@@ -22,7 +22,3 @@
 -   [ ] I have updated documentation if needed
 -   [ ] CI/CD checks pass
 -   [ ] Code follows coding standards
-
-## Reviewer Notes
-
-<!-- Any additional information for reviewers, or areas to focus on -->
