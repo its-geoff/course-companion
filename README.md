@@ -8,4 +8,4 @@ Current Version: 0.1.0 (alpha)
 
 -   download libraries with `conan install . --build=missing -of build`
 -   generate build files with `cmake .. -DCMAKE_TOOLCHAIN_FILE="conan_toolchain.cmake"`
--   build the project with `cmake --build .`
+-   navigate to the build folder with `cd build` and build the project with `cmake --build .`

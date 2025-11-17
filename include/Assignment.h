@@ -15,7 +15,7 @@
  * @class Assignment
  * @brief Represents an academic assignment given to a student.
  * 
- * Stores metadata such as title_, description_, due date, completion status, and grade_.
+ * Stores metadata such as title, description, due date, completion status, and grade.
  * The Assignment class is used by the main function to track progress and report assignment results.
  */
 class Assignment {
