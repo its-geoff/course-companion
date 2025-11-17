@@ -1,0 +1,3 @@
+C:/Users/Geoffrey/Documents/VS Code/course-companion/build/CMakeFiles/CourseCompanion.dir
+C:/Users/Geoffrey/Documents/VS Code/course-companion/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Geoffrey/Documents/VS Code/course-companion/build/CMakeFiles/ZERO_CHECK.dir

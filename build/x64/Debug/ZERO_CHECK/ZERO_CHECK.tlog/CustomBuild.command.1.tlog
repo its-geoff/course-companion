@@ -1,0 +1,10 @@
+^C:\USERS\GEOFFREY\DOCUMENTS\VS CODE\COURSE-COMPANION\BUILD\CMAKEFILES\00986CA5289D27E8B80F9189EEDF4A80\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Geoffrey/Documents/VS Code/course-companion" "-BC:/Users/Geoffrey/Documents/VS Code/course-companion/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/Geoffrey/Documents/VS Code/course-companion/build/CourseCompanion.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
