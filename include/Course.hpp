@@ -52,6 +52,21 @@ class Course {
             std::chrono::system_clock::time_point endDate_, int numCredits_, bool active_);
 
         void printCourseInfo();
+
+        void setTitle(std::string_view newTitle);
+        void setDescription(std::string_view newDescription);
+        void setStartDate(std::chrono::system_clock::time_point newStartDate);
+        void setEndDate(std::chrono::system_clock::time_point newEndDate);
+        void setNumCredits(int newNumCredits);
+        void setGradingScale(std::map<std::string, float> newGradingScale);
+        void setActive(bool newActive);
+        std::string getTitle();
+        std::string getDescription();
+        std::chrono::system_clock::time_point getStartDate();
+        std::chrono::system_clock::time_point getEndDate();
+        int getNumCredits();
+        std::map<std::string, float> getGradingScale();
+        bool getActive();
 };
 
 #endif
