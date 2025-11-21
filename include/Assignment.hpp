@@ -2,7 +2,7 @@
 #define ASSIGNMENT_H
 
 // -------------------------------------------------------------------------------------------------------------------
-// File: Assignment.h
+// File: Assignment.hpp
 // description_:
 //      Definition of an Assignment class that stores metadata and is used to organize coursework. There can be
 //      multiple Assignments within one Course. Individual assignment grades will be used to determine course grades.
@@ -43,14 +43,14 @@ class Assignment {
 
         void printAssignmentInfo();
 
-        void setTitle(std::string_view newTitle);
-        void setDescription(std::string_view newDescription);
+        void setTitle(std::string newTitle);
+        void setDescription(std::string newDescription);
         void setDueDate(std::chrono::system_clock::time_point newDueDate);
         void setCompletionStatus(bool newCompletionStatus);
         void setGrade(float newGrade);
         void setCourse(Course newCourse);
-        std::string getTitle();
-        std::string getDescription();
+        std::string_view getTitle();
+        std::string_view getDescription();
         std::chrono::system_clock::time_point getDueDate();
         bool getCompletionStatus();
         float getGrade();
