@@ -2,7 +2,7 @@
 #define COURSE_H
 
 // -------------------------------------------------------------------------------------------------------------------
-// File: Course.h
+// File: Course.hpp
 // description_:
 //      Definition of an Course class that stores metadata and contains zero or more Assignments. Each course has
 //      a grade that is calculated based on the assignment grades. There can be multiple Courses within a Term.
@@ -60,8 +60,8 @@ class Course {
         void setNumCredits(int newNumCredits);
         void setGradingScale(std::map<std::string, float> newGradingScale);
         void setActive(bool newActive);
-        std::string getTitle();
-        std::string getDescription();
+        std::string_view getTitle();
+        std::string_view getDescription();
         std::chrono::system_clock::time_point getStartDate();
         std::chrono::system_clock::time_point getEndDate();
         int getNumCredits();
