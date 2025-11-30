@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# create toolchain file for build
+cmake -S .. -B build -DCMAKE_TOOLCHAIN_FILE=build/build/conan_toolchain.cmake

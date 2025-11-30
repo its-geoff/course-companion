@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# install missing dependencies
+conan install .. --build=missing -of build
