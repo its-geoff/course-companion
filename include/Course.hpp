@@ -1,13 +1,13 @@
 #ifndef COURSE_H
 #define COURSE_H
 
-// -------------------------------------------------------------------------------------------------------------------
-// File: Course.hpp
-// description_:
-//      Definition of an Course class that stores metadata and contains zero or more Assignments. Each course has
-//      a grade that is calculated based on the assignment grades. There can be multiple Courses within a Term.
-//      Provides declarations only; see Course.cpp for implementations.
-// -------------------------------------------------------------------------------------------------------------------
+/**
+ * @file Course.hpp
+ * @brief Definition of an Course class that stores metadata and contains zero or more Assignments. 
+ * 
+ * Each course has a grade that is calculated based on the assignment grades. There can be multiple Courses 
+ * within a Term. Provides declarations only; see Course.cpp for implementations.
+ */
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
