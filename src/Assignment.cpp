@@ -103,8 +103,8 @@ void Assignment::setDueDate(std::chrono::year_month_day newDueDate) {
     dueDate_ = newDueDate;
 }
 
-void Assignment::setCompletionStatus(bool newCompletionStatus) {
-    completed_ = newCompletionStatus;
+void Assignment::setCompleted(bool newCompleted) {
+    completed_ = newCompleted;
 }
 
 void Assignment::setGrade(float newGrade) {
@@ -127,7 +127,7 @@ std::chrono::year_month_day Assignment::getDueDate() {
     return dueDate_;
 }
 
-bool Assignment::getCompletionStatus() {
+bool Assignment::getCompleted() {
     return completed_;
 }
 
