@@ -1,17 +1,17 @@
 #ifndef ASSIGNMENT_H
 #define ASSIGNMENT_H
 
-// -------------------------------------------------------------------------------------------------------------------
-// File: Assignment.hpp
-// description_:
-//      Definition of an Assignment class that stores metadata and is used to organize coursework. There can be
-//      multiple Assignments within one Course. Individual assignment grades will be used to determine course grades.
-//      Provides declarations only; see Assignment.cpp for implementations.
-// -------------------------------------------------------------------------------------------------------------------
+/**
+ * @file Assignment.hpp
+ * @brief Definition of an Assignment class that stores metadata and is used to organize coursework. 
+ * 
+ * There can be multiple Assignments within one Course. Individual assignment grades will be used to 
+ * determine course grades. Provides declarations only; see Assignment.cpp for implementations.
+ */
 
 #include <string>       // for string variables
 #include <chrono>       // for date and time-related variables
-#include "Course.hpp"   // for connection to relevant Course
+// #include "Course.hpp"   // for connection to relevant Course  -> no Course implementation yet
 
 /**
  * @class Assignment
@@ -25,36 +25,37 @@ class Assignment {
     private:
         std::string title_{};
         std::string description_{};
-        std::chrono::system_clock::time_point dueDate{};
-        bool completionStatus_{false};
+        std::chrono::year_month_day dueDate_{};
+        bool completed_{false};
         float grade_{0.0};
-        Course course_{};
+        // Course course_{};  -> no Course implementation yet
 
     public:
-        Assignment();
-        Assignment(std::string title_, std::chrono::system_clock::time_point dueDate_);
-        Assignment(std::string title_, std::chrono::system_clock::time_point dueDate_, bool completionStatus_);
-        Assignment(std::string title_, std::chrono::system_clock::time_point dueDate_, bool completionStatus_, float grade_);
-        Assignment(std::string title_, std::string description_, std::chrono::system_clock::time_point dueDate_);
-        Assignment(std::string title_, std::string description_, std::chrono::system_clock::time_point dueDate_, bool completionStatus_);
-        Assignment(std::string title_, std::string description_, std::chrono::system_clock::time_point dueDate_, bool completionStatus_, float grade_);
-        Assignment(std::string title_, std::string description_, std::chrono::system_clock::time_point dueDate_, bool completionStatus_, float grade_,
-                    Course course_);
+        Assignment(std::string title);
+        Assignment(std::string title, std::chrono::year_month_day dueDate);
+        Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed);
+        Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed_, float grade);
+        Assignment(std::string title, std::string description);
+        Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate);
+        Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed);
+        Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade);
+        // Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade,
+        //             Course course);  -> no Course implementation yet
 
         void printAssignmentInfo();
 
         void setTitle(std::string newTitle);
         void setDescription(std::string newDescription);
-        void setDueDate(std::chrono::system_clock::time_point newDueDate);
+        void setDueDate(std::chrono::year_month_day newDueDate);
         void setCompletionStatus(bool newCompletionStatus);
         void setGrade(float newGrade);
-        void setCourse(Course newCourse);
+        // void setCourse(Course newCourse);  -> no Course implementation yet
         std::string_view getTitle();
         std::string_view getDescription();
-        std::chrono::system_clock::time_point getDueDate();
+        std::chrono::year_month_day getDueDate();
         bool getCompletionStatus();
         float getGrade();
-        Course getCourse();
+        // Course getCourse();  -> no Course implementation yet
 };
 
 #endif

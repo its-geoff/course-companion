@@ -12,9 +12,9 @@
 
 Assignment::Assignment(std::string title) {
     title_ = title;
-    auto now = std::chrono::system_clock::now;
-    auto today = std::chrono::floor<std::chrono::days>(now);    // set to today
-    dueDate_ = today;
+    auto now = std::chrono::system_clock::now();
+    auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
+    dueDate_ = std::chrono::year_month_day(today);
     completed_ = false;
 }
 
@@ -35,6 +35,15 @@ Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, b
     dueDate_ = dueDate;
     completed_ = completed;
     grade_ = grade;
+}
+
+Assignment::Assignment(std::string title, std::string description) {
+    title_ = title;
+    description_ = description;
+    auto now = std::chrono::system_clock::now();
+    auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
+    dueDate_ = std::chrono::year_month_day(today);
+    completed_ = false;
 }
 
 Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate) {
@@ -59,15 +68,15 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
     grade_ = grade;
 }
 
-Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade,
-            Course course) {
-    title_ = title;
-    description_ = description;
-    dueDate_ = dueDate;
-    completed_ = completed;
-    grade_ = grade;
-    course_ = course;
-}
+// Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade,
+//             Course course) {
+//     title_ = title;
+//     description_ = description;
+//     dueDate_ = dueDate;
+//     completed_ = completed;
+//     grade_ = grade;
+//     course_ = course;
+// }  -> no Course implementation yet
 
 void Assignment::printAssignmentInfo() {
     std::cout << "===========================================================";
@@ -75,7 +84,7 @@ void Assignment::printAssignmentInfo() {
     if (!description_.empty()) {
         std::cout << "Description: " << description_ << std::endl;
     };
-    std::cout << "Course: " << course_.getTitle() << std::endl;
+    // std::cout << "Course: " << course_.getTitle() << std::endl;  -> no Course implementation yet
     std::cout << "Due Date: " << dueDate_ << std::endl;
     std::cout << "Completed? " << completed_ << std::endl;
     std::cout << "Grade: " << grade_<< std::endl;
@@ -102,9 +111,9 @@ void Assignment::setGrade(float newGrade) {
     grade_ = newGrade;
 }
 
-void Assignment::setCourse(Course newCourse) {
-    course_ = newCourse;
-}
+// void Assignment::setCourse(Course newCourse) {
+//     course_ = newCourse;
+// }  -> no Course implementation yet
 
 std::string_view Assignment::getTitle() {
     return title_;
@@ -126,6 +135,6 @@ float Assignment::getGrade() {
     return grade_;
 }
 
-Course Assignment::getCourse() {
-    return course_;
-}
+// Course Assignment::getCourse() {
+//     return course_;
+// }  -> no Course implementation yet
