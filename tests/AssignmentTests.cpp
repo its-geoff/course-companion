@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <sstream>
 #include "Assignment.hpp"
 
 using namespace std::chrono_literals;
@@ -19,6 +20,22 @@ class AssignmentTest : public testing::Test {
             );
         }
 };
+
+// test class to redirect output
+class CoutRedirect {
+    public:
+        CoutRedirect(std::ostream& newStream)
+            : oldBuf(std::cout.rdbuf(newStream.rdbuf()))
+        {}
+
+        ~CoutRedirect() {
+            std::cout.rdbuf(oldBuf);
+        }
+
+    private:
+        std::streambuf* oldBuf;
+};
+
 
 // ====================================
 // GETTER SMOKE TESTS
@@ -140,6 +157,14 @@ TEST_F(AssignmentTest, FiveParamDescInitialization) {
 // ====================================
 // FUNCTION SMOKE TESTS
 // ====================================
+
+TEST_F(AssignmentTest, PrintAssignmentInfo) {
+    std::stringstream ss;
+    CoutRedirect redirect(ss);
+
+    assignment1.printAssignmentInfo();
+    ASSERT_EQ(ss.str(), "Homework 3\nFocus on variables and strings.\n2025-11-20\n1\n95.18");
+}
 
 // ====================================
 // GETTER EDGE CASES
