@@ -1,4 +1,52 @@
 #!/bin/bash
 
-# install missing dependencies
-conan install .. --build=missing -of build
+usage() {
+    echo "Usage: setup-deps [-t]"
+    echo "  -t: Output to build_test"
+}
+
+OS_NAME=$(uname)
+option_given=0
+
+if [[ "$OS_NAME" == "Darwin" ]]; then
+    while getopts ":t" opt; do
+        option_given=1
+
+        case $opt in
+            t)
+                conan install .. --build=missing -of build_test
+                ;;
+            \?)
+                echo "Invalid option: -$opt" >&2
+                usage
+                ;;
+        esac
+    done
+
+    if [ $option_given -eq 0 ]; then
+        # create toolchain file for build
+        conan install .. --build=missing -of build_main
+    fi
+elif [[ "$OS_NAME" == "Linux" ]]; then
+    while getopts ":t" opt; do
+        option_given=1
+
+        case $opt in
+            t)
+                conan install /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion --build=missing -of build_test
+                ;;
+            \?)
+                echo "Invalid option: -$opt" >&2
+                usage
+                ;;
+        esac
+    done
+
+    if [ $option_given -eq 0 ]; then
+        # create toolchain file for build
+        conan install /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion --build=missing -of build_main
+    fi
+else
+    echo "Unknown OS: $OS_NAME"
+    exit 1
+fi

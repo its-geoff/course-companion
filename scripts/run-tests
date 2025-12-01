@@ -1,0 +1,16 @@
+#!/bin/bash
+
+OS_NAME=$(uname)
+
+if [[ "$OS_NAME" == "Darwin" ]]; then
+    ctest --output-on-failure
+    mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
+    cp Testing/Temporary/LastTest.log /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs/
+elif [[ "$OS_NAME" == "Linux" ]]; then
+    ctest --output-on-failure
+    mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
+    cp Testing/Temporary/LastTest.log /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs/
+else
+    echo "Unknown OS: $OS_NAME"
+    exit 1
+fi

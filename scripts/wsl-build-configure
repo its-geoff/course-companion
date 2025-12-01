@@ -12,7 +12,9 @@ while getopts ":t" opt; do
 
     case $opt in
         t)
-            cmake /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion -DBUILD_TESTING=ON
+            cmake -S /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion \
+                  -B /home/its-geoff/wsl_build/course-companion/build \
+                  -DBUILD_TESTING=ON
             ;;
         \?)
             echo "Invalid option: -$opt" >&2
@@ -23,6 +25,7 @@ done
 
 if [ $option_given -eq 0 ]; then
     # create toolchain file for build
-    cmake /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion
+    cmake -S /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion \
+          -B /home/its-geoff/wsl_build/course-companion/build
 fi
 

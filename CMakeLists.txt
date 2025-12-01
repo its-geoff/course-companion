@@ -46,5 +46,6 @@ set_target_properties(CourseCompanion PROPERTIES
 option(BUILD_TESTING "Build tests" OFF)
 
 if(BUILD_TESTING)
+    enable_testing()
     add_subdirectory(tests)
 endif()
