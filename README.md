@@ -15,9 +15,12 @@ Current Version: 0.1.0 (alpha)
 1.  navigate to the upper build folder with `cd ./build`
 2.  download libraries with `setup-deps`
 3.  generate build files with `build-configure`
+    -   if testing, use `build-configure -t` to turn tests on
 4.  navigate to the lower build folder with `cd build` and build the project with `make-build`
+    -   to build only main files, use `make-build -m`
+    -   to build only test files, use `make-build -t`
 
-## Deleting and Refreshing Builds
+## Deleting and Refreshing Builds (do this after a failed build or after changes are made to code)
 
 1.  navigate to the upper build folder with `cd ../build`
 2.  remove the previous build with `rm-prev-build`
@@ -25,5 +28,6 @@ Current Version: 0.1.0 (alpha)
 
 ## Testing Commands
 
+-   NOTE: make sure tests are built before using this
 -   to run all tests, use `ctest`
 -   to run a certain test suite, use `ctest -R file_name`
