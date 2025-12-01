@@ -19,6 +19,7 @@ Current Version: 0.1.0 (alpha)
 4.  navigate to the lower build folder with `cd build` and build the project with `make-build`
     -   to build only main files, use `make-build -m`
     -   to build only test files, use `make-build -t`
+    -   NOTE: for WSL, you will stay in the upper build folder
 
 ## Deleting and Refreshing Builds (do this after a failed build or after changes are made to code)
 
@@ -31,3 +32,8 @@ Current Version: 0.1.0 (alpha)
 -   NOTE: make sure tests are built before using this
 -   to run all tests, use `ctest`
 -   to run a certain test suite, use `ctest -R file_name`
+
+## WSL Paths
+
+-   Path to root folder: `~/wsl_build/course-companion`
+-   Path to build folder: `~/wsl_build/course-companion/build/build`

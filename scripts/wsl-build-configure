@@ -1,0 +1,28 @@
+#!/bin/bash
+
+usage() {
+    echo "Usage: wsl-build-configure [-t]"
+    echo "  -t: Build test files"
+}
+
+option_given=0
+
+while getopts ":t" opt; do
+    option_given=1
+
+    case $opt in
+        t)
+            cmake /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion -DBUILD_TESTING=ON
+            ;;
+        \?)
+            echo "Invalid option: -$opt" >&2
+            usage
+            ;;
+    esac
+done
+
+if [ $option_given -eq 0 ]; then
+    # create toolchain file for build
+    cmake /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion
+fi
+

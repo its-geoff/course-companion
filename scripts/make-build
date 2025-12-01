@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cmake --build .
-
 usage() {
     echo "Usage: make-build [-mt]"
     echo "  -m: Only build main files"

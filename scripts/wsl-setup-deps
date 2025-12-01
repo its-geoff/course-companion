@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# install missing dependencies
+conan install /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion --build=missing -of build
