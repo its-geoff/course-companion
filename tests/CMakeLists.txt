@@ -1,17 +1,24 @@
-# Create test executable
-add_executable(AssignmentTests
-    AssignmentTests.cpp
+# Enable testing
+enable_testing()
+
+# Fetch GoogleTest
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
-# Link test executable with project code
-target_link_libraries(AssignmentTests
-    PRIVATE
-        CourseCompanion_lib
-        GTest::gtest_main
-)
+# Test executable
+add_executable(tests 
+    AssignmentTests.cpp)
+target_link_libraries(tests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME AssignmentTests COMMAND tests)
 
-add_test(NAME AssignmentTests COMMAND AssignmentTests)
-
-set_target_properties(AssignmentTests PROPERTIES
+# Optional: output directory
+set_target_properties(tests PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )

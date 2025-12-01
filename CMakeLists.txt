@@ -43,27 +43,8 @@ set_target_properties(CourseCompanion PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
-# ------------------------
-# Enable testing
-# ------------------------
-option(BUILD_TESTING "Build tests" ON)
-if (BUILD_TESTING)
-    enable_testing()
+option(BUILD_TESTING "Build tests" OFF)
 
-    # ---- Fetch GoogleTest ----
-    include(FetchContent)
-    FetchContent_Declare(
-        googletest
-        URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-    )
-
-    # Disable installing gtest into system
-    set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
-    set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
-
-    FetchContent_MakeAvailable(googletest)
-
-    # ---- Add tests folder ----
+if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()

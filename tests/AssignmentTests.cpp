@@ -7,18 +7,13 @@ using namespace std::chrono_literals;
 // test fixture for class Assignment
 class AssignmentTest : public testing::Test {
     protected:
-        Assignment assignment1;
-
-        // override with member variable values
-        void SetUp() override {
-            assignment1 = Assignment(
-                "Homework 3", 
-                "Focus on variables and strings.", 
-                std::chrono::sys_days{2025y/11/20},
-                true,
-                95.18
-            );
-        }
+        Assignment assignment1{
+            "Homework 3", 
+            "Focus on variables and strings.", 
+            std::chrono::sys_days{2025y/11/20},
+            true,
+            95.18
+        };
 };
 
 // test class to redirect output
