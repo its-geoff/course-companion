@@ -79,7 +79,7 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
 // }  -> no Course implementation yet
 
 void Assignment::printAssignmentInfo() {
-    std::cout << "===========================================================";
+    std::cout << "===========================================================" << std::endl;
     std::cout << "Assignment Title: " << title_ << std::endl;
     if (!description_.empty()) {
         std::cout << "Description: " << description_ << std::endl;
@@ -88,7 +88,7 @@ void Assignment::printAssignmentInfo() {
     std::cout << "Due Date: " << dueDate_ << std::endl;
     std::cout << "Completed? " << completed_ << std::endl;
     std::cout << "Grade: " << grade_<< std::endl;
-    std::cout << "===========================================================";
+    std::cout << "===========================================================" << std::endl;
 }
 
 void Assignment::setTitle(std::string newTitle) {

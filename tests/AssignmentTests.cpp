@@ -53,7 +53,7 @@ TEST_F(AssignmentTest, CompletedGetter) {
 }
 
 TEST_F(AssignmentTest, GradeGetter) {
-    ASSERT_EQ(assignment1.getGrade(), 95.18);
+    ASSERT_NEAR(assignment1.getGrade(), 95.18, 1e-5);
 }
 
 // ====================================
@@ -82,7 +82,7 @@ TEST_F(AssignmentTest, CompletedSetter) {
 
 TEST_F(AssignmentTest, GradeSetter) {
     assignment1.setGrade(96.20);
-    ASSERT_EQ(assignment1.getGrade(), 96.20);
+    ASSERT_NEAR(assignment1.getGrade(), 96.20, 1e-5);
 }
 
 // ====================================
@@ -158,7 +158,8 @@ TEST_F(AssignmentTest, PrintAssignmentInfo) {
     CoutRedirect redirect(ss);
 
     assignment1.printAssignmentInfo();
-    ASSERT_EQ(ss.str(), "Homework 3\nFocus on variables and strings.\n2025-11-20\n1\n95.18");
+    ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 3\nDescription: Focus on variables and strings.\n"
+                        "Due Date: 2025-11-20\nCompleted? 1\nGrade: 95.18\n===========================================================\n");
 }
 
 // ====================================
