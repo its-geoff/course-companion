@@ -9,6 +9,7 @@
  */
 
  #include <iostream>        // for cout
+ #include <stdexcept>       // for exceptions
 
 Assignment::Assignment(std::string title) {
     title_ = title;
@@ -78,19 +79,6 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
 //     course_ = course;
 // }  -> no Course implementation yet
 
-void Assignment::printAssignmentInfo() {
-    std::cout << "===========================================================" << std::endl;
-    std::cout << "Assignment Title: " << title_ << std::endl;
-    if (!description_.empty()) {
-        std::cout << "Description: " << description_ << std::endl;
-    };
-    // std::cout << "Course: " << course_.getTitle() << std::endl;  -> no Course implementation yet
-    std::cout << "Due Date: " << dueDate_ << std::endl;
-    std::cout << "Completed? " << completed_ << std::endl;
-    std::cout << "Grade: " << grade_<< std::endl;
-    std::cout << "===========================================================" << std::endl;
-}
-
 void Assignment::setTitle(std::string newTitle) {
     title_ = newTitle;
 }
@@ -138,3 +126,38 @@ float Assignment::getGrade() {
 // Course Assignment::getCourse() {
 //     return course_;
 // }  -> no Course implementation yet
+
+void Assignment::validateGrade(float grade) {
+    if (grade < 0.0 || grade > 100.0) {
+        grade_ = 0.0;
+        throw std::out_of_range("Grade must be from 0 to 100.");
+    }
+}
+
+void Assignment::validateTitle(std::string_view title) {
+    if (title == "") {
+        title_ = "";
+        throw std::invalid_argument("Title must be non-empty.");
+    }
+}
+
+std::string Assignment::completedString(bool completed) {
+    if (completed) {
+        return "Yes";
+    } else {
+        return "No";
+    }
+}
+
+void Assignment::printAssignmentInfo() {
+    std::cout << "===========================================================" << std::endl;
+    std::cout << "Assignment Title: " << title_ << std::endl;
+    if (!description_.empty()) {
+        std::cout << "Description: " << description_ << std::endl;
+    };
+    // std::cout << "Course: " << course_.getTitle() << std::endl;  -> no Course implementation yet
+    std::cout << "Due Date: " << dueDate_ << std::endl;
+    std::cout << "Completed? " << completedString(completed_) << std::endl;
+    std::cout << "Grade: " << grade_<< std::endl;
+    std::cout << "===========================================================" << std::endl;
+}

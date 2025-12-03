@@ -34,15 +34,13 @@ class Assignment {
         Assignment(std::string title);
         Assignment(std::string title, std::chrono::year_month_day dueDate);
         Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed);
-        Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed_, float grade);
+        Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed, float grade);
         Assignment(std::string title, std::string description);
         Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate);
         Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed);
         Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade);
         // Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade,
         //             Course course);  -> no Course implementation yet
-
-        void printAssignmentInfo();
 
         void setTitle(std::string newTitle);
         void setDescription(std::string newDescription);
@@ -56,6 +54,11 @@ class Assignment {
         bool getCompleted();
         float getGrade();
         // Course getCourse();  -> no Course implementation yet
+
+        void validateGrade(float grade);
+        void validateTitle(std::string_view title);
+        std::string completedString(bool completed);
+        void printAssignmentInfo();
 };
 
 #endif

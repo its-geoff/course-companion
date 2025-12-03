@@ -91,25 +91,25 @@ TEST_F(AssignmentTest, GradeSetter) {
 
 // initializations without description defined
 TEST_F(AssignmentTest, OneParamInitialization) {
-    Assignment assignment2 = Assignment("Homework 1");
+    Assignment assignment2{"Homework 1"};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
 }
 
 TEST_F(AssignmentTest, TwoParamInitialization) {
-    Assignment assignment2 = Assignment("Homework 1", std::chrono::sys_days{2025y/10/31});
+    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
 }
 
 TEST_F(AssignmentTest, ThreeParamInitialization) {
-    Assignment assignment2 = Assignment("Homework 1", std::chrono::sys_days{2025y/10/31}, false);
+    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
     ASSERT_EQ(assignment2.getCompleted(), false);
 }
 
 TEST_F(AssignmentTest, FourParamInitialization) {
-    Assignment assignment2 = Assignment("Homework 1", std::chrono::sys_days{2025y/10/31}, false, 90.50);
+    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, 90.50};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
     ASSERT_EQ(assignment2.getCompleted(), false);
@@ -118,21 +118,21 @@ TEST_F(AssignmentTest, FourParamInitialization) {
 
 // initializations with description defined
 TEST_F(AssignmentTest, TwoParamDescInitialization) {
-    Assignment assignment2 = Assignment("Homework 1", "Focus on lexical analysis.");
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis."};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
 }
 
 TEST_F(AssignmentTest, ThreeParamDescInitialization) {
-    Assignment assignment2 = Assignment("Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31});
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31}};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
 }
 
 TEST_F(AssignmentTest, FourParamDescInitialization) {
-    Assignment assignment2 = Assignment("Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
-                                        false);
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
+                                        false};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
@@ -140,8 +140,8 @@ TEST_F(AssignmentTest, FourParamDescInitialization) {
 }
 
 TEST_F(AssignmentTest, FiveParamDescInitialization) {
-    Assignment assignment2 = Assignment("Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
-                                        false, 90.50);
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
+                                        false, 90.50};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
@@ -159,12 +159,35 @@ TEST_F(AssignmentTest, PrintAssignmentInfo) {
 
     assignment1.printAssignmentInfo();
     ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 3\nDescription: Focus on variables and strings.\n"
-                        "Due Date: 2025-11-20\nCompleted? 1\nGrade: 95.18\n===========================================================\n");
+                        "Due Date: 2025-11-20\nCompleted? Yes\nGrade: 95.18\n===========================================================\n");
+}
+
+TEST_F(AssignmentTest, ValidateGradeLow) {
+    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, -20.24};
+    ASSERT_THROW(assignment2.validateGrade(assignment2.getGrade()), std::out_of_range);
+}
+
+TEST_F(AssignmentTest, ValidateGradeHigh) {
+    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, 200.24};
+    ASSERT_THROW(assignment2.validateGrade(assignment2.getGrade()), std::out_of_range);
+}
+
+TEST_F(AssignmentTest, ValidateTitle) {
+    Assignment assignment2{"", std::chrono::sys_days{2025y/10/31}, false, 90.50};
+    ASSERT_THROW(assignment2.validateTitle(assignment2.getTitle()), std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, CompletedString) {
+    Assignment assignment2{"", std::chrono::sys_days{2025y/10/31}, false, 90.50};
+    ASSERT_EQ(assignment1.completedString(assignment1.getCompleted()), "Yes");
+    ASSERT_EQ(assignment2.completedString(assignment2.getCompleted()), "No");
 }
 
 // ====================================
 // GETTER EDGE CASES
 // ====================================
+
+
 
 // ====================================
 // SETTER EDGE CASES
