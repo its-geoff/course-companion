@@ -14,7 +14,7 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
 
         case $opt in
             t)
-                cmake -S .. -B build -DCMAKE_TOOLCHAIN_FILE=build/build/conan_toolchain.cmake -DBUILD_TESTING=ON
+                cmake -S .. -B build_test -DCMAKE_TOOLCHAIN_FILE=build/build_test/conan_toolchain.cmake -DBUILD_TESTING=ON
                 ;;
             \?)
                 echo "Invalid option: -$opt" >&2
@@ -25,7 +25,7 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
 
     if [ $option_given -eq 0 ]; then
         # create toolchain file for build
-        cmake -S .. -B build -DCMAKE_TOOLCHAIN_FILE=build/build/conan_toolchain.cmake
+        cmake -S .. -B build_main -DCMAKE_TOOLCHAIN_FILE=build/build_main/conan_toolchain.cmake
     fi
 elif [[ "$OS_NAME" == "Linux" ]]; then
     while getopts ":t" opt; do
@@ -34,7 +34,7 @@ elif [[ "$OS_NAME" == "Linux" ]]; then
         case $opt in
             t)
                 cmake -S /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion \
-                    -B /home/its-geoff/wsl_build/course-companion/build \
+                    -B /home/its-geoff/wsl_build/course-companion/build_test \
                     -DBUILD_TESTING=ON
                 ;;
             \?)
@@ -47,7 +47,7 @@ elif [[ "$OS_NAME" == "Linux" ]]; then
     if [ $option_given -eq 0 ]; then
         # create toolchain file for build
         cmake -S /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion \
-            -B /home/its-geoff/wsl_build/course-companion/build
+            -B /home/its-geoff/wsl_build/course-companion/build_main
     fi
 else
     echo "Unknown OS: $OS_NAME"
