@@ -17,18 +17,24 @@ Assignment::Assignment(std::string title) {
     auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
     dueDate_ = std::chrono::year_month_day(today);
     completed_ = false;
+
+    validateTitle(title_);
 }
 
 Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate) {
     title_ = title;
     dueDate_ = dueDate;
     completed_ = false;
+
+    validateTitle(title_);
 }
 
 Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed) {
     title_ = title;
     dueDate_ = dueDate;
     completed_ = completed;
+
+    validateTitle(title_);
 }
 
 Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed, float grade) {
@@ -36,6 +42,9 @@ Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, b
     dueDate_ = dueDate;
     completed_ = completed;
     grade_ = grade;
+
+    validateTitle(title_);
+    validateGrade(grade_);
 }
 
 Assignment::Assignment(std::string title, std::string description) {
@@ -45,6 +54,8 @@ Assignment::Assignment(std::string title, std::string description) {
     auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
     dueDate_ = std::chrono::year_month_day(today);
     completed_ = false;
+
+    validateTitle(title_);
 }
 
 Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate) {
@@ -52,6 +63,8 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
     description_ = description;
     dueDate_ = dueDate;
     completed_ = false;
+
+    validateTitle(title_);
 }
 
 Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed) {
@@ -59,6 +72,8 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
     description_ = description;
     dueDate_ = dueDate;
     completed_ = completed;
+
+    validateTitle(title_);
 }
 
 Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade) {
@@ -67,6 +82,9 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
     dueDate_ = dueDate;
     completed_ = completed;
     grade_ = grade;
+
+    validateTitle(title_);
+    validateGrade(grade_);
 }
 
 // Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade,
@@ -77,30 +95,6 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
 //     completed_ = completed;
 //     grade_ = grade;
 //     course_ = course;
-// }  -> no Course implementation yet
-
-void Assignment::setTitle(std::string newTitle) {
-    title_ = newTitle;
-}
-
-void Assignment::setDescription(std::string newDescription) {
-    description_ = newDescription;
-}
-
-void Assignment::setDueDate(std::chrono::year_month_day newDueDate) {
-    dueDate_ = newDueDate;
-}
-
-void Assignment::setCompleted(bool newCompleted) {
-    completed_ = newCompleted;
-}
-
-void Assignment::setGrade(float newGrade) {
-    grade_ = newGrade;
-}
-
-// void Assignment::setCourse(Course newCourse) {
-//     course_ = newCourse;
 // }  -> no Course implementation yet
 
 std::string_view Assignment::getTitle() {
@@ -127,6 +121,32 @@ float Assignment::getGrade() {
 //     return course_;
 // }  -> no Course implementation yet
 
+void Assignment::setTitle(std::string newTitle) {
+    title_ = newTitle;
+    validateTitle(newTitle);
+}
+
+void Assignment::setDescription(std::string newDescription) {
+    description_ = newDescription;
+}
+
+void Assignment::setDueDate(std::chrono::year_month_day newDueDate) {
+    dueDate_ = newDueDate;
+}
+
+void Assignment::setCompleted(bool newCompleted) {
+    completed_ = newCompleted;
+}
+
+void Assignment::setGrade(float newGrade) {
+    grade_ = newGrade;
+    validateGrade(newGrade);
+}
+
+// void Assignment::setCourse(Course newCourse) {
+//     course_ = newCourse;
+// }  -> no Course implementation yet
+
 void Assignment::validateGrade(float grade) {
     if (grade < 0.0 || grade > 100.0) {
         grade_ = 0.0;
@@ -136,7 +156,6 @@ void Assignment::validateGrade(float grade) {
 
 void Assignment::validateTitle(std::string_view title) {
     if (title == "") {
-        title_ = "";
         throw std::invalid_argument("Title must be non-empty.");
     }
 }

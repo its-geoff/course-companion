@@ -42,18 +42,18 @@ class Assignment {
         // Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade,
         //             Course course);  -> no Course implementation yet
 
-        void setTitle(std::string newTitle);
-        void setDescription(std::string newDescription);
-        void setDueDate(std::chrono::year_month_day newDueDate);
-        void setCompleted(bool newCompleted);
-        void setGrade(float newGrade);
-        // void setCourse(Course newCourse);  -> no Course implementation yet
         std::string_view getTitle();
         std::string_view getDescription();
         std::chrono::year_month_day getDueDate();
         bool getCompleted();
         float getGrade();
         // Course getCourse();  -> no Course implementation yet
+        void setTitle(std::string newTitle);
+        void setDescription(std::string newDescription);
+        void setDueDate(std::chrono::year_month_day newDueDate);
+        void setCompleted(bool newCompleted);
+        void setGrade(float newGrade);
+        // void setCourse(Course newCourse);  -> no Course implementation yet
 
         void validateGrade(float grade);
         void validateTitle(std::string_view title);
