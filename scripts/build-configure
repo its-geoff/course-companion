@@ -34,7 +34,7 @@ elif [[ "$OS_NAME" == "Linux" ]]; then
         case $opt in
             t)
                 cmake -S /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion \
-                    -B /home/its-geoff/wsl_build/course-companion/build_test \
+                    -B /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/build/build_test \
                     -DBUILD_TESTING=ON
                 ;;
             \?)
@@ -47,7 +47,7 @@ elif [[ "$OS_NAME" == "Linux" ]]; then
     if [ $option_given -eq 0 ]; then
         # create toolchain file for build
         cmake -S /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion \
-            -B /home/its-geoff/wsl_build/course-companion/build_main
+            -B /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/build/build_main
     fi
 else
     echo "Unknown OS: $OS_NAME"
