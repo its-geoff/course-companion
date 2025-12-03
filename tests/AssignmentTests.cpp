@@ -162,26 +162,8 @@ TEST_F(AssignmentTest, PrintAssignmentInfo) {
                         "Due Date: 2025-11-20\nCompleted? Yes\nGrade: 95.18\n===========================================================\n");
 }
 
-TEST_F(AssignmentTest, ValidateGradeLow) {
-    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, -20.24};
-    // throw out of range error since negative numbers not in range 0 to 100
-    ASSERT_THROW(assignment2.validateGrade(assignment2.getGrade()), std::out_of_range);
-}
-
-TEST_F(AssignmentTest, ValidateGradeHigh) {
-    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, 200.24};
-    // throw out of range error since negative numbers not in range 0 to 100
-    ASSERT_THROW(assignment2.validateGrade(assignment2.getGrade()), std::out_of_range);
-}
-
-TEST_F(AssignmentTest, ValidateTitle) {
-    Assignment assignment2{"", std::chrono::sys_days{2025y/10/31}, false, 90.50};
-    // throw invalid argument error since title should not be empty
-    ASSERT_THROW(assignment2.validateTitle(assignment2.getTitle()), std::invalid_argument);
-}
-
 TEST_F(AssignmentTest, CompletedString) {
-    Assignment assignment2{"", std::chrono::sys_days{2025y/10/31}, false, 90.50};
+    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, 90.50};
     ASSERT_EQ(assignment1.completedString(assignment1.getCompleted()), "Yes");
     ASSERT_EQ(assignment2.completedString(assignment2.getCompleted()), "No");
 }
@@ -230,61 +212,26 @@ TEST_F(AssignmentTest, DueDateGetterInvalid) {
     ASSERT_THROW(assignment2.getDueDate(), std::invalid_argument);
 }
 
-TEST_F(AssignmentTest, CompletedGetterInvalid) {
-    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/2/30},
-                                        "no", 90.50};
-    // throw invalid argument since invalid type
-    ASSERT_THROW(assignment2.getCompleted(), std::invalid_argument);
+TEST_F(AssignmentTest, GradeGetterInvalidLow) {
+    // throw out of range error since number is not in range 0 to 100
+    ASSERT_THROW(Assignment{"Homework 1", std::chrono::sys_days{2025y/2/30},
+                                        false, -20.24}, std::out_of_range);
 }
 
-TEST_F(AssignmentTest, GradeGetterInvalid) {
-    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/2/30},
-                                        false, 90.-50};
-    // throw invalid argument since input is not valid float
-    ASSERT_THROW(assignment2.getGrade(), std::invalid_argument);
+TEST_F(AssignmentTest, GradeGetterInvalidHigh) {
+    // throw out of range error since number is not in range 0 to 100
+    ASSERT_THROW(Assignment{"Homework 1", std::chrono::sys_days{2025y/2/30},
+                                        false, 200.24}, std::out_of_range);
 }
 
 // ====================================
 // SETTER EDGE CASES
 // ====================================
 
-// empty parameters
-TEST_F(AssignmentTest, TitleSetterEmpty) {
-    // throw invalid argument since no argument given
-    ASSERT_THROW(assignment1.setTitle(), std::invalid_argument);
-}
-
-TEST_F(AssignmentTest, DescriptionSetterEmpty) {
-    // throw invalid argument since no argument given
-    ASSERT_THROW(assignment1.setDescription(), std::invalid_argument);
-}
-
-TEST_F(AssignmentTest, DueDateSetterEmpty) {
-    // throw invalid argument since no argument given
-    ASSERT_THROW(assignment1.setDueDate(), std::invalid_argument);
-}
-
-TEST_F(AssignmentTest, CompletedSetterEmpty) {
-    // throw invalid argument since no argument given
-    ASSERT_THROW(assignment1.setCompleted(), std::invalid_argument);
-}
-
-TEST_F(AssignmentTest, GradeSetterEmpty) {
-    // throw invalid argument since no argument given
-    ASSERT_THROW(assignment1.setGrade(), std::invalid_argument);
-}
-
-// invalid parameters
 TEST_F(AssignmentTest, TitleSetterInvalid) {
-    // throw invalid argument since invalid type
-    ASSERT_THROW(assignment1.setTitle(5.01), std::invalid_argument);
+    // throw invalid argument since title is empty
+    ASSERT_THROW(assignment1.setTitle(""), std::invalid_argument);
     ASSERT_EQ(assignment1.getTitle(), "Homework 3");
-}
-
-TEST_F(AssignmentTest, DescriptionSetterInvalid) {
-    // throw invalid argument since invalid type
-    ASSERT_THROW(assignment1.setDescription(5.01), std::invalid_argument);
-    ASSERT_EQ(assignment1.getDescription(), "Focus on variables and strings.");
 }
 
 TEST_F(AssignmentTest, DueDateSetterInvalid) {
@@ -293,15 +240,15 @@ TEST_F(AssignmentTest, DueDateSetterInvalid) {
     ASSERT_EQ(assignment1.getDueDate(), std::chrono::sys_days{2025y/11/20});
 }
 
-TEST_F(AssignmentTest, CompletedSetterInvalid) {
-    // throw invalid argument since invalid type
-    ASSERT_THROW(assignment1.setCompleted("no"), std::invalid_argument);
-    ASSERT_EQ(assignment1.getCompleted(), false);
+TEST_F(AssignmentTest, GradeSetterInvalidLow) {
+    // throw out of range since input is not in range 0 to 100
+    ASSERT_THROW(assignment1.setGrade(-20.24), std::out_of_range);
+    ASSERT_EQ(assignment1.getGrade(), 95.18);
 }
 
-TEST_F(AssignmentTest, GradeSetterInvalid) {
-    // throw invalid argument since input is not valid float
-    ASSERT_THROW(assignment1.setGrade(90.-50), std::invalid_argument);
+TEST_F(AssignmentTest, GradeSetterInvalidHigh) {
+    // throw out of range since input is not in range 0 to 100
+    ASSERT_THROW(assignment1.setGrade(200.24), std::out_of_range);
     ASSERT_EQ(assignment1.getGrade(), 95.18);
 }
 
@@ -311,9 +258,8 @@ TEST_F(AssignmentTest, GradeSetterInvalid) {
 
 // invalid initializations without description defined
 TEST_F(AssignmentTest, OneParamInitializationInvalid) {
-    Assignment assignment2{""};
     // throw invalid argument since input is empty
-    ASSERT_THROW(assignment2.getTitle(), std::invalid_argument);
+    ASSERT_THROW(Assignment{""}, std::invalid_argument);
 }
 
 TEST_F(AssignmentTest, TwoParamInitializationInvalid) {
@@ -323,21 +269,20 @@ TEST_F(AssignmentTest, TwoParamInitializationInvalid) {
     ASSERT_THROW(assignment2.getDueDate(), std::invalid_argument);
 }
 
-TEST_F(AssignmentTest, ThreeParamInitializationInvalid) {
-    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, "no"};
-    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
-    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
-    // throw invalid argument since invalid type
-    ASSERT_THROW(assignment2.getCompleted(), std::invalid_argument);
-}
-
-TEST_F(AssignmentTest, FourParamInitializationInvalid) {
-    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, 90.-50};
+TEST_F(AssignmentTest, FourParamInitializationInvalidLow) {
+    // throw out of range since input is not in range 0 to 100
+    ASSERT_THROW(Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, -20.24}, std::out_of_range);
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
     ASSERT_EQ(assignment2.getCompleted(), false);
-    // throw invalid argument since input is not valid float
-    ASSERT_THROW(assignment2.getGrade(), std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FourParamInitializationInvalidHigh) {
+    // throw out of range since input is not in range 0 to 100
+    ASSERT_THROW(Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, 200.24}, std::out_of_range);
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
+    ASSERT_EQ(assignment2.getCompleted(), false);
 }
 
 // invalid initializations with description defined
@@ -349,25 +294,24 @@ TEST_F(AssignmentTest, ThreeParamDescInitializationInvalid) {
     ASSERT_THROW(assignment2.getDueDate(), std::invalid_argument);
 }
 
-TEST_F(AssignmentTest, FourParamDescInitializationInvalid) {
-    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
-                                        "no"};
-    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
-    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
-    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
-    // throw invalid argument since invalid type
-    ASSERT_THROW(assignment2.getCompleted(), std::invalid_argument);
-}
-
-TEST_F(AssignmentTest, FiveParamDescInitializationInvalid) {
-    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
-                                        false, 90.-50};
+TEST_F(AssignmentTest, FiveParamDescInitializationInvalidLow) {
+    // throw out of range since input is not in range 0 to 100
+    ASSERT_THROW(Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
+                                        false, -20.24}, std::out_of_range);
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
     ASSERT_EQ(assignment2.getCompleted(), false);
-    // throw invalid type since input is not valid float
-    ASSERT_THROW(assignment2.getGrade(), std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FiveParamDescInitializationInvalidHigh) {
+    // throw out of range since input is not in range 0 to 100
+    ASSERT_THROW(Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
+                                        false, 200.24}, std::out_of_range);
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
+    ASSERT_EQ(assignment2.getCompleted(), false);
 }
 
 // ====================================
