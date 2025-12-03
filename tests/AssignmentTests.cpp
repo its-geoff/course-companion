@@ -288,7 +288,7 @@ TEST_F(AssignmentTest, DescriptionSetterInvalid) {
 }
 
 TEST_F(AssignmentTest, DueDateSetterInvalid) {
-    // throw invalid argument since due date does not exist
+    // throw invalid argument since date does not exist
     ASSERT_THROW(assignment1.setDueDate(std::chrono::sys_days{2025y/2/30}), std::invalid_argument);
     ASSERT_EQ(assignment1.getDueDate(), std::chrono::sys_days{2025y/11/20});
 }
@@ -308,6 +308,67 @@ TEST_F(AssignmentTest, GradeSetterInvalid) {
 // ====================================
 // INITIALIZATION EDGE CASES
 // ====================================
+
+// invalid initializations without description defined
+TEST_F(AssignmentTest, OneParamInitializationInvalid) {
+    Assignment assignment2{""};
+    // throw invalid argument since input is empty
+    ASSERT_THROW(assignment2.getTitle(), std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, TwoParamInitializationInvalid) {
+    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/2/30}};
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    // throw invalid argument since date does not exist 
+    ASSERT_THROW(assignment2.getDueDate(), std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, ThreeParamInitializationInvalid) {
+    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, "no"};
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
+    // throw invalid argument since invalid type
+    ASSERT_THROW(assignment2.getCompleted(), std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FourParamInitializationInvalid) {
+    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, 90.-50};
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
+    ASSERT_EQ(assignment2.getCompleted(), false);
+    // throw invalid argument since input is not valid float
+    ASSERT_THROW(assignment2.getGrade(), std::invalid_argument);
+}
+
+// invalid initializations with description defined
+TEST_F(AssignmentTest, ThreeParamDescInitializationInvalid) {
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/2/30}};
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
+    // throw invalid argument since date does not exist
+    ASSERT_THROW(assignment2.getDueDate(), std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FourParamDescInitializationInvalid) {
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
+                                        "no"};
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
+    // throw invalid argument since invalid type
+    ASSERT_THROW(assignment2.getCompleted(), std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FiveParamDescInitializationInvalid) {
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
+                                        false, 90.-50};
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
+    ASSERT_EQ(assignment2.getCompleted(), false);
+    // throw invalid type since input is not valid float
+    ASSERT_THROW(assignment2.getGrade(), std::invalid_argument);
+}
 
 // ====================================
 // FUNCTION EDGE CASES
