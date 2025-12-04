@@ -206,7 +206,7 @@ TEST_F(AssignmentTest, GradeGetterEmpty) {
 // invalid parameters
 TEST_F(AssignmentTest, DueDateGetterInvalid) {
     // throw invalid argument since date does not exist
-    ASSERT_THROW((Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/2/30}, false, 90.50}), std::invalid_argument;
+    ASSERT_THROW((Assignment{"Homework 1", std::chrono::sys_days{2025y/2/30}, false, 90.50}), std::invalid_argument);
 }
 
 TEST_F(AssignmentTest, GradeGetterInvalidLow) {
@@ -258,54 +258,34 @@ TEST_F(AssignmentTest, OneParamInitializationInvalid) {
 }
 
 TEST_F(AssignmentTest, TwoParamInitializationInvalid) {
-    Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/2/30}};
-    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     // throw invalid argument since date does not exist 
-    ASSERT_THROW(assignment2.getDueDate(), std::invalid_argument);
+    ASSERT_THROW((Assignment{"Homework1", std::chrono::sys_days{2025y/2/30}}), std::invalid_argument);
 }
 
 TEST_F(AssignmentTest, FourParamInitializationInvalidLow) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, -20.24}), std::out_of_range);
-    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
-    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
-    ASSERT_EQ(assignment2.getCompleted(), false);
+    ASSERT_THROW((Assignment{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, -20.24}), std::out_of_range);
 }
 
 TEST_F(AssignmentTest, FourParamInitializationInvalidHigh) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, 200.24}), std::out_of_range);
-    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
-    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
-    ASSERT_EQ(assignment2.getCompleted(), false);
+    ASSERT_THROW((Assignment{"Homework 1", std::chrono::sys_days{2025y/10/31}, false, 200.24}), std::out_of_range);
 }
 
 // invalid initializations with description defined
 TEST_F(AssignmentTest, ThreeParamDescInitializationInvalid) {
     // throw invalid argument since date does not exist
-    ASSERT_THROW((Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/2/30}}), std::invalid_argument);
-    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
-    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
+    ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/2/30}}), std::invalid_argument);
 }
 
 TEST_F(AssignmentTest, FiveParamDescInitializationInvalidLow) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
-                                        false, -20.24}), std::out_of_range);
-    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
-    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
-    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
-    ASSERT_EQ(assignment2.getCompleted(), false);
+    ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31}, false, -20.24}), std::out_of_range);
 }
 
 TEST_F(AssignmentTest, FiveParamDescInitializationInvalidHigh) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31},
-                                        false, 200.24}), std::out_of_range);
-    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
-    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
-    ASSERT_EQ(assignment2.getDueDate(), std::chrono::sys_days{2025y/10/31});
-    ASSERT_EQ(assignment2.getCompleted(), false);
+    ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::sys_days{2025y/10/31}, false, 200.24}), std::out_of_range);
 }
 
 // ====================================
@@ -316,8 +296,7 @@ TEST_F(AssignmentTest, FiveParamDescInitializationInvalidHigh) {
 // CLASS USE CASES
 // ====================================
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
