@@ -200,7 +200,7 @@ TEST_F(AssignmentTest, CompletedGetterEmpty) {
 
 TEST_F(AssignmentTest, GradeGetterEmpty) {
     Assignment assignment2{"Homework 1", std::chrono::sys_days{2025y/2/30}, false};
-    ASSERT_EQ(assignment2.getGrade(), 0.0);
+    ASSERT_NEAR(assignment2.getGrade(), 0.0, 1e-5);
 }
 
 // invalid parameters
@@ -238,13 +238,13 @@ TEST_F(AssignmentTest, DueDateSetterInvalid) {
 TEST_F(AssignmentTest, GradeSetterInvalidLow) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW(assignment1.setGrade(-20.24), std::out_of_range);
-    ASSERT_EQ(assignment1.getGrade(), 95.18);
+    ASSERT_NEAR(assignment1.getGrade(), 95.18, 1e-5);
 }
 
 TEST_F(AssignmentTest, GradeSetterInvalidHigh) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW(assignment1.setGrade(200.24), std::out_of_range);
-    ASSERT_EQ(assignment1.getGrade(), 95.18);
+    ASSERT_NEAR(assignment1.getGrade(), 95.18, 1e-5);
 }
 
 // ====================================
@@ -259,7 +259,7 @@ TEST_F(AssignmentTest, OneParamInitializationInvalid) {
 
 TEST_F(AssignmentTest, TwoParamInitializationInvalid) {
     // throw invalid argument since date does not exist 
-    ASSERT_THROW((Assignment{"Homework1", std::chrono::sys_days{2025y/2/30}}), std::invalid_argument);
+    ASSERT_THROW((Assignment{"Homework 1", std::chrono::sys_days{2025y/2/30}}), std::invalid_argument);
 }
 
 TEST_F(AssignmentTest, FourParamInitializationInvalidLow) {

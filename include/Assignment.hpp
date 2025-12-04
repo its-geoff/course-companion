@@ -55,8 +55,9 @@ class Assignment {
         void setGrade(float newGrade);
         // void setCourse(Course newCourse);  -> no Course implementation yet
 
-        void validateGrade(float grade);
         void validateTitle(std::string_view title);
+        void validateGrade(float grade);
+        void validateDueDate(std::chrono::year_month_day dueDate);
         std::string completedString(bool completed);
         void printAssignmentInfo();
 };
