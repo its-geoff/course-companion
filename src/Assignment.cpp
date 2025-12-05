@@ -10,6 +10,8 @@
 
  #include <iostream>        // for cout
  #include <stdexcept>       // for exceptions
+ #include <algorithm>       // for all_of
+ #include <cctype>          // for isspace
 
 Assignment::Assignment(std::string title) {
     validateTitle(title);
@@ -154,8 +156,13 @@ void Assignment::setGrade(float newGrade) {
 //     course_ = newCourse;
 // }  -> no Course implementation yet
 
+bool Assignment::isOnlyWhitespace(const std::string_view str) {
+    return std::all_of(str.begin(), str.end(), [](unsigned char c)
+                       { return std::isspace(c); });
+}
+
 void Assignment::validateTitle(std::string_view title) {
-    if (title == "") {
+    if (isOnlyWhitespace(title)) {
         throw std::invalid_argument("Title must be non-empty.");
     }
 }
@@ -167,7 +174,7 @@ void Assignment::validateDueDate(std::chrono::year_month_day dueDate) {
 }
 
 void Assignment::validateGrade(float grade) {
-    if (grade < 0.0 || grade > 100.0) {
+    if (grade < 0.0f || grade > 100.0f) {
         throw std::out_of_range("Grade must be from 0 to 100.");
     }
 }

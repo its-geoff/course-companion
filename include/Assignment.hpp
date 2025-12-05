@@ -27,7 +27,7 @@ class Assignment {
         std::string description_{};
         std::chrono::year_month_day dueDate_{};
         bool completed_{false};
-        float grade_{0.0};
+        float grade_{0.0f};
         // Course course_{};  -> no Course implementation yet
 
     public:
@@ -55,6 +55,7 @@ class Assignment {
         void setGrade(float newGrade);
         // void setCourse(Course newCourse);  -> no Course implementation yet
 
+        bool isOnlyWhitespace(const std::string_view str);
         void validateTitle(std::string_view title);
         void validateGrade(float grade);
         void validateDueDate(std::chrono::year_month_day dueDate);

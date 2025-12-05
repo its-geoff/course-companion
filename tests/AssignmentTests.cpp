@@ -12,7 +12,7 @@ class AssignmentTest : public testing::Test {
             "Focus on variables and strings.", 
             std::chrono::year_month_day{2025y/11/20},
             true,
-            95.18
+            95.18f
         };
 };
 
@@ -53,7 +53,7 @@ TEST_F(AssignmentTest, CompletedGetter) {
 }
 
 TEST_F(AssignmentTest, GradeGetter) {
-    ASSERT_NEAR(assignment1.getGrade(), 95.18, 1e-5);
+    ASSERT_NEAR(assignment1.getGrade(), 95.18f, 1e-5);
 }
 
 // ====================================
@@ -81,8 +81,8 @@ TEST_F(AssignmentTest, CompletedSetter) {
 }
 
 TEST_F(AssignmentTest, GradeSetter) {
-    assignment1.setGrade(96.20);
-    ASSERT_NEAR(assignment1.getGrade(), 96.20, 1e-5);
+    assignment1.setGrade(96.20f);
+    ASSERT_NEAR(assignment1.getGrade(), 96.20f, 1e-5);
 }
 
 // ====================================
@@ -109,11 +109,11 @@ TEST_F(AssignmentTest, ThreeParamInitialization) {
 }
 
 TEST_F(AssignmentTest, FourParamInitialization) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
     ASSERT_EQ(assignment2.getCompleted(), false);
-    ASSERT_EQ(assignment2.getGrade(), 90.50);
+    ASSERT_EQ(assignment2.getGrade(), 90.50f);
 }
 
 // initializations with description defined
@@ -131,8 +131,7 @@ TEST_F(AssignmentTest, ThreeParamDescInitialization) {
 }
 
 TEST_F(AssignmentTest, FourParamDescInitialization) {
-    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31},
-                                        false};
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
@@ -140,13 +139,12 @@ TEST_F(AssignmentTest, FourParamDescInitialization) {
 }
 
 TEST_F(AssignmentTest, FiveParamDescInitialization) {
-    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31},
-                                        false, 90.50};
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
     ASSERT_EQ(assignment2.getCompleted(), false);
-    ASSERT_EQ(assignment2.getGrade(), 90.50);
+    ASSERT_EQ(assignment2.getGrade(), 90.50f);
 }
 
 // ====================================
@@ -163,7 +161,7 @@ TEST_F(AssignmentTest, PrintAssignmentInfo) {
 }
 
 TEST_F(AssignmentTest, CompletedString) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     ASSERT_EQ(assignment1.completedString(assignment1.getCompleted()), "Yes");
     ASSERT_EQ(assignment2.completedString(assignment2.getCompleted()), "No");
 }
@@ -174,8 +172,7 @@ TEST_F(AssignmentTest, CompletedString) {
 
 // empty parameters
 TEST_F(AssignmentTest, DescriptionGetterEmpty) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31},
-                                        false, 90.50};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     ASSERT_EQ(assignment2.getDescription(), "");
 }
 
@@ -193,13 +190,13 @@ TEST_F(AssignmentTest, CompletedGetterEmpty) {
 
 TEST_F(AssignmentTest, GradeGetterEmpty) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false};
-    ASSERT_NEAR(assignment2.getGrade(), 0.0, 1e-5);
+    ASSERT_NEAR(assignment2.getGrade(), 0.0f, 1e-5);
 }
 
 // invalid parameters
 TEST_F(AssignmentTest, DueDateGetterInvalid) {
     // throw invalid argument since date does not exist
-    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/2/30}, false, 90.50}), std::invalid_argument);
+    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/2/30}, false, 90.50f}), std::invalid_argument);
 }
 
 TEST_F(AssignmentTest, GradeGetterInvalidLow) {
@@ -222,6 +219,12 @@ TEST_F(AssignmentTest, TitleSetterInvalid) {
     ASSERT_EQ(assignment1.getTitle(), "Homework 3");
 }
 
+TEST_F(AssignmentTest, TitleSetterWhitespaceInvalid) {
+    // throw invalid argument since title is whitespace
+    ASSERT_THROW(assignment1.setTitle(" "), std::invalid_argument);
+    ASSERT_EQ(assignment1.getTitle(), "Homework 3");
+}
+
 TEST_F(AssignmentTest, DueDateSetterInvalid) {
     // throw invalid argument since date does not exist
     ASSERT_THROW(assignment1.setDueDate(std::chrono::year_month_day{2025y/2/30}), std::invalid_argument);
@@ -230,14 +233,24 @@ TEST_F(AssignmentTest, DueDateSetterInvalid) {
 
 TEST_F(AssignmentTest, GradeSetterInvalidLow) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW(assignment1.setGrade(-20.24), std::out_of_range);
-    ASSERT_NEAR(assignment1.getGrade(), 95.18, 1e-5);
+    ASSERT_THROW(assignment1.setGrade(-20.24f), std::out_of_range);
+    ASSERT_NEAR(assignment1.getGrade(), 95.18f, 1e-5);
 }
 
 TEST_F(AssignmentTest, GradeSetterInvalidHigh) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW(assignment1.setGrade(200.24), std::out_of_range);
-    ASSERT_NEAR(assignment1.getGrade(), 95.18, 1e-5);
+    ASSERT_THROW(assignment1.setGrade(200.24f), std::out_of_range);
+    ASSERT_NEAR(assignment1.getGrade(), 95.18f, 1e-5);
+}
+
+TEST_F(AssignmentTest, GradeSetterBoundaryLow) {
+    assignment1.setGrade(0.0f);
+    ASSERT_NEAR(assignment1.getGrade(), 0.0f, 1e-5);
+}
+
+TEST_F(AssignmentTest, GradeSetterBoundaryHigh) {
+    assignment1.setGrade(100.0);
+    ASSERT_NEAR(assignment1.getGrade(), 100.0f, 1e-5);
 }
 
 // ====================================
@@ -257,12 +270,12 @@ TEST_F(AssignmentTest, TwoParamInitializationInvalid) {
 
 TEST_F(AssignmentTest, FourParamInitializationInvalidLow) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, -20.24}), std::out_of_range);
+    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, -20.24f}), std::out_of_range);
 }
 
 TEST_F(AssignmentTest, FourParamInitializationInvalidHigh) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 200.24}), std::out_of_range);
+    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 200.24f}), std::out_of_range);
 }
 
 // invalid initializations with description defined
@@ -278,22 +291,60 @@ TEST_F(AssignmentTest, ThreeParamDescInitializationInvalid) {
 
 TEST_F(AssignmentTest, FiveParamDescInitializationInvalidLow) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, -20.24}), std::out_of_range);
+    ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, -20.24f}), std::out_of_range);
 }
 
 TEST_F(AssignmentTest, FiveParamDescInitializationInvalidHigh) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, 200.24}), std::out_of_range);
+    ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, 200.24f}), std::out_of_range);
 }
 
 // ====================================
 // FUNCTION EDGE CASES
 // ====================================
 
+TEST_F(AssignmentTest, PrintAssignmentInfoPartial) {
+    std::stringstream ss;
+    CoutRedirect redirect(ss);
+
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}};
+
+    assignment2.printAssignmentInfo();
+    ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\n"
+                        "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
+}
+
+TEST_F(AssignmentTest, PrintAssignmentInfoDescPartial) {
+    std::stringstream ss;
+    CoutRedirect redirect(ss);
+
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}};
+
+    assignment2.printAssignmentInfo();
+    ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
+                        "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
+}
+
+TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
+    std::stringstream ss;
+    CoutRedirect redirect(ss);
+
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, true, 75};
+
+    assignment2.printAssignmentInfo();
+    ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
+                        "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
+}
+
 // ====================================
 // CLASS USE CASES
 // ====================================
 
+
+
+// ====================================
+// MAIN FUNCTION
+// ====================================
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
