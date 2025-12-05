@@ -340,7 +340,11 @@ TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
 // CLASS USE CASES
 // ====================================
 
-
+// add assignment (partial info)
+// print assignment info for both 1 and 2
+// change some assignment info for 1 (setters)
+// retrieve some old and some new info (getters)
+// remove assignment
 
 // ====================================
 // MAIN FUNCTION

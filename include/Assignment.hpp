@@ -61,6 +61,9 @@ class Assignment {
         void validateDueDate(std::chrono::year_month_day dueDate);
         std::string completedString(bool completed);
         void printAssignmentInfo();
+        // next, implement addAssignment and removeAssignment
+        void addAssignment();
+        void removeAssignment();
 };
 
 #endif
