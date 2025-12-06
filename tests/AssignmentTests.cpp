@@ -16,22 +16,6 @@ class AssignmentTest : public testing::Test {
         };
 };
 
-// test class to redirect output
-class CoutRedirect {
-    public:
-        CoutRedirect(std::ostream& newStream)
-            : oldBuf(std::cout.rdbuf(newStream.rdbuf()))
-        {}
-
-        ~CoutRedirect() {
-            std::cout.rdbuf(oldBuf);
-        }
-
-    private:
-        std::streambuf* oldBuf;
-};
-
-
 // ====================================
 // GETTER SMOKE TESTS
 // ====================================
@@ -153,9 +137,8 @@ TEST_F(AssignmentTest, FiveParamDescInitialization) {
 
 TEST_F(AssignmentTest, PrintAssignmentInfo) {
     std::stringstream ss;
-    CoutRedirect redirect(ss);
 
-    assignment1.printAssignmentInfo();
+    assignment1.printAssignmentInfo(ss);
     ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 3\nDescription: Focus on variables and strings.\n"
                         "Due Date: 2025-11-20\nCompleted? Yes\nGrade: 95.18\n===========================================================\n");
 }
@@ -164,6 +147,16 @@ TEST_F(AssignmentTest, CompletedString) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     ASSERT_EQ(assignment1.completedString(assignment1.getCompleted()), "Yes");
     ASSERT_EQ(assignment2.completedString(assignment2.getCompleted()), "No");
+}
+
+TEST_F(AssignmentTest, ReadOptionalString) {
+    std::stringstream ss_in;
+    std::stringstream ss_out;
+    std::string input = "Homework 2";
+    ss_in >> input;
+
+    assignment1.readOptionalString(ss_in);
+    ASSERT_EQ(ss_out.str(), "Homework 2");
 }
 
 // ====================================
@@ -305,33 +298,27 @@ TEST_F(AssignmentTest, FiveParamDescInitializationInvalidHigh) {
 
 TEST_F(AssignmentTest, PrintAssignmentInfoPartial) {
     std::stringstream ss;
-    CoutRedirect redirect(ss);
-
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}};
 
-    assignment2.printAssignmentInfo();
+    assignment2.printAssignmentInfo(ss);
     ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\n"
                         "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
 }
 
 TEST_F(AssignmentTest, PrintAssignmentInfoDescPartial) {
     std::stringstream ss;
-    CoutRedirect redirect(ss);
-
     Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}};
 
-    assignment2.printAssignmentInfo();
+    assignment2.printAssignmentInfo(ss);
     ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
                         "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
 }
 
 TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
     std::stringstream ss;
-    CoutRedirect redirect(ss);
-
     Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, true, 75};
 
-    assignment2.printAssignmentInfo();
+    assignment2.printAssignmentInfo(ss);
     ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
                         "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
 }

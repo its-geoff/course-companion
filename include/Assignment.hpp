@@ -12,6 +12,7 @@
 #include <string>       // for string variables
 #include <chrono>       // for date and time-related variables
 #include <optional>     // for optional variables
+#include <iostream>     // for i/o streams
 // #include "Course.hpp"   // for connection to relevant Course  -> no Course implementation yet
 
 /**
@@ -61,13 +62,13 @@ class Assignment {
         void validateGrade(float grade);
         void validateDueDate(std::chrono::year_month_day dueDate);
         std::string completedString(bool completed);
-        void printAssignmentInfo();
-        std::optional<std::string> readOptionalString(const std::string_view prompt);
-        std::optional<std::chrono::year_month_day> readOptionalDate(const std::string_view prompt);
-        std::optional<bool> readOptionalBool(const std::string_view prompt);
-        std::optional<float> readOptionalFloat(const std::string_view prompt);
+        void printAssignmentInfo(std::ostream &os);
+        std::optional<std::string> readOptionalString(std::istream &is);
+        std::optional<std::chrono::year_month_day> readOptionalDate();
+        std::optional<bool> readOptionalBool();
+        std::optional<float> readOptionalFloat();
         Assignment chooseConstructor(std::string title, std::optional<std::string> description, std::optional<std::chrono::year_month_day> date, 
-                                     std::optional<bool> completed, std::optional<float> grade);
+            std::optional<bool> completed, std::optional<float> grade);
         // next, implement addAssignment and removeAssignment
         void addAssignment();
         void removeAssignment();

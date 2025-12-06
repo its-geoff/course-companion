@@ -190,24 +190,23 @@ std::string Assignment::completedString(bool completed) {
 }
 
 // prints information held by an Assignment object
-void Assignment::printAssignmentInfo() {
-    std::cout << "===========================================================" << std::endl;
-    std::cout << "Assignment Title: " << title_ << std::endl;
+void Assignment::printAssignmentInfo(std::ostream &os) {
+    os << "===========================================================" << std::endl;
+    os << "Assignment Title: " << title_ << std::endl;
     if (!description_.empty()) {
-        std::cout << "Description: " << description_ << std::endl;
+        os << "Description: " << description_ << std::endl;
     };
-    // std::cout << "Course: " << course_.getTitle() << std::endl;  -> no Course implementation yet
-    std::cout << "Due Date: " << dueDate_ << std::endl;
-    std::cout << "Completed? " << completedString(completed_) << std::endl;
-    std::cout << "Grade: " << grade_<< std::endl;
-    std::cout << "===========================================================" << std::endl;
+    // os << "Course: " << course_.getTitle() << std::endl;  -> no Course implementation yet
+    os << "Due Date: " << dueDate_ << std::endl;
+    os << "Completed? " << completedString(completed_) << std::endl;
+    os << "Grade: " << grade_<< std::endl;
+    os << "===========================================================" << std::endl;
 }
 
 // reads optional string from user input
-std::optional<std::string> Assignment::readOptionalString(const std::string_view prompt) {
-    std::cout << prompt;
+std::optional<std::string> Assignment::readOptionalString(std::istream &is) {
     std::string response;
-    std::getline(std::cin, response);
+    std::getline(is, response);
 
     if (response.empty())
         return std::nullopt;
@@ -216,18 +215,18 @@ std::optional<std::string> Assignment::readOptionalString(const std::string_view
 }
 
 // reads optional date from user input and converts to the year_month_day format
-std::optional<std::chrono::year_month_day> Assignment::readOptionalDate(const std::string_view prompt) {
-    std::cout << prompt;
+std::optional<std::chrono::year_month_day> Assignment::readOptionalDate() {
     std::string response;
     std::getline(std::cin, response);
     if (response.empty())
         return std::nullopt;
 
-    int y, m, d;
+    int y;
+    unsigned int m, d;
     if (sscanf(response.c_str(), "%d-%d-%d", &y, &m, &d) != 3)
         return std::nullopt;
 
-    year_month_day output{year{y}, month{m}, day{d}};
+    std::chrono::year_month_day output{std::chrono::year{y}, std::chrono::month{m}, std::chrono::day{d}};
     if (!output.ok())
         return std::nullopt;
 
@@ -235,8 +234,7 @@ std::optional<std::chrono::year_month_day> Assignment::readOptionalDate(const st
 }
 
 // reads optional bool from user input and converts to the bool format
-std::optional<bool> Assignment::readOptionalBool(const std::string_view prompt) {
-    std::cout << prompt;
+std::optional<bool> Assignment::readOptionalBool() {
     std::string response;
     std::getline(std::cin, response);
     if (response.empty())
@@ -251,8 +249,7 @@ std::optional<bool> Assignment::readOptionalBool(const std::string_view prompt) 
 }
 
 // reads optional float from user input and converts to the float format
-std::optional<float> Assignment::readOptionalFloat(const std::string_view prompt) {
-    std::cout << prompt;
+std::optional<float> Assignment::readOptionalFloat() {
     std::string response;
     std::getline(std::cin, response);
     if (response.empty())
