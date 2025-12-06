@@ -214,9 +214,9 @@ std::optional<std::string> Assignment::readOptionalString(std::istream &is) {
 }
 
 // reads optional date from user input and converts to the year_month_day format
-std::optional<std::chrono::year_month_day> Assignment::readOptionalDate() {
+std::optional<std::chrono::year_month_day> Assignment::readOptionalDate(std::istream &is) {
     std::string response;
-    std::getline(std::cin, response);
+    std::getline(is, response);
     if (response.empty())
         return std::nullopt;
 
@@ -233,24 +233,24 @@ std::optional<std::chrono::year_month_day> Assignment::readOptionalDate() {
 }
 
 // reads optional bool from user input and converts to the bool format
-std::optional<bool> Assignment::readOptionalBool() {
+std::optional<bool> Assignment::readOptionalBool(std::istream &is) {
     std::string response;
-    std::getline(std::cin, response);
+    std::getline(is, response);
     if (response.empty())
         return std::nullopt;
 
-    if (response == "yes" || response == "y" || response == "1")
+    if (response == "yes" || response == "y" || response == "true" || response == "1")
         return true;
-    else if (response == "no" || response == "n" || response == "0")
+    else if (response == "no" || response == "n" || response == "false" || response == "0")
         return false;
 
     return std::nullopt;
 }
 
 // reads optional float from user input and converts to the float format
-std::optional<float> Assignment::readOptionalFloat() {
+std::optional<float> Assignment::readOptionalFloat(std::istream &is) {
     std::string response;
-    std::getline(std::cin, response);
+    std::getline(is, response);
     if (response.empty())
         return std::nullopt;
 

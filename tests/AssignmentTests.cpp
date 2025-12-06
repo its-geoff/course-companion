@@ -150,9 +150,23 @@ TEST_F(AssignmentTest, CompletedString) {
 }
 
 TEST_F(AssignmentTest, ReadOptionalString) {
-    std::stringstream ss_in("Homework 2");
+    std::stringstream ss("Homework 2");
+    ASSERT_EQ(assignment1.readOptionalString(ss).value(), "Homework 2");
+}
 
-    ASSERT_EQ(assignment1.readOptionalString(ss_in).value(), "Homework 2");
+TEST_F(AssignmentTest, ReadOptionalDate) {
+    std::stringstream ss("2025-10-31");
+    ASSERT_EQ(assignment1.readOptionalDate(ss).value(), std::chrono::year_month_day{2025y/10/31});
+}
+
+TEST_F(AssignmentTest, ReadOptionalBool) {
+    std::stringstream ss("yes");
+    ASSERT_EQ(assignment1.readOptionalBool(ss).value(), true);
+}
+
+TEST_F(AssignmentTest, ReadOptionalFloat) {
+    std::stringstream ss("95.18");
+    ASSERT_NEAR(assignment1.readOptionalFloat(ss).value(), 95.18, 1e-5);
 }
 
 // ====================================
@@ -318,6 +332,8 @@ TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
     ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
                         "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
 }
+
+
 
 // ====================================
 // CLASS USE CASES
