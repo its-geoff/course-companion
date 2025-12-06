@@ -37,7 +37,7 @@ TEST_F(AssignmentTest, CompletedGetter) {
 }
 
 TEST_F(AssignmentTest, GradeGetter) {
-    ASSERT_NEAR(assignment1.getGrade(), 95.18f, 1e-5);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
 }
 
 // ====================================
@@ -66,7 +66,7 @@ TEST_F(AssignmentTest, CompletedSetter) {
 
 TEST_F(AssignmentTest, GradeSetter) {
     assignment1.setGrade(96.20f);
-    ASSERT_NEAR(assignment1.getGrade(), 96.20f, 1e-5);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 96.20f);
 }
 
 // ====================================
@@ -166,7 +166,7 @@ TEST_F(AssignmentTest, ReadOptionalBool) {
 
 TEST_F(AssignmentTest, ReadOptionalFloat) {
     std::stringstream ss("95.18");
-    ASSERT_NEAR(assignment1.readOptionalFloat(ss).value(), 95.18, 1e-5);
+    ASSERT_FLOAT_EQ(assignment1.readOptionalFloat(ss).value(), 95.18);
 }
 
 // ====================================
@@ -193,7 +193,7 @@ TEST_F(AssignmentTest, CompletedGetterEmpty) {
 
 TEST_F(AssignmentTest, GradeGetterEmpty) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false};
-    ASSERT_NEAR(assignment2.getGrade(), 0.0f, 1e-5);
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
 }
 
 // invalid parameters
@@ -237,23 +237,23 @@ TEST_F(AssignmentTest, DueDateSetterInvalid) {
 TEST_F(AssignmentTest, GradeSetterInvalidLow) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW(assignment1.setGrade(-20.24f), std::out_of_range);
-    ASSERT_NEAR(assignment1.getGrade(), 95.18f, 1e-5);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
 }
 
 TEST_F(AssignmentTest, GradeSetterInvalidHigh) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW(assignment1.setGrade(200.24f), std::out_of_range);
-    ASSERT_NEAR(assignment1.getGrade(), 95.18f, 1e-5);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
 }
 
 TEST_F(AssignmentTest, GradeSetterBoundaryLow) {
     assignment1.setGrade(0.0f);
-    ASSERT_NEAR(assignment1.getGrade(), 0.0f, 1e-5);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 0.0f);
 }
 
 TEST_F(AssignmentTest, GradeSetterBoundaryHigh) {
     assignment1.setGrade(100.0);
-    ASSERT_NEAR(assignment1.getGrade(), 100.0f, 1e-5);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 100.0f);
 }
 
 // ====================================
@@ -333,7 +333,62 @@ TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
                         "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
 }
 
+TEST_F(AssignmentTest, ReadOptionalStringEmpty) {
+    std::stringstream ss1("");
+    std::stringstream ss2("  ");
 
+    ASSERT_EQ(assignment1.readOptionalString(ss1), std::nullopt);
+    ASSERT_EQ(assignment1.readOptionalString(ss2), std::nullopt);
+}
+
+TEST_F(AssignmentTest, ReadOptionalDateEmpty) {
+    std::stringstream ss1("");
+    std::stringstream ss2("  ");
+
+    ASSERT_EQ(assignment1.readOptionalDate(ss1), std::nullopt);
+    ASSERT_EQ(assignment1.readOptionalDate(ss2), std::nullopt);
+}
+
+TEST_F(AssignmentTest, ReadOptionalBoolEmpty) {
+    std::stringstream ss1("");
+    std::stringstream ss2("  ");
+
+    ASSERT_EQ(assignment1.readOptionalBool(ss1), std::nullopt);
+    ASSERT_EQ(assignment1.readOptionalBool(ss2), std::nullopt);
+}
+
+TEST_F(AssignmentTest, ReadOptionalFloatEmpty) {
+    std::stringstream ss1("");
+    std::stringstream ss2("  ");
+
+    ASSERT_EQ(assignment1.readOptionalFloat(ss1), std::nullopt);
+    ASSERT_EQ(assignment1.readOptionalFloat(ss2), std::nullopt);
+}
+
+TEST_F(AssignmentTest, ReadOptionalBoolAlternatives) {
+    std::stringstream ss_y(
+        "yes\n"
+        "y\n"
+        "true\n"
+        "1\n"
+    );
+    std::stringstream ss_n(
+        "no\n"
+        "n\n"
+        "false\n"
+        "0\n"
+    );
+
+    // checks each line separately and asserts true or false, based on conversion
+    ASSERT_EQ(assignment1.readOptionalBool(ss_y).value(), true);
+    ASSERT_EQ(assignment1.readOptionalBool(ss_y).value(), true);
+    ASSERT_EQ(assignment1.readOptionalBool(ss_y).value(), true);
+    ASSERT_EQ(assignment1.readOptionalBool(ss_y).value(), true);
+    ASSERT_EQ(assignment1.readOptionalBool(ss_n).value(), false);
+    ASSERT_EQ(assignment1.readOptionalBool(ss_n).value(), false);
+    ASSERT_EQ(assignment1.readOptionalBool(ss_n).value(), false);
+    ASSERT_EQ(assignment1.readOptionalBool(ss_n).value(), false);
+}
 
 // ====================================
 // CLASS USE CASES

@@ -207,7 +207,7 @@ std::optional<std::string> Assignment::readOptionalString(std::istream &is) {
     std::string response;
     std::getline(is, response);
 
-    if (response.empty())
+    if (isOnlyWhitespace(response))
         return std::nullopt;
 
     return response;
@@ -217,7 +217,7 @@ std::optional<std::string> Assignment::readOptionalString(std::istream &is) {
 std::optional<std::chrono::year_month_day> Assignment::readOptionalDate(std::istream &is) {
     std::string response;
     std::getline(is, response);
-    if (response.empty())
+    if (isOnlyWhitespace(response))
         return std::nullopt;
 
     int y;
@@ -236,7 +236,7 @@ std::optional<std::chrono::year_month_day> Assignment::readOptionalDate(std::ist
 std::optional<bool> Assignment::readOptionalBool(std::istream &is) {
     std::string response;
     std::getline(is, response);
-    if (response.empty())
+    if (isOnlyWhitespace(response))
         return std::nullopt;
 
     if (response == "yes" || response == "y" || response == "true" || response == "1")
@@ -251,7 +251,7 @@ std::optional<bool> Assignment::readOptionalBool(std::istream &is) {
 std::optional<float> Assignment::readOptionalFloat(std::istream &is) {
     std::string response;
     std::getline(is, response);
-    if (response.empty())
+    if (isOnlyWhitespace(response))
         return std::nullopt;
 
     return std::stof(response);
