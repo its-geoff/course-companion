@@ -63,15 +63,6 @@ class Assignment {
         void validateDueDate(std::chrono::year_month_day dueDate);
         std::string completedString(bool completed);
         void printAssignmentInfo(std::ostream &os);
-        std::optional<std::string> readOptionalString(std::istream &is);
-        std::optional<std::chrono::year_month_day> readOptionalDate(std::istream &is);
-        std::optional<bool> readOptionalBool(std::istream &is);
-        std::optional<float> readOptionalFloat(std::istream &is);
-        Assignment chooseConstructor(std::string title, std::optional<std::string> description, std::optional<std::chrono::year_month_day> date, 
-            std::optional<bool> completed, std::optional<float> grade);
-        // next, implement addAssignment and removeAssignment
-        void addAssignment();
-        void removeAssignment();
 };
 
 #endif

@@ -1,7 +1,7 @@
-# Enable testing
+# enable testing
 enable_testing()
 
-# Fetch GoogleTest
+# fetch GoogleTest
 include(FetchContent)
 FetchContent_Declare(
     googletest
@@ -12,13 +12,17 @@ set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# Test executable
+# add test executables
 add_executable(tests 
-    AssignmentTests.cpp)
+    unit/AssignmentTests.cpp
+    integration/ControllerTests.cpp)
 target_link_libraries(tests PRIVATE CourseCompanion_lib GTest::gtest_main)
-add_test(NAME AssignmentTests COMMAND tests)
 
-# Optional: output directory
+# auto-discover tests
+include(GoogleTest)
+gtest_discover_tests(tests)
+
+# set output directory
 set_target_properties(tests PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )

@@ -149,26 +149,6 @@ TEST_F(AssignmentTest, CompletedString) {
     ASSERT_EQ(assignment2.completedString(assignment2.getCompleted()), "No");
 }
 
-TEST_F(AssignmentTest, ReadOptionalString) {
-    std::stringstream ss("Homework 2");
-    ASSERT_EQ(assignment1.readOptionalString(ss).value(), "Homework 2");
-}
-
-TEST_F(AssignmentTest, ReadOptionalDate) {
-    std::stringstream ss("2025-10-31");
-    ASSERT_EQ(assignment1.readOptionalDate(ss).value(), std::chrono::year_month_day{2025y/10/31});
-}
-
-TEST_F(AssignmentTest, ReadOptionalBool) {
-    std::stringstream ss("yes");
-    ASSERT_EQ(assignment1.readOptionalBool(ss).value(), true);
-}
-
-TEST_F(AssignmentTest, ReadOptionalFloat) {
-    std::stringstream ss("95.18");
-    ASSERT_FLOAT_EQ(assignment1.readOptionalFloat(ss).value(), 95.18);
-}
-
 // ====================================
 // GETTER EDGE CASES
 // ====================================
