@@ -14,7 +14,7 @@
 #include <chrono>           // for date and time-related variables
 #include <optional>         // for optional variables
 #include <iostream>         // for i/o streams
-#include "Assignment.hpp"   // for references to Assignment
+#include "../models/Assignment.hpp"   // for references to Assignment
 // #include "Course.hpp"   // for connection to relevant Course  -> no Course implementation yet
 
 bool isOnlyWhitespace(const std::string_view str);

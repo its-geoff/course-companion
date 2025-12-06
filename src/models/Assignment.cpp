@@ -1,4 +1,4 @@
-#include "Assignment.hpp"
+#include "models/Assignment.hpp"
 
 /**
  * @file Assignment.cpp
@@ -8,8 +8,8 @@
  * determine course grades. Provides implementations only; see Assignment.hpp for definitions.
  */
 
-#include <stdexcept>       // for exceptions
-#include "controller.hpp"  // for isOnlyWhitespace
+#include <stdexcept>            // for exceptions
+#include "app/controller.hpp"   // for isOnlyWhitespace
 
 using namespace std::chrono_literals;
 

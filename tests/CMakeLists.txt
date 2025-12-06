@@ -14,8 +14,9 @@ FetchContent_MakeAvailable(googletest)
 
 # add test executables
 add_executable(tests 
+    integration/ControllerTests.cpp
     unit/AssignmentTests.cpp
-    integration/ControllerTests.cpp)
+)
 target_link_libraries(tests PRIVATE CourseCompanion_lib GTest::gtest_main)
 
 # auto-discover tests

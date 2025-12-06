@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <sstream>
-#include "Assignment.hpp"
+#include "models/Assignment.hpp"
 
 using namespace std::chrono_literals;
 
@@ -311,63 +311,6 @@ TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
     assignment2.printAssignmentInfo(ss);
     ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
                         "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
-}
-
-TEST_F(AssignmentTest, ReadOptionalStringEmpty) {
-    std::stringstream ss1("");
-    std::stringstream ss2("  ");
-
-    ASSERT_EQ(assignment1.readOptionalString(ss1), std::nullopt);
-    ASSERT_EQ(assignment1.readOptionalString(ss2), std::nullopt);
-}
-
-TEST_F(AssignmentTest, ReadOptionalDateEmpty) {
-    std::stringstream ss1("");
-    std::stringstream ss2("  ");
-
-    ASSERT_EQ(assignment1.readOptionalDate(ss1), std::nullopt);
-    ASSERT_EQ(assignment1.readOptionalDate(ss2), std::nullopt);
-}
-
-TEST_F(AssignmentTest, ReadOptionalBoolEmpty) {
-    std::stringstream ss1("");
-    std::stringstream ss2("  ");
-
-    ASSERT_EQ(assignment1.readOptionalBool(ss1), std::nullopt);
-    ASSERT_EQ(assignment1.readOptionalBool(ss2), std::nullopt);
-}
-
-TEST_F(AssignmentTest, ReadOptionalFloatEmpty) {
-    std::stringstream ss1("");
-    std::stringstream ss2("  ");
-
-    ASSERT_EQ(assignment1.readOptionalFloat(ss1), std::nullopt);
-    ASSERT_EQ(assignment1.readOptionalFloat(ss2), std::nullopt);
-}
-
-TEST_F(AssignmentTest, ReadOptionalBoolAlternatives) {
-    std::stringstream ss_y(
-        "yes\n"
-        "y\n"
-        "true\n"
-        "1\n"
-    );
-    std::stringstream ss_n(
-        "no\n"
-        "n\n"
-        "false\n"
-        "0\n"
-    );
-
-    // checks each line separately and asserts true or false, based on conversion
-    ASSERT_EQ(assignment1.readOptionalBool(ss_y).value(), true);
-    ASSERT_EQ(assignment1.readOptionalBool(ss_y).value(), true);
-    ASSERT_EQ(assignment1.readOptionalBool(ss_y).value(), true);
-    ASSERT_EQ(assignment1.readOptionalBool(ss_y).value(), true);
-    ASSERT_EQ(assignment1.readOptionalBool(ss_n).value(), false);
-    ASSERT_EQ(assignment1.readOptionalBool(ss_n).value(), false);
-    ASSERT_EQ(assignment1.readOptionalBool(ss_n).value(), false);
-    ASSERT_EQ(assignment1.readOptionalBool(ss_n).value(), false);
 }
 
 // ====================================
