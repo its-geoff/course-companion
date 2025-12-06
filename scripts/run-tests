@@ -14,8 +14,7 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
 
         case $opt in
             V)
-                ctest -V --output-on-failure
-                mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
+                ctest -V mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
                 cp Testing/Temporary/LastTest.log /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs/
                 ;;
             \?)
@@ -26,8 +25,7 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
     done
 
     if [ $option_given -eq 0 ]; then
-        ctest --output-on-failure
-        mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
+        ctest mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
         cp Testing/Temporary/LastTest.log /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs/
     fi
 elif [[ "$OS_NAME" == "Linux" ]]; then
@@ -36,8 +34,7 @@ elif [[ "$OS_NAME" == "Linux" ]]; then
 
         case $opt in
             V)
-                ctest -V --output-on-failure
-                mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
+                ctest -V mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
                 cp Testing/Temporary/LastTest.log /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs/
                 ;;
             \?)
@@ -48,8 +45,7 @@ elif [[ "$OS_NAME" == "Linux" ]]; then
     done
 
     if [ $option_given -eq 0 ]; then
-        ctest --output-on-failure
-        mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
+        ctest mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
         cp Testing/Temporary/LastTest.log /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs/
     fi
 else

@@ -12,18 +12,24 @@ set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# add test executables
-add_executable(tests 
-    integration/ControllerTests.cpp
-    unit/AssignmentTests.cpp
+# ---------------------------
+# AssignmentTests executable
+# ---------------------------
+add_executable(AssignmentTests unit/AssignmentTests.cpp)
+target_link_libraries(AssignmentTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME AssignmentTests COMMAND AssignmentTests)
+
+# ---------------------------
+# ControllerTests executable
+# ---------------------------
+add_executable(ControllerTests integration/ControllerTests.cpp)
+target_link_libraries(ControllerTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME ControllerTests COMMAND ControllerTests)
+
+# output directory
+set_target_properties(AssignmentTests PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
-target_link_libraries(tests PRIVATE CourseCompanion_lib GTest::gtest_main)
-
-# auto-discover tests
-include(GoogleTest)
-gtest_discover_tests(tests)
-
-# set output directory
-set_target_properties(tests PROPERTIES
+set_target_properties(ControllerTests PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
