@@ -8,7 +8,6 @@
  * Provides implementations only; see Assignment.hpp for definitions.
  */
 
-#include <iostream>        // for cout
 #include <stdexcept>       // for exceptions
 #include <algorithm>       // for all_of
 #include <cctype>          // for isspace

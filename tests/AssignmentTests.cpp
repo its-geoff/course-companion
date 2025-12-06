@@ -150,13 +150,9 @@ TEST_F(AssignmentTest, CompletedString) {
 }
 
 TEST_F(AssignmentTest, ReadOptionalString) {
-    std::stringstream ss_in;
-    std::stringstream ss_out;
-    std::string input = "Homework 2";
-    ss_in >> input;
+    std::stringstream ss_in("Homework 2");
 
-    assignment1.readOptionalString(ss_in);
-    ASSERT_EQ(ss_out.str(), "Homework 2");
+    ASSERT_EQ(assignment1.readOptionalString(ss_in).value(), "Homework 2");
 }
 
 // ====================================
