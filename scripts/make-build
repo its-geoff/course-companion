@@ -1,0 +1,31 @@
+#!/bin/bash
+
+usage() {
+    echo "Usage: make-build [-mt]"
+    echo "  -m: Only build main files"
+    echo "  -t: Only build test files"
+}
+
+option_given=0
+
+while getopts ":mt" opt; do
+    option_given=1
+
+    case $opt in
+        m)
+            cmake --build . --target CourseCompanion_lib
+            ;;
+        t)
+            # update when new tests are added
+            cmake --build . --target AssignmentTests UtilsTests
+            ;;
+        \?)
+            echo "Invalid option: -$opt" >&2
+            usage
+            ;;
+    esac
+done
+
+if [ $option_given -eq 0 ]; then
+    cmake --build .
+fi

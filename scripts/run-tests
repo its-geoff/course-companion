@@ -1,0 +1,54 @@
+#!/bin/bash
+
+usage() {
+    echo "Usage: run-tests [-V]"
+    echo "  -V: verbose - additional test outputs"
+}
+
+OS_NAME=$(uname)
+option_given=0
+
+if [[ "$OS_NAME" == "Darwin" ]]; then
+    while getopts ":V" opt; do
+        option_given=1
+
+        case $opt in
+            V)
+                ctest -V mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
+                cp Testing/Temporary/LastTest.log /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs/
+                ;;
+            \?)
+                echo "Invalid option: -$opt" >&2
+                usage
+                ;;
+        esac
+    done
+
+    if [ $option_given -eq 0 ]; then
+        ctest mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
+        cp Testing/Temporary/LastTest.log /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs/
+    fi
+elif [[ "$OS_NAME" == "Linux" ]]; then
+    while getopts ":V" opt; do
+        option_given=1
+
+        case $opt in
+            V)
+                ctest -V mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
+                cp Testing/Temporary/LastTest.log /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs/
+                ;;
+            \?)
+                echo "Invalid option: -$opt" >&2
+                usage
+                ;;
+        esac
+    done
+
+    if [ $option_given -eq 0 ]; then
+        ctest mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
+        cp Testing/Temporary/LastTest.log /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs/
+    fi
+else
+    echo "Unknown OS: $OS_NAME"
+    exit 1
+fi

@@ -1,2 +1,5 @@
 .vscode/
 build/
+.zshrc
+CMakeUserPresets.json
+tests/output_logs/

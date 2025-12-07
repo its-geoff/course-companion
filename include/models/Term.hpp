@@ -1,13 +1,13 @@
 #ifndef TERM_H
 #define TERM_H
 
-// -------------------------------------------------------------------------------------------------------------------
-// File: Term.hpp
-// description_:
-//      Definition of an Term class that stores metadata and contains zero or more Courses. Each term has a GPA that
-//      is calculated based on the course grades.
-//      Provides declarations only; see Term.cpp for implementations.
-// -------------------------------------------------------------------------------------------------------------------
+/**
+ * @file Term.hpp
+ * @brief Definition of an Term class that stores metadata and contains zero or more Courses. 
+ * 
+ * Each term has a GPA that is calculated based on the course grades. Provides declarations only; 
+ * see Term.cpp for implementations.
+ */
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
@@ -23,7 +23,6 @@
  * based on the number of credits to produce the term GPA. The Term class is used by the main function to group
  * courses and provide a student's grade for one term. 
  */
-
 class Term {
     private:
         std::string title_{};

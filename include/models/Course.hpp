@@ -1,19 +1,19 @@
 #ifndef COURSE_H
 #define COURSE_H
 
-// -------------------------------------------------------------------------------------------------------------------
-// File: Course.hpp
-// description_:
-//      Definition of an Course class that stores metadata and contains zero or more Assignments. Each course has
-//      a grade that is calculated based on the assignment grades. There can be multiple Courses within a Term.
-//      Provides declarations only; see Course.cpp for implementations.
-// -------------------------------------------------------------------------------------------------------------------
+/**
+ * @file Course.hpp
+ * @brief Definition of an Course class that stores metadata and contains zero or more Assignments. 
+ * 
+ * Each course has a grade that is calculated based on the assignment grades. There can be multiple Courses 
+ * within a Term. Provides declarations only; see Course.cpp for implementations.
+ */
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
 #include <vector>           // for vector of Assignments
 #include <map>              // for grading scale
-#include "Assignment.hpp"   // for usage of Assignment objects in vector
+#include "models/Assignment.hpp"   // for usage of Assignment objects in vector
 
 /**
  * @class Course
@@ -67,6 +67,8 @@ class Course {
         int getNumCredits();
         std::map<std::string, float> getGradingScale();
         bool getActive();
+        void addAssignment();
+        void removeAssignment();
 };
 
 #endif
