@@ -16,7 +16,8 @@ while getopts ":mt" opt; do
             cmake --build . --target CourseCompanion_lib
             ;;
         t)
-            cmake --build . --target AssignmentTests ControllerTests
+            # update when new tests are added
+            cmake --build . --target AssignmentTests UtilsTests
             ;;
         \?)
             echo "Invalid option: -$opt" >&2

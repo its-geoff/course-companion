@@ -9,7 +9,7 @@
  */
 
 #include <stdexcept>            // for exceptions
-#include "app/controller.hpp"   // for isOnlyWhitespace
+#include "app/utils.hpp"        // for isOnlyWhitespace
 
 using namespace std::chrono_literals;
 
@@ -158,7 +158,7 @@ void Assignment::setGrade(float newGrade) {
 
 // throws an exception if a string is empty
 void Assignment::validateTitle(std::string_view title) {
-    if (isOnlyWhitespace(title))
+    if (utils::isOnlyWhitespace(title))
         throw std::invalid_argument("Title must be non-empty.");
 }
 

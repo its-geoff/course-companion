@@ -322,11 +322,3 @@ TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
 // change some assignment info for 1 (setters)
 // retrieve some old and some new info (getters)
 // remove assignment
-
-// ====================================
-// MAIN FUNCTION
-// ====================================
-int main(int argc, char **argv) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

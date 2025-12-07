@@ -13,7 +13,7 @@
 #include <chrono>           // for date and time-related variables
 #include <vector>           // for vector of Assignments
 #include <map>              // for grading scale
-#include "Assignment.hpp"   // for usage of Assignment objects in vector
+#include "models/Assignment.hpp"   // for usage of Assignment objects in vector
 
 /**
  * @class Course
@@ -67,6 +67,8 @@ class Course {
         int getNumCredits();
         std::map<std::string, float> getGradingScale();
         bool getActive();
+        void addAssignment();
+        void removeAssignment();
 };
 
 #endif
