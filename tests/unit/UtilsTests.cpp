@@ -28,6 +28,22 @@ TEST(UtilsTest, ReadOptionalFloat) {
     ASSERT_FLOAT_EQ(utils::readOptionalFloat(ss).value(), 95.18);
 }
 
+TEST(UtilsTest, ChooseAssignmentConstructor) {
+    Assignment assignment2 = utils::chooseAssignmentConstructor(
+        "Homework 1", 
+        "Focus on lexical analysis.", 
+        std::chrono::year_month_day{2025y/10/31}, 
+        false, 
+        90.50f
+    );
+
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
+    ASSERT_FALSE(assignment2.getCompleted());
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 90.50f);
+}
+
 // ====================================
 // FUNCTION EDGE CASES
 // ====================================
@@ -89,6 +105,118 @@ TEST(UtilsTest, ReadOptionalBoolAlternatives) {
     ASSERT_EQ(utils::readOptionalBool(ss_n).value(), false);
 }
 
-// ====================================
-// FUNCTION USE CASES
-// ====================================
+TEST(UtilsTest, ChooseAssignmentConstructorTitleOnly) {
+    Assignment assignment2 = utils::chooseAssignmentConstructor(
+        "Homework 1", 
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
+        std::nullopt
+    );
+
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "");
+    auto now = std::chrono::system_clock::now();
+    auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
+    ASSERT_EQ(assignment2.getDueDate(), today);
+    ASSERT_FALSE(assignment2.getCompleted());
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
+}
+
+TEST(UtilsTest, ChooseAssignmentConstructorTitleDueDate) {
+    Assignment assignment2 = utils::chooseAssignmentConstructor(
+        "Homework 1", 
+        std::nullopt,
+        std::chrono::year_month_day{2025y/10/31},
+        std::nullopt,
+        std::nullopt
+    );
+
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
+    ASSERT_FALSE(assignment2.getCompleted());
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
+}
+
+TEST(UtilsTest, ChooseAssignmentConstructorTitleDueDateCompleted) {
+    Assignment assignment2 = utils::chooseAssignmentConstructor(
+        "Homework 1", 
+        std::nullopt,
+        std::chrono::year_month_day{2025y/10/31},
+        true,
+        std::nullopt
+    );
+
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
+    ASSERT_TRUE(assignment2.getCompleted());
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
+}
+
+TEST(UtilsTest, ChooseAssignmentConstructorTitleDueDateCompletedGrade) {
+    Assignment assignment2 = utils::chooseAssignmentConstructor(
+        "Homework 1", 
+        std::nullopt,
+        std::chrono::year_month_day{2025y/10/31},
+        true,
+        98.15f
+    );
+
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
+    ASSERT_TRUE(assignment2.getCompleted());
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 98.15f);
+}
+
+TEST(UtilsTest, ChooseAssignmentConstructorTitleDesc) {
+    Assignment assignment2 = utils::chooseAssignmentConstructor(
+        "Homework 1", 
+        "Focus on lexical analysis.",
+        std::nullopt,
+        std::nullopt,
+        std::nullopt
+    );
+
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
+    auto now = std::chrono::system_clock::now();
+    auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
+    ASSERT_EQ(assignment2.getDueDate(), today);
+    ASSERT_FALSE(assignment2.getCompleted());
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
+}
+
+TEST(UtilsTest, ChooseAssignmentConstructorTitleDescDueDate) {
+    Assignment assignment2 = utils::chooseAssignmentConstructor(
+        "Homework 1", 
+        "Focus on lexical analysis.",
+        std::chrono::year_month_day{2025y/10/31},
+        std::nullopt,
+        std::nullopt
+    );
+
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
+    ASSERT_FALSE(assignment2.getCompleted());
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
+}
+
+TEST(UtilsTest, ChooseAssignmentConstructorTitleDescDueDateCompleted) {
+    Assignment assignment2 = utils::chooseAssignmentConstructor(
+        "Homework 1", 
+        "Focus on lexical analysis.",
+        std::chrono::year_month_day{2025y/10/31},
+        true,
+        std::nullopt
+    );
+
+    ASSERT_EQ(assignment2.getTitle(), "Homework 1");
+    ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
+    ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
+    ASSERT_TRUE(assignment2.getCompleted());
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
+}

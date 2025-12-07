@@ -33,7 +33,7 @@ TEST_F(AssignmentTest, DueDateGetter) {
 }
 
 TEST_F(AssignmentTest, CompletedGetter) {
-    ASSERT_EQ(assignment1.getCompleted(), true);
+    ASSERT_TRUE(assignment1.getCompleted());
 }
 
 TEST_F(AssignmentTest, GradeGetter) {
@@ -61,7 +61,7 @@ TEST_F(AssignmentTest, DueDateSetter) {
 
 TEST_F(AssignmentTest, CompletedSetter) {
     assignment1.setCompleted(false);
-    ASSERT_EQ(assignment1.getCompleted(), false);
+    ASSERT_FALSE(assignment1.getCompleted());
 }
 
 TEST_F(AssignmentTest, GradeSetter) {
@@ -89,14 +89,14 @@ TEST_F(AssignmentTest, ThreeParamInitialization) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
-    ASSERT_EQ(assignment2.getCompleted(), false);
+    ASSERT_FALSE(assignment2.getCompleted());
 }
 
 TEST_F(AssignmentTest, FourParamInitialization) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
-    ASSERT_EQ(assignment2.getCompleted(), false);
+    ASSERT_FALSE(assignment2.getCompleted());
     ASSERT_EQ(assignment2.getGrade(), 90.50f);
 }
 
@@ -119,7 +119,7 @@ TEST_F(AssignmentTest, FourParamDescInitialization) {
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
-    ASSERT_EQ(assignment2.getCompleted(), false);
+    ASSERT_FALSE(assignment2.getCompleted());
 }
 
 TEST_F(AssignmentTest, FiveParamDescInitialization) {
@@ -127,7 +127,7 @@ TEST_F(AssignmentTest, FiveParamDescInitialization) {
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
-    ASSERT_EQ(assignment2.getCompleted(), false);
+    ASSERT_FALSE(assignment2.getCompleted());
     ASSERT_EQ(assignment2.getGrade(), 90.50f);
 }
 
@@ -168,7 +168,7 @@ TEST_F(AssignmentTest, DueDateGetterEmpty) {
 
 TEST_F(AssignmentTest, CompletedGetterEmpty) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}};
-    ASSERT_EQ(assignment2.getCompleted(), false);
+    ASSERT_FALSE(assignment2.getCompleted());
 }
 
 TEST_F(AssignmentTest, GradeGetterEmpty) {

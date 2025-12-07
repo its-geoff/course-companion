@@ -28,8 +28,7 @@ class Controller {
     private:
         // add after implementation of Term is completed
     public:
-        Assignment chooseAssignmentConstructor(std::string title, std::optional<std::string> description, std::optional<std::chrono::year_month_day> date, 
-            std::optional<bool> completed, std::optional<float> grade);
+        // add after implementation of Term is completed
 };
 
 #endif
