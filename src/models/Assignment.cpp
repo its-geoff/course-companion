@@ -9,7 +9,7 @@
  */
 
 #include <stdexcept>            // for exceptions
-#include "app/utils.hpp"        // for isOnlyWhitespace
+#include "app/utils.hpp"        // for isOnlyWhitespace and validation
 
 using namespace std::chrono_literals;
 
@@ -20,21 +20,19 @@ Assignment::Assignment(std::string title) {
     auto now = std::chrono::system_clock::now();
     auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
     dueDate_ = std::chrono::year_month_day(today);
-    completed_ = false;
 }
 
 Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate) {
     utils::validateTitle(title);
-    validateDueDate(dueDate);
+    utils::validateDate(dueDate);
 
     title_ = title;
     dueDate_ = dueDate;
-    completed_ = false;
 }
 
 Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed) {
     utils::validateTitle(title);
-    validateDueDate(dueDate);
+    utils::validateDate(dueDate);
     
     title_ = title;
     dueDate_ = dueDate;
@@ -43,7 +41,7 @@ Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, b
 
 Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed, float grade) {
     utils::validateTitle(title);
-    validateDueDate(dueDate);
+    utils::validateDate(dueDate);
     validateGrade(grade);
 
     title_ = title;
@@ -60,22 +58,20 @@ Assignment::Assignment(std::string title, std::string description) {
     auto now = std::chrono::system_clock::now();
     auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
     dueDate_ = std::chrono::year_month_day(today);
-    completed_ = false;
 }
 
 Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate) {
     utils::validateTitle(title);
-    validateDueDate(dueDate);
+    utils::validateDate(dueDate);
 
     title_ = title;
     description_ = description;
     dueDate_ = dueDate;
-    completed_ = false;
 }
 
 Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed) {
     utils::validateTitle(title);
-    validateDueDate(dueDate);
+    utils::validateDate(dueDate);
     
     title_ = title;
     description_ = description;
@@ -85,7 +81,7 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
 
 Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade) {
     utils::validateTitle(title);
-    validateDueDate(dueDate);
+    utils::validateDate(dueDate);
     validateGrade(grade);
     
     title_ = title;
@@ -139,7 +135,7 @@ void Assignment::setDescription(std::string newDescription) {
 }
 
 void Assignment::setDueDate(std::chrono::year_month_day newDueDate) {
-    validateDueDate(newDueDate);
+    utils::validateDate(newDueDate);
     dueDate_ = newDueDate;
 }
 
@@ -155,12 +151,6 @@ void Assignment::setGrade(float newGrade) {
 // void Assignment::setCourse(Course newCourse) {
 //     course_ = newCourse;
 // }  -> no Course implementation yet
-
-// throws an exception if a date is non-existent
-void Assignment::validateDueDate(std::chrono::year_month_day dueDate) {
-    if (!dueDate.ok())
-        throw std::invalid_argument("Date is invalid.");
-}
 
 // throws an exception if a grade is less than 0 or greater than 100
 void Assignment::validateGrade(float grade) {

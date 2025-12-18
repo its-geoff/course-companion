@@ -24,6 +24,12 @@ namespace utils {
             throw std::invalid_argument("Title must be non-empty.");
     }
 
+    // throws an exception if a date is non-existent
+    void validateDate(std::chrono::year_month_day date) {
+        if (!date.ok())
+            throw std::invalid_argument("Date is invalid.");
+    }
+
     // reads optional string from user input
     std::optional<std::string> readOptionalString(std::istream &is) {
         std::string response;
