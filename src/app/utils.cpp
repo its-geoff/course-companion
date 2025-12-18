@@ -18,6 +18,12 @@ namespace utils {
         return std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); });
     }
 
+    // throws an exception if a string is empty
+    void validateTitle(std::string_view title) {
+        if (isOnlyWhitespace(title))
+            throw std::invalid_argument("Title must be non-empty.");
+    }
+
     // reads optional string from user input
     std::optional<std::string> readOptionalString(std::istream &is) {
         std::string response;

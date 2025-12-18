@@ -2,53 +2,35 @@
 
 usage() {
     echo "Usage: run-tests [-V]"
-    echo "  -V: verbose - additional test outputs"
+    echo "  -V: verbose test output"
 }
 
-OS_NAME=$(uname)
 option_given=0
 
-if [[ "$OS_NAME" == "Darwin" ]]; then
-    while getopts ":V" opt; do
-        option_given=1
+OUTPUT_DIR="$HOME/Documents/VS_Code/course-companion/tests/output_logs"
 
-        case $opt in
-            V)
-                ctest -V mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
-                cp Testing/Temporary/LastTest.log /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs/
-                ;;
-            \?)
-                echo "Invalid option: -$opt" >&2
-                usage
-                ;;
-        esac
-    done
+while getopts ":V" opt; do
+    option_given=1
+    case $opt in
+        V)
+            ctest --verbose
+            ;;
+        \?)
+            echo "Invalid option: -$opt" >&2
+            usage
+            exit 1
+            ;;
+    esac
+done
 
-    if [ $option_given -eq 0 ]; then
-        ctest mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
-        cp Testing/Temporary/LastTest.log /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs/
-    fi
-elif [[ "$OS_NAME" == "Linux" ]]; then
-    while getopts ":V" opt; do
-        option_given=1
+if [ $option_given -eq 0 ]; then
+    ctest --output-on-failure
+fi
 
-        case $opt in
-            V)
-                ctest -V mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
-                cp Testing/Temporary/LastTest.log /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs/
-                ;;
-            \?)
-                echo "Invalid option: -$opt" >&2
-                usage
-                ;;
-        esac
-    done
+mkdir -p "$OUTPUT_DIR"
 
-    if [ $option_given -eq 0 ]; then
-        ctest mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
-        cp Testing/Temporary/LastTest.log /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs/
-    fi
+if [ -f Testing/Temporary/LastTest.log ]; then
+    cp Testing/Temporary/LastTest.log "$OUTPUT_DIR/"
 else
-    echo "Unknown OS: $OS_NAME"
-    exit 1
+    echo "Warning: LastTest.log not found"
 fi
