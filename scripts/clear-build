@@ -1,0 +1,26 @@
+#!/bin/bash
+
+usage() {
+    echo "Usage: clear-build [-mt]"
+    echo "  -t: Clear build_test files"
+}
+
+option_given=0
+
+while getopts ":t" opt; do
+    option_given=1
+
+    case $opt in
+        t)
+            rm -rf build_test/*
+            ;;
+        \?)
+            echo "Invalid option: -$opt" >&2
+            usage
+            ;;
+    esac
+done
+
+if [ $option_given -eq 0 ]; then
+    rm -rf build_main/*
+fi
