@@ -25,9 +25,10 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # Library containing app logic
 # ------------------------
 add_library(CourseCompanion_lib
+    src/models/Assignment.cpp
+    src/models/Course.cpp
     src/app/Controller.cpp
     src/app/utils.cpp
-    src/models/Assignment.cpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
