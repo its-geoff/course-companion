@@ -28,6 +28,13 @@ TEST(UtilsTest, ReadOptionalFloat) {
     ASSERT_FLOAT_EQ(utils::readOptionalFloat(ss).value(), 95.18);
 }
 
+TEST(UtilsTest, BoolToString) {
+    Assignment assignment1{"Homework 3", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    ASSERT_EQ(utils::boolToString(assignment1.getCompleted()), "Yes");
+    ASSERT_EQ(utils::boolToString(assignment2.getCompleted()), "No");
+}
+
 TEST(UtilsTest, ChooseAssignmentConstructor) {
     Assignment assignment2 = utils::chooseAssignmentConstructor(
         "Homework 1", 

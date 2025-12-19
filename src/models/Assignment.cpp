@@ -9,7 +9,7 @@
  */
 
 #include <stdexcept>            // for exceptions
-#include "app/utils.hpp"        // for isOnlyWhitespace and validation
+#include "app/utils.hpp"        // for isOnlyWhitespace, validation, and boolToString
 
 using namespace std::chrono_literals;
 
@@ -158,14 +158,6 @@ void Assignment::validateGrade(float grade) {
         throw std::out_of_range("Grade must be from 0 to 100.");
 }
 
-// converts bool value of completed into a string for output
-std::string Assignment::completedString(bool completed) {
-    if (completed)
-        return "Yes";
-    else
-        return "No";
-}
-
 // prints information held by an Assignment object
 void Assignment::printAssignmentInfo(std::ostream &os) {
     os << "===========================================================" << std::endl;
@@ -175,7 +167,7 @@ void Assignment::printAssignmentInfo(std::ostream &os) {
     };
     // os << "Course: " << course_.getTitle() << std::endl;  -> no Course implementation yet
     os << "Due Date: " << dueDate_ << std::endl;
-    os << "Completed? " << completedString(completed_) << std::endl;
-    os << "Grade: " << grade_<< std::endl;
+    os << "Completed? " << utils::boolToString(completed_) << std::endl;
+    os << "Grade: " << grade_ << std::endl;
     os << "===========================================================" << std::endl;
 }

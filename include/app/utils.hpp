@@ -24,6 +24,7 @@ namespace utils {
     std::optional<std::chrono::year_month_day> readOptionalDate(std::istream &is);
     std::optional<bool> readOptionalBool(std::istream &is);
     std::optional<float> readOptionalFloat(std::istream &is);
+    std::string boolToString(bool value);
     Assignment chooseAssignmentConstructor(std::string title, std::optional<std::string> description, std::optional<std::chrono::year_month_day> date, 
         std::optional<bool> completed, std::optional<float> grade);
 }

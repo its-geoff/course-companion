@@ -143,12 +143,6 @@ TEST_F(AssignmentTest, PrintAssignmentInfo) {
                         "Due Date: 2025-11-20\nCompleted? Yes\nGrade: 95.18\n===========================================================\n");
 }
 
-TEST_F(AssignmentTest, CompletedString) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
-    ASSERT_EQ(assignment1.completedString(assignment1.getCompleted()), "Yes");
-    ASSERT_EQ(assignment2.completedString(assignment2.getCompleted()), "No");
-}
-
 // ====================================
 // GETTER EDGE CASES
 // ====================================

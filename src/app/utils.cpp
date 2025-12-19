@@ -85,6 +85,14 @@ namespace utils {
         return std::stof(response);
     }
 
+    // converts bool value of completed into a string for output
+    std::string boolToString(bool value) {
+        if (value)
+            return "Yes";
+        else
+            return "No";
+    }
+
     // chooses a constructor for the Assignment class based on the user input given
     Assignment chooseAssignmentConstructor(std::string title, std::optional<std::string> description, std::optional<std::chrono::year_month_day> dueDate, 
         std::optional<bool> completed, std::optional<float> grade) {
