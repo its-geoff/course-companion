@@ -25,6 +25,7 @@ namespace utils {
     std::optional<bool> readOptionalBool(std::istream &is);
     std::optional<float> readOptionalFloat(std::istream &is);
     std::string boolToString(bool value);
+    bool floatEqual(float a, float b, float relEps = std::numeric_limits<float>::epsilon() * 10, float absEps = 1e-8f);
     Assignment chooseAssignmentConstructor(std::string title, std::optional<std::string> description, std::optional<std::chrono::year_month_day> date, 
         std::optional<bool> completed, std::optional<float> grade);
 }

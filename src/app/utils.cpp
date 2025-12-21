@@ -9,8 +9,10 @@
  * multiple components.
  */
 
-#include <algorithm>       // for all_of
-#include <cctype>          // for isspace
+#include <algorithm>        // for all_of
+#include <cctype>           // for isspace
+#include <cmath>            // for fabs, min, and max
+#include <limits>           // for numeric limits
 
 namespace utils {
     // checks if a string is only whitespace
@@ -91,6 +93,17 @@ namespace utils {
             return "Yes";
         else
             return "No";
+    }
+
+    // checks if two floats are equal while taking into account relative and absolute tolerance
+    bool floatEqual(float a, float b, float relEps, float absEps) {
+        if (a == b)
+            return true;
+
+        if (std::isnan(a) || std::isnan(b))
+            return false;
+
+            return std::fabs(a - b) <= std::max(relEps * std::max(std::fabs(a), std::fabs(b)), absEps);
     }
 
     // chooses a constructor for the Assignment class based on the user input given
