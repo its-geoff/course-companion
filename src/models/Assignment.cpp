@@ -9,7 +9,7 @@
  */
 
 #include <stdexcept>            // for exceptions
-#include "app/utils.hpp"        // for isOnlyWhitespace, validation, and boolToString
+#include "app/utils.hpp"        // for reused custom functions
 
 using namespace std::chrono_literals;
 
@@ -170,4 +170,9 @@ void Assignment::printAssignmentInfo(std::ostream &os) {
     os << "Completed? " << utils::boolToString(completed_) << std::endl;
     os << "Grade: " << grade_ << std::endl;
     os << "===========================================================" << std::endl;
+}
+
+// equality comparison based on Assignment titles
+bool Assignment::operator==(const Assignment &other) const {
+    return title_ == other.title_;
 }

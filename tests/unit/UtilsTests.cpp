@@ -35,6 +35,11 @@ TEST(UtilsTest, BoolToString) {
     ASSERT_EQ(utils::boolToString(assignment2.getCompleted()), "No");
 }
 
+TEST(UtilsTest, FloatEqual) {
+    ASSERT_TRUE(utils::floatEqual(1.0f, 1.0f));
+    ASSERT_FALSE(utils::floatEqual(1.0f, 1.1f));
+}
+
 TEST(UtilsTest, ChooseAssignmentConstructor) {
     Assignment assignment2 = utils::chooseAssignmentConstructor(
         "Homework 1", 
@@ -110,6 +115,14 @@ TEST(UtilsTest, ReadOptionalBoolAlternatives) {
     ASSERT_EQ(utils::readOptionalBool(ss_n).value(), false);
     ASSERT_EQ(utils::readOptionalBool(ss_n).value(), false);
     ASSERT_EQ(utils::readOptionalBool(ss_n).value(), false);
+}
+
+TEST(UtilsTest, FloatEqualVerySmall) {
+    ASSERT_TRUE(utils::floatEqual(0.0f, 1e-9f));
+}
+
+TEST(UtilsTest, FloatEqualVeryLarge) {
+    ASSERT_TRUE(utils::floatEqual(1e8f, 1e8f + 1.0f));
 }
 
 TEST(UtilsTest, ChooseAssignmentConstructorTitleOnly) {

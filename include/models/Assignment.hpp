@@ -60,6 +60,8 @@ class Assignment {
         void validateGrade(float grade);
         std::string completedString(bool completed);
         void printAssignmentInfo(std::ostream &os);
+
+        bool operator==(const Assignment &other) const;
 };
 
 #endif
