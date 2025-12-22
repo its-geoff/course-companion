@@ -26,23 +26,28 @@ done
 # Paths
 # ---------------------------
 BUILD_DIR="$(pwd)"
+PARENT_DIR="$(pwd)/.."
+COVERAGE_DIR="$PARENT_DIR/coverage"
 SRC_DIR="$(pwd)/../../src"
 TEST_BIN_DIR="$BUILD_DIR/bin"
 
-LCOV_DIR="$BUILD_DIR/lcov"
-HTML_DIR="$BUILD_DIR/coverage-html"
+LCOV_DIR="$COVERAGE_DIR/lcov"
+HTML_DIR="$COVERAGE_DIR/html"
 mkdir -p "$LCOV_DIR"
 
 # ---------------------------
 # Merge profraw files
 # ---------------------------
-PROFRAW_FILES=("$BUILD_DIR"/*.profraw)
+shopt -s nullglob
+PROFRAW_FILES=("$COVERAGE_DIR"/profraw/*.profraw)
+shopt -u nullglob
+
 if [ ${#PROFRAW_FILES[@]} -eq 0 ]; then
-    echo "Error: No .profraw files found in $BUILD_DIR. Did you run the tests with coverage enabled?"
+    echo "Error: No .profraw files found in $COVERAGE_DIR. Did you run the tests with coverage enabled?"
     exit 1
 fi
 
-PROFDATA="$BUILD_DIR/coverage.profdata"
+PROFDATA="$COVERAGE_DIR/profdata/coverage.profdata"
 echo "Merging .profraw files into $PROFDATA"
 xcrun llvm-profdata merge -sparse "${PROFRAW_FILES[@]}" -o "$PROFDATA"
 

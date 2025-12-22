@@ -103,7 +103,7 @@ namespace utils {
         if (std::isnan(a) || std::isnan(b))
             return false;
 
-            return std::fabs(a - b) <= std::max(relEps * std::max(std::fabs(a), std::fabs(b)), absEps);
+        return std::fabs(a - b) <= std::max(relEps * std::max(std::fabs(a), std::fabs(b)), absEps);
     }
 
     // chooses a constructor for the Assignment class based on the user input given

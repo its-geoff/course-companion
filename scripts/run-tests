@@ -8,7 +8,7 @@ usage() {
     exit 1
 }
 
-OUTPUT_DIR="$HOME/Documents/VS_Code/course-companion/tests/output_logs"
+OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
 mkdir -p "$OUTPUT_DIR"
 
 ENABLE_COVERAGE=0
@@ -32,8 +32,11 @@ done
 # ---------------------------
 # Set coverage environment
 # ---------------------------
+PARENT_DIR="$(pwd)/.."
+COVERAGE_DIR="$PARENT_DIR/coverage"
+
 if [[ $ENABLE_COVERAGE -eq 1 ]]; then
-    export LLVM_PROFILE_FILE="$(pwd)/%p.profraw"
+    export LLVM_PROFILE_FILE="$COVERAGE_DIR/profraw/%p.profraw"
     echo "Coverage enabled. LLVM_PROFILE_FILE set to $LLVM_PROFILE_FILE"
 fi
 

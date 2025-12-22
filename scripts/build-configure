@@ -23,13 +23,14 @@ while getopts ":tc" opt; do
 done
 
 # ---------------------------
-# Set build directories
+# Set directories
 # ---------------------------
 BUILD_DIR="build_main"
 if [[ $BUILD_TESTS -eq 1 ]]; then
     BUILD_DIR="build_test"
 fi
 mkdir -p "$BUILD_DIR"
+COVERAGE_DIR="$(pwd)/coverage"
 
 # ---------------------------
 # Set compiler for macOS
@@ -39,11 +40,11 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
     # Force AppleClang for coverage to avoid linker/hash issues
     export CC=/usr/bin/clang
     export CXX=/usr/bin/clang++
-    LLVM_PROFILE_FILE="$BUILD_DIR/%p.profraw"
+    LLVM_PROFILE_FILE="$COVERAGE_DIR/profraw/%p.profraw"
     if [[ $ENABLE_COVERAGE -eq 1 ]]; then
         export LLVM_PROFILE_FILE
         # Clean old .profraw files to avoid version mismatch
-        rm -f "$BUILD_DIR"/*.profraw || true
+        rm -f "$COVERAGE_DIR"/profraw/*.profraw || true
         echo "Coverage enabled. LLVM_PROFILE_FILE set to $LLVM_PROFILE_FILE"
     fi
 fi

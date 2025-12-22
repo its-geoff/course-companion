@@ -315,6 +315,18 @@ TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
                         "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
 }
 
+TEST_F(AssignmentTest, OverloadedEqualsSameTitleDifferentParams) {
+    Assignment assignment2{"Homework 1", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment3{"Homework 3", "Focus on functions.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment4{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/19}, true, 95.18f};
+    Assignment assignment5{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, false, 92.71f};
+
+    ASSERT_FALSE(assignment1 == assignment2);
+    ASSERT_FALSE(assignment1 == assignment3);
+    ASSERT_FALSE(assignment1 == assignment4);
+    ASSERT_FALSE(assignment1 == assignment5);
+}
+
 // TO-DO: after requiring assignment titles to be different, add test case to compare two assignments with same titles (overloaded == assert false)
 
 // ====================================

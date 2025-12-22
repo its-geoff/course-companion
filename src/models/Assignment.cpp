@@ -153,7 +153,11 @@ void Assignment::printAssignmentInfo(std::ostream &os) {
     os << "===========================================================" << std::endl;
 }
 
-// equality comparison based on Assignment titles
+// equality comparison based on all relevant Assignment fields
 bool Assignment::operator==(const Assignment &other) const {
-    return title_ == other.title_;
+    return title_ == other.title_
+        && dueDate_ == other.dueDate_
+        && completed_ == other.completed_
+        && grade_ == other.grade_
+        && description_ == other.description_;
 }
