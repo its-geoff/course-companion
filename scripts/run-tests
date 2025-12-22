@@ -1,34 +1,54 @@
 #!/bin/bash
+set -e  # exit on error
 
 usage() {
-    echo "Usage: run-tests [-V]"
+    echo "Usage: run-tests [-V] [-c]"
     echo "  -V: verbose test output"
+    echo "  -c: enable coverage (generate .profraw files)"
+    exit 1
 }
 
-option_given=0
-
 OUTPUT_DIR="$HOME/Documents/VS_Code/course-companion/tests/output_logs"
+mkdir -p "$OUTPUT_DIR"
 
-while getopts ":V" opt; do
-    option_given=1
+ENABLE_COVERAGE=0
+VERBOSE=0
+
+while getopts ":Vc" opt; do
     case $opt in
         V)
-            ctest --verbose
+            VERBOSE=1
+            ;;
+        c)
+            ENABLE_COVERAGE=1
             ;;
         \?)
             echo "Invalid option: -$opt" >&2
             usage
-            exit 1
             ;;
     esac
 done
 
-if [ $option_given -eq 0 ]; then
+# ---------------------------
+# Set coverage environment
+# ---------------------------
+if [[ $ENABLE_COVERAGE -eq 1 ]]; then
+    export LLVM_PROFILE_FILE="$(pwd)/%p.profraw"
+    echo "Coverage enabled. LLVM_PROFILE_FILE set to $LLVM_PROFILE_FILE"
+fi
+
+# ---------------------------
+# Run tests
+# ---------------------------
+if [[ $VERBOSE -eq 1 ]]; then
+    ctest --verbose
+else
     ctest --output-on-failure
 fi
 
-mkdir -p "$OUTPUT_DIR"
-
+# ---------------------------
+# Save last test log
+# ---------------------------
 if [ -f Testing/Temporary/LastTest.log ]; then
     cp Testing/Temporary/LastTest.log "$OUTPUT_DIR/"
 else

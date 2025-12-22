@@ -1,0 +1,6 @@
+{
+    "coverage-gutters.coverageFileNames": [
+        "build/build_main/lcov/*.info",
+        "build/build_test/lcov/*.info"
+    ]
+}

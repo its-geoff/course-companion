@@ -33,6 +33,16 @@ add_executable(UtilsTests unit/UtilsTests.cpp)
 target_link_libraries(UtilsTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME UtilsTests COMMAND UtilsTests)
 
+# ---------------------------
+# Code coverage
+# ---------------------------
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    foreach(test_target AssignmentTests CourseTests UtilsTests)
+        target_compile_options(${test_target} PRIVATE --coverage)
+        target_link_options(${test_target} PRIVATE --coverage)
+    endforeach()
+endif()
+
 # output directory
 set_target_properties(AssignmentTests PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
