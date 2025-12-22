@@ -30,23 +30,15 @@ Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate) {
     dueDate_ = dueDate;
 }
 
-Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed) {
-    utils::validateTitle(title);
-    utils::validateDate(dueDate);
-    
-    title_ = title;
-    dueDate_ = dueDate;
+Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed)
+    : Assignment(title, dueDate) {
     completed_ = completed;
 }
 
-Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed, float grade) {
-    utils::validateTitle(title);
-    utils::validateDate(dueDate);
+Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed, 
+    float grade) : Assignment(title, dueDate, completed) {
     validateGrade(grade);
 
-    title_ = title;
-    dueDate_ = dueDate;
-    completed_ = completed;
     grade_ = grade;
 }
 
@@ -69,25 +61,14 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
     dueDate_ = dueDate;
 }
 
-Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed) {
-    utils::validateTitle(title);
-    utils::validateDate(dueDate);
-    
-    title_ = title;
-    description_ = description;
-    dueDate_ = dueDate;
+Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, 
+    bool completed) : Assignment(title, description, dueDate) {
     completed_ = completed;
 }
 
-Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade) {
-    utils::validateTitle(title);
-    utils::validateDate(dueDate);
+Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, 
+    bool completed, float grade) : Assignment(title, description, dueDate, completed) {
     validateGrade(grade);
-    
-    title_ = title;
-    description_ = description;
-    dueDate_ = dueDate;
-    completed_ = completed;
     grade_ = grade;
 }
 
