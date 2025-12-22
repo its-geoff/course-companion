@@ -32,8 +32,11 @@ done
 # ---------------------------
 # Set coverage environment
 # ---------------------------
+PARENT_DIR="$(pwd)/.."
+COVERAGE_DIR="$PARENT_DIR/coverage"
+
 if [[ $ENABLE_COVERAGE -eq 1 ]]; then
-    export LLVM_PROFILE_FILE="$(pwd)/%p.profraw"
+    export LLVM_PROFILE_FILE="$COVERAGE_DIR/profraw/%p.profraw"
     echo "Coverage enabled. LLVM_PROFILE_FILE set to $LLVM_PROFILE_FILE"
 fi
 
