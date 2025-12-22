@@ -19,11 +19,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(ENABLE_COVERAGE "Enable code test coverage" OFF)
 
 if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
-    message(STATUS "Enabling coverage flags for AppleClang")
+    message(STATUS "Enabling coverage flags for Clang/AppleClang")
     add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
     add_link_options(-fprofile-instr-generate)
 endif()
-
 
 # ------------------------
 # Include directories
@@ -41,14 +40,6 @@ add_library(CourseCompanion_lib
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
-
-# ---------------------------
-# Code coverage
-# ---------------------------
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-    target_compile_options(CourseCompanion_lib PRIVATE --coverage)
-    target_link_options(CourseCompanion_lib PRIVATE --coverage)
-endif()
 
 # ------------------------
 # Main executable

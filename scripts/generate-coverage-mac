@@ -37,7 +37,7 @@ mkdir -p "$LCOV_DIR"
 # Merge profraw files
 # ---------------------------
 PROFRAW_FILES=("$BUILD_DIR"/*.profraw)
-if [ ${#PROFRAW_FILES[@]} -eq 0 ]; then
+if [ ! -e "${PROFRAW_FILES[0]}" ]; then
     echo "Error: No .profraw files found in $BUILD_DIR. Did you run the tests with coverage enabled?"
     exit 1
 fi

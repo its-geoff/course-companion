@@ -8,7 +8,7 @@ usage() {
     exit 1
 }
 
-OUTPUT_DIR="$HOME/Documents/VS_Code/course-companion/tests/output_logs"
+OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
 mkdir -p "$OUTPUT_DIR"
 
 ENABLE_COVERAGE=0
