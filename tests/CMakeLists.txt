@@ -20,6 +20,13 @@ target_link_libraries(AssignmentTests PRIVATE CourseCompanion_lib GTest::gtest_m
 add_test(NAME AssignmentTests COMMAND AssignmentTests)
 
 # ---------------------------
+# CourseTests executable
+# ---------------------------
+add_executable(CourseTests unit/CourseTests.cpp)
+target_link_libraries(CourseTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME CourseTests COMMAND CourseTests)
+
+# ---------------------------
 # UtilsTests executable
 # ---------------------------
 add_executable(UtilsTests unit/UtilsTests.cpp)
@@ -28,6 +35,9 @@ add_test(NAME UtilsTests COMMAND UtilsTests)
 
 # output directory
 set_target_properties(AssignmentTests PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+set_target_properties(CourseTests PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 set_target_properties(UtilsTests PROPERTIES

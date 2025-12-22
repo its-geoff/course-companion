@@ -1,54 +1,59 @@
 #!/bin/bash
+set -e  # exit on error
 
 usage() {
-    echo "Usage: run-tests [-V]"
-    echo "  -V: verbose - additional test outputs"
+    echo "Usage: run-tests [-V] [-c]"
+    echo "  -V: verbose test output"
+    echo "  -c: enable coverage (generate .profraw files)"
+    exit 1
 }
 
-OS_NAME=$(uname)
-option_given=0
+OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
+mkdir -p "$OUTPUT_DIR"
 
-if [[ "$OS_NAME" == "Darwin" ]]; then
-    while getopts ":V" opt; do
-        option_given=1
+ENABLE_COVERAGE=0
+VERBOSE=0
 
-        case $opt in
-            V)
-                ctest -V mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
-                cp Testing/Temporary/LastTest.log /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs/
-                ;;
-            \?)
-                echo "Invalid option: -$opt" >&2
-                usage
-                ;;
-        esac
-    done
+while getopts ":Vc" opt; do
+    case $opt in
+        V)
+            VERBOSE=1
+            ;;
+        c)
+            ENABLE_COVERAGE=1
+            ;;
+        \?)
+            echo "Invalid option: -$opt" >&2
+            usage
+            ;;
+    esac
+done
 
-    if [ $option_given -eq 0 ]; then
-        ctest mkdir -p /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs
-        cp Testing/Temporary/LastTest.log /Users/geoffreya/Documents/VS_Code/course-companion/tests/output_logs/
-    fi
-elif [[ "$OS_NAME" == "Linux" ]]; then
-    while getopts ":V" opt; do
-        option_given=1
+# ---------------------------
+# Set coverage environment
+# ---------------------------
+PARENT_DIR="$(pwd)/.."
+COVERAGE_DIR="$PARENT_DIR/coverage"
 
-        case $opt in
-            V)
-                ctest -V mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
-                cp Testing/Temporary/LastTest.log /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs/
-                ;;
-            \?)
-                echo "Invalid option: -$opt" >&2
-                usage
-                ;;
-        esac
-    done
+if [[ $ENABLE_COVERAGE -eq 1 ]]; then
+    export LLVM_PROFILE_FILE="$COVERAGE_DIR/profraw/%p.profraw"
+    echo "Coverage enabled. LLVM_PROFILE_FILE set to $LLVM_PROFILE_FILE"
+fi
 
-    if [ $option_given -eq 0 ]; then
-        ctest mkdir -p /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs
-        cp Testing/Temporary/LastTest.log /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/tests/output_logs/
-    fi
+# ---------------------------
+# Run tests
+# ---------------------------
+if [[ $VERBOSE -eq 1 ]]; then
+    ctest --verbose
 else
-    echo "Unknown OS: $OS_NAME"
-    exit 1
+    ctest --output-on-failure
+fi
+
+# ---------------------------
+# Save last test log
+# ---------------------------
+if [ -f Testing/Temporary/LastTest.log ]; then
+    cp Testing/Temporary/LastTest.log "$OUTPUT_DIR/"
+else
+    echo "Warning: LastTest.log not found"
 fi

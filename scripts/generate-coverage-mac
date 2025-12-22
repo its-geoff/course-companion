@@ -1,0 +1,86 @@
+#!/bin/bash
+set -e  # Exit on error
+
+# ---------------------------
+# Usage
+# ---------------------------
+usage() {
+    echo "Usage: generate-coverage [-h]"
+    echo "  -h  Generate HTML report in addition to .lcov files"
+    exit 1
+}
+
+# ---------------------------
+# Parse options
+# ---------------------------
+HTML_REPORT=0
+
+while getopts ":h" opt; do
+    case $opt in
+        h) HTML_REPORT=1 ;;
+        \?) usage ;;
+    esac
+done
+
+# ---------------------------
+# Paths
+# ---------------------------
+BUILD_DIR="$(pwd)"
+PARENT_DIR="$(pwd)/.."
+COVERAGE_DIR="$PARENT_DIR/coverage"
+SRC_DIR="$(pwd)/../../src"
+TEST_BIN_DIR="$BUILD_DIR/bin"
+
+LCOV_DIR="$COVERAGE_DIR/lcov"
+HTML_DIR="$COVERAGE_DIR/html"
+mkdir -p "$LCOV_DIR"
+
+# ---------------------------
+# Merge profraw files
+# ---------------------------
+shopt -s nullglob
+PROFRAW_FILES=("$COVERAGE_DIR"/profraw/*.profraw)
+shopt -u nullglob
+
+if [ ${#PROFRAW_FILES[@]} -eq 0 ]; then
+    echo "Error: No .profraw files found in $COVERAGE_DIR. Did you run the tests with coverage enabled?"
+    exit 1
+fi
+
+PROFDATA="$COVERAGE_DIR/profdata/coverage.profdata"
+echo "Merging .profraw files into $PROFDATA"
+xcrun llvm-profdata merge -sparse "${PROFRAW_FILES[@]}" -o "$PROFDATA"
+
+# ---------------------------
+# Generate .lcov files
+# ---------------------------
+echo "Generating .lcov files in $LCOV_DIR"
+for bin in "$TEST_BIN_DIR"/*; do
+    [[ -x "$bin" ]] || continue
+    bin_name="$(basename "$bin")"
+    echo "Processing $bin_name"
+    xcrun llvm-cov export \
+        "$bin" \
+        -instr-profile="$PROFDATA" \
+        -format=lcov \
+        > "$LCOV_DIR/$bin_name.info"
+done
+
+# ---------------------------
+# Optional HTML report
+# ---------------------------
+if [[ $HTML_REPORT -eq 1 ]]; then
+    mkdir -p "$HTML_DIR"
+    echo "Generating HTML report in $HTML_DIR"
+    for bin in "$TEST_BIN_DIR"/*; do
+        [[ -x "$bin" ]] || continue
+        xcrun llvm-cov show "$bin" \
+            -instr-profile="$PROFDATA" \
+            -format=html \
+            -output-dir="$HTML_DIR" \
+            -ignore-filename-regex=".*/external/.*"
+    done
+fi
+
+echo "All .lcov files generated in $LCOV_DIR"
+[[ $HTML_REPORT -eq 1 ]] && echo "HTML report generated in $HTML_DIR"

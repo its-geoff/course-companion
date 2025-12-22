@@ -1,55 +1,74 @@
 #!/bin/bash
+set -e  # Exit on any error
 
 usage() {
-    echo "Usage: build-configure [-t]"
+    echo "Usage: $0 [-t] [-c]"
     echo "  -t: Build test files"
+    echo "  -c: Enable code coverage"
+    exit 1
 }
 
-OS_NAME=$(uname)
-option_given=0
+# ---------------------------
+# Parse options
+# ---------------------------
+BUILD_TESTS=0
+ENABLE_COVERAGE=0
 
-if [[ "$OS_NAME" == "Darwin" ]]; then
-    while getopts ":t" opt; do
-        option_given=1
+while getopts ":tc" opt; do
+    case $opt in
+        t) BUILD_TESTS=1 ;;
+        c) ENABLE_COVERAGE=1 ;;
+        \?) usage ;;
+    esac
+done
 
-        case $opt in
-            t)
-                cmake -S .. -B build_test -DCMAKE_TOOLCHAIN_FILE=build/build_test/conan_toolchain.cmake -DBUILD_TESTING=ON
-                ;;
-            \?)
-                echo "Invalid option: -$opt" >&2
-                usage
-                ;;
-        esac
-    done
-
-    if [ $option_given -eq 0 ]; then
-        # create toolchain file for build
-        cmake -S .. -B build_main -DCMAKE_TOOLCHAIN_FILE=build/build_main/conan_toolchain.cmake
-    fi
-elif [[ "$OS_NAME" == "Linux" ]]; then
-    while getopts ":t" opt; do
-        option_given=1
-
-        case $opt in
-            t)
-                cmake -S /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion \
-                    -B /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/build/build_test \
-                    -DBUILD_TESTING=ON
-                ;;
-            \?)
-                echo "Invalid option: -$opt" >&2
-                usage
-                ;;
-        esac
-    done
-
-    if [ $option_given -eq 0 ]; then
-        # create toolchain file for build
-        cmake -S /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion \
-            -B /mnt/c/Users/Geoffrey/Documents/VS_Code/course-companion/build/build_main
-    fi
-else
-    echo "Unknown OS: $OS_NAME"
-    exit 1
+# ---------------------------
+# Set directories
+# ---------------------------
+BUILD_DIR="build_main"
+if [[ $BUILD_TESTS -eq 1 ]]; then
+    BUILD_DIR="build_test"
 fi
+mkdir -p "$BUILD_DIR"
+COVERAGE_DIR="$(pwd)/coverage"
+
+# ---------------------------
+# Set compiler for macOS
+# ---------------------------
+OS_NAME=$(uname)
+if [[ "$OS_NAME" == "Darwin" ]]; then
+    # Force AppleClang for coverage to avoid linker/hash issues
+    export CC=/usr/bin/clang
+    export CXX=/usr/bin/clang++
+    LLVM_PROFILE_FILE="$COVERAGE_DIR/profraw/%p.profraw"
+    if [[ $ENABLE_COVERAGE -eq 1 ]]; then
+        export LLVM_PROFILE_FILE
+        # Clean old .profraw files to avoid version mismatch
+        rm -f "$COVERAGE_DIR"/profraw/*.profraw || true
+        echo "Coverage enabled. LLVM_PROFILE_FILE set to $LLVM_PROFILE_FILE"
+    fi
+fi
+
+# ---------------------------
+# Run Conan install
+# ---------------------------
+echo "Installing dependencies..."
+conan install .. --build=missing -of "$BUILD_DIR"
+
+CMAKE_TOOLCHAIN_FILE="$(pwd)/$BUILD_DIR/conan_toolchain.cmake"
+
+# ---------------------------
+# Configure CMake
+# ---------------------------
+CMAKE_ARGS="-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE"
+if [[ $BUILD_TESTS -eq 1 ]]; then
+    CMAKE_ARGS="$CMAKE_ARGS -DBUILD_TESTING=ON"
+fi
+if [[ $ENABLE_COVERAGE -eq 1 ]]; then
+    CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON"
+fi
+
+echo "Configuring build in $BUILD_DIR..."
+cmake -S .. -B "$BUILD_DIR" $CMAKE_ARGS
+
+echo "Build configured successfully in $BUILD_DIR"

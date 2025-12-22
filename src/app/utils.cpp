@@ -9,13 +9,27 @@
  * multiple components.
  */
 
-#include <algorithm>       // for all_of
-#include <cctype>          // for isspace
+#include <algorithm>        // for all_of
+#include <cctype>           // for isspace
+#include <cmath>            // for fabs, min, and max
+#include <limits>           // for numeric limits
 
 namespace utils {
     // checks if a string is only whitespace
     bool isOnlyWhitespace(const std::string_view str) {
         return std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); });
+    }
+
+    // throws an exception if a string is empty
+    void validateTitle(std::string_view title) {
+        if (isOnlyWhitespace(title))
+            throw std::invalid_argument("Title must be non-empty.");
+    }
+
+    // throws an exception if a date is non-existent
+    void validateDate(std::chrono::year_month_day date) {
+        if (!date.ok())
+            throw std::invalid_argument("Date is invalid.");
     }
 
     // reads optional string from user input
@@ -71,6 +85,25 @@ namespace utils {
             return std::nullopt;
 
         return std::stof(response);
+    }
+
+    // converts bool value of completed into a string for output
+    std::string boolToString(bool value) {
+        if (value)
+            return "Yes";
+        else
+            return "No";
+    }
+
+    // checks if two floats are equal while taking into account relative and absolute tolerance
+    bool floatEqual(float a, float b, float relEps, float absEps) {
+        if (a == b)
+            return true;
+
+        if (std::isnan(a) || std::isnan(b))
+            return false;
+
+        return std::fabs(a - b) <= std::max(relEps * std::max(std::fabs(a), std::fabs(b)), absEps);
     }
 
     // chooses a constructor for the Assignment class based on the user input given

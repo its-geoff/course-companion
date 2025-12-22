@@ -143,10 +143,12 @@ TEST_F(AssignmentTest, PrintAssignmentInfo) {
                         "Due Date: 2025-11-20\nCompleted? Yes\nGrade: 95.18\n===========================================================\n");
 }
 
-TEST_F(AssignmentTest, CompletedString) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
-    ASSERT_EQ(assignment1.completedString(assignment1.getCompleted()), "Yes");
-    ASSERT_EQ(assignment2.completedString(assignment2.getCompleted()), "No");
+TEST_F(AssignmentTest, OverloadedEquals) {
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, true, 75};
+    Assignment assignment3{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+
+    ASSERT_TRUE(assignment1 == assignment3);
+    ASSERT_FALSE(assignment1 == assignment2);
 }
 
 // ====================================
@@ -312,6 +314,20 @@ TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
     ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
                         "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
 }
+
+TEST_F(AssignmentTest, OverloadedEqualsSameTitleDifferentParams) {
+    Assignment assignment2{"Homework 1", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment3{"Homework 3", "Focus on functions.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment4{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/19}, true, 95.18f};
+    Assignment assignment5{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, false, 92.71f};
+
+    ASSERT_FALSE(assignment1 == assignment2);
+    ASSERT_FALSE(assignment1 == assignment3);
+    ASSERT_FALSE(assignment1 == assignment4);
+    ASSERT_FALSE(assignment1 == assignment5);
+}
+
+// TO-DO: after requiring assignment titles to be different, add test case to compare two assignments with same titles (overloaded == assert false)
 
 // ====================================
 // CLASS USE CASES
