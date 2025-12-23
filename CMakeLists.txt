@@ -18,20 +18,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(ENABLE_COVERAGE "Enable code test coverage" OFF)
 
-if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
-    message(STATUS "Enabling coverage flags for Clang/AppleClang")
-    add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
-    add_link_options(-fprofile-instr-generate)
-endif()
-
 # ------------------------
 # Include directories
 # ------------------------
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# ------------------------
+# -------------------------------
 # Library containing app logic
-# ------------------------
+# -------------------------------
 add_library(CourseCompanion_lib
     src/models/Assignment.cpp
     src/models/Course.cpp
@@ -41,21 +35,31 @@ add_library(CourseCompanion_lib
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
 
+# -------------------------------
+# Helper function for coverage
+# -------------------------------
+function(enable_coverage target)
+    if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
+        target_compile_options(${target} PRIVATE
+            -fprofile-instr-generate -fcoverage-mapping
+        )
+        target_link_options(${target} PRIVATE
+            -fprofile-instr-generate
+        )
+    endif()
+endfunction()
+
 # ------------------------
 # Main executable
 # ------------------------
-add_executable(CourseCompanion
-    src/app/main.cpp
-    src/app/utils.cpp
-)
-
-target_link_libraries(CourseCompanion PRIVATE CourseCompanion_lib)
-
-set_target_properties(CourseCompanion PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-)
-
-option(BUILD_TESTING "Build tests" OFF)
+if(NOT BUILD_TESTING)
+    add_executable(CourseCompanion src/main.cpp)
+    target_link_libraries(CourseCompanion PRIVATE CourseCompanion_lib)
+    
+    set_target_properties(CourseCompanion PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    )
+endif()
 
 if(BUILD_TESTING)
     enable_testing()

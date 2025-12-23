@@ -20,7 +20,8 @@
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/build_test/conan_toolchain.cmake",
                 "CMAKE_BUILD_TYPE": "Debug",
-                "BUILD_TESTING": "ON"
+                "BUILD_TESTING": "ON",
+                "ENABLE_COVERAGE": "ON"
             }
         }
     ],
