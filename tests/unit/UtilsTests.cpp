@@ -40,6 +40,19 @@ TEST(UtilsTest, FloatEqual) {
     ASSERT_FALSE(utils::floatEqual(1.0f, 1.1f));
 }
 
+TEST(UtilsTest, PrintMap) {
+    std::map<int, std::string> numbers = {
+        {1, "one"},
+        {2, "two"},
+        {3, "three"}
+    };
+
+    std::stringstream ss;
+    utils::printMap(numbers, ss);
+
+    ASSERT_EQ(ss.str(), ("1 -> one\n2 -> two\n3 -> three\n"));
+}
+
 TEST(UtilsTest, ChooseAssignmentConstructor) {
     Assignment assignment2 = utils::chooseAssignmentConstructor(
         "Homework 1", 

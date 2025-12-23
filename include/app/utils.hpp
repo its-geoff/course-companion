@@ -20,12 +20,22 @@ namespace utils {
     bool isOnlyWhitespace(const std::string_view str);
     void validateTitle(std::string_view title);
     void validateDate(std::chrono::year_month_day dueDate);
-    std::optional<std::string> readOptionalString(std::istream &is);
-    std::optional<std::chrono::year_month_day> readOptionalDate(std::istream &is);
-    std::optional<bool> readOptionalBool(std::istream &is);
-    std::optional<float> readOptionalFloat(std::istream &is);
+    std::optional<std::string> readOptionalString(std::istream &is = std::cin);
+    std::optional<std::chrono::year_month_day> readOptionalDate(std::istream &is = std::cin);
+    std::optional<bool> readOptionalBool(std::istream &is = std::cin);
+    std::optional<float> readOptionalFloat(std::istream &is = std::cin);
     std::string boolToString(bool value);
     bool floatEqual(float a, float b, float relEps = std::numeric_limits<float>::epsilon() * 10, float absEps = 1e-8f);
+
+    // included in header since it's template function
+    // prints a map in the format "first -> second"
+    template <typename T>
+    void printMap(const T& map, std::ostream &os) {
+        for (const auto& [first, second] : map) {
+            os << first << " -> " << second << "\n";
+        }
+    }
+
     Assignment chooseAssignmentConstructor(std::string title, std::optional<std::string> description, std::optional<std::chrono::year_month_day> date, 
         std::optional<bool> completed, std::optional<float> grade);
 }

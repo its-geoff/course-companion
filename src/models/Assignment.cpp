@@ -22,11 +22,10 @@ Assignment::Assignment(std::string title) {
     dueDate_ = std::chrono::year_month_day(today);
 }
 
-Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate) {
-    utils::validateTitle(title);
+Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate) : 
+    Assignment(title) {
     utils::validateDate(dueDate);
 
-    title_ = title;
     dueDate_ = dueDate;
 }
 
@@ -82,27 +81,27 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
 //     course_ = course;
 // }  -> no Course implementation yet
 
-std::string_view Assignment::getTitle() {
+std::string_view Assignment::getTitle() const {
     return title_;
 }
 
-std::string_view Assignment::getDescription() {
+std::string_view Assignment::getDescription() const {
     return description_;
 }
 
-std::chrono::year_month_day Assignment::getDueDate() {
+std::chrono::year_month_day Assignment::getDueDate() const {
     return dueDate_;
 }
 
-bool Assignment::getCompleted() {
+bool Assignment::getCompleted() const {
     return completed_;
 }
 
-float Assignment::getGrade() {
+float Assignment::getGrade() const {
     return grade_;
 }
 
-// Course Assignment::getCourse() {
+// Course Assignment::getCourse() const {
 //     return course_;
 // }  -> no Course implementation yet
 
@@ -156,8 +155,8 @@ void Assignment::printAssignmentInfo(std::ostream &os) {
 // equality comparison based on all relevant Assignment fields
 bool Assignment::operator==(const Assignment &other) const {
     return title_ == other.title_
+        && description_ == other.description_
         && dueDate_ == other.dueDate_
         && completed_ == other.completed_
-        && grade_ == other.grade_
-        && description_ == other.description_;
+        && grade_ == other.grade_;
 }

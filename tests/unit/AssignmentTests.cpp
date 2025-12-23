@@ -243,43 +243,43 @@ TEST_F(AssignmentTest, GradeSetterBoundaryHigh) {
 // ====================================
 
 // invalid initializations without description defined
-TEST_F(AssignmentTest, OneParamInitializationInvalid) {
+TEST_F(AssignmentTest, OneParamInitializationInvalidTitle) {
     // throw invalid argument since input is empty
     ASSERT_THROW((Assignment{""}), std::invalid_argument);
 }
 
-TEST_F(AssignmentTest, TwoParamInitializationInvalid) {
+TEST_F(AssignmentTest, TwoParamInitializationInvalidDate) {
     // throw invalid argument since date does not exist 
     ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/2/30}}), std::invalid_argument);
 }
 
-TEST_F(AssignmentTest, FourParamInitializationInvalidLow) {
+TEST_F(AssignmentTest, FourParamInitializationInvalidGradeLow) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, -20.24f}), std::out_of_range);
 }
 
-TEST_F(AssignmentTest, FourParamInitializationInvalidHigh) {
+TEST_F(AssignmentTest, FourParamInitializationInvalidGradeHigh) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 200.24f}), std::out_of_range);
 }
 
 // invalid initializations with description defined
-TEST_F(AssignmentTest, TwoParamDescInitializationInvalid) {
+TEST_F(AssignmentTest, TwoParamDescInitializationInvalidTitle) {
     // throw invalid argument since title is empty
     ASSERT_THROW((Assignment{"", "Focus on lexical analysis."}), std::invalid_argument);
 }
 
-TEST_F(AssignmentTest, ThreeParamDescInitializationInvalid) {
+TEST_F(AssignmentTest, ThreeParamDescInitializationInvalidDate) {
     // throw invalid argument since date does not exist
     ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/2/30}}), std::invalid_argument);
 }
 
-TEST_F(AssignmentTest, FiveParamDescInitializationInvalidLow) {
+TEST_F(AssignmentTest, FiveParamDescInitializationInvalidGradeLow) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, -20.24f}), std::out_of_range);
 }
 
-TEST_F(AssignmentTest, FiveParamDescInitializationInvalidHigh) {
+TEST_F(AssignmentTest, FiveParamDescInitializationInvalidGradeHigh) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, 200.24f}), std::out_of_range);
 }
