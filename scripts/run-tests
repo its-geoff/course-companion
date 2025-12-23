@@ -8,7 +8,6 @@ usage() {
 }
 
 OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
-echo "Test logs will be written to: $OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
 ENABLE_COVERAGE=0
