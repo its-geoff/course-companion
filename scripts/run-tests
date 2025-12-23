@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e  # exit on error
 
 usage() {
     echo "Usage: run-tests [-V] [-c]"
@@ -9,6 +8,7 @@ usage() {
 }
 
 OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
+echo "Test logs will be written to: $OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
 ENABLE_COVERAGE=0
@@ -54,6 +54,7 @@ fi
 # ---------------------------
 if [ -f Testing/Temporary/LastTest.log ]; then
     cp Testing/Temporary/LastTest.log "$OUTPUT_DIR/"
+    echo "Saved test logs to $OUTPUT_DIR"
 else
     echo "Warning: LastTest.log not found"
 fi
