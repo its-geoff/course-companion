@@ -28,7 +28,7 @@
  */
 class Course {
     private:
-        std::string id_{};
+        std::string id_{};  // UUID v4 automatically generated during construction
         std::string title_{};
         std::string description_{};
         std::chrono::year_month_day startDate_{};

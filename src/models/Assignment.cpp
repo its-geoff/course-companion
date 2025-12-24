@@ -155,7 +155,7 @@ void Assignment::printAssignmentInfo(std::ostream &os) {
     os << "===========================================================" << "\n";
 }
 
-// equality comparison based on all relevant Assignment fields
+// equality comparison based on unique identifier (UUID)
 bool Assignment::operator==(const Assignment &other) const {
     return id_ == other.id_;
 }

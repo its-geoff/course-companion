@@ -306,7 +306,7 @@ void Course::printCourseInfo(std::ostream &os) {
 //     std::erase(assignmentList_, assignment);
 // }
 
-// equality comparison based on all relevant Course fields
+// equality comparison based on unique identifier (UUID)
 bool Course::operator==(const Course &other) const {
     return id_ == other.id_;
 }
