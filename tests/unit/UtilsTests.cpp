@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>
+#include <regex>        // for UUID testing
+#include <unordered_set>    // for UUID testing
 #include "app/utils.hpp"
 
 using namespace std::chrono_literals;
@@ -7,6 +9,33 @@ using namespace std::chrono_literals;
 // ====================================
 // FUNCTION SMOKE TESTS
 // ====================================
+
+TEST(UtilsTest, GenerateUuidNotEmpty) {
+    std::string uuid = utils::generateUuid();
+    // check if uuid is not empty
+    ASSERT_FALSE(utils::isOnlyWhitespace(uuid));
+}
+
+TEST(UtilsTest, GenerateUuidFormat) {
+    std::string uuid = utils::generateUuid();
+    std::stringstream ss(utils::generateUuid());
+
+    // allow both letter cases for cross-platform testing
+    std::regex uuidRegex(
+        "^[0-9a-fA-F]{8}-"
+        "[0-9a-fA-F]{4}-"
+        "[0-9a-fA-F]{4}-"
+        "[0-9a-fA-F]{4}-"
+        "[0-9a-fA-F]{12}$"
+    );
+
+    ASSERT_TRUE(std::regex_match(uuid, uuidRegex));
+}
+
+TEST(UtilsTest, GenerateUuidLength) {
+    std::string uuid = utils::generateUuid();
+    ASSERT_EQ(uuid.length(), 36);
+}
 
 TEST(UtilsTest, ReadOptionalString) {
     std::stringstream ss("Homework 2");
@@ -72,6 +101,20 @@ TEST(UtilsTest, ChooseAssignmentConstructor) {
 // ====================================
 // FUNCTION EDGE CASES
 // ====================================
+
+TEST(UtilsTest, UuidUniqueness) {
+    std::unordered_set<std::string> uuids;
+
+    int n = 1000;
+    for (int i = 0; i < n; ++i) {
+        std::string uuid = utils::generateUuid();
+        uuids.insert(uuid);
+    }
+
+    // to check uniqueness, compare size of unordered set to number of UUIDs
+    // (unordered set doesn't include duplicates)
+    ASSERT_EQ(uuids.size(), n);
+}
 
 TEST(UtilsTest, ReadOptionalStringEmpty) {
     std::stringstream ss1("");
