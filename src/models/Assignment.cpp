@@ -13,7 +13,7 @@
 
 using namespace std::chrono_literals;
 
-Assignment::Assignment(std::string title) {
+Assignment::Assignment(std::string title) : id_{utils::generateUuid()} {
     utils::validateTitle(title);
 
     title_ = std::move(title);
@@ -41,7 +41,7 @@ Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, b
     grade_ = grade;
 }
 
-Assignment::Assignment(std::string title, std::string description) {
+Assignment::Assignment(std::string title, std::string description) : id_{utils::generateUuid()} {
     utils::validateTitle(title);
 
     title_ = std::move(title);
@@ -51,12 +51,10 @@ Assignment::Assignment(std::string title, std::string description) {
     dueDate_ = std::chrono::year_month_day(today);
 }
 
-Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate) {
-    utils::validateTitle(title);
+Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate)
+    : Assignment(title, description) {
     utils::validateDate(dueDate);
 
-    title_ = title;
-    description_ = description;
     dueDate_ = dueDate;
 }
 
@@ -80,6 +78,10 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
 //     grade_ = grade;
 //     course_ = course;
 // }  -> no Course implementation yet
+
+std::string_view Assignment::getId() const {
+    return id_;
+}
 
 std::string_view Assignment::getTitle() const {
     return title_;
@@ -141,6 +143,7 @@ void Assignment::validateGrade(float grade) {
 // prints information held by an Assignment object
 void Assignment::printAssignmentInfo(std::ostream &os) {
     os << "===========================================================" << "\n";
+    os << "ID: " << id_ << "\n";
     os << "Assignment Title: " << title_ << "\n";
     if (!description_.empty()) {
         os << "Description: " << description_ << "\n";
@@ -152,11 +155,7 @@ void Assignment::printAssignmentInfo(std::ostream &os) {
     os << "===========================================================" << "\n";
 }
 
-// equality comparison based on all relevant Assignment fields
+// equality comparison based on unique identifier (UUID)
 bool Assignment::operator==(const Assignment &other) const {
-    return title_ == other.title_
-        && description_ == other.description_
-        && dueDate_ == other.dueDate_
-        && completed_ == other.completed_
-        && utils::floatEqual(grade_, other.grade_);
+    return id_ == other.id_;
 }

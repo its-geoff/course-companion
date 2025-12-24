@@ -25,6 +25,7 @@
  */
 class Assignment {
     private:
+        std::string id_{};  // UUID v4 automatically generated during construction
         std::string title_{};
         std::string description_{};
         std::chrono::year_month_day dueDate_{};
@@ -46,6 +47,7 @@ class Assignment {
         // Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade,
         //             Course course);  -> no Course implementation yet
 
+        std::string_view getId() const;
         std::string_view getTitle() const;
         std::string_view getDescription() const;
         std::chrono::year_month_day getDueDate() const;

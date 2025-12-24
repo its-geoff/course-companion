@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <sstream>
+#include <regex>
 #include "models/Course.hpp"
+#include "app/utils.hpp"
 
 using namespace std::chrono_literals;
 
@@ -28,6 +30,11 @@ class CourseTest : public testing::Test {
 // ====================================
 // GETTER SMOKE TESTS
 // ====================================
+
+TEST_F(CourseTest, IdGetter) {
+    // ensure id is not empty
+    ASSERT_FALSE(utils::isOnlyWhitespace(course1.getId()));
+}
 
 TEST_F(CourseTest, TitleGetter) {
     ASSERT_EQ(course1.getTitle(), "CMPE 142");
@@ -200,6 +207,7 @@ TEST_F(CourseTest, GradeScaleSetter) {
 // initializations without description defined
 TEST_F(CourseTest, ThreeParamInitialization) {
     Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
     ASSERT_EQ(course2.getTitle(), "ENGR 195A");
     ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
     ASSERT_EQ(course2.getEndDate(), std::chrono::year_month_day{2025y/12/18});
@@ -207,6 +215,7 @@ TEST_F(CourseTest, ThreeParamInitialization) {
 
 TEST_F(CourseTest, FourParamInitialization) {
     Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
     ASSERT_EQ(course2.getTitle(), "ENGR 195A");
     ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
     ASSERT_EQ(course2.getEndDate(), std::chrono::year_month_day{2025y/12/18});
@@ -215,6 +224,7 @@ TEST_F(CourseTest, FourParamInitialization) {
 
 TEST_F(CourseTest, FiveParamInitialization) {
     Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1, false};
+    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
     ASSERT_EQ(course2.getTitle(), "ENGR 195A");
     ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
     ASSERT_EQ(course2.getEndDate(), std::chrono::year_month_day{2025y/12/18});
@@ -225,6 +235,7 @@ TEST_F(CourseTest, FiveParamInitialization) {
 // initializations with description defined
 TEST_F(CourseTest, FourParamDescInitialization) {
     Course course2{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
     ASSERT_EQ(course2.getTitle(), "ENGR 195A");
     ASSERT_EQ(course2.getDescription(), "Global and Social Issues in Engineering");
     ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
@@ -233,6 +244,7 @@ TEST_F(CourseTest, FourParamDescInitialization) {
 
 TEST_F(CourseTest, FiveParamDescInitialization) {
     Course course2{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
     ASSERT_EQ(course2.getTitle(), "ENGR 195A");
     ASSERT_EQ(course2.getDescription(), "Global and Social Issues in Engineering");
     ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
@@ -242,6 +254,7 @@ TEST_F(CourseTest, FiveParamDescInitialization) {
 
 TEST_F(CourseTest, SixParamDescInitialization) {
     Course course2{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1, false};
+    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
     ASSERT_EQ(course2.getTitle(), "ENGR 195A");
     ASSERT_EQ(course2.getDescription(), "Global and Social Issues in Engineering");
     ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
@@ -258,16 +271,24 @@ TEST_F(CourseTest, PrintCourseInfo) {
     std::stringstream ss;
 
     course1.printCourseInfo(ss);
-    ASSERT_EQ(ss.str(), "===========================================================\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
+    std::string output = ss.str();
+
+    // find and remove the UUID part
+    std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+    output = std::regex_replace(output, uuidRegex, "<UUID>");
+
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
                         "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGPA Value: 0\nCurrent? No\n===========================================================\n");
 }
 
 TEST_F(CourseTest, OverloadedEquals) {
     Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
+    Course course4 = course1;
 
-    ASSERT_TRUE(course1 == course3);
     ASSERT_FALSE(course1 == course2);
+    ASSERT_FALSE(course1 == course3);
+    ASSERT_TRUE(course1 == course4);
 }
 
 // ====================================
@@ -480,18 +501,28 @@ TEST_F(CourseTest, SixParamInitializationInvalidNumCredits) {
 TEST_F(CourseTest, PrintCourseInfoPartial) {
     std::stringstream ss;
     Course course2{"CMPE 142", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
-
     course2.printCourseInfo(ss);
-    ASSERT_EQ(ss.str(), "===========================================================\nCourse Title: CMPE 142\n"
+    std::string output = ss.str();
+
+    // find and remove the UUID part
+    std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+    output = std::regex_replace(output, uuidRegex, "<UUID>");
+
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\n"
                         "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGPA Value: 0\nCurrent? Yes\n===========================================================\n");
 }
 
 TEST_F(CourseTest, PrintCourseInfoDescPartial) {
     std::stringstream ss;
     Course course2{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
-
     course2.printCourseInfo(ss);
-    ASSERT_EQ(ss.str(), "===========================================================\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
+    std::string output = ss.str();
+
+    // find and remove the UUID part
+    std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+    output = std::regex_replace(output, uuidRegex, "<UUID>");
+
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
                         "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGPA Value: 0\nCurrent? Yes\n===========================================================\n");
 }
 
@@ -507,6 +538,13 @@ TEST_F(CourseTest, OverloadedEqualsSameTitleDifferentParams) {
     ASSERT_FALSE(course1 == course4);
     ASSERT_FALSE(course1 == course5);
     ASSERT_FALSE(course1 == course6);
+}
+
+TEST_F(CourseTest, OverloadedEqualsSameParamsDifferentId) {
+    Course course2{"CMPE 142", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
+    Course course3{"CMPE 142", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
+
+    ASSERT_FALSE(course2 == course3);
 }
 
 // ====================================

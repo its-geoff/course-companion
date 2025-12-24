@@ -126,7 +126,7 @@ float Course::calculateGpaVal(const std::string& letterGrade) {
 }
 
 Course::Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day 
-    endDate) {
+    endDate) : id_{utils::generateUuid()} {
     utils::validateTitle(title);
     utils::validateDate(startDate);
     utils::validateDate(endDate);
@@ -148,7 +148,8 @@ Course::Course(std::string title, std::chrono::year_month_day startDate, std::ch
     active_ = active;
 }
 
-Course::Course(std::string title, std::string description, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate) {
+Course::Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
+    std::chrono::year_month_day endDate) : id_{utils::generateUuid()} {
     utils::validateTitle(title);
     utils::validateDate(startDate);
     utils::validateDate(endDate);
@@ -169,6 +170,10 @@ Course::Course(std::string title, std::string description, std::chrono::year_mon
 Course::Course(std::string title, std::string description, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate, 
     int numCredits, bool active) : Course(title, description, startDate, endDate, numCredits) {
     active_ = active;
+}
+
+std::string_view Course::getId() const {
+    return id_;
 }
 
 std::string_view Course::getTitle() const {
@@ -203,7 +208,7 @@ float Course::getGradePct() const {
     return gradePct_;
 }
 
-std::string Course::getLetterGrade() const {
+std::string_view Course::getLetterGrade() const {
     return letterGrade_;
 }
 
@@ -270,7 +275,6 @@ void Course::setActive(bool newActive) {
     active_ = newActive;
 }
 
-// FINISH THIS FUNCTION AND MAKE VALIDATION FUNCTION
 void Course::setGradeScale(const std::map<float, std::string>& newGradeScale) {
     validateGradeScale(newGradeScale);
     gradeScale_ = newGradeScale;
@@ -279,6 +283,7 @@ void Course::setGradeScale(const std::map<float, std::string>& newGradeScale) {
 // prints information held by a Course object
 void Course::printCourseInfo(std::ostream &os) {
     os << "===========================================================" << "\n";
+    os << "ID: " << id_ << "\n";
     os << "Course Title: " << title_ << "\n";
     if (!description_.empty()) {
         os << "Description: " << description_ << "\n";
@@ -301,12 +306,7 @@ void Course::printCourseInfo(std::ostream &os) {
 //     std::erase(assignmentList_, assignment);
 // }
 
-// equality comparison based on all relevant Course fields
+// equality comparison based on unique identifier (UUID)
 bool Course::operator==(const Course &other) const {
-    return title_ == other.title_
-        && description_ == other.description_
-        && startDate_ == other.startDate_
-        && endDate_ == other.endDate_
-        && numCredits_ == other.numCredits_
-        && active_ == other.active_;
+    return id_ == other.id_;
 }

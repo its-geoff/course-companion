@@ -28,6 +28,7 @@
  */
 class Course {
     private:
+        std::string id_{};  // UUID v4 automatically generated during construction
         std::string title_{};
         std::string description_{};
         std::chrono::year_month_day startDate_{};
@@ -66,6 +67,7 @@ class Course {
         Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
             std::chrono::year_month_day endDate, int numCredits, bool active);
 
+        std::string_view getId() const;
         std::string_view getTitle() const;
         std::string_view getDescription() const;
         std::chrono::year_month_day getStartDate() const;
@@ -74,7 +76,7 @@ class Course {
         std::unordered_map<std::string, float> getGradeWeights() const;
         int getNumCredits() const;
         float getGradePct() const;
-        std::string getLetterGrade() const;
+        std::string_view getLetterGrade() const;
         float getGpaVal() const;
         bool getActive() const;
         std::map<float, std::string> getGradeScale() const;     // need to test
