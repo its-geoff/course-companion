@@ -445,7 +445,8 @@ TEST_F(CourseTest, GradeScaleSetterMissingZero) {
 TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
     std::map<float, std::string> gradeScale2 = {
         {110.0, "A++"},
-        {60.0, "F"}
+        {60.0, "C"},
+        {0.0, "F"}
     };
 
     ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
@@ -454,7 +455,8 @@ TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
 TEST_F(CourseTest, GradeScaleSetterUpperBound) {
     std::map<float, std::string> gradeScale2 = {
         {100.0, "A++"},
-        {90.0, "A-"}
+        {90.0, "A-"},
+        {0.0, "F"}
     };
 
     ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
