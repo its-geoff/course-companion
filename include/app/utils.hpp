@@ -18,6 +18,7 @@
 
 namespace utils {
     bool isOnlyWhitespace(const std::string_view str);
+    std::string generateUuid();
     void validateTitle(std::string_view title);
     void validateDate(std::chrono::year_month_day dueDate);
     std::optional<std::string> readOptionalString(std::istream &is = std::cin);

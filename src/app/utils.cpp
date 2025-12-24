@@ -13,11 +13,21 @@
 #include <cctype>           // for isspace
 #include <cmath>            // for fabs, min, and max
 #include <limits>           // for numeric limits
+#include <uuid/uuid.h>      // for UUID
 
 namespace utils {
     // checks if a string is only whitespace
     bool isOnlyWhitespace(const std::string_view str) {
         return std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); });
+    }
+
+    // generates a unique ID across all objects and classes
+    std::string generateUuid() {
+        uuid_t id;
+        uuid_generate_random(id);   // use UUID v4 for random generation
+        char str[37];
+        uuid_unparse(id, str);
+        return std::string(str);
     }
 
     // throws an exception if a string is empty
