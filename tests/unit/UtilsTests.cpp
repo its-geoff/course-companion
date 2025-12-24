@@ -18,7 +18,6 @@ TEST(UtilsTest, GenerateUuidNotEmpty) {
 
 TEST(UtilsTest, GenerateUuidFormat) {
     std::string uuid = utils::generateUuid();
-    std::stringstream ss(utils::generateUuid());
 
     // allow both letter cases for cross-platform testing
     std::regex uuidRegex(
@@ -108,12 +107,13 @@ TEST(UtilsTest, UuidUniqueness) {
     int n = 1000;
     for (int i = 0; i < n; ++i) {
         std::string uuid = utils::generateUuid();
-        uuids.insert(uuid);
+        auto result = uuids.insert(uuid);
+        ASSERT_TRUE(result.second);
     }
 
     // to check uniqueness, compare size of unordered set to number of UUIDs
     // (unordered set doesn't include duplicates)
-    ASSERT_EQ(uuids.size(), n);
+    ASSERT_EQ(uuids.size(), static_cast<std::size_t>(n));
 }
 
 TEST(UtilsTest, ReadOptionalStringEmpty) {

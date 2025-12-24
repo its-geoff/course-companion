@@ -24,7 +24,7 @@ namespace utils {
     // generates a unique ID across all objects and classes
     std::string generateUuid() {
         uuid_t id;
-        uuid_generate(id);
+        uuid_generate_random(id);   // use UUID v4 for random generation
         char str[37];
         uuid_unparse(id, str);
         return std::string(str);
