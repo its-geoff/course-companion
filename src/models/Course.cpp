@@ -16,14 +16,14 @@
 using namespace std::chrono_literals;
 
 // default grade weights if unset; must add up to 1.0
-std::unordered_map<std::string, float> Course::gradeWeightsDefault_ = {
+const std::unordered_map<std::string, float> Course::gradeWeightsDefault_ = {
     {"Homework", 0.25},
     {"Midterm", 0.35},
     {"Final Exam", 0.4}
 };
 
 // associates each percentage range to a letter grade
-std::map<float, std::string> Course::gradeScale_ = {
+const std::map<float, std::string> Course::gradeScaleDefault_ = {
     {97.0, "A+"},
     {93.0, "A"},
     {90.0, "A-"},
@@ -40,7 +40,7 @@ std::map<float, std::string> Course::gradeScale_ = {
 };
 
 // associates each letter grade with a GPA value
-std::unordered_map<std::string, float> Course::gpaScale_ = {
+const std::unordered_map<std::string, float> Course::gpaScale_ = {
     {"A+", 4.0},
     {"A", 4.0},
     {"A-", 3.7},
@@ -82,14 +82,28 @@ void Course::validateGradePct(float gradePct) {
         throw std::out_of_range("Grade percentage must be from 0 to 100.");
 }
 
+// throws an exception if the grade scale is empty or does not provide grades for 0-100
+void Course::validateGradeScale(const std::map<float, std::string>& gradeScale) {
+    if (gradeScale.empty()) {
+        throw std::runtime_error("Grade scale is empty.");
+    }
+
+    if (!gradeScale.contains(0.0f)) {
+        throw std::runtime_error("Grade scale does not include 0.");
+    }
+
+    auto it = gradeScale.lower_bound(100.0f);
+
+    if (it != gradeScale.end()) {
+        throw std::runtime_error("Grade scale includes values greater than 100.");
+    }
+}
+
+
 // calculate letter grade based on grade scale
 // TO-DO: allow the user to change the grading scale
 std::string Course::calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const {
     auto iter = gradeScale.upper_bound(gradePct);
-
-    if (gradeScale.empty()) {
-        throw std::runtime_error("Cannot calculate letter grade; grade scale is empty.");
-    }
 
     // if gradePct > the highest key, use the last entry
     if (iter == gradeScale.end()) {
@@ -201,6 +215,10 @@ bool Course::getActive() const {
     return active_;
 }
 
+std::map<float, std::string> Course::getGradeScale() const {
+    return gradeScale_;
+}
+
 void Course::setTitle(std::string newTitle) {
     utils::validateTitle(newTitle);
     title_ = newTitle;
@@ -250,6 +268,12 @@ void Course::setGpaVal() {
 
 void Course::setActive(bool newActive) {
     active_ = newActive;
+}
+
+// FINISH THIS FUNCTION AND MAKE VALIDATION FUNCTION
+void Course::setGradeScale(const std::map<float, std::string>& newGradeScale) {
+    validateGradeScale(newGradeScale);
+    gradeScale_ = newGradeScale;
 }
 
 // prints information held by a Course object

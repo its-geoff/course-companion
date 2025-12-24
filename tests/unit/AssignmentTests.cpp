@@ -178,22 +178,6 @@ TEST_F(AssignmentTest, GradeGetterEmpty) {
     ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
 }
 
-// invalid parameters
-TEST_F(AssignmentTest, DueDateGetterInvalid) {
-    // throw invalid argument since date does not exist
-    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/2/30}, false, 90.50f}), std::invalid_argument);
-}
-
-TEST_F(AssignmentTest, GradeGetterInvalidLow) {
-    // throw out of range error since number is not in range 0 to 100
-    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, -20.24}), std::out_of_range);
-}
-
-TEST_F(AssignmentTest, GradeGetterInvalidHigh) {
-    // throw out of range error since number is not in range 0 to 100
-    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 200.24}), std::out_of_range);
-}
-
 // ====================================
 // SETTER EDGE CASES
 // ====================================

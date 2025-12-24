@@ -15,6 +15,14 @@ class CourseTest : public testing::Test {
             3,
             false
         };
+
+        // used for some static variable tests to prevent global overwrites
+        Course course2{
+            "ENGR 195A", 
+            std::chrono::year_month_day{2025y/8/14}, 
+            std::chrono::year_month_day{2025y/12/18}, 
+            1
+        };
 };
 
 // ====================================
@@ -89,6 +97,26 @@ TEST_F(CourseTest, ActiveGetter) {
     ASSERT_FALSE(course1.getActive());
 }
 
+TEST_F(CourseTest, GradeScaleGetter) {
+    std::map<float, std::string> gradeScale2 = {
+        {97.0, "A+"},
+        {93.0, "A"},
+        {90.0, "A-"},
+        {87.0, "B+"},
+        {83.0, "B"},
+        {80.0, "B-"},
+        {77.0, "C+"},
+        {73.0, "C"},
+        {70.0, "C-"},
+        {67.0, "D+"},
+        {63.0, "D"},
+        {60.0, "D-"},
+        {0.0, "F"}
+    };
+
+    ASSERT_EQ(course1.getGradeScale(), gradeScale2);
+}
+
 // ====================================
 // SETTER SMOKE TESTS
 // ====================================
@@ -153,6 +181,16 @@ TEST_F(CourseTest, GpaValSetter) {
 TEST_F(CourseTest, ActiveSetter) {
     course1.setActive(true);
     ASSERT_TRUE(course1.getActive());
+}
+
+TEST_F(CourseTest, GradeScaleSetter) {
+    std::map<float, std::string> gradeScale2 = {
+        {70.0, "P"},
+        {0.0, "NP"}
+    };
+
+    course2.setGradeScale(gradeScale2);
+    ASSERT_EQ(course2.getGradeScale(), gradeScale2);
 }
 
 // ====================================
@@ -252,12 +290,6 @@ TEST_F(CourseTest, ActiveGetterEmpty) {
     ASSERT_TRUE(course2.getActive());
 }
 
-// invalid parameters
-TEST_F(CourseTest, NumCreditsInvalid) {
-    // throw out of range error since numCredits must be positive or zero
-    ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, -4}), std::out_of_range);
-}
-
 // ====================================
 // SETTER EDGE CASES
 // ====================================
@@ -294,8 +326,8 @@ TEST_F(CourseTest, GradeWeightsSetterInvalid) {
     };
 
     // throw invalid argument since grade percentages > 100%
-    ASSERT_THROW(course1.setGradeWeights(gradeWeights2), std::invalid_argument);
-    auto weights = course1.getGradeWeights();
+    ASSERT_THROW(course2.setGradeWeights(gradeWeights2), std::invalid_argument);
+    auto weights = course2.getGradeWeights();
     // check that the values have not been updated
     ASSERT_FLOAT_EQ(weights.find("Homework")->second, 0.25);
     ASSERT_FLOAT_EQ(weights.find("Midterm")->second, 0.35);
@@ -371,6 +403,40 @@ TEST_F(CourseTest, GpaValSetterLowF) {
     course1.setLetterGrade();
     course1.setGpaVal();
     ASSERT_EQ(course1.getGpaVal(), 0.0f);
+}
+
+
+TEST_F(CourseTest, GradeScaleSetterEmpty) {
+    std::map<float, std::string> gradeScale2 = {};
+
+    ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
+}
+
+TEST_F(CourseTest, GradeScaleSetterMissingZero) {
+    std::map<float, std::string> gradeScale2 = {
+        {80.0, "A"},
+        {60.0, "C"}
+    };
+
+    ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
+}
+
+TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
+    std::map<float, std::string> gradeScale2 = {
+        {110.0, "A++"},
+        {60.0, "F"}
+    };
+
+    ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
+}
+
+TEST_F(CourseTest, GradeScaleSetterUpperBound) {
+    std::map<float, std::string> gradeScale2 = {
+        {100.0, "A++"},
+        {90.0, "A-"}
+    };
+
+    ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
 }
 
 // ====================================

@@ -33,19 +33,21 @@ class Course {
         std::chrono::year_month_day startDate_{};
         std::chrono::year_month_day endDate_{};
         std::unordered_map<std::string, Assignment> assignmentList_{};
-        static std::unordered_map<std::string, float> gradeWeightsDefault_;   // default grade weights if not set
+        static const std::unordered_map<std::string, float> gradeWeightsDefault_;   // default grade weights if not set
         std::unordered_map<std::string, float> gradeWeights_{gradeWeightsDefault_}; // weights of each assignment type
         int numCredits_{0};
         float gradePct_{0.0};   // grade percentage from 0 to 100%
         std::string letterGrade_{};
         float gpaVal_{0.0};     // GPA value associated with letter grade
         bool active_{true};     // indicates whether the course is currently ongoing
-        static std::map<float, std::string> gradeScale_;     // lower grade thresholds for letter grades
-        static std::unordered_map<std::string, float> gpaScale_;       // GPA values based on letter grades
+        static const std::map<float, std::string> gradeScaleDefault_;    // default grade scale if not set
+        std::map<float, std::string> gradeScale_{gradeScaleDefault_};     // lower grade thresholds for letter grades
+        static const std::unordered_map<std::string, float> gpaScale_;       // GPA values based on letter grades
 
         void validateGradeWeights(const std::unordered_map<std::string, float>& gradeWeights);
         void validateNumCredits(int numCredits);
         void validateGradePct(float gradePct);
+        void validateGradeScale(const std::map<float, std::string>& gradeScale);
 
         std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const;
         std::string calculateLetterGrade(float gradePct) const;
