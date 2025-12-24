@@ -203,7 +203,7 @@ float Course::getGradePct() const {
     return gradePct_;
 }
 
-std::string Course::getLetterGrade() const {
+std::string_view Course::getLetterGrade() const {
     return letterGrade_;
 }
 

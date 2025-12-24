@@ -74,7 +74,7 @@ class Course {
         std::unordered_map<std::string, float> getGradeWeights() const;
         int getNumCredits() const;
         float getGradePct() const;
-        std::string getLetterGrade() const;
+        std::string_view getLetterGrade() const;
         float getGpaVal() const;
         bool getActive() const;
         std::map<float, std::string> getGradeScale() const;     // need to test

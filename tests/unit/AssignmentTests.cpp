@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
-#include <sstream>
+#include <sstream>      // diverts output from terminal to separate stream
+#include <regex>        // regular expression matching for UUIDs
 #include "models/Assignment.hpp"
+#include "app/utils.hpp"
 
 using namespace std::chrono_literals;
 
@@ -19,6 +21,11 @@ class AssignmentTest : public testing::Test {
 // ====================================
 // GETTER SMOKE TESTS
 // ====================================
+
+TEST_F(AssignmentTest, IdGetter) {
+    // ensure id is not empty
+    ASSERT_FALSE(utils::isOnlyWhitespace(assignment1.getId()));
+}
 
 TEST_F(AssignmentTest, TitleGetter) {
     ASSERT_EQ(assignment1.getTitle(), "Homework 3");
@@ -139,16 +146,24 @@ TEST_F(AssignmentTest, PrintAssignmentInfo) {
     std::stringstream ss;
 
     assignment1.printAssignmentInfo(ss);
-    ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 3\nDescription: Focus on variables and strings.\n"
+    std::string output = ss.str();
+
+    // find and remove the UUID part
+    std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+    output = std::regex_replace(output, uuidRegex, "<UUID>");
+
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment Title: Homework 3\nDescription: Focus on variables and strings.\n"
                         "Due Date: 2025-11-20\nCompleted? Yes\nGrade: 95.18\n===========================================================\n");
 }
 
 TEST_F(AssignmentTest, OverloadedEquals) {
     Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, true, 75};
     Assignment assignment3{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment4 = assignment1;
 
-    ASSERT_TRUE(assignment1 == assignment3);
     ASSERT_FALSE(assignment1 == assignment2);
+    ASSERT_FALSE(assignment1 == assignment3);
+    ASSERT_TRUE(assignment1 == assignment4);
 }
 
 // ====================================
@@ -275,27 +290,42 @@ TEST_F(AssignmentTest, FiveParamDescInitializationInvalidGradeHigh) {
 TEST_F(AssignmentTest, PrintAssignmentInfoPartial) {
     std::stringstream ss;
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}};
-
     assignment2.printAssignmentInfo(ss);
-    ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\n"
+    std::string output = ss.str();
+
+    // find and remove the UUID part
+    std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+    output = std::regex_replace(output, uuidRegex, "<UUID>");
+
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment Title: Homework 1\n"
                         "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
 }
 
 TEST_F(AssignmentTest, PrintAssignmentInfoDescPartial) {
     std::stringstream ss;
     Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}};
-
     assignment2.printAssignmentInfo(ss);
-    ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
+    std::string output = ss.str();
+
+    // find and remove the UUID part
+    std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+    output = std::regex_replace(output, uuidRegex, "<UUID>");
+
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
                         "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
 }
 
 TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
     std::stringstream ss;
     Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, true, 75};
-
     assignment2.printAssignmentInfo(ss);
-    ASSERT_EQ(ss.str(), "===========================================================\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
+    std::string output = ss.str();
+
+    // find and remove the UUID part
+    std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
+    output = std::regex_replace(output, uuidRegex, "<UUID>");
+
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
                         "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
 }
 
@@ -311,7 +341,12 @@ TEST_F(AssignmentTest, OverloadedEqualsSameTitleDifferentParams) {
     ASSERT_FALSE(assignment1 == assignment5);
 }
 
-// TO-DO: after requiring assignment titles to be different, add test case to compare two assignments with same titles (overloaded == assert false)
+TEST_F(AssignmentTest, OverloadedEqualsSameParamsDifferentId) {
+    Assignment assignment2{"Homework 1", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment3{"Homework 1", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+
+    ASSERT_FALSE(assignment2 == assignment3);
+}
 
 // ====================================
 // CLASS USE CASES
