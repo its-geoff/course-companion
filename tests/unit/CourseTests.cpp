@@ -59,7 +59,7 @@ TEST_F(CourseTest, EndDateGetter) {
 TEST_F(CourseTest, GradeWeightsGetter) {
     auto weights = course1.getGradeWeights();
 
-    // check that these key-value pairs are in the vector
+    // check that these key-value pairs are in the map
     ASSERT_TRUE(weights.find("Homework") != weights.end());
     ASSERT_TRUE(weights.find("Final Exam") != weights.end());
 }
@@ -330,14 +330,8 @@ TEST_F(CourseTest, GradePctSetterBoundaryLow) {
 }
 
 TEST_F(CourseTest, GradePctSetterBoundaryHigh) {
-    course1.setGradePct(100.0);
+    course1.setGradePct(100.0f);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 100.0f);
-}
-
-TEST_F(CourseTest, LetterGradeSetterRangeLow) {
-    course1.setGradePct(90.01f);
-    course1.setLetterGrade();
-    ASSERT_EQ(course1.getLetterGrade(), "A-");
 }
 
 TEST_F(CourseTest, LetterGradeSetterRangeHigh) {
@@ -348,6 +342,18 @@ TEST_F(CourseTest, LetterGradeSetterRangeHigh) {
 
 TEST_F(CourseTest, LetterGradeSetterLowF) {
     course1.setGradePct(35.0f);
+    course1.setLetterGrade();
+    ASSERT_EQ(course1.getLetterGrade(), "F");
+}
+
+TEST_F(CourseTest, LetterGradeSetterBoundaryHigh) {
+    course1.setGradePct(100.0f);
+    course1.setLetterGrade();
+    ASSERT_EQ(course1.getLetterGrade(), "A+");
+}
+
+TEST_F(CourseTest, LetterGradeSetterBoundaryLow) {
+    course1.setGradePct(0.0f);
     course1.setLetterGrade();
     ASSERT_EQ(course1.getLetterGrade(), "F");
 }

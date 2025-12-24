@@ -32,6 +32,8 @@ class Assignment {
         float grade_{0.0f};
         // Course course_{};  -> no Course implementation yet
 
+        void validateGrade(float grade);
+
     public:
         Assignment(std::string title);
         Assignment(std::string title, std::chrono::year_month_day dueDate);
@@ -57,7 +59,6 @@ class Assignment {
         void setGrade(float newGrade);
         // void setCourse(Course newCourse);  -> no Course implementation yet
 
-        void validateGrade(float grade);
         void printAssignmentInfo(std::ostream &os);
 
         bool operator==(const Assignment &other) const;

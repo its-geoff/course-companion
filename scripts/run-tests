@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 usage() {
     echo "Usage: run-tests [-V] [-c]"

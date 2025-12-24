@@ -27,7 +27,7 @@ namespace utils {
     std::string boolToString(bool value);
     bool floatEqual(float a, float b, float relEps = std::numeric_limits<float>::epsilon() * 10, float absEps = 1e-8f);
 
-    // included in header since it's template function
+    // included in header since it's a template function
     // prints a map in the format "first -> second"
     template <typename T>
     void printMap(const T& map, std::ostream &os) {

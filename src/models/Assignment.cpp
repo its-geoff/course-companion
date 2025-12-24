@@ -16,7 +16,7 @@ using namespace std::chrono_literals;
 Assignment::Assignment(std::string title) {
     utils::validateTitle(title);
 
-    title_ = title;
+    title_ = std::move(title);
     auto now = std::chrono::system_clock::now();
     auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
     dueDate_ = std::chrono::year_month_day(today);
@@ -44,8 +44,8 @@ Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, b
 Assignment::Assignment(std::string title, std::string description) {
     utils::validateTitle(title);
 
-    title_ = title;
-    description_ = description;
+    title_ = std::move(title);
+    description_ = std::move(description);
     auto now = std::chrono::system_clock::now();
     auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
     dueDate_ = std::chrono::year_month_day(today);
@@ -140,16 +140,16 @@ void Assignment::validateGrade(float grade) {
 
 // prints information held by an Assignment object
 void Assignment::printAssignmentInfo(std::ostream &os) {
-    os << "===========================================================" << std::endl;
-    os << "Assignment Title: " << title_ << std::endl;
+    os << "===========================================================" << "\n";
+    os << "Assignment Title: " << title_ << "\n";
     if (!description_.empty()) {
-        os << "Description: " << description_ << std::endl;
+        os << "Description: " << description_ << "\n";
     };
-    // os << "Course: " << course_.getTitle() << std::endl;  -> no Course implementation yet
-    os << "Due Date: " << dueDate_ << std::endl;
-    os << "Completed? " << utils::boolToString(completed_) << std::endl;
-    os << "Grade: " << grade_ << std::endl;
-    os << "===========================================================" << std::endl;
+    // os << "Course: " << course_.getTitle() << "\n";  -> no Course implementation yet
+    os << "Due Date: " << dueDate_ << "\n";
+    os << "Completed? " << utils::boolToString(completed_) << "\n";
+    os << "Grade: " << grade_ << "\n";
+    os << "===========================================================" << "\n";
 }
 
 // equality comparison based on all relevant Assignment fields
@@ -158,5 +158,5 @@ bool Assignment::operator==(const Assignment &other) const {
         && description_ == other.description_
         && dueDate_ == other.dueDate_
         && completed_ == other.completed_
-        && grade_ == other.grade_;
+        && utils::floatEqual(grade_, other.grade_);
 }

@@ -12,9 +12,9 @@
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
 #include <vector>           // for vector of Assignments
-#include <map>              // for weights and GPA values
-#include <array>            // for array of gradeScale
-#include "models/Assignment.hpp"   // for usage of Assignment objects in vector
+#include <map>              // for GPA scale
+#include <unordered_map>    // for weights and GPA values
+#include "models/Assignment.hpp"   // for usage of Assignment objects in Course
 
 /**
  * @class Course
@@ -43,6 +43,14 @@ class Course {
         static std::map<float, std::string> gradeScale_;     // lower grade thresholds for letter grades
         static std::unordered_map<std::string, float> gpaScale_;       // GPA values based on letter grades
 
+        void validateGradeWeights(const std::unordered_map<std::string, float>& gradeWeights);
+        void validateNumCredits(int numCredits);
+        void validateGradePct(float gradePct);
+
+        std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const;
+        std::string calculateLetterGrade(float gradePct) const;
+        float calculateGpaVal(const std::string& letterGrade);
+
     public:
         Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate);
         Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate,
@@ -60,34 +68,29 @@ class Course {
         std::string_view getDescription() const;
         std::chrono::year_month_day getStartDate() const;
         std::chrono::year_month_day getEndDate() const;
-        std::unordered_map<std::string, Assignment> getAssignmentList() const;
+        // std::unordered_map<std::string, Assignment> getAssignmentList() const;
         std::unordered_map<std::string, float> getGradeWeights() const;
         int getNumCredits() const;
         float getGradePct() const;
         std::string getLetterGrade() const;
         float getGpaVal() const;
         bool getActive() const;
+        std::map<float, std::string> getGradeScale() const;     // need to test
         void setTitle(std::string newTitle);
         void setDescription(std::string newDescription);
         void setStartDate(std::chrono::year_month_day newStartDate);
         void setEndDate(std::chrono::year_month_day newEndDate);
-        void setGradeWeights(std::unordered_map<std::string, float> newGradeWeights);     // ** TESTING
+        void setGradeWeights(const std::unordered_map<std::string, float>& newGradeWeights);
         void setNumCredits(int newNumCredits);
         void setGradePct(float newGradePct);
-        // calculateLetterGrade is used in setLetterGrade
-        std::string calculateLetterGrade(float gradePct, std::map<float, std::string>& gradeScale = gradeScale_);
+        void setGradeScale(const std::map<float, std::string>& newGradeScale);      // need to test
         void setLetterGrade();
-        // calculateGpaVal is used in setGpaVal
-        float calculateGpaVal(std::string letterGrade);
         void setGpaVal();
         void setActive(bool newActive);
 
-        void validateGradeWeights(std::unordered_map<std::string, float> gradeWeights);   // ** TESTING
-        void validateNumCredits(int numCredits);
-        void validateGradePct(float gradePct);
         void printCourseInfo(std::ostream &os);
-        void addAssignment(const Assignment &assignment);
-        void removeAssignment(const Assignment &assignment);
+        // void addAssignment(const Assignment &assignment);
+        // void removeAssignment(const Assignment &assignment);
 
         bool operator==(const Course &other) const;
 };

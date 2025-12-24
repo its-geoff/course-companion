@@ -53,7 +53,7 @@ endfunction()
 # Main executable
 # ------------------------
 if(NOT BUILD_TESTING)
-    add_executable(CourseCompanion src/main.cpp)
+    add_executable(CourseCompanion src/app/main.cpp)
     target_link_libraries(CourseCompanion PRIVATE CourseCompanion_lib)
     
     set_target_properties(CourseCompanion PROPERTIES
