@@ -15,6 +15,14 @@ class CourseTest : public testing::Test {
             3,
             false
         };
+
+        // used for some static variable tests to prevent global overwrites
+        Course course2{
+            "ENGR 195A", 
+            std::chrono::year_month_day{2025y/8/14}, 
+            std::chrono::year_month_day{2025y/12/18}, 
+            1
+        };
 };
 
 // ====================================
@@ -37,22 +45,76 @@ TEST_F(CourseTest, EndDateGetter) {
     ASSERT_EQ(course1.getEndDate(), std::chrono::year_month_day{2025y/12/5});
 }
 
-// insert assignmentList getter
+// TEST_F(CourseTest, AssignmentListGetter) {
+//     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+//     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+//     course1.addAssignment(assignment1);
+//     course1.addAssignment(assignment2);
+//     auto list = course1.getAssignmentList();
+//     ASSERT_EQ(list[0].getTitle(), "Homework 3");
+//     ASSERT_EQ(list[1].getDueDate(), std::chrono::year_month_day{2025y/10/31});
+// }
+
+// TEST_F(CourseTest, AssignmentListGetterCheckSize) {
+//     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+//     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+//     course1.addAssignment(assignment1);
+//     course1.addAssignment(assignment2);
+//     auto list = course1.getAssignmentList();
+//     ASSERT_EQ(list.size(), 2);
+// }
+
+TEST_F(CourseTest, GradeWeightsGetter) {
+    auto weights = course1.getGradeWeights();
+
+    // check that these key-value pairs are in the map
+    ASSERT_TRUE(weights.find("Homework") != weights.end());
+    ASSERT_TRUE(weights.find("Final Exam") != weights.end());
+}
 
 TEST_F(CourseTest, NumCreditsGetter) {
     ASSERT_EQ(course1.getNumCredits(), 3);
 }
 
-// insert gradingScale getter
-
 TEST_F(CourseTest, GradePctGetter) {
     ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0);
 }
 
-// insert letterGrade getter
+TEST_F(CourseTest, LetterGradeGetter) {
+    course1.setGradePct(86.0f);
+    course1.setLetterGrade();
+    ASSERT_EQ(course1.getLetterGrade(), "B");
+}
+
+TEST_F(CourseTest, GpaValGetter) {
+    course1.setGradePct(88.3f);
+    course1.setLetterGrade();
+    course1.setGpaVal();
+    ASSERT_FLOAT_EQ(course1.getGpaVal(), 3.3f);
+}
 
 TEST_F(CourseTest, ActiveGetter) {
     ASSERT_FALSE(course1.getActive());
+}
+
+TEST_F(CourseTest, GradeScaleGetter) {
+    std::map<float, std::string> gradeScale2 = {
+        {97.0, "A+"},
+        {93.0, "A"},
+        {90.0, "A-"},
+        {87.0, "B+"},
+        {83.0, "B"},
+        {80.0, "B-"},
+        {77.0, "C+"},
+        {73.0, "C"},
+        {70.0, "C-"},
+        {67.0, "D+"},
+        {63.0, "D"},
+        {60.0, "D-"},
+        {0.0, "F"}
+    };
+
+    ASSERT_EQ(course1.getGradeScale(), gradeScale2);
 }
 
 // ====================================
@@ -84,17 +146,51 @@ TEST_F(CourseTest, NumCreditsSetter) {
     ASSERT_EQ(course1.getNumCredits(), 2);
 }
 
+TEST_F(CourseTest, GradeWeightsSetter) {
+    std::unordered_map<std::string, float> gradeWeights2 = {
+        {"Homework", 0.2},
+        {"Midterm", 0.4},
+        {"Final Exam", 0.4}
+    };
+
+    course1.setGradeWeights(gradeWeights2);
+    auto weights = course1.getGradeWeights();
+    // check that the values have been updated
+    ASSERT_FLOAT_EQ(weights.find("Homework")->second, 0.2);
+    ASSERT_FLOAT_EQ(weights.find("Midterm")->second, 0.4);
+}
+
 TEST_F(CourseTest, GradePctSetter) {
     course1.setGradePct(89.17f);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 89.17f);
 }
 
-// insert letterGrade setter
-// insert gradingScale setter
+TEST_F(CourseTest, LetterGradeSetter) {
+    course1.setGradePct(90.18f);
+    course1.setLetterGrade();   // calculateLetterGrade used in setLetterGrade
+    ASSERT_EQ(course1.getLetterGrade(), "A-");
+}
+
+TEST_F(CourseTest, GpaValSetter) {
+    course1.setGradePct(75.28f);
+    course1.setLetterGrade();
+    course1.setGpaVal(); // calculateGpaVal used in setGpaVal
+    ASSERT_EQ(course1.getGpaVal(), 2.0f);
+}
 
 TEST_F(CourseTest, ActiveSetter) {
     course1.setActive(true);
     ASSERT_TRUE(course1.getActive());
+}
+
+TEST_F(CourseTest, GradeScaleSetter) {
+    std::map<float, std::string> gradeScale2 = {
+        {70.0, "P"},
+        {0.0, "NP"}
+    };
+
+    course2.setGradeScale(gradeScale2);
+    ASSERT_EQ(course2.getGradeScale(), gradeScale2);
 }
 
 // ====================================
@@ -158,26 +254,260 @@ TEST_F(CourseTest, SixParamDescInitialization) {
 // FUNCTION SMOKE TESTS
 // ====================================
 
+TEST_F(CourseTest, PrintCourseInfo) {
+    std::stringstream ss;
+
+    course1.printCourseInfo(ss);
+    ASSERT_EQ(ss.str(), "===========================================================\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGPA Value: 0\nCurrent? No\n===========================================================\n");
+}
+
+TEST_F(CourseTest, OverloadedEquals) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
+
+    ASSERT_TRUE(course1 == course3);
+    ASSERT_FALSE(course1 == course2);
+}
 
 // ====================================
 // GETTER EDGE CASES
 // ====================================
 
+// empty parameters
+TEST_F(CourseTest, DescriptionGetterEmpty) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    ASSERT_EQ(course2.getDescription(), "");
+}
+
+TEST_F(CourseTest, NumCreditsGetterEmpty) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    ASSERT_EQ(course2.getNumCredits(), 0);
+}
+
+TEST_F(CourseTest, ActiveGetterEmpty) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    ASSERT_TRUE(course2.getActive());
+}
 
 // ====================================
 // SETTER EDGE CASES
 // ====================================
 
+TEST_F(CourseTest, TitleSetterInvalid) {
+    // throw invalid argument since title is empty
+    ASSERT_THROW(course1.setTitle(""), std::invalid_argument);
+    ASSERT_EQ(course1.getTitle(), "CMPE 142");
+}
+
+TEST_F(CourseTest, TitleSetterWhitespaceInvalid) {
+    // throw invalid argument since title is whitespace
+    ASSERT_THROW(course1.setTitle(" "), std::invalid_argument);
+    ASSERT_EQ(course1.getTitle(), "CMPE 142");
+}
+
+TEST_F(CourseTest, StartDateSetterInvalid) {
+    // throw invalid argument since date does not exist
+    ASSERT_THROW(course1.setStartDate(std::chrono::year_month_day{2025y/2/30}), std::invalid_argument);
+    ASSERT_EQ(course1.getStartDate(), std::chrono::year_month_day{2025y/8/12});
+}
+
+TEST_F(CourseTest, EndDateSetterInvalid) {
+    // throw invalid argument since date does not exist
+    ASSERT_THROW(course1.setEndDate(std::chrono::year_month_day{2025y/2/30}), std::invalid_argument);
+    ASSERT_EQ(course1.getEndDate(), std::chrono::year_month_day{2025y/12/5});
+}
+
+TEST_F(CourseTest, GradeWeightsSetterInvalid) {
+    std::unordered_map<std::string, float> gradeWeights2 = {
+        {"Homework", 0.4},
+        {"Midterm", 0.4},
+        {"Final Exam", 0.4}
+    };
+
+    // throw invalid argument since grade percentages > 100%
+    ASSERT_THROW(course2.setGradeWeights(gradeWeights2), std::invalid_argument);
+    auto weights = course2.getGradeWeights();
+    // check that the values have not been updated
+    ASSERT_FLOAT_EQ(weights.find("Homework")->second, 0.25);
+    ASSERT_FLOAT_EQ(weights.find("Midterm")->second, 0.35);
+}
+
+TEST_F(CourseTest, NumCreditsSetterInvalid) {
+    // throw out of range since input is not greater than or equal to 0
+    ASSERT_THROW(course1.setNumCredits(-3), std::out_of_range);
+    ASSERT_EQ(course1.getNumCredits(), 3);
+}
+
+TEST_F(CourseTest, NumCreditsSetterZero) {
+    course1.setNumCredits(0);
+    ASSERT_EQ(course1.getNumCredits(), 0);
+}
+
+TEST_F(CourseTest, GradePctSetterInvalidLow) {
+    // throw out of range since input is not in range 0 to 100
+    ASSERT_THROW(course1.setGradePct(-20.24f), std::out_of_range);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
+}
+
+TEST_F(CourseTest, GradePctSetterInvalidHigh) {
+    // throw out of range since input is not in range 0 to 100
+    ASSERT_THROW(course1.setGradePct(200.24f), std::out_of_range);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
+}
+
+TEST_F(CourseTest, GradePctSetterBoundaryLow) {
+    course1.setGradePct(0.0f);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
+}
+
+TEST_F(CourseTest, GradePctSetterBoundaryHigh) {
+    course1.setGradePct(100.0f);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 100.0f);
+}
+
+TEST_F(CourseTest, LetterGradeSetterRangeHigh) {
+    course1.setGradePct(92.99f);
+    course1.setLetterGrade();
+    ASSERT_EQ(course1.getLetterGrade(), "A-");
+}
+
+TEST_F(CourseTest, LetterGradeSetterLowF) {
+    course1.setGradePct(35.0f);
+    course1.setLetterGrade();
+    ASSERT_EQ(course1.getLetterGrade(), "F");
+}
+
+TEST_F(CourseTest, LetterGradeSetterBoundaryHigh) {
+    course1.setGradePct(100.0f);
+    course1.setLetterGrade();
+    ASSERT_EQ(course1.getLetterGrade(), "A+");
+}
+
+TEST_F(CourseTest, LetterGradeSetterBoundaryLow) {
+    course1.setGradePct(0.0f);
+    course1.setLetterGrade();
+    ASSERT_EQ(course1.getLetterGrade(), "F");
+}
+
+TEST_F(CourseTest, GpaValSetterNoGrade) {
+    // expected path is gradePct -> letterGrade -> gpaVal
+    // going straight from gradePct to gpaVal should call setLetterGrade
+    course1.setGradePct(88.4f);
+    course1.setGpaVal();
+    ASSERT_FLOAT_EQ(course1.getGpaVal(), 3.3);
+}
+
+TEST_F(CourseTest, GpaValSetterLowF) {
+    course1.setGradePct(15.5f);
+    course1.setLetterGrade();
+    course1.setGpaVal();
+    ASSERT_EQ(course1.getGpaVal(), 0.0f);
+}
+
+
+TEST_F(CourseTest, GradeScaleSetterEmpty) {
+    std::map<float, std::string> gradeScale2 = {};
+
+    ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
+}
+
+TEST_F(CourseTest, GradeScaleSetterMissingZero) {
+    std::map<float, std::string> gradeScale2 = {
+        {80.0, "A"},
+        {60.0, "C"}
+    };
+
+    ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
+}
+
+TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
+    std::map<float, std::string> gradeScale2 = {
+        {110.0, "A++"},
+        {60.0, "F"}
+    };
+
+    ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
+}
+
+TEST_F(CourseTest, GradeScaleSetterUpperBound) {
+    std::map<float, std::string> gradeScale2 = {
+        {100.0, "A++"},
+        {90.0, "A-"}
+    };
+
+    ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
+}
 
 // ====================================
 // INITIALIZATION EDGE CASES
 // ====================================
 
+TEST_F(CourseTest, ThreeParamInitializationNoTitle) {
+    // throw invalid argument since title is empty
+    ASSERT_THROW((Course{"", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, ThreeParamInitializationInvalidDate) {
+    // throw invalid argument since start date does not exist
+    ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/2/31}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FiveParamInitializationInvalidNumCredits) {
+    // throw out of range since input is not greater than or equal to 0
+    ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, -4}), std::out_of_range);
+}
+
+TEST_F(CourseTest, FourParamDescInitializationNoTitle) {
+    // throw invalid argument since title is empty
+    ASSERT_THROW((Course{"", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FourParamInitializationInvalidDate) {
+    // throw invalid argument since start date does not exist
+    ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/2/31}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, SixParamInitializationInvalidNumCredits) {
+    // throw out of range since input is not greater than or equal to 0
+    ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, -4}), std::out_of_range);
+}
 
 // ====================================
 // FUNCTION EDGE CASES
 // ====================================
 
+TEST_F(CourseTest, PrintCourseInfoPartial) {
+    std::stringstream ss;
+    Course course2{"CMPE 142", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
+
+    course2.printCourseInfo(ss);
+    ASSERT_EQ(ss.str(), "===========================================================\nCourse Title: CMPE 142\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGPA Value: 0\nCurrent? Yes\n===========================================================\n");
+}
+
+TEST_F(CourseTest, PrintCourseInfoDescPartial) {
+    std::stringstream ss;
+    Course course2{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
+
+    course2.printCourseInfo(ss);
+    ASSERT_EQ(ss.str(), "===========================================================\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGPA Value: 0\nCurrent? Yes\n===========================================================\n");
+}
+
+TEST_F(CourseTest, OverloadedEqualsSameTitleDifferentParams) {
+    Course course2{"CMPE 142", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
+    Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/9/2}, std::chrono::year_month_day{2025y/12/5}, 3, false};
+    Course course4{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2024y/12/5}, 3, false};
+    Course course5{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 1, false};
+    Course course6{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, true};
+
+    ASSERT_FALSE(course1 == course2);
+    ASSERT_FALSE(course1 == course3);
+    ASSERT_FALSE(course1 == course4);
+    ASSERT_FALSE(course1 == course5);
+    ASSERT_FALSE(course1 == course6);
+}
 
 // ====================================
 // CLASS USE CASES

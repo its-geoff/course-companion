@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e  # exit on error
+set -euo pipefail
 
 usage() {
     echo "Usage: run-tests [-V] [-c]"
@@ -54,6 +54,7 @@ fi
 # ---------------------------
 if [ -f Testing/Temporary/LastTest.log ]; then
     cp Testing/Temporary/LastTest.log "$OUTPUT_DIR/"
+    echo "Saved test logs to $OUTPUT_DIR"
 else
     echo "Warning: LastTest.log not found"
 fi

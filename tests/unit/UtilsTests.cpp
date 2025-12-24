@@ -40,6 +40,19 @@ TEST(UtilsTest, FloatEqual) {
     ASSERT_FALSE(utils::floatEqual(1.0f, 1.1f));
 }
 
+TEST(UtilsTest, PrintMap) {
+    std::map<int, std::string> numbers = {
+        {1, "one"},
+        {2, "two"},
+        {3, "three"}
+    };
+
+    std::stringstream ss;
+    utils::printMap(numbers, ss);
+
+    ASSERT_EQ(ss.str(), ("1 -> one\n2 -> two\n3 -> three\n"));
+}
+
 TEST(UtilsTest, ChooseAssignmentConstructor) {
     Assignment assignment2 = utils::chooseAssignmentConstructor(
         "Homework 1", 
@@ -76,6 +89,18 @@ TEST(UtilsTest, ReadOptionalDateEmpty) {
     ASSERT_EQ(utils::readOptionalDate(ss2), std::nullopt);
 }
 
+TEST(UtilsTest, ReadOptionalDateMissingValue) {
+    std::stringstream ss1("2025-02-");
+
+    ASSERT_EQ(utils::readOptionalDate(ss1), std::nullopt);
+}
+
+TEST(UtilsTest, ReadOptionalDateInvalid) {
+    std::stringstream ss1("2025-02-30");
+
+    ASSERT_EQ(utils::readOptionalDate(ss1), std::nullopt);
+}
+
 TEST(UtilsTest, ReadOptionalBoolEmpty) {
     std::stringstream ss1("");
     std::stringstream ss2("  ");
@@ -84,12 +109,10 @@ TEST(UtilsTest, ReadOptionalBoolEmpty) {
     ASSERT_EQ(utils::readOptionalBool(ss2), std::nullopt);
 }
 
-TEST(UtilsTest, ReadOptionalFloatEmpty) {
-    std::stringstream ss1("");
-    std::stringstream ss2("  ");
+TEST(UtilsTest, ReadOptionalBoolInvalid) {
+    std::stringstream ss1("ye");
 
-    ASSERT_EQ(utils::readOptionalFloat(ss1), std::nullopt);
-    ASSERT_EQ(utils::readOptionalFloat(ss2), std::nullopt);
+    ASSERT_EQ(utils::readOptionalBool(ss1), std::nullopt);
 }
 
 TEST(UtilsTest, ReadOptionalBoolAlternatives) {
@@ -117,12 +140,24 @@ TEST(UtilsTest, ReadOptionalBoolAlternatives) {
     ASSERT_EQ(utils::readOptionalBool(ss_n).value(), false);
 }
 
+TEST(UtilsTest, ReadOptionalFloatEmpty) {
+    std::stringstream ss1("");
+    std::stringstream ss2("  ");
+
+    ASSERT_EQ(utils::readOptionalFloat(ss1), std::nullopt);
+    ASSERT_EQ(utils::readOptionalFloat(ss2), std::nullopt);
+}
+
 TEST(UtilsTest, FloatEqualVerySmall) {
     ASSERT_TRUE(utils::floatEqual(0.0f, 1e-9f));
 }
 
 TEST(UtilsTest, FloatEqualVeryLarge) {
     ASSERT_TRUE(utils::floatEqual(1e8f, 1e8f + 1.0f));
+}
+
+TEST(UtilsTest, FloatEqualNanValue) {
+    ASSERT_FALSE(utils::floatEqual(1.0f, std::nanf("")));
 }
 
 TEST(UtilsTest, ChooseAssignmentConstructorTitleOnly) {

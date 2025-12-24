@@ -1,3 +1,6 @@
 {
-    "coverage-gutters.coverageFileNames": ["build/coverage/lcov/*.info"]
+    "coverage-gutters.coverageFileNames": ["build/coverage/lcov/*.info"],
+    "cmake.testEnvironment": {
+        "LLVM_PROFILE_FILE": "${workspaceFolder}/build/coverage/profraw/%p-%m.profraw"
+    }
 }

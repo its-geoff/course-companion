@@ -10,7 +10,10 @@ FetchContent_Declare(
 )
 set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
+set(TEST_LOG_DIR "${CMAKE_BINARY_DIR}/../../tests/output_logs")
 FetchContent_MakeAvailable(googletest)
+
+enable_coverage(CourseCompanion_lib)
 
 # ---------------------------
 # AssignmentTests executable
@@ -18,6 +21,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(AssignmentTests unit/AssignmentTests.cpp)
 target_link_libraries(AssignmentTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME AssignmentTests COMMAND AssignmentTests)
+enable_coverage(AssignmentTests)
 
 # ---------------------------
 # CourseTests executable
@@ -25,6 +29,7 @@ add_test(NAME AssignmentTests COMMAND AssignmentTests)
 add_executable(CourseTests unit/CourseTests.cpp)
 target_link_libraries(CourseTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME CourseTests COMMAND CourseTests)
+enable_coverage(CourseTests)
 
 # ---------------------------
 # UtilsTests executable
@@ -32,14 +37,13 @@ add_test(NAME CourseTests COMMAND CourseTests)
 add_executable(UtilsTests unit/UtilsTests.cpp)
 target_link_libraries(UtilsTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME UtilsTests COMMAND UtilsTests)
+enable_coverage(UtilsTests)
 
-# output directory
-set_target_properties(AssignmentTests PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-)
-set_target_properties(CourseTests PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-)
-set_target_properties(UtilsTests PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-)
+# ---------------------------
+# Set output directory
+# ---------------------------
+foreach(test_target AssignmentTests CourseTests UtilsTests)
+    set_target_properties(${test_target} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    )
+endforeach()

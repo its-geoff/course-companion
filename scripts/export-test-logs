@@ -1,0 +1,7 @@
+#!/bin/bash
+
+OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
+
+rm -rf "$OUTPUT_DIR"
+mkdir -p "$OUTPUT_DIR"
+cp Testing/Temporary/LastTest_*.log "$OUTPUT_DIR/"
