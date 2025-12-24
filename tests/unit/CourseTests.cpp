@@ -405,6 +405,24 @@ TEST_F(CourseTest, SixParamInitializationInvalidNumCredits) {
 // FUNCTION EDGE CASES
 // ====================================
 
+TEST_F(CourseTest, PrintCourseInfoPartial) {
+    std::stringstream ss;
+    Course course2{"CMPE 142", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
+
+    course2.printCourseInfo(ss);
+    ASSERT_EQ(ss.str(), "===========================================================\nCourse Title: CMPE 142\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGPA Value: 0\nCurrent? Yes\n===========================================================\n");
+}
+
+TEST_F(CourseTest, PrintCourseInfoDescPartial) {
+    std::stringstream ss;
+    Course course2{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
+
+    course2.printCourseInfo(ss);
+    ASSERT_EQ(ss.str(), "===========================================================\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGPA Value: 0\nCurrent? Yes\n===========================================================\n");
+}
+
 TEST_F(CourseTest, OverloadedEqualsSameTitleDifferentParams) {
     Course course2{"CMPE 142", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
     Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/9/2}, std::chrono::year_month_day{2025y/12/5}, 3, false};
@@ -418,8 +436,6 @@ TEST_F(CourseTest, OverloadedEqualsSameTitleDifferentParams) {
     ASSERT_FALSE(course1 == course5);
     ASSERT_FALSE(course1 == course6);
 }
-
-// TO-DO: add edge cases for printCourseInfo -- TODAY
 
 // ====================================
 // CLASS USE CASES

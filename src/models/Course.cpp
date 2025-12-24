@@ -118,9 +118,9 @@ std::chrono::year_month_day Course::getEndDate() const {
     return endDate_;
 }
 
-std::unordered_map<std::string, Assignment> Course::getAssignmentList() const {
-    return assignmentList_;
-}
+// std::unordered_map<std::string, Assignment> Course::getAssignmentList() const {
+//     return assignmentList_;
+// }
 
 std::unordered_map<std::string, float> Course::getGradeWeights() const {
     return gradeWeights_;
