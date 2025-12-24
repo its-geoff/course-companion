@@ -83,17 +83,20 @@ TEST_F(AssignmentTest, GradeSetter) {
 // initializations without description defined
 TEST_F(AssignmentTest, OneParamInitialization) {
     Assignment assignment2{"Homework 1"};
+    ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
 }
 
 TEST_F(AssignmentTest, TwoParamInitialization) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}};
+    ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
 }
 
 TEST_F(AssignmentTest, ThreeParamInitialization) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false};
+    ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
     ASSERT_FALSE(assignment2.getCompleted());
@@ -101,6 +104,7 @@ TEST_F(AssignmentTest, ThreeParamInitialization) {
 
 TEST_F(AssignmentTest, FourParamInitialization) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
     ASSERT_FALSE(assignment2.getCompleted());
@@ -110,12 +114,14 @@ TEST_F(AssignmentTest, FourParamInitialization) {
 // initializations with description defined
 TEST_F(AssignmentTest, TwoParamDescInitialization) {
     Assignment assignment2{"Homework 1", "Focus on lexical analysis."};
+    ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
 }
 
 TEST_F(AssignmentTest, ThreeParamDescInitialization) {
     Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}};
+    ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
@@ -123,6 +129,7 @@ TEST_F(AssignmentTest, ThreeParamDescInitialization) {
 
 TEST_F(AssignmentTest, FourParamDescInitialization) {
     Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false};
+    ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
@@ -131,6 +138,7 @@ TEST_F(AssignmentTest, FourParamDescInitialization) {
 
 TEST_F(AssignmentTest, FiveParamDescInitialization) {
     Assignment assignment2{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});

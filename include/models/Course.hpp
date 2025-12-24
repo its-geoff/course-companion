@@ -28,6 +28,7 @@
  */
 class Course {
     private:
+        std::string id_{};
         std::string title_{};
         std::string description_{};
         std::chrono::year_month_day startDate_{};
@@ -66,6 +67,7 @@ class Course {
         Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
             std::chrono::year_month_day endDate, int numCredits, bool active);
 
+        std::string_view getId() const;
         std::string_view getTitle() const;
         std::string_view getDescription() const;
         std::chrono::year_month_day getStartDate() const;
