@@ -72,7 +72,7 @@ class Course {
         std::string_view getDescription() const;
         std::chrono::year_month_day getStartDate() const;
         std::chrono::year_month_day getEndDate() const;
-        // std::unordered_map<std::string, Assignment> getAssignmentList() const;
+        std::unordered_map<std::string, Assignment> getAssignmentList() const;
         std::unordered_map<std::string, float> getGradeWeights() const;
         int getNumCredits() const;
         float getGradePct() const;
@@ -93,8 +93,10 @@ class Course {
         void setActive(bool newActive);
 
         void printCourseInfo(std::ostream &os);
-        // void addAssignment(const Assignment &assignment);
-        // void removeAssignment(const Assignment &assignment);
+        void addAssignment(const Assignment &assignment);
+        void removeAssignment(std::string_view id);
+        const Assignment& findAssignment(std::string_view id) const;    // non-mutable version
+        Assignment& findAssignment(std::string_view id);    // mutable version
 
         bool operator==(const Course &other) const;
 };
