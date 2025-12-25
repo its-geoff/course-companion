@@ -172,15 +172,15 @@ Course::Course(std::string title, std::string description, std::chrono::year_mon
     active_ = active;
 }
 
-std::string_view Course::getId() const {
+std::string Course::getId() const {
     return id_;
 }
 
-std::string_view Course::getTitle() const {
+std::string Course::getTitle() const {
     return title_;
 }
 
-std::string_view Course::getDescription() const {
+std::string Course::getDescription() const {
     return description_;
 }
 
@@ -192,9 +192,9 @@ std::chrono::year_month_day Course::getEndDate() const {
     return endDate_;
 }
 
-// std::unordered_map<std::string, Assignment> Course::getAssignmentList() const {
-//     return assignmentList_;
-// }
+std::unordered_map<std::string, Assignment> Course::getAssignmentList() const {
+    return assignmentList_;
+}
 
 std::unordered_map<std::string, float> Course::getGradeWeights() const {
     return gradeWeights_;
@@ -208,7 +208,7 @@ float Course::getGradePct() const {
     return gradePct_;
 }
 
-std::string_view Course::getLetterGrade() const {
+std::string Course::getLetterGrade() const {
     return letterGrade_;
 }
 
@@ -290,21 +290,46 @@ void Course::printCourseInfo(std::ostream &os) {
     }
     os << "Duration: " << startDate_ << " - " << endDate_ << "\n";
     os << "Number of Credits: " << numCredits_ << "\n";
-    // os << "Grade Percentage: " << gradePct_ << "\n";
+    os << "Grade Percentage: " << gradePct_ << "%\n";
+    os << "Letter Grade: " << letterGrade_ << "\n";
     os << "GPA Value: " << gpaVal_ << "\n";
     os << "Current? " << utils::boolToString(active_) << "\n";
     os << "===========================================================" << "\n";
 }
 
-// // adds an Assignment to the end of the list from the given input
-// void Course::addAssignment(const Assignment &assignment) {
-//     assignmentList_.push_back(assignment);
-// }
+// adds an Assignment to the end of the list from the given input
+void Course::addAssignment(const Assignment &assignment) {
+    auto [it, inserted] = assignmentList_.emplace(assignment.getId(), assignment);
 
-// // removes an Assignment with the specified name
-// void Course::removeAssignment(const Assignment &assignment) {
-//     std::erase(assignmentList_, assignment);
-// }
+    if (!inserted) {
+        throw std::logic_error("Assignment with same ID already exists.");
+    }
+}
+
+// removes an Assignment with the specified UUID
+void Course::removeAssignment(const std::string& id) {
+    if (assignmentList_.erase(id) == 0) {
+        throw std::out_of_range("Assignment not found.");
+    }
+}
+
+// finds an assignment in assignmentList based on ID; non-mutable (read-only)
+const Assignment& Course::findAssignment(const std::string& id) const {
+    auto it = assignmentList_.find(id);
+
+    if (it != assignmentList_.end()) {
+        return it->second;
+    } else {
+        throw std::out_of_range("Assignment not found.");
+    }
+}
+
+// finds an assignment in assignmentList based on ID; mutable (read and write access)
+Assignment& Course::findAssignment(const std::string& id) {
+    // use const casting to use the same logic as the const version without duplication
+    const Course &selfConst = *this;
+    return const_cast<Assignment&>(selfConst.findAssignment(id));
+}
 
 // equality comparison based on unique identifier (UUID)
 bool Course::operator==(const Course &other) const {

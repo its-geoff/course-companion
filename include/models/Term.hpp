@@ -46,7 +46,7 @@ class Term {
         void setStartDate(std::chrono::system_clock::time_point newStartDate);
         void setEndDate(std::chrono::system_clock::time_point newEndDate);
         void setActive(bool newActive);
-        std::string_view getTitle();
+        std::string getTitle();
         std::chrono::system_clock::time_point getStartDate();
         std::chrono::system_clock::time_point getEndDate();
         bool getActive();

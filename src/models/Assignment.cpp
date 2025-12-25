@@ -79,15 +79,15 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
 //     course_ = course;
 // }  -> no Course implementation yet
 
-std::string_view Assignment::getId() const {
+std::string Assignment::getId() const {
     return id_;
 }
 
-std::string_view Assignment::getTitle() const {
+std::string Assignment::getTitle() const {
     return title_;
 }
 
-std::string_view Assignment::getDescription() const {
+std::string Assignment::getDescription() const {
     return description_;
 }
 

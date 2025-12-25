@@ -52,24 +52,26 @@ TEST_F(CourseTest, EndDateGetter) {
     ASSERT_EQ(course1.getEndDate(), std::chrono::year_month_day{2025y/12/5});
 }
 
-// TEST_F(CourseTest, AssignmentListGetter) {
-//     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-//     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
-//     course1.addAssignment(assignment1);
-//     course1.addAssignment(assignment2);
-//     auto list = course1.getAssignmentList();
-//     ASSERT_EQ(list[0].getTitle(), "Homework 3");
-//     ASSERT_EQ(list[1].getDueDate(), std::chrono::year_month_day{2025y/10/31});
-// }
+TEST_F(CourseTest, AssignmentListGetter) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    std::string id1 = assignment1.getId();
+    std::string id2 = assignment2.getId();
 
-// TEST_F(CourseTest, AssignmentListGetterCheckSize) {
-//     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-//     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
-//     course1.addAssignment(assignment1);
-//     course1.addAssignment(assignment2);
-//     auto list = course1.getAssignmentList();
-//     ASSERT_EQ(list.size(), 2);
-// }
+    ASSERT_EQ(course1.findAssignment(id1).getTitle(), "Homework 3");
+    ASSERT_EQ(course1.findAssignment(id2).getDueDate(), std::chrono::year_month_day{2025y/10/31});
+}
+
+TEST_F(CourseTest, AssignmentListGetterCheckSize) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    auto list = course1.getAssignmentList();
+    ASSERT_EQ(list.size(), 2);
+}
 
 TEST_F(CourseTest, GradeWeightsGetter) {
     auto weights = course1.getGradeWeights();
@@ -278,7 +280,8 @@ TEST_F(CourseTest, PrintCourseInfo) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGPA Value: 0\nCurrent? No\n===========================================================\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0%\nLetter Grade: \n"
+                        "GPA Value: 0\nCurrent? No\n===========================================================\n");
 }
 
 TEST_F(CourseTest, OverloadedEquals) {
@@ -289,6 +292,53 @@ TEST_F(CourseTest, OverloadedEquals) {
     ASSERT_FALSE(course1 == course2);
     ASSERT_FALSE(course1 == course3);
     ASSERT_TRUE(course1 == course4);
+}
+
+TEST_F(CourseTest, AddAssignment) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+
+    course1.addAssignment(assignment1);
+    ASSERT_EQ(course1.getAssignmentList().size(), 1);
+}
+
+TEST_F(CourseTest, RemoveAssignment) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    std::string id = assignment1.getId();
+    course1.removeAssignment(id);
+
+    // check size and success of removal
+    ASSERT_EQ(course1.getAssignmentList().size(), 1);
+    ASSERT_THROW(course1.getAssignmentList().at(id), std::out_of_range);
+}
+
+TEST_F(CourseTest, FindAssignmentConst) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    std::string id = assignment1.getId();
+
+    // cast to const Course to use const version of function
+    ASSERT_EQ(static_cast<const Course&>(course1).findAssignment(id), assignment1);
+}
+
+TEST_F(CourseTest, FindAssignmentNonConst) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment3 = assignment1;    // make assignment3 the same as assignment1
+
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    std::string id = assignment1.getId();
+    course1.findAssignment(id).setCompleted(false);
+    assignment3.setCompleted(false);    // copy change to assignment1
+
+    ASSERT_EQ(course1.findAssignment(id), assignment3);
 }
 
 // ====================================
@@ -445,7 +495,8 @@ TEST_F(CourseTest, GradeScaleSetterMissingZero) {
 TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
     std::map<float, std::string> gradeScale2 = {
         {110.0, "A++"},
-        {60.0, "F"}
+        {60.0, "C"},
+        {0.0, "F"}
     };
 
     ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
@@ -454,7 +505,8 @@ TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
 TEST_F(CourseTest, GradeScaleSetterUpperBound) {
     std::map<float, std::string> gradeScale2 = {
         {100.0, "A++"},
-        {90.0, "A-"}
+        {90.0, "A-"},
+        {0.0, "F"}
     };
 
     ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
@@ -509,7 +561,8 @@ TEST_F(CourseTest, PrintCourseInfoPartial) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGPA Value: 0\nCurrent? Yes\n===========================================================\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGrade Percentage: 0%\nLetter Grade: \n"
+                        "GPA Value: 0\nCurrent? Yes\n===========================================================\n");
 }
 
 TEST_F(CourseTest, PrintCourseInfoDescPartial) {
@@ -523,7 +576,51 @@ TEST_F(CourseTest, PrintCourseInfoDescPartial) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGPA Value: 0\nCurrent? Yes\n===========================================================\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGrade Percentage: 0%\nLetter Grade: \n"
+                        "GPA Value: 0\nCurrent? Yes\n===========================================================\n");
+}
+
+TEST_F(CourseTest, AddAssignmentAlreadyExists) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+
+    course1.addAssignment(assignment1);
+
+    // throw logic error since assignment already exists in map
+    ASSERT_THROW(course1.addAssignment(assignment1), std::logic_error);
+}
+
+TEST_F(CourseTest, RemoveAssignmentNotFound) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    std::string id = assignment2.getId();
+
+    course1.addAssignment(assignment1);
+
+    // throw out of range since ID was not found
+    ASSERT_THROW(course1.removeAssignment(id), std::out_of_range);
+}
+
+TEST_F(CourseTest, FindAssignmentConstNotFound) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+
+    course1.addAssignment(assignment1);
+    std::string id = assignment2.getId();
+
+    // cast to const Course to use const version of function
+    // throw out of range since ID was not found
+    ASSERT_THROW(static_cast<const Course&>(course1).findAssignment(id), std::out_of_range);
+}
+
+TEST_F(CourseTest, FindAssignmentNonConstNotFound) {
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+
+    course1.addAssignment(assignment1);
+    std::string id = assignment2.getId();
+
+    // throw out of range since ID was not found
+    ASSERT_THROW(course1.findAssignment(id), std::out_of_range);
 }
 
 TEST_F(CourseTest, OverloadedEqualsSameTitleDifferentParams) {

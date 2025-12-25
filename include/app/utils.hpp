@@ -17,9 +17,9 @@
 #include "models/Assignment.hpp"   // for references to Assignment
 
 namespace utils {
-    bool isOnlyWhitespace(const std::string_view str);
+    bool isOnlyWhitespace(const std::string str);
     std::string generateUuid();
-    void validateTitle(std::string_view title);
+    void validateTitle(std::string title);
     void validateDate(std::chrono::year_month_day dueDate);
     std::optional<std::string> readOptionalString(std::istream &is = std::cin);
     std::optional<std::chrono::year_month_day> readOptionalDate(std::istream &is = std::cin);
