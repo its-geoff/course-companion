@@ -172,15 +172,15 @@ Course::Course(std::string title, std::string description, std::chrono::year_mon
     active_ = active;
 }
 
-std::string_view Course::getId() const {
+std::string Course::getId() const {
     return id_;
 }
 
-std::string_view Course::getTitle() const {
+std::string Course::getTitle() const {
     return title_;
 }
 
-std::string_view Course::getDescription() const {
+std::string Course::getDescription() const {
     return description_;
 }
 
@@ -208,7 +208,7 @@ float Course::getGradePct() const {
     return gradePct_;
 }
 
-std::string_view Course::getLetterGrade() const {
+std::string Course::getLetterGrade() const {
     return letterGrade_;
 }
 
@@ -299,40 +299,36 @@ void Course::printCourseInfo(std::ostream &os) {
 
 // adds an Assignment to the end of the list from the given input
 void Course::addAssignment(const Assignment &assignment) {
-    auto [it, inserted] = assignmentList_.emplace(assignment.getId(), std::move(assignment));
+    auto [it, inserted] = assignmentList_.emplace(assignment.getId(), assignment);
 
     if (!inserted) {
-        throw std::logic_error("Assignment with same ID alredy exists.");
+        throw std::logic_error("Assignment with same ID already exists.");
     }
 }
 
 // removes an Assignment with the specified UUID
-void Course::removeAssignment(std::string_view id) {
-    if (assignmentList_.erase(std::string{id}) == 0) {
-        throw std::out_of_range("Assignment ID not found.");
+void Course::removeAssignment(const std::string& id) {
+    if (assignmentList_.erase(id) == 0) {
+        throw std::out_of_range("Assignment not found.");
     }
 }
 
 // finds an assignment in assignmentList based on ID; non-mutable (read-only)
-const Assignment& Course::findAssignment(std::string_view id) const {
-    auto it = assignmentList_.find(std::string{id});
+const Assignment& Course::findAssignment(const std::string& id) const {
+    auto it = assignmentList_.find(id);
 
     if (it != assignmentList_.end()) {
         return it->second;
     } else {
-        throw std::out_of_range("Assignment not in list.");
+        throw std::out_of_range("Assignment not found.");
     }
 }
 
 // finds an assignment in assignmentList based on ID; mutable (read and write access)
-Assignment& Course::findAssignment(std::string_view id) {
-    auto it = assignmentList_.find(std::string{id});
-
-    if (it != assignmentList_.end()) {
-        return it->second;
-    } else {
-        throw std::out_of_range("Assignment not in list.");
-    }
+Assignment& Course::findAssignment(const std::string& id) {
+    // use const casting to use the same logic as the const version without duplication
+    const Course &selfConst = *this;
+    return const_cast<Assignment&>(selfConst.findAssignment(id));
 }
 
 // equality comparison based on unique identifier (UUID)

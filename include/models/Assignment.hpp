@@ -47,9 +47,9 @@ class Assignment {
         // Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade,
         //             Course course);  -> no Course implementation yet
 
-        std::string_view getId() const;
-        std::string_view getTitle() const;
-        std::string_view getDescription() const;
+        std::string getId() const;
+        std::string getTitle() const;
+        std::string getDescription() const;
         std::chrono::year_month_day getDueDate() const;
         bool getCompleted() const;
         float getGrade() const;

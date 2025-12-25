@@ -57,8 +57,8 @@ TEST_F(CourseTest, AssignmentListGetter) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
-    std::string_view id1 = assignment1.getId();
-    std::string_view id2 = assignment2.getId();
+    std::string id1 = assignment1.getId();
+    std::string id2 = assignment2.getId();
 
     ASSERT_EQ(course1.findAssignment(id1).getTitle(), "Homework 3");
     ASSERT_EQ(course1.findAssignment(id2).getDueDate(), std::chrono::year_month_day{2025y/10/31});
@@ -307,11 +307,12 @@ TEST_F(CourseTest, RemoveAssignment) {
 
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
-    course1.removeAssignment(assignment1.getId());
+    std::string id = assignment1.getId();
+    course1.removeAssignment(id);
 
     // check size and success of removal
     ASSERT_EQ(course1.getAssignmentList().size(), 1);
-    ASSERT_THROW(course1.getAssignmentList().at("Homework 3"), std::out_of_range);
+    ASSERT_THROW(course1.getAssignmentList().at(id), std::out_of_range);
 }
 
 TEST_F(CourseTest, FindAssignmentConst) {
@@ -320,7 +321,7 @@ TEST_F(CourseTest, FindAssignmentConst) {
 
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
-    std::string_view id = assignment1.getId();
+    std::string id = assignment1.getId();
 
     // cast to const Course to use const version of function
     ASSERT_EQ(static_cast<const Course&>(course1).findAssignment(id), assignment1);
@@ -333,7 +334,7 @@ TEST_F(CourseTest, FindAssignmentNonConst) {
 
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
-    std::string_view id = assignment1.getId();
+    std::string id = assignment1.getId();
     course1.findAssignment(id).setCompleted(false);
     assignment3.setCompleted(false);    // copy change to assignment1
 
@@ -591,7 +592,7 @@ TEST_F(CourseTest, AddAssignmentAlreadyExists) {
 TEST_F(CourseTest, RemoveAssignmentNotFound) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
-    std::string_view id = assignment2.getId();
+    std::string id = assignment2.getId();
 
     course1.addAssignment(assignment1);
 
@@ -604,7 +605,7 @@ TEST_F(CourseTest, FindAssignmentConstNotFound) {
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
-    std::string_view id = assignment2.getId();
+    std::string id = assignment2.getId();
 
     // cast to const Course to use const version of function
     // throw out of range since ID was not found
@@ -612,11 +613,11 @@ TEST_F(CourseTest, FindAssignmentConstNotFound) {
 }
 
 TEST_F(CourseTest, FindAssignmentNonConstNotFound) {
-        Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
     Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
-    std::string_view id = assignment2.getId();
+    std::string id = assignment2.getId();
 
     // throw out of range since ID was not found
     ASSERT_THROW(course1.findAssignment(id), std::out_of_range);

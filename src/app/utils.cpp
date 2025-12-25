@@ -17,7 +17,7 @@
 
 namespace utils {
     // checks if a string is only whitespace
-    bool isOnlyWhitespace(const std::string_view str) {
+    bool isOnlyWhitespace(const std::string str) {
         return std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); });
     }
 
@@ -31,7 +31,7 @@ namespace utils {
     }
 
     // throws an exception if a string is empty
-    void validateTitle(std::string_view title) {
+    void validateTitle(std::string title) {
         if (isOnlyWhitespace(title))
             throw std::invalid_argument("Title must be non-empty.");
     }

@@ -67,16 +67,16 @@ class Course {
         Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
             std::chrono::year_month_day endDate, int numCredits, bool active);
 
-        std::string_view getId() const;
-        std::string_view getTitle() const;
-        std::string_view getDescription() const;
+        std::string getId() const;  // uses string for compatibility with unordered map functions
+        std::string getTitle() const;
+        std::string getDescription() const;
         std::chrono::year_month_day getStartDate() const;
         std::chrono::year_month_day getEndDate() const;
         std::unordered_map<std::string, Assignment> getAssignmentList() const;
         std::unordered_map<std::string, float> getGradeWeights() const;
         int getNumCredits() const;
         float getGradePct() const;
-        std::string_view getLetterGrade() const;
+        std::string getLetterGrade() const;
         float getGpaVal() const;
         bool getActive() const;
         std::map<float, std::string> getGradeScale() const;     // need to test
@@ -92,11 +92,11 @@ class Course {
         void setGpaVal();
         void setActive(bool newActive);
 
-        void printCourseInfo(std::ostream &os);
-        void addAssignment(const Assignment &assignment);
-        void removeAssignment(std::string_view id);
-        const Assignment& findAssignment(std::string_view id) const;    // non-mutable version
-        Assignment& findAssignment(std::string_view id);    // mutable version
+        void printCourseInfo(std::ostream& os);
+        void addAssignment(const Assignment& assignment);
+        void removeAssignment(const std::string& id);
+        const Assignment& findAssignment(const std::string& id) const;    // non-mutable version
+        Assignment& findAssignment(const std::string& id);    // mutable version
 
         bool operator==(const Course &other) const;
 };
