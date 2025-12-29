@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <sstream>
-#include <regex>
+#include <sstream>      // diverts output from terminal to separate stream
+#include <regex>        // regular expression matching for UUIDs
 #include "models/Course.hpp"
 #include "app/utils.hpp"
 
@@ -16,14 +16,6 @@ class CourseTest : public testing::Test {
             std::chrono::year_month_day{2025y/12/5},
             3,
             false
-        };
-
-        // used for some static variable tests to prevent global overwrites
-        Course course2{
-            "ENGR 195A", 
-            std::chrono::year_month_day{2025y/8/14}, 
-            std::chrono::year_month_day{2025y/12/18}, 
-            1
         };
 };
 
@@ -193,6 +185,7 @@ TEST_F(CourseTest, ActiveSetter) {
 }
 
 TEST_F(CourseTest, GradeScaleSetter) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {70.0, "P"},
         {0.0, "NP"}
@@ -390,6 +383,7 @@ TEST_F(CourseTest, EndDateSetterInvalid) {
 }
 
 TEST_F(CourseTest, GradeWeightsSetterInvalid) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::unordered_map<std::string, float> gradeWeights2 = {
         {"Homework", 0.4},
         {"Midterm", 0.4},
@@ -478,12 +472,14 @@ TEST_F(CourseTest, GpaValSetterLowF) {
 
 
 TEST_F(CourseTest, GradeScaleSetterEmpty) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {};
 
     ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
 }
 
 TEST_F(CourseTest, GradeScaleSetterMissingZero) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {80.0, "A"},
         {60.0, "C"}
@@ -493,6 +489,7 @@ TEST_F(CourseTest, GradeScaleSetterMissingZero) {
 }
 
 TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {110.0, "A++"},
         {60.0, "C"},
@@ -503,6 +500,7 @@ TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
 }
 
 TEST_F(CourseTest, GradeScaleSetterUpperBound) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {100.0, "A++"},
         {90.0, "A-"},
@@ -648,3 +646,10 @@ TEST_F(CourseTest, OverloadedEqualsSameParamsDifferentId) {
 // CLASS USE CASES
 // ====================================
 
+// add Course (partial info)
+// add multiple Assignments to Course assignmentList
+// print course info
+// set grades for all assignments
+// calculate gradePct, gpaVal, and letterGrade
+// remove Assignment from assignmentList
+// recalculate gradePct, gpaVal, and letterGrade

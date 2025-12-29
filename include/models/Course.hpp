@@ -50,9 +50,9 @@ class Course {
         void validateGradePct(float gradePct);
         void validateGradeScale(const std::map<float, std::string>& gradeScale);
 
-        std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const;
-        std::string calculateLetterGrade(float gradePct) const;
-        float calculateGpaVal(const std::string& letterGrade);
+        std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const; // auto set during add or remove Assignment?
+        std::string calculateLetterGrade(float gradePct) const; // auto set during add or remove Assignment?
+        float calculateGpaVal(const std::string& letterGrade); // auto set during add or remove Assignment?
 
     public:
         Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate);

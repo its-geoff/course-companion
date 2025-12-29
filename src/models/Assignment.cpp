@@ -144,7 +144,7 @@ void Assignment::validateGrade(float grade) {
 void Assignment::printAssignmentInfo(std::ostream &os) {
     os << "===========================================================" << "\n";
     os << "ID: " << id_ << "\n";
-    os << "Assignment Title: " << title_ << "\n";
+    os << "Assignment: " << title_ << "\n";
     if (!description_.empty()) {
         os << "Description: " << description_ << "\n";
     };

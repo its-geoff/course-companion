@@ -32,6 +32,14 @@ add_test(NAME CourseTests COMMAND CourseTests)
 enable_coverage(CourseTests)
 
 # ---------------------------
+# TermTests executable
+# ---------------------------
+# add_executable(TermTests unit/TermTests.cpp)
+# target_link_libraries(TermTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+# add_test(NAME TermTests COMMAND TermTests)
+# enable_coverage(TermTests)
+
+# ---------------------------
 # UtilsTests executable
 # ---------------------------
 add_executable(UtilsTests unit/UtilsTests.cpp)
