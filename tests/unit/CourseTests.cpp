@@ -24,7 +24,7 @@ class CourseTest : public testing::Test {
 // ====================================
 
 TEST_F(CourseTest, IdGetter) {
-    // ensure id is not empty
+    // ensure ID is not empty
     ASSERT_FALSE(utils::isOnlyWhitespace(course1.getId()));
 }
 
@@ -272,7 +272,7 @@ TEST_F(CourseTest, PrintCourseInfo) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
                         "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0%\nLetter Grade: \n"
                         "GPA Value: 0\nCurrent? No\n===========================================================\n");
 }
@@ -346,7 +346,7 @@ TEST_F(CourseTest, DescriptionGetterEmpty) {
 
 TEST_F(CourseTest, NumCreditsGetterEmpty) {
     Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
-    ASSERT_EQ(course2.getNumCredits(), 0);
+    ASSERT_EQ(course2.getNumCredits(), 3);
 }
 
 TEST_F(CourseTest, ActiveGetterEmpty) {
@@ -558,8 +558,8 @@ TEST_F(CourseTest, PrintCourseInfoPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGrade Percentage: 0%\nLetter Grade: \n"
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0%\nLetter Grade: \n"
                         "GPA Value: 0\nCurrent? Yes\n===========================================================\n");
 }
 
@@ -573,8 +573,8 @@ TEST_F(CourseTest, PrintCourseInfoDescPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGrade Percentage: 0%\nLetter Grade: \n"
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0%\nLetter Grade: \n"
                         "GPA Value: 0\nCurrent? Yes\n===========================================================\n");
 }
 
