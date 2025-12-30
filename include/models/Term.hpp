@@ -11,7 +11,7 @@
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
-#include <vector>           // for vector of Courses
+#include <unordered_map>    // for courseList
 #include "models/Course.hpp"   // for usage of Course objects in vector
 
 /**
@@ -46,7 +46,7 @@ class Term {
         std::string getTitle() const;
         std::chrono::year_month_day getStartDate() const;
         std::chrono::year_month_day getEndDate() const;
-        std::unordered_map<std::string, Course> getCourseList() const;
+        const std::unordered_map<std::string, Course>& getCourseList() const;
         int getTotalCredits() const;
         float getOvrGpa() const;
         bool getActive() const;

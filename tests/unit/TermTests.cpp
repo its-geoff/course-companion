@@ -70,11 +70,16 @@ TEST_F(TermTest, TotalCreditsGetter) {
 
 TEST_F(TermTest, OvrGpaGetter) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    
+    course1.setGradePct(89.5f);
+    course1.setGpaVal();
+    course2.setGradePct(72.8f);
+    course2.setGpaVal();
     term1.addCourse(course1);
     term1.addCourse(course2);
 
-    ASSERT_EQ(term1.getOvrGpa(), 0);
+    ASSERT_FLOAT_EQ(term1.getOvrGpa(), 2.9f);
 }
 
 TEST_F(TermTest, ActiveGetter) {
@@ -147,7 +152,7 @@ TEST_F(TermTest, PrintTermInfo) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "===========================================================\nID: <UUID>\nTerm: Fall 2025\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nTotal Credits: 6\nOverall GPA: 0\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nTotal Credits: 6\nOverall GPA: 0.00\n"
                         "Current? No\n===========================================================\n");
 }
 
@@ -212,6 +217,17 @@ TEST_F(TermTest, OverloadedEquals) {
 // GETTER EDGE CASES
 // ====================================
 
+TEST_F(TermTest, OvrGpaGetterNoCourses) {
+    ASSERT_FLOAT_EQ(term1.getOvrGpa(), 0.0f);
+}
+
+TEST_F(TermTest, OvrGpaGetterZeroCredits) {
+    Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 0};
+    term1.addCourse(course1);
+
+    ASSERT_FLOAT_EQ(term1.getOvrGpa(), 0.0f);
+}
+
 TEST_F(TermTest, ActiveGetterEmpty) {
     Term term2{"Spring 2025", std::chrono::year_month_day{2025y/1/18}, std::chrono::year_month_day{2025y/5/28}};
     ASSERT_TRUE(term2.getActive());
@@ -234,13 +250,13 @@ TEST_F(TermTest, TitleSetterWhitespaceInvalid) {
 }
 
 TEST_F(TermTest, StartDateSetterInvalid) {
-    // throw invalid argument since date does not exist
+    // throw invalid argument since start date does not exist
     ASSERT_THROW(term1.setStartDate(std::chrono::year_month_day{2025y/2/30}), std::invalid_argument);
     ASSERT_EQ(term1.getStartDate(), std::chrono::year_month_day{2025y/8/12});
 }
 
 TEST_F(TermTest, EndDateSetterInvalid) {
-    // throw invalid argument since date does not exist
+    // throw invalid argument since end date does not exist
     ASSERT_THROW(term1.setEndDate(std::chrono::year_month_day{2025y/2/30}), std::invalid_argument);
     ASSERT_EQ(term1.getEndDate(), std::chrono::year_month_day{2025y/12/5});
 }
@@ -281,7 +297,7 @@ TEST_F(TermTest, PrintTermInfoPartial) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "===========================================================\nID: <UUID>\nTerm: Spring 2025\n"
-                        "Duration: 2025-01-18 - 2025-05-28\nTotal Credits: 3\nOverall GPA: 0\n"
+                        "Duration: 2025-01-18 - 2025-05-28\nTotal Credits: 3\nOverall GPA: 0.00\n"
                         "Current? Yes\n===========================================================\n");
 }
 
@@ -324,7 +340,6 @@ TEST_F(TermTest, FindCourseNonConstNotFound) {
     term1.addCourse(course1);
     std::string id = course2.getId();
 
-    // cast to const Term to use const version of function
     // throw out of range since ID was not found
     ASSERT_THROW(term1.findCourse(id), std::out_of_range);
 }

@@ -10,6 +10,7 @@
  */
 
 #include <stdexcept>            // for exceptions
+#include <iomanip>              // for string formatting in print statement
 #include "app/utils.hpp"        // for reused custom functions
 
 using namespace std::chrono_literals;
@@ -191,11 +192,11 @@ std::chrono::year_month_day Course::getEndDate() const {
     return endDate_;
 }
 
-std::unordered_map<std::string, Assignment> Course::getAssignmentList() const {
+const std::unordered_map<std::string, Assignment>& Course::getAssignmentList() const {
     return assignmentList_;
 }
 
-std::unordered_map<std::string, float> Course::getGradeWeights() const {
+const std::unordered_map<std::string, float>& Course::getGradeWeights() const {
     return gradeWeights_;
 }
 
@@ -288,9 +289,9 @@ void Course::printCourseInfo(std::ostream &os) {
     }
     os << "Duration: " << startDate_ << " - " << endDate_ << "\n";
     os << "Number of Credits: " << numCredits_ << "\n";
-    os << "Grade Percentage: " << gradePct_ << "%\n";
+    os << "Grade Percentage: " << std::fixed << std::setprecision(2) << gradePct_ << "%\n";
     os << "Letter Grade: " << letterGrade_ << "\n";
-    os << "GPA Value: " << gpaVal_ << "\n";
+    os << "GPA Value: " << std::fixed << std::setprecision(1) << gpaVal_ << "\n";
     os << "Current? " << utils::boolToString(active_) << "\n";
     os << "===========================================================" << "\n";
 }

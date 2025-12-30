@@ -11,7 +11,7 @@
 
 #include <stdexcept>            // for exceptions
 #include <cmath>                // for round
-#include <iomanip>              // 
+#include <iomanip>              // for string formatting in print statement
 #include "app/utils.hpp"        // for reused custom functions
 
 using namespace std::chrono_literals;
@@ -29,14 +29,20 @@ int Term::calculateTotalCredits() {
 
 // calculates overall GPA based on courseList
 float Term::calculateOvrGpa() {
-    float totalGpa = 0.0;
+    float totalGpa = 0.0f;
     int credits = calculateTotalCredits();  // ensure that totalCredits is set
 
-    for (const auto& [id, course] : courseList_) {
-        totalGpa += course.getGpaVal();
+    // default case to avoid division by zero
+    if (credits == 0) {
+        return 0.0f;
     }
 
-    return totalGpa / credits;
+    // weighted GPA calculation
+    for (const auto& [id, course] : courseList_) {
+        totalGpa += course.getGpaVal() * course.getNumCredits();
+    }
+
+    return totalGpa / static_cast<float>(credits);
 }
 
 Term::Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day 
@@ -71,7 +77,7 @@ std::chrono::year_month_day Term::getEndDate() const {
     return endDate_;
 }
 
-std::unordered_map<std::string, Course> Term::getCourseList() const {
+const std::unordered_map<std::string, Course>& Term::getCourseList() const {
     return courseList_;
 }
 
@@ -112,7 +118,7 @@ void Term::printTermInfo(std::ostream &os) {
     os << "Term: " << title_ << "\n";
     os << "Duration: " << startDate_ << " - " << endDate_ << "\n";
     os << "Total Credits: " << totalCredits_ << "\n";
-    os << "Overall GPA: " << std::setprecision(2) << ovrGpa_ << "\n";   // set precision to 2 decimal places
+    os << "Overall GPA: " << std::fixed << std::setprecision(2) << ovrGpa_ << "\n";   // set precision to 2 decimal places
     os << "Current? " << utils::boolToString(active_) << "\n";
     os << "===========================================================" << "\n";
 }
@@ -120,13 +126,14 @@ void Term::printTermInfo(std::ostream &os) {
 // adds a Course to the end of the list from the given input
 void Term::addCourse(const Course& course) {
     auto [it, inserted] = courseList_.emplace(course.getId(), course);
-    // update total credits and overall GPA after adding to list
-    totalCredits_ = calculateTotalCredits();
-    ovrGpa_ = calculateOvrGpa();
 
     if (!inserted) {
         throw std::logic_error("Course with same ID already exists.");
     }
+
+    // update total credits and overall GPA after adding to list
+    totalCredits_ = calculateTotalCredits();
+    ovrGpa_ = calculateOvrGpa();
 }
 
 // removes a Course with the specified UUID
@@ -134,6 +141,10 @@ void Term::removeCourse(const std::string& id) {
     if (courseList_.erase(id) == 0) {
         throw std::out_of_range("Course not found.");
     }
+
+    // update total credits and overall GPA after removing from list
+    totalCredits_ = calculateTotalCredits();
+    ovrGpa_ = calculateOvrGpa();
 }
 
 // finds a Course in courseList based on ID; non-mutable (read-only)
@@ -147,7 +158,7 @@ const Course& Term::findCourse(const std::string& id) const {
     }
 }
 
-// finds an Course in courseList based on ID; mutable (read and write access)
+// finds a Course in courseList based on ID; mutable (read and write access)
 Course& Term::findCourse(const std::string& id) {
     // use const casting to use the same logic as the const version without duplication
     const Term &selfConst = *this;

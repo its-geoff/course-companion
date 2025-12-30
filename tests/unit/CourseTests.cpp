@@ -273,8 +273,8 @@ TEST_F(CourseTest, PrintCourseInfo) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0%\nLetter Grade: \n"
-                        "GPA Value: 0\nCurrent? No\n===========================================================\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
+                        "GPA Value: 0.0\nCurrent? No\n===========================================================\n");
 }
 
 TEST_F(CourseTest, AddAssignment) {
@@ -524,7 +524,7 @@ TEST_F(CourseTest, ThreeParamInitializationInvalidStartDate) {
 }
 
 TEST_F(CourseTest, ThreeParamInitializationInvalidEndDate) {
-    // throw invalid argument since start date does not exist
+    // throw invalid argument since end date does not exist
     ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
 }
 
@@ -544,7 +544,7 @@ TEST_F(CourseTest, FourParamInitializationInvalidStartDate) {
 }
 
 TEST_F(CourseTest, FourParamInitializationInvalidEndDate) {
-    // throw invalid argument since start date does not exist
+    // throw invalid argument since end date does not exist
     ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
 }
 
@@ -568,8 +568,8 @@ TEST_F(CourseTest, PrintCourseInfoPartial) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0%\nLetter Grade: \n"
-                        "GPA Value: 0\nCurrent? Yes\n===========================================================\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
+                        "GPA Value: 0.0\nCurrent? Yes\n===========================================================\n");
 }
 
 TEST_F(CourseTest, PrintCourseInfoDescPartial) {
@@ -583,8 +583,8 @@ TEST_F(CourseTest, PrintCourseInfoDescPartial) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0%\nLetter Grade: \n"
-                        "GPA Value: 0\nCurrent? Yes\n===========================================================\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
+                        "GPA Value: 0.0\nCurrent? Yes\n===========================================================\n");
 }
 
 TEST_F(CourseTest, AddAssignmentAlreadyExists) {

@@ -11,9 +11,8 @@
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
-#include <vector>           // for vector of Assignments
 #include <map>              // for GPA scale
-#include <unordered_map>    // for weights and GPA values
+#include <unordered_map>    // for weights, GPA values, and assignmentList
 #include "models/Assignment.hpp"   // for usage of Assignment objects in Course
 
 /**
@@ -72,8 +71,8 @@ class Course {
         std::string getDescription() const;
         std::chrono::year_month_day getStartDate() const;
         std::chrono::year_month_day getEndDate() const;
-        std::unordered_map<std::string, Assignment> getAssignmentList() const;
-        std::unordered_map<std::string, float> getGradeWeights() const;
+        const std::unordered_map<std::string, Assignment>& getAssignmentList() const;
+        const std::unordered_map<std::string, float>& getGradeWeights() const;
         int getNumCredits() const;
         float getGradePct() const;
         std::string getLetterGrade() const;
