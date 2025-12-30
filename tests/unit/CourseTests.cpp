@@ -272,9 +272,9 @@ TEST_F(CourseTest, PrintCourseInfo) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
+    ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
                         "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
-                        "GPA Value: 0.0\nCurrent? No\n===========================================================\n");
+                        "GPA Value: 0.0\nCurrent? No\n");
 }
 
 TEST_F(CourseTest, AddAssignment) {
@@ -567,9 +567,9 @@ TEST_F(CourseTest, PrintCourseInfoPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\n"
+    ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\n"
                         "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
-                        "GPA Value: 0.0\nCurrent? Yes\n===========================================================\n");
+                        "GPA Value: 0.0\nCurrent? Yes\n");
 }
 
 TEST_F(CourseTest, PrintCourseInfoDescPartial) {
@@ -582,9 +582,9 @@ TEST_F(CourseTest, PrintCourseInfoDescPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
+    ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
                         "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
-                        "GPA Value: 0.0\nCurrent? Yes\n===========================================================\n");
+                        "GPA Value: 0.0\nCurrent? Yes\n");
 }
 
 TEST_F(CourseTest, AddAssignmentAlreadyExists) {
@@ -650,15 +650,3 @@ TEST_F(CourseTest, OverloadedEqualsSameParamsDifferentId) {
 
     ASSERT_FALSE(course2 == course3);
 }
-
-// ====================================
-// CLASS USE CASES
-// ====================================
-
-// add Course (partial info)
-// add multiple Assignments to Course assignmentList
-// print course info
-// set grades for all assignments
-// calculate gradePct, gpaVal, and letterGrade
-// remove Assignment from assignmentList
-// recalculate gradePct, gpaVal, and letterGrade

@@ -26,9 +26,16 @@
  */
 class Controller {
     private:
-        // add after implementation of Term is completed
+        Term &term;
+
     public:
-        // add after implementation of Term is completed
+        explicit Controller(Term &term);
+        
+        void addCourse(const std::string &courseName, int credits);
+        void addAssignment(const std::string &courseId, const std::string &assignmentName, float grade);
+
+        float getTermGpa() const;
+        const std::unordered_map<std::string, Course>& getCourses() const;
 };
 
 #endif

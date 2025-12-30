@@ -151,9 +151,9 @@ TEST_F(TermTest, PrintTermInfo) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nTerm: Fall 2025\n"
+    ASSERT_EQ(output, "ID: <UUID>\nTerm: Fall 2025\n"
                         "Duration: 2025-08-12 - 2025-12-05\nTotal Credits: 6\nOverall GPA: 0.00\n"
-                        "Current? No\n===========================================================\n");
+                        "Current? No\n");
 }
 
 TEST_F(TermTest, AddCourse) {
@@ -296,9 +296,9 @@ TEST_F(TermTest, PrintTermInfoPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nTerm: Spring 2025\n"
+    ASSERT_EQ(output, "ID: <UUID>\nTerm: Spring 2025\n"
                         "Duration: 2025-01-18 - 2025-05-28\nTotal Credits: 3\nOverall GPA: 0.00\n"
-                        "Current? Yes\n===========================================================\n");
+                        "Current? Yes\n");
 }
 
 TEST_F(TermTest, AddCourseAlreadyExists) {

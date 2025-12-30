@@ -2,10 +2,12 @@
 
 /**
  * @file Assignment.cpp
- * @brief Implementation of an Assignment class that stores metadata and is used to organize coursework. 
+ * @brief Implementation of an Assignment class, which stores metadata and is used to organize coursework. 
  * 
  * There can be multiple Assignments within one Course. Individual assignment grades will be used to 
- * determine course grades. Provides implementations only; see Assignment.hpp for definitions.
+ * determine course grades. 
+ * 
+ * Provides implementations only; see Assignment.hpp for definitions.
  */
 
 #include <stdexcept>            // for exceptions
@@ -124,7 +126,6 @@ void Assignment::validateGrade(float grade) {
 
 // prints information held by an Assignment object
 void Assignment::printAssignmentInfo(std::ostream &os) {
-    os << "===========================================================" << "\n";
     os << "ID: " << id_ << "\n";
     os << "Assignment: " << title_ << "\n";
     if (!description_.empty()) {
@@ -134,7 +135,6 @@ void Assignment::printAssignmentInfo(std::ostream &os) {
     os << "Due Date: " << dueDate_ << "\n";
     os << "Completed? " << utils::boolToString(completed_) << "\n";
     os << "Grade: " << grade_ << "\n";
-    os << "===========================================================" << "\n";
 }
 
 // equality comparison based on unique identifier (UUID)

@@ -3,10 +3,12 @@
 
 /**
  * @file Assignment.hpp
- * @brief Definition of an Assignment class that stores metadata and is used to organize coursework. 
+ * @brief Definition of the Assignment class, which stores metadata and is used to organize coursework. 
  * 
  * There can be multiple Assignments within one Course. Individual assignment grades will be used to 
- * determine course grades. Provides declarations only; see Assignment.cpp for implementations.
+ * determine course grades. 
+ * 
+ * Provides declarations only; see Assignment.cpp for implementations.
  */
 
 #include <string>       // for string variables
@@ -55,7 +57,7 @@ class Assignment {
         void setCompleted(bool newCompleted);
         void setGrade(float newGrade);
 
-        void printAssignmentInfo(std::ostream &os);
+        void printAssignmentInfo(std::ostream &os = std::cout);
 
         bool operator==(const Assignment &other) const;
 };
