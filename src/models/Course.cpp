@@ -10,7 +10,7 @@
  */
 
 #include <stdexcept>            // for exceptions
-#include <algorithm>            // for vector erase
+#include <iomanip>              // for string formatting in print statement
 #include "app/utils.hpp"        // for reused custom functions
 
 using namespace std::chrono_literals;
@@ -192,11 +192,11 @@ std::chrono::year_month_day Course::getEndDate() const {
     return endDate_;
 }
 
-std::unordered_map<std::string, Assignment> Course::getAssignmentList() const {
+const std::unordered_map<std::string, Assignment>& Course::getAssignmentList() const {
     return assignmentList_;
 }
 
-std::unordered_map<std::string, float> Course::getGradeWeights() const {
+const std::unordered_map<std::string, float>& Course::getGradeWeights() const {
     return gradeWeights_;
 }
 
@@ -243,7 +243,6 @@ void Course::setEndDate(std::chrono::year_month_day newEndDate) {
     endDate_ = newEndDate;
 }
 
-
 void Course::setGradeWeights(const std::unordered_map<std::string, float>& newGradeWeights) {
     validateGradeWeights(newGradeWeights);
     gradeWeights_ = newGradeWeights;
@@ -284,15 +283,15 @@ void Course::setGradeScale(const std::map<float, std::string>& newGradeScale) {
 void Course::printCourseInfo(std::ostream &os) {
     os << "===========================================================" << "\n";
     os << "ID: " << id_ << "\n";
-    os << "Course Title: " << title_ << "\n";
+    os << "Course: " << title_ << "\n";
     if (!description_.empty()) {
         os << "Description: " << description_ << "\n";
     }
     os << "Duration: " << startDate_ << " - " << endDate_ << "\n";
     os << "Number of Credits: " << numCredits_ << "\n";
-    os << "Grade Percentage: " << gradePct_ << "%\n";
+    os << "Grade Percentage: " << std::fixed << std::setprecision(2) << gradePct_ << "%\n";
     os << "Letter Grade: " << letterGrade_ << "\n";
-    os << "GPA Value: " << gpaVal_ << "\n";
+    os << "GPA Value: " << std::fixed << std::setprecision(1) << gpaVal_ << "\n";
     os << "Current? " << utils::boolToString(active_) << "\n";
     os << "===========================================================" << "\n";
 }
@@ -313,7 +312,7 @@ void Course::removeAssignment(const std::string& id) {
     }
 }
 
-// finds an assignment in assignmentList based on ID; non-mutable (read-only)
+// finds an Assignment in assignmentList based on ID; non-mutable (read-only)
 const Assignment& Course::findAssignment(const std::string& id) const {
     auto it = assignmentList_.find(id);
 
@@ -324,7 +323,7 @@ const Assignment& Course::findAssignment(const std::string& id) const {
     }
 }
 
-// finds an assignment in assignmentList based on ID; mutable (read and write access)
+// finds an Assignment in assignmentList based on ID; mutable (read and write access)
 Assignment& Course::findAssignment(const std::string& id) {
     // use const casting to use the same logic as the const version without duplication
     const Course &selfConst = *this;

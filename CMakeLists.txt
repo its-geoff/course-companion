@@ -29,6 +29,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 add_library(CourseCompanion_lib
     src/models/Assignment.cpp
     src/models/Course.cpp
+    src/models/Term.cpp
     src/app/Controller.cpp
     src/app/utils.cpp
 )

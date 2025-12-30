@@ -23,7 +23,7 @@ class AssignmentTest : public testing::Test {
 // ====================================
 
 TEST_F(AssignmentTest, IdGetter) {
-    // ensure id is not empty
+    // ensure ID is not empty
     ASSERT_FALSE(utils::isOnlyWhitespace(assignment1.getId()));
 }
 
@@ -160,7 +160,7 @@ TEST_F(AssignmentTest, PrintAssignmentInfo) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment Title: Homework 3\nDescription: Focus on variables and strings.\n"
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment: Homework 3\nDescription: Focus on variables and strings.\n"
                         "Due Date: 2025-11-20\nCompleted? Yes\nGrade: 95.18\n===========================================================\n");
 }
 
@@ -305,7 +305,7 @@ TEST_F(AssignmentTest, PrintAssignmentInfoPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment Title: Homework 1\n"
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment: Homework 1\n"
                         "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
 }
 
@@ -319,7 +319,7 @@ TEST_F(AssignmentTest, PrintAssignmentInfoDescPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment: Homework 1\nDescription: Focus on lexical analysis.\n"
                         "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
 }
 
@@ -333,7 +333,7 @@ TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment Title: Homework 1\nDescription: Focus on lexical analysis.\n"
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment: Homework 1\nDescription: Focus on lexical analysis.\n"
                         "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
 }
 

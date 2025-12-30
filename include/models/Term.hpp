@@ -11,8 +11,8 @@
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
-#include <vector>           // for vector of Courses
-#include "Course.hpp"   // for usage of Course objects in vector
+#include <unordered_map>    // for courseList
+#include "models/Course.hpp"   // for usage of Course objects in vector
 
 /**
  * @class Term
@@ -25,31 +25,43 @@
  */
 class Term {
     private:
+        std::string id_{};  // UUID v4 automatically generated during construction
         std::string title_{};
-        std::chrono::system_clock::time_point startDate_{};
-        std::chrono::system_clock::time_point endDate_{};
-        std::vector<Course> courseList_{};
-        float gpa_{0.0};
-        bool active_{true};     // indicates whether the term is currently ongoing
+        std::chrono::year_month_day startDate_{};
+        std::chrono::year_month_day endDate_{};
+        std::unordered_map<std::string, Course> courseList_{};
+        int totalCredits_{0};
+        float ovrGpa_{0.0};
+        bool active_{true}; // indicates whether the term is currently ongoing
+
+        int calculateTotalCredits();    // calculates total credits - need to auto call during add or remove Course
+        float calculateOvrGpa();        // calculates overall gpa - need to auto call during add or remove Course
 
     public:
-        Term();
-        Term(std::string title_, std::chrono::system_clock::time_point startDate_, std::chrono::system_clock::time_point endDate_);
-        Term(std::string title_, std::chrono::system_clock::time_point startDate_, std::chrono::system_clock::time_point endDate_,
-                std::vector<Course> courseList_);
-        Term(std::string title_, std::chrono::system_clock::time_point startDate_, std::chrono::system_clock::time_point endDate_,
-                std::vector<Course> courseList_, bool active_);
+        Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate);
+        Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate,
+            bool active);
 
-        void printTermInfo();
-
+        std::string getId() const;
+        std::string getTitle() const;
+        std::chrono::year_month_day getStartDate() const;
+        std::chrono::year_month_day getEndDate() const;
+        const std::unordered_map<std::string, Course>& getCourseList() const;
+        int getTotalCredits() const;
+        float getOvrGpa() const;
+        bool getActive() const;
         void setTitle(std::string newTitle);
-        void setStartDate(std::chrono::system_clock::time_point newStartDate);
-        void setEndDate(std::chrono::system_clock::time_point newEndDate);
+        void setStartDate(std::chrono::year_month_day newStartDate);
+        void setEndDate(std::chrono::year_month_day newEndDate);
         void setActive(bool newActive);
-        std::string getTitle();
-        std::chrono::system_clock::time_point getStartDate();
-        std::chrono::system_clock::time_point getEndDate();
-        bool getActive();
+
+        void printTermInfo(std::ostream &os);
+        void addCourse(const Course& course);
+        void removeCourse(const std::string& id);
+        const Course& findCourse(const std::string& id) const;    // non-mutable version
+        Course& findCourse(const std::string& id);    // mutable version
+
+        bool operator==(const Term &other) const;
 };
 
 #endif

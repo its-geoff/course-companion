@@ -11,9 +11,8 @@
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
-#include <vector>           // for vector of Assignments
 #include <map>              // for GPA scale
-#include <unordered_map>    // for weights and GPA values
+#include <unordered_map>    // for weights, GPA values, and assignmentList
 #include "models/Assignment.hpp"   // for usage of Assignment objects in Course
 
 /**
@@ -36,7 +35,7 @@ class Course {
         std::unordered_map<std::string, Assignment> assignmentList_{};
         static const std::unordered_map<std::string, float> gradeWeightsDefault_;   // default grade weights if not set
         std::unordered_map<std::string, float> gradeWeights_{gradeWeightsDefault_}; // weights of each assignment type
-        int numCredits_{0};
+        int numCredits_{3};     // default number of credits for a class, TO-DO: allow user to override default
         float gradePct_{0.0};   // grade percentage from 0 to 100%
         std::string letterGrade_{};
         float gpaVal_{0.0};     // GPA value associated with letter grade
@@ -50,9 +49,9 @@ class Course {
         void validateGradePct(float gradePct);
         void validateGradeScale(const std::map<float, std::string>& gradeScale);
 
-        std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const;
-        std::string calculateLetterGrade(float gradePct) const;
-        float calculateGpaVal(const std::string& letterGrade);
+        std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const; // auto set during add or remove Assignment?
+        std::string calculateLetterGrade(float gradePct) const; // auto set during add or remove Assignment?
+        float calculateGpaVal(const std::string& letterGrade); // auto set during add or remove Assignment?
 
     public:
         Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate);
@@ -67,13 +66,13 @@ class Course {
         Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
             std::chrono::year_month_day endDate, int numCredits, bool active);
 
-        std::string getId() const;  // uses string for compatibility with unordered map functions
+        std::string getId() const;
         std::string getTitle() const;
         std::string getDescription() const;
         std::chrono::year_month_day getStartDate() const;
         std::chrono::year_month_day getEndDate() const;
-        std::unordered_map<std::string, Assignment> getAssignmentList() const;
-        std::unordered_map<std::string, float> getGradeWeights() const;
+        const std::unordered_map<std::string, Assignment>& getAssignmentList() const;
+        const std::unordered_map<std::string, float>& getGradeWeights() const;
         int getNumCredits() const;
         float getGradePct() const;
         std::string getLetterGrade() const;

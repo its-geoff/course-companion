@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <sstream>
-#include <regex>
+#include <sstream>      // diverts output from terminal to separate stream
+#include <regex>        // regular expression matching for UUIDs
 #include "models/Course.hpp"
 #include "app/utils.hpp"
 
@@ -17,14 +17,6 @@ class CourseTest : public testing::Test {
             3,
             false
         };
-
-        // used for some static variable tests to prevent global overwrites
-        Course course2{
-            "ENGR 195A", 
-            std::chrono::year_month_day{2025y/8/14}, 
-            std::chrono::year_month_day{2025y/12/18}, 
-            1
-        };
 };
 
 // ====================================
@@ -32,7 +24,7 @@ class CourseTest : public testing::Test {
 // ====================================
 
 TEST_F(CourseTest, IdGetter) {
-    // ensure id is not empty
+    // ensure ID is not empty
     ASSERT_FALSE(utils::isOnlyWhitespace(course1.getId()));
 }
 
@@ -193,6 +185,7 @@ TEST_F(CourseTest, ActiveSetter) {
 }
 
 TEST_F(CourseTest, GradeScaleSetter) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {70.0, "P"},
         {0.0, "NP"}
@@ -279,19 +272,9 @@ TEST_F(CourseTest, PrintCourseInfo) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0%\nLetter Grade: \n"
-                        "GPA Value: 0\nCurrent? No\n===========================================================\n");
-}
-
-TEST_F(CourseTest, OverloadedEquals) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
-    Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course4 = course1;
-
-    ASSERT_FALSE(course1 == course2);
-    ASSERT_FALSE(course1 == course3);
-    ASSERT_TRUE(course1 == course4);
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
+                        "GPA Value: 0.0\nCurrent? No\n===========================================================\n");
 }
 
 TEST_F(CourseTest, AddAssignment) {
@@ -341,6 +324,16 @@ TEST_F(CourseTest, FindAssignmentNonConst) {
     ASSERT_EQ(course1.findAssignment(id), assignment3);
 }
 
+TEST_F(CourseTest, OverloadedEquals) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
+    Course course4 = course1;
+
+    ASSERT_FALSE(course1 == course2);
+    ASSERT_FALSE(course1 == course3);
+    ASSERT_TRUE(course1 == course4);
+}
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -353,7 +346,7 @@ TEST_F(CourseTest, DescriptionGetterEmpty) {
 
 TEST_F(CourseTest, NumCreditsGetterEmpty) {
     Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
-    ASSERT_EQ(course2.getNumCredits(), 0);
+    ASSERT_EQ(course2.getNumCredits(), 3);
 }
 
 TEST_F(CourseTest, ActiveGetterEmpty) {
@@ -390,6 +383,7 @@ TEST_F(CourseTest, EndDateSetterInvalid) {
 }
 
 TEST_F(CourseTest, GradeWeightsSetterInvalid) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::unordered_map<std::string, float> gradeWeights2 = {
         {"Homework", 0.4},
         {"Midterm", 0.4},
@@ -476,14 +470,15 @@ TEST_F(CourseTest, GpaValSetterLowF) {
     ASSERT_EQ(course1.getGpaVal(), 0.0f);
 }
 
-
 TEST_F(CourseTest, GradeScaleSetterEmpty) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {};
 
     ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
 }
 
 TEST_F(CourseTest, GradeScaleSetterMissingZero) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {80.0, "A"},
         {60.0, "C"}
@@ -493,6 +488,7 @@ TEST_F(CourseTest, GradeScaleSetterMissingZero) {
 }
 
 TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {110.0, "A++"},
         {60.0, "C"},
@@ -503,6 +499,7 @@ TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
 }
 
 TEST_F(CourseTest, GradeScaleSetterUpperBound) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {100.0, "A++"},
         {90.0, "A-"},
@@ -521,9 +518,14 @@ TEST_F(CourseTest, ThreeParamInitializationNoTitle) {
     ASSERT_THROW((Course{"", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
 }
 
-TEST_F(CourseTest, ThreeParamInitializationInvalidDate) {
+TEST_F(CourseTest, ThreeParamInitializationInvalidStartDate) {
     // throw invalid argument since start date does not exist
     ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/2/31}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, ThreeParamInitializationInvalidEndDate) {
+    // throw invalid argument since end date does not exist
+    ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
 }
 
 TEST_F(CourseTest, FiveParamInitializationInvalidNumCredits) {
@@ -536,9 +538,14 @@ TEST_F(CourseTest, FourParamDescInitializationNoTitle) {
     ASSERT_THROW((Course{"", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
 }
 
-TEST_F(CourseTest, FourParamInitializationInvalidDate) {
+TEST_F(CourseTest, FourParamInitializationInvalidStartDate) {
     // throw invalid argument since start date does not exist
     ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/2/31}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FourParamInitializationInvalidEndDate) {
+    // throw invalid argument since end date does not exist
+    ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
 }
 
 TEST_F(CourseTest, SixParamInitializationInvalidNumCredits) {
@@ -560,9 +567,9 @@ TEST_F(CourseTest, PrintCourseInfoPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGrade Percentage: 0%\nLetter Grade: \n"
-                        "GPA Value: 0\nCurrent? Yes\n===========================================================\n");
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
+                        "GPA Value: 0.0\nCurrent? Yes\n===========================================================\n");
 }
 
 TEST_F(CourseTest, PrintCourseInfoDescPartial) {
@@ -575,9 +582,9 @@ TEST_F(CourseTest, PrintCourseInfoDescPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse Title: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 0\nGrade Percentage: 0%\nLetter Grade: \n"
-                        "GPA Value: 0\nCurrent? Yes\n===========================================================\n");
+    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
+                        "GPA Value: 0.0\nCurrent? Yes\n===========================================================\n");
 }
 
 TEST_F(CourseTest, AddAssignmentAlreadyExists) {
@@ -585,7 +592,7 @@ TEST_F(CourseTest, AddAssignmentAlreadyExists) {
 
     course1.addAssignment(assignment1);
 
-    // throw logic error since assignment already exists in map
+    // throw logic error since Assignment already exists in list
     ASSERT_THROW(course1.addAssignment(assignment1), std::logic_error);
 }
 
@@ -648,3 +655,10 @@ TEST_F(CourseTest, OverloadedEqualsSameParamsDifferentId) {
 // CLASS USE CASES
 // ====================================
 
+// add Course (partial info)
+// add multiple Assignments to Course assignmentList
+// print course info
+// set grades for all assignments
+// calculate gradePct, gpaVal, and letterGrade
+// remove Assignment from assignmentList
+// recalculate gradePct, gpaVal, and letterGrade
