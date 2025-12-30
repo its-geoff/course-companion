@@ -69,16 +69,6 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
     grade_ = grade;
 }
 
-// Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade,
-//             Course course) {
-//     title_ = title;
-//     description_ = description;
-//     dueDate_ = dueDate;
-//     completed_ = completed;
-//     grade_ = grade;
-//     course_ = course;
-// }  -> no Course implementation yet
-
 std::string Assignment::getId() const {
     return id_;
 }
@@ -103,10 +93,6 @@ float Assignment::getGrade() const {
     return grade_;
 }
 
-// Course Assignment::getCourse() const {
-//     return course_;
-// }  -> no Course implementation yet
-
 void Assignment::setTitle(std::string newTitle) {
     utils::validateTitle(newTitle);
     title_ = newTitle;
@@ -129,10 +115,6 @@ void Assignment::setGrade(float newGrade) {
     validateGrade(newGrade);
     grade_ = newGrade;
 }
-
-// void Assignment::setCourse(Course newCourse) {
-//     course_ = newCourse;
-// }  -> no Course implementation yet
 
 // throws an exception if a grade is less than 0 or greater than 100
 void Assignment::validateGrade(float grade) {

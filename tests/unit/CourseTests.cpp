@@ -277,16 +277,6 @@ TEST_F(CourseTest, PrintCourseInfo) {
                         "GPA Value: 0\nCurrent? No\n===========================================================\n");
 }
 
-TEST_F(CourseTest, OverloadedEquals) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
-    Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course4 = course1;
-
-    ASSERT_FALSE(course1 == course2);
-    ASSERT_FALSE(course1 == course3);
-    ASSERT_TRUE(course1 == course4);
-}
-
 TEST_F(CourseTest, AddAssignment) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
 
@@ -332,6 +322,16 @@ TEST_F(CourseTest, FindAssignmentNonConst) {
     assignment3.setCompleted(false);    // copy change to assignment1
 
     ASSERT_EQ(course1.findAssignment(id), assignment3);
+}
+
+TEST_F(CourseTest, OverloadedEquals) {
+    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
+    Course course4 = course1;
+
+    ASSERT_FALSE(course1 == course2);
+    ASSERT_FALSE(course1 == course3);
+    ASSERT_TRUE(course1 == course4);
 }
 
 // ====================================
@@ -470,7 +470,6 @@ TEST_F(CourseTest, GpaValSetterLowF) {
     ASSERT_EQ(course1.getGpaVal(), 0.0f);
 }
 
-
 TEST_F(CourseTest, GradeScaleSetterEmpty) {
     Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {};
@@ -519,9 +518,14 @@ TEST_F(CourseTest, ThreeParamInitializationNoTitle) {
     ASSERT_THROW((Course{"", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
 }
 
-TEST_F(CourseTest, ThreeParamInitializationInvalidDate) {
+TEST_F(CourseTest, ThreeParamInitializationInvalidStartDate) {
     // throw invalid argument since start date does not exist
     ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/2/31}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, ThreeParamInitializationInvalidEndDate) {
+    // throw invalid argument since start date does not exist
+    ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
 }
 
 TEST_F(CourseTest, FiveParamInitializationInvalidNumCredits) {
@@ -534,9 +538,14 @@ TEST_F(CourseTest, FourParamDescInitializationNoTitle) {
     ASSERT_THROW((Course{"", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
 }
 
-TEST_F(CourseTest, FourParamInitializationInvalidDate) {
+TEST_F(CourseTest, FourParamInitializationInvalidStartDate) {
     // throw invalid argument since start date does not exist
     ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/2/31}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FourParamInitializationInvalidEndDate) {
+    // throw invalid argument since start date does not exist
+    ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
 }
 
 TEST_F(CourseTest, SixParamInitializationInvalidNumCredits) {
@@ -583,7 +592,7 @@ TEST_F(CourseTest, AddAssignmentAlreadyExists) {
 
     course1.addAssignment(assignment1);
 
-    // throw logic error since assignment already exists in map
+    // throw logic error since Assignment already exists in list
     ASSERT_THROW(course1.addAssignment(assignment1), std::logic_error);
 }
 

@@ -120,9 +120,12 @@ void Term::printTermInfo(std::ostream &os) {
 // adds a Course to the end of the list from the given input
 void Term::addCourse(const Course& course) {
     auto [it, inserted] = courseList_.emplace(course.getId(), course);
+    // update total credits and overall GPA after adding to list
+    totalCredits_ = calculateTotalCredits();
+    ovrGpa_ = calculateOvrGpa();
 
     if (!inserted) {
-        throw std::logic_error("Assignment with same ID already exists.");
+        throw std::logic_error("Course with same ID already exists.");
     }
 }
 

@@ -67,7 +67,7 @@ class Course {
         Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
             std::chrono::year_month_day endDate, int numCredits, bool active);
 
-        std::string getId() const;  // uses string for compatibility with unordered map functions
+        std::string getId() const;
         std::string getTitle() const;
         std::string getDescription() const;
         std::chrono::year_month_day getStartDate() const;
