@@ -30,8 +30,10 @@ add_library(CourseCompanion_lib
     src/models/Assignment.cpp
     src/models/Course.cpp
     src/models/Term.cpp
-    src/controller/Controller.cpp
+    src/controller/TermController.cpp
     src/utils/utils.cpp
+    src/view/CliView.cpp
+    src/main.cpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)

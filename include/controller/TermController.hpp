@@ -2,7 +2,7 @@
 #define CONTROLLER_H
 
 /**
- * @file Controller.hpp
+ * @file TermController.hpp
  * 
  * @brief Definition of a controller that manages interaction between Assignment, Course, and Term. 
  * 
@@ -12,9 +12,9 @@
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
-#include <optional>         // for optional variables
+#include <unordered_map>    // for Term objects
 #include "models/Assignment.hpp"   // for references to Assignment
-// #include "Course.hpp"   // for connection to relevant Course  -> no Course implementation yet
+#include "models/Term.hpp"
 
 /**
  * @class Controller
@@ -24,13 +24,13 @@
  * It stores the current application state, processes user input, and delegates operations to classes such as 
  * Term, Course, and Assignment.
  */
-class Controller {
+class TermController {
     private:
-        Term &term;
+        std::unordered_map<std::string, Term> terms_;
 
     public:
-        explicit Controller(Term &term);
-        
+        TermController() = default;
+
         void addCourse(const std::string &courseName, int credits);
         void addAssignment(const std::string &courseId, const std::string &assignmentName, float grade);
 

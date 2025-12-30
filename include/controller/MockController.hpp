@@ -16,7 +16,7 @@
  * 
  * Overrides normal controller functions to allow a simplified bypass for testing.
  */
-class MockController : public Controller {
+class MockController : public TermController {
 public:
     void addCourse(const std::string &courseName, int credits) { true; };
     void addAssignment(const std::string &courseId, const std::string &assignmentName, float grade) { true; };
