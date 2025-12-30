@@ -3,6 +3,7 @@
 usage() {
     echo "Usage: clear-build [-mt]"
     echo "  -t: Clear build_test files"
+    exit 1
 }
 
 option_given=0

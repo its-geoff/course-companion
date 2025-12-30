@@ -3,6 +3,7 @@
 usage() {
     echo "Usage: setup-deps [-t]"
     echo "  -t: Output to build_test"
+    exit 1
 }
 
 OS_NAME=$(uname)
