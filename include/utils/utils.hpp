@@ -36,9 +36,6 @@ namespace utils {
             os << first << " -> " << second << "\n";
         }
     }
-
-    Assignment chooseAssignmentConstructor(std::string title, std::optional<std::string> description, std::optional<std::chrono::year_month_day> date, 
-        std::optional<bool> completed, std::optional<float> grade);
 }
 
 #endif

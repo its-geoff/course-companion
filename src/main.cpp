@@ -3,7 +3,7 @@
 #include "models/Assignment.hpp"
 #include "models/Course.hpp"
 #include "models/Term.hpp"
-#include "controller/Controller.hpp"
+#include "controller/TermController.hpp"
 #include "controller/MockController.hpp"
 #include "view/CliView.hpp"
 
@@ -18,7 +18,7 @@ Term defaultTermFromToday() {
 
 int main() {
     Term model = defaultTermFromToday();
-    Controller controller(model);
+    TermController controller;
     MockController mockController(controller);    // uncomment for test builds
     CliView view(mockController);       // change to controller for main builds
 

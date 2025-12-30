@@ -12,7 +12,7 @@
  */
 
 #include <iostream>         // for i/o streams
-#include "controller/Controller.hpp"
+#include "controller/TermController.hpp"
 
 /**
  * @class CliView
@@ -23,20 +23,33 @@
  */
 class CliView {
     private:
-        Controller &controller_;
+        TermController &controller_;
         std::istream &in_;
         std::ostream &out_;
+        enum class MenuState {
+            term,
+            course,
+            assigment,
+            exit
+        };
 
-        void displayMenu() const;
+        std::chrono::year_month_day parseDate(const std::string& input) const;
+
+        void displayIntro() const;
+        void displayTermMenu() const;
+        void displayCourseMenu() const;
+        void displayAssignmentMenu() const;
         void displayDelim() const;
 
-        std::string getStringInput(const std::string &input) const;
-        float getFloatInput(const std::string &input) const;
-        int getIntInput(const std::string &input) const;
-        bool getBoolInput(const std::string &input);
+        char getCharInput(const std::string &label, const char defaultVal) const;
+        std::string getStringInput(const std::string &label, const std::string &defaultVal) const;
+        std::chrono::year_month_day getDateInput(const std::string &label, const std::chrono::year_month_day defaultVal) const;
+        float getFloatInput(const std::string &label, const float defaultVal) const;
+        int getIntInput(const std::string &label, const int defaultVal) const;
+        bool getBoolInput(const std::string &label, const bool defaultVal) const;
 
     public:
-        explicit CliView(Controller &controller, std::istream& is = std::cin, std::ostream& os = std::cout);
+        explicit CliView(TermController &controller, std::istream& is = std::cin, std::ostream& os = std::cout);
         void run();
 };
 
