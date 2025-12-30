@@ -4,6 +4,7 @@ usage() {
     echo "Usage: make-build [-mt]"
     echo "  -m: Only build main files"
     echo "  -t: Only build test files"
+    exit 1
 }
 
 option_given=0
