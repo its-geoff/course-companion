@@ -1,4 +1,4 @@
-#include "app/Controller.hpp"
+#include "controller/Controller.hpp"
 
 /**
  * @file Controller.cpp

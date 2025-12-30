@@ -2,7 +2,7 @@
 #include <sstream>      // diverts output from terminal to separate stream
 #include <regex>        // regular expression matching for UUIDs
 #include "models/Term.hpp"
-#include "app/utils.hpp"
+#include "utils/utils.hpp"
 
 using namespace std::chrono_literals;
 

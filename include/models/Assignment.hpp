@@ -13,7 +13,6 @@
 #include <chrono>       // for date and time-related variables
 #include <optional>     // for optional variables
 #include <iostream>     // for i/o streams
-// #include "Course.hpp"   // for connection to relevant Course  -> no Course implementation yet
 
 /**
  * @class Assignment

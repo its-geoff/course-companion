@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.20)
 # Project metadata
 # ------------------------
 project(CourseCompanion
-    VERSION 0.1.0
+    VERSION 0.2.0
     DESCRIPTION "Homework tracker that allows students to track homework assignments, estimate grades, and organize class schedules."
     LANGUAGES CXX
 )
@@ -30,8 +30,8 @@ add_library(CourseCompanion_lib
     src/models/Assignment.cpp
     src/models/Course.cpp
     src/models/Term.cpp
-    src/app/Controller.cpp
-    src/app/utils.cpp
+    src/controller/Controller.cpp
+    src/utils/utils.cpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
@@ -54,7 +54,7 @@ endfunction()
 # Main executable
 # ------------------------
 if(NOT BUILD_TESTING)
-    add_executable(CourseCompanion src/app/main.cpp)
+    add_executable(CourseCompanion src/main.cpp)
     target_link_libraries(CourseCompanion PRIVATE CourseCompanion_lib)
     
     set_target_properties(CourseCompanion PROPERTIES

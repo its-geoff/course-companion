@@ -9,7 +9,7 @@
  */
 
 #include <stdexcept>            // for exceptions
-#include "app/utils.hpp"        // for reused custom functions
+#include "utils/utils.hpp"        // for reused custom functions
 
 using namespace std::chrono_literals;
 
