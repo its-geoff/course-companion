@@ -1,5 +1,5 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#ifndef TERMCONTROLLER_HPP
+#define TERMCONTROLLER_HPP
 
 /**
  * @file TermController.hpp
@@ -38,4 +38,4 @@ class TermController {
         const std::unordered_map<std::string, Course>& getCourses() const;
 };
 
-#endif
+#endif  // TERMCONTROLLER_HPP

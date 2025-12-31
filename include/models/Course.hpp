@@ -1,5 +1,5 @@
-#ifndef COURSE_H
-#define COURSE_H
+#ifndef COURSE_HPP
+#define COURSE_HPP
 
 /**
  * @file Course.hpp
@@ -103,4 +103,4 @@ class Course {
         bool operator==(const Course &other) const;
 };
 
-#endif
+#endif  // COURSE_HPP

@@ -1,5 +1,5 @@
-#ifndef MOCKCONTROLLER_H
-#define MOCKCONTROLLER_H
+#ifndef MOCKCONTROLLER_HPP
+#define MOCKCONTROLLER_HPP
 
 /**
  * @file MockController.hpp
@@ -24,4 +24,4 @@ public:
     float getTermGpa() const { return 4.0; };
 };
 
-#endif
+#endif  // MOCKCONTROLLER_HPP

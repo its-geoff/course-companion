@@ -1,5 +1,5 @@
-#ifndef CLIVIEW_H
-#define CLIVIEW_H
+#ifndef CLIVIEW_HPP
+#define CLIVIEW_HPP
 
 /**
  * @file CliView.hpp
@@ -29,7 +29,7 @@ class CliView {
         enum class MenuState {
             term,
             course,
-            assigment,
+            assignment,
             exit
         };
 
@@ -53,4 +53,4 @@ class CliView {
         void run();
 };
 
-#endif
+#endif  // CLIVIEW_HPP

@@ -1,5 +1,5 @@
-#ifndef ASSIGNMENT_H
-#define ASSIGNMENT_H
+#ifndef ASSIGNMENT_HPP
+#define ASSIGNMENT_HPP
 
 /**
  * @file Assignment.hpp
@@ -62,4 +62,4 @@ class Assignment {
         bool operator==(const Assignment &other) const;
 };
 
-#endif
+#endif  // ASSIGNMENT_HPP

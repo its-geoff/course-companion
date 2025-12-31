@@ -1,5 +1,5 @@
-#ifndef TERM_H
-#define TERM_H
+#ifndef TERM_HPP
+#define TERM_HPP
 
 /**
  * @file Term.hpp
@@ -66,4 +66,4 @@ class Term {
         bool operator==(const Term &other) const;
 };
 
-#endif
+#endif  // TERM_HPP
