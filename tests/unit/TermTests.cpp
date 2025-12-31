@@ -360,7 +360,3 @@ TEST_F(TermTest, OverloadedEqualsSameParamsDifferentId) {
 
     ASSERT_FALSE(term2 == term3);
 }
-
-// ====================================
-// CLASS USE CASES
-// ====================================

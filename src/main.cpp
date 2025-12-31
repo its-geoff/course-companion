@@ -17,7 +17,6 @@ Term defaultTermFromToday() {
 }
 
 int main() {
-    Term model = defaultTermFromToday();
     TermController controller;
     MockController mockController(controller);    // uncomment for test builds
     CliView view(mockController);       // change to controller for main builds

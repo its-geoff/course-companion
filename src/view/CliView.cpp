@@ -12,6 +12,7 @@
 
 #include "utils/utils.hpp"      // for reused custom functions
 
+// takes date as string input and converts to year_month_day format
 std::chrono::year_month_day CliView::parseDate(const std::string &input) const {
     int y, m, d;
 
@@ -32,6 +33,7 @@ void CliView::displayIntro() const {
 // prints a menu of choices for the user to select a Term
 void CliView::displayTermMenu() const {
     displayDelim();
+    out_ << "                         Term Menu                         " << "\n";
     out_ << "             What would you like to do today?              " << "\n";
     out_ << "[A] Add term" << "\n";
     out_ << "[E] Edit term" << "\n";
@@ -45,6 +47,7 @@ void CliView::displayCourseMenu() const {
     displayDelim();
     out_ << "Term: " << "\n";
     displayDelim();
+    out_ << "                        Course Menu                        " << "\n";
     out_ << "             What would you like to do today?              " << "\n";
     out_ << "[A] Add course" << "\n";
     out_ << "[E] Edit course" << "\n";
@@ -59,6 +62,7 @@ void CliView::displayAssignmentMenu() const {
     out_ << "Term: " << "\n";
     out_ << "Course: " << "\n";
     displayDelim();
+    out_ << "                      Assignment Menu                      " << "\n";
     out_ << "             What would you like to do today?              " << "\n";
     out_ << "[A] Add assignment" << "\n";
     out_ << "[E] Edit assignment" << "\n";
@@ -83,7 +87,13 @@ char CliView::getCharInput(const std::string &label, const char defaultVal) cons
         return defaultVal;
     }
 
-    return input[0];
+    if (input.size() == 1) {
+        return input[0];
+    }
+
+    // error message for multiple character input
+    out_ << "Invalid input, only one character allowed." << "\n";
+    return '\0';
 }
 
 // ask the user for a string input, using the default value in the case of an invalid input 
@@ -192,22 +202,94 @@ void CliView::run() {
                 case 'A':
                     // add term
                     out_ << "Add term placeholder" << "\n";
+                    state = MenuState::course;
                     break;
                 case 'E':
                     // edit term
                     out_ << "Edit term placeholder" << "\n";
+                    state = MenuState::course;
                     break;
                 case 'F':
                     // find term
                     out_ << "Find term placeholder" << "\n";
+                    state = MenuState::course;
                     break;
                 case 'R':
                     // remove term
                     out_ << "Remove term placeholder" << "\n";
+                    state = MenuState::course;
                     break;
                 case 'X':
                     // exit
                     state = MenuState::exit;
+                    break;
+                default:
+                    // invalid selection
+                    out_ << "Invalid selection. Please try again." << "\n";
+            }
+        }
+
+        while (state == MenuState::course) {
+            displayCourseMenu();
+            userInput = getCharInput("Response", 'X');
+            userInput = std::toupper(userInput);
+
+            switch (userInput) {
+                case 'A':
+                    // add course
+                    out_ << "Add course placeholder" << "\n";
+                    state = MenuState::assignment;
+                    break;
+                case 'E':
+                    // edit course
+                    out_ << "Edit course placeholder" << "\n";
+                    state = MenuState::assignment;
+                    break;
+                case 'F':
+                    // find course
+                    out_ << "Find course placeholder" << "\n";
+                    state = MenuState::assignment;
+                    break;
+                case 'R':
+                    // remove course
+                    out_ << "Remove course placeholder" << "\n";
+                    state = MenuState::assignment;
+                    break;
+                case 'X':
+                    // exit
+                    state = MenuState::term;
+                    break;
+                default:
+                    // invalid selection
+                    out_ << "Invalid selection. Please try again." << "\n";
+            }
+        }
+
+        while (state == MenuState::assignment) {
+            displayAssignmentMenu();
+            userInput = getCharInput("Response", 'X');
+            userInput = std::toupper(userInput);
+
+            switch (userInput) {
+                case 'A':
+                    // add assignment
+                    out_ << "Add assignment placeholder" << "\n";
+                    break;
+                case 'E':
+                    // edit assignment
+                    out_ << "Edit assignment placeholder" << "\n";
+                    break;
+                case 'F':
+                    // find assignment
+                    out_ << "Find assignment placeholder" << "\n";
+                    break;
+                case 'R':
+                    // remove assignment
+                    out_ << "Remove assignment placeholder" << "\n";
+                    break;
+                case 'X':
+                    // exit
+                    state = MenuState::course;
                     break;
                 default:
                     // invalid selection

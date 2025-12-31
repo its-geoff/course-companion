@@ -40,6 +40,14 @@ add_test(NAME TermTests COMMAND TermTests)
 enable_coverage(TermTests)
 
 # ---------------------------
+# CliViewTests executable
+# ---------------------------
+add_executable(CliViewTests unit/CliViewTests.cpp)
+target_link_libraries(CliViewTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME CliViewTests COMMAND CliViewTests)
+enable_coverage(CliViewTests)
+
+# ---------------------------
 # UtilsTests executable
 # ---------------------------
 add_executable(UtilsTests unit/UtilsTests.cpp)
@@ -50,7 +58,7 @@ enable_coverage(UtilsTests)
 # ---------------------------
 # Set output directory
 # ---------------------------
-foreach(test_target AssignmentTests CourseTests TermTests UtilsTests)
+foreach(test_target AssignmentTests CourseTests TermTests CliViewTests UtilsTests)
     set_target_properties(${test_target} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )
