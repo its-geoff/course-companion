@@ -3,7 +3,6 @@
 
 /**
  * @file TermController.hpp
- * 
  * @brief Definition of a controller that manages interaction between Assignment, Course, and Term. 
  * 
  * This controller defines functions that integrate the three classes together and allow for code 

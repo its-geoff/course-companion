@@ -3,7 +3,6 @@
 
 /**
  * @file utils.hpp
- * 
  * @brief Definition of utilities that can be commonly used among all classes. 
  * 
  * This file defines functions that are independent of any class. These functions perform common

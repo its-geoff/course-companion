@@ -3,23 +3,24 @@
 
 /**
  * @file MockController.hpp
- * @brief Mock controller used for testing purposes. Does not include full functionality of Controller.
+ * @brief Mock controller used for testing purposes. Does not include full functionality of TermController.
  * 
  * Overrides normal controller functions to allow a simplified bypass for testing.
  */
 
-#include "view/CliView.hpp"   // for interaction with CliView
+#include <string>       // for string functions
+#include "controller/TermController.hpp"
 
 /**
  * @class MockController
- * @brief Controller with limited functionality used for testing purposes; derived from Controller.
+ * @brief Mock controller with limited functionality used for testing purposes; derived from TermController.
  * 
- * Overrides normal controller functions to allow a simplified bypass for testing.
+ * Overrides normal Term controller functions to allow a simplified bypass for testing.
  */
 class MockController : public TermController {
 public:
-    void addCourse(const std::string &courseName, int credits) { true; };
-    void addAssignment(const std::string &courseId, const std::string &assignmentName, float grade) { true; };
+    void addCourse(const std::string &courseName, int credits) {};
+    void addAssignment(const std::string &courseId, const std::string &assignmentName, float grade) {};
 
     float getTermGpa() const { return 4.0; };
 };

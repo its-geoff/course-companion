@@ -141,7 +141,7 @@ TEST(CliViewTest, LongInput) {
         view.run();
     }
 
-    // verify that intro message was sent and there is no invalid selection
+    // verify that intro message and invalid char input message was sent
     ASSERT_NE(os.str().find("Welcome to Course Companion!"), std::string::npos);
-    ASSERT_EQ(os.str().find("Invalid input."), std::string::npos);
+    ASSERT_NE(os.str().find("Invalid input."), std::string::npos);
 }

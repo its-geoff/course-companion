@@ -12,6 +12,7 @@
  */
 
 #include <iostream>         // for i/o streams
+#include <chrono>           // for date and time-related variables
 #include "controller/TermController.hpp"
 
 /**

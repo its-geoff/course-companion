@@ -10,6 +10,8 @@
  * Provides implementations only; see CliView.hpp for definitions.
  */
 
+#include <cstdio>       // for sscanf
+#include <algorithm>    // for transform
 #include "utils/utils.hpp"      // for reused custom functions
 
 // takes date as string input and converts to year_month_day format
@@ -123,7 +125,7 @@ std::chrono::year_month_day CliView::getDateInput(const std::string &label, cons
 
     try {
         return parseDate(input);
-    } catch (const std::invalid_argument& e) {
+    } catch (const std::invalid_argument &e) {
         out_ << "Invalid date. Using default." << "\n";
         return defaultVal;
     }
@@ -140,7 +142,15 @@ float CliView::getFloatInput(const std::string &label, const float defaultVal) c
         return defaultVal;
     }
 
-    return std::stof(input);
+    try {
+        return std::stof(input);
+    } catch (const std::invalid_argument &e) {
+        out_ << "Invalid float. Using default." << "\n";
+        return defaultVal;
+    } catch (const std::out_of_range &e) {
+        out_ << "Value out of range. Using default." << "\n";
+        return defaultVal;
+    }
 }
 
 // ask the user for an int input, using the default value in the case of an invalid input
@@ -154,7 +164,15 @@ int CliView::getIntInput(const std::string &label, const int defaultVal) const {
         return defaultVal;
     }
 
-    return std::stoi(input);
+    try {
+        return std::stoi(input);
+    } catch (const std::invalid_argument &e) {
+        out_ << "Invalid integer. Using default." << "\n";
+        return defaultVal;
+    } catch (const std::out_of_range &e) {
+        out_ << "Value out of range. Using default." << "\n";
+        return defaultVal;
+    }
 }
 
 // ask the user for a bool input, using the default value in the case of an invalid input
@@ -178,7 +196,8 @@ bool CliView::getBoolInput(const std::string &label, const bool defaultVal) cons
     } else if (input == "false" || input == "0" || input == "no" || input == "n") {
         return false;
     } else {
-        throw std::invalid_argument("Invalid boolean string: " + input);
+        throw std::invalid_argument("Invalid boolean string. Using default.");
+        return defaultVal;
     }
 }
 
@@ -202,12 +221,10 @@ void CliView::run() {
                 case 'A':
                     // add term
                     out_ << "Add term placeholder" << "\n";
-                    state = MenuState::course;
                     break;
                 case 'E':
                     // edit term
                     out_ << "Edit term placeholder" << "\n";
-                    state = MenuState::course;
                     break;
                 case 'F':
                     // find term
@@ -217,7 +234,6 @@ void CliView::run() {
                 case 'R':
                     // remove term
                     out_ << "Remove term placeholder" << "\n";
-                    state = MenuState::course;
                     break;
                 case 'X':
                     // exit
@@ -238,12 +254,10 @@ void CliView::run() {
                 case 'A':
                     // add course
                     out_ << "Add course placeholder" << "\n";
-                    state = MenuState::assignment;
                     break;
                 case 'E':
                     // edit course
                     out_ << "Edit course placeholder" << "\n";
-                    state = MenuState::assignment;
                     break;
                 case 'F':
                     // find course
@@ -253,7 +267,6 @@ void CliView::run() {
                 case 'R':
                     // remove course
                     out_ << "Remove course placeholder" << "\n";
-                    state = MenuState::assignment;
                     break;
                 case 'X':
                     // exit
