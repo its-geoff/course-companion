@@ -1,16 +1,19 @@
-#ifndef COURSE_H
-#define COURSE_H
+#ifndef COURSE_HPP
+#define COURSE_HPP
 
 /**
  * @file Course.hpp
- * @brief Definition of an Course class that stores metadata and contains zero or more Assignments. 
+ * @brief Definition of the Course class, which stores metadata and contains zero or more Assignments. 
  * 
  * Each course has a grade that is calculated based on the assignment grades. There can be multiple Courses 
- * within a Term. Provides declarations only; see Course.cpp for implementations.
+ * within a Term. 
+ * 
+ * Provides declarations only; see Course.cpp for implementations.
  */
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
+#include <iostream>         // for i/o streams
 #include <map>              // for GPA scale
 #include <unordered_map>    // for weights, GPA values, and assignmentList
 #include "models/Assignment.hpp"   // for usage of Assignment objects in Course
@@ -91,7 +94,7 @@ class Course {
         void setGpaVal();
         void setActive(bool newActive);
 
-        void printCourseInfo(std::ostream& os);
+        void printCourseInfo(std::ostream& os = std::cout);
         void addAssignment(const Assignment& assignment);
         void removeAssignment(const std::string& id);
         const Assignment& findAssignment(const std::string& id) const;    // non-mutable version
@@ -100,4 +103,4 @@ class Course {
         bool operator==(const Course &other) const;
 };
 
-#endif
+#endif  // COURSE_HPP

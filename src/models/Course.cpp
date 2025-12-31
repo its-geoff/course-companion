@@ -2,16 +2,17 @@
 
 /**
  * @file Course.cpp
- * @brief Implementation of a Course class that stores course metadata and is used to organize coursework. 
+ * @brief Implementation of the Course class, which stores course metadata and is used to organize coursework. 
  * 
  * There can be multiple Assignments within one Course. There can be multiple Courses within one Term.
- * Individual assignment grades will be weighted to determine course grades. Provides implementations only; 
- * see Course.hpp for definitions.
+ * Individual assignment grades will be weighted to determine course grades. 
+ * 
+ * Provides implementations only; see Course.hpp for definitions.
  */
 
 #include <stdexcept>            // for exceptions
 #include <iomanip>              // for string formatting in print statement
-#include "app/utils.hpp"        // for reused custom functions
+#include "utils/utils.hpp"        // for reused custom functions
 
 using namespace std::chrono_literals;
 
@@ -281,7 +282,6 @@ void Course::setGradeScale(const std::map<float, std::string>& newGradeScale) {
 
 // prints information held by a Course object
 void Course::printCourseInfo(std::ostream &os) {
-    os << "===========================================================" << "\n";
     os << "ID: " << id_ << "\n";
     os << "Course: " << title_ << "\n";
     if (!description_.empty()) {
@@ -293,7 +293,6 @@ void Course::printCourseInfo(std::ostream &os) {
     os << "Letter Grade: " << letterGrade_ << "\n";
     os << "GPA Value: " << std::fixed << std::setprecision(1) << gpaVal_ << "\n";
     os << "Current? " << utils::boolToString(active_) << "\n";
-    os << "===========================================================" << "\n";
 }
 
 // adds an Assignment to the end of the list from the given input

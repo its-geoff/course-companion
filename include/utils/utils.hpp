@@ -1,9 +1,8 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 /**
  * @file utils.hpp
- * 
  * @brief Definition of utilities that can be commonly used among all classes. 
  * 
  * This file defines functions that are independent of any class. These functions perform common
@@ -36,9 +35,6 @@ namespace utils {
             os << first << " -> " << second << "\n";
         }
     }
-
-    Assignment chooseAssignmentConstructor(std::string title, std::optional<std::string> description, std::optional<std::chrono::year_month_day> date, 
-        std::optional<bool> completed, std::optional<float> grade);
 }
 
-#endif
+#endif  // UTILS_HPP

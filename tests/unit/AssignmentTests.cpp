@@ -2,7 +2,7 @@
 #include <sstream>      // diverts output from terminal to separate stream
 #include <regex>        // regular expression matching for UUIDs
 #include "models/Assignment.hpp"
-#include "app/utils.hpp"
+#include "utils/utils.hpp"
 
 using namespace std::chrono_literals;
 
@@ -160,8 +160,8 @@ TEST_F(AssignmentTest, PrintAssignmentInfo) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment: Homework 3\nDescription: Focus on variables and strings.\n"
-                        "Due Date: 2025-11-20\nCompleted? Yes\nGrade: 95.18\n===========================================================\n");
+    ASSERT_EQ(output, "ID: <UUID>\nAssignment: Homework 3\nDescription: Focus on variables and strings.\n"
+                        "Due Date: 2025-11-20\nCompleted? Yes\nGrade: 95.18\n");
 }
 
 TEST_F(AssignmentTest, OverloadedEquals) {
@@ -305,8 +305,8 @@ TEST_F(AssignmentTest, PrintAssignmentInfoPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment: Homework 1\n"
-                        "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
+    ASSERT_EQ(output, "ID: <UUID>\nAssignment: Homework 1\n"
+                        "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n");
 }
 
 TEST_F(AssignmentTest, PrintAssignmentInfoDescPartial) {
@@ -319,8 +319,8 @@ TEST_F(AssignmentTest, PrintAssignmentInfoDescPartial) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment: Homework 1\nDescription: Focus on lexical analysis.\n"
-                        "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n===========================================================\n");
+    ASSERT_EQ(output, "ID: <UUID>\nAssignment: Homework 1\nDescription: Focus on lexical analysis.\n"
+                        "Due Date: 2025-10-31\nCompleted? No\nGrade: 0\n");
 }
 
 TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
@@ -333,8 +333,8 @@ TEST_F(AssignmentTest, PrintAssignmentInfoInteger) {
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
-    ASSERT_EQ(output, "===========================================================\nID: <UUID>\nAssignment: Homework 1\nDescription: Focus on lexical analysis.\n"
-                        "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n===========================================================\n");
+    ASSERT_EQ(output, "ID: <UUID>\nAssignment: Homework 1\nDescription: Focus on lexical analysis.\n"
+                        "Due Date: 2025-10-31\nCompleted? Yes\nGrade: 75\n");
 }
 
 TEST_F(AssignmentTest, OverloadedEqualsSameTitleDifferentParams) {
@@ -355,13 +355,3 @@ TEST_F(AssignmentTest, OverloadedEqualsSameParamsDifferentId) {
 
     ASSERT_FALSE(assignment2 == assignment3);
 }
-
-// ====================================
-// CLASS USE CASES
-// ====================================
-
-// add assignment (partial info)
-// print assignment info for both 1 and 2
-// change some assignment info for 1 (setters)
-// retrieve some old and some new info (getters)
-// remove assignment

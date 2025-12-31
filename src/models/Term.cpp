@@ -2,17 +2,18 @@
 
 /**
  * @file Term.cpp
- * @brief Implementation of a Term class that stores term metadata and is used to organize courses. 
+ * @brief Implementation of the Term class, which stores term metadata and is used to organize courses. 
  * 
  * There can be multiple Assignments within one Course. There can be multiple Courses within one Term.
- * Course grades will be weighted based on credits to determine term GPA. Provides implementations only; 
- * see Term.hpp for definitions.
+ * Course grades will be weighted based on credits to determine term GPA. 
+ * 
+ * Provides implementations only; see Term.hpp for definitions.
  */
 
 #include <stdexcept>            // for exceptions
 #include <cmath>                // for round
 #include <iomanip>              // for string formatting in print statement
-#include "app/utils.hpp"        // for reused custom functions
+#include "utils/utils.hpp"        // for reused custom functions
 
 using namespace std::chrono_literals;
 
@@ -113,14 +114,12 @@ void Term::setActive(bool newActive) {
 }
 
 void Term::printTermInfo(std::ostream &os) {
-    os << "===========================================================" << "\n";
     os << "ID: " << id_ << "\n";
     os << "Term: " << title_ << "\n";
     os << "Duration: " << startDate_ << " - " << endDate_ << "\n";
     os << "Total Credits: " << totalCredits_ << "\n";
     os << "Overall GPA: " << std::fixed << std::setprecision(2) << ovrGpa_ << "\n";   // set precision to 2 decimal places
     os << "Current? " << utils::boolToString(active_) << "\n";
-    os << "===========================================================" << "\n";
 }
 
 // adds a Course to the end of the list from the given input

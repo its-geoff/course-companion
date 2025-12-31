@@ -1,16 +1,18 @@
-#ifndef TERM_H
-#define TERM_H
+#ifndef TERM_HPP
+#define TERM_HPP
 
 /**
  * @file Term.hpp
- * @brief Definition of an Term class that stores metadata and contains zero or more Courses. 
+ * @brief Definition of the Term class, which stores metadata and contains zero or more Courses. 
  * 
- * Each term has a GPA that is calculated based on the course grades. Provides declarations only; 
- * see Term.cpp for implementations.
+ * Each term has a GPA that is calculated based on the course grades. 
+ * 
+ * Provides declarations only; see Term.cpp for implementations.
  */
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
+#include <iostream>         // for i/o streams
 #include <unordered_map>    // for courseList
 #include "models/Course.hpp"   // for usage of Course objects in vector
 
@@ -55,7 +57,7 @@ class Term {
         void setEndDate(std::chrono::year_month_day newEndDate);
         void setActive(bool newActive);
 
-        void printTermInfo(std::ostream &os);
+        void printTermInfo(std::ostream &os = std::cout);
         void addCourse(const Course& course);
         void removeCourse(const std::string& id);
         const Course& findCourse(const std::string& id) const;    // non-mutable version
@@ -64,4 +66,4 @@ class Term {
         bool operator==(const Term &other) const;
 };
 
-#endif
+#endif  // TERM_HPP

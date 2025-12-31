@@ -1,19 +1,20 @@
-#ifndef ASSIGNMENT_H
-#define ASSIGNMENT_H
+#ifndef ASSIGNMENT_HPP
+#define ASSIGNMENT_HPP
 
 /**
  * @file Assignment.hpp
- * @brief Definition of an Assignment class that stores metadata and is used to organize coursework. 
+ * @brief Definition of the Assignment class, which stores metadata and is used to organize coursework. 
  * 
  * There can be multiple Assignments within one Course. Individual assignment grades will be used to 
- * determine course grades. Provides declarations only; see Assignment.cpp for implementations.
+ * determine course grades. 
+ * 
+ * Provides declarations only; see Assignment.cpp for implementations.
  */
 
 #include <string>       // for string variables
 #include <chrono>       // for date and time-related variables
 #include <optional>     // for optional variables
 #include <iostream>     // for i/o streams
-// #include "Course.hpp"   // for connection to relevant Course  -> no Course implementation yet
 
 /**
  * @class Assignment
@@ -56,9 +57,9 @@ class Assignment {
         void setCompleted(bool newCompleted);
         void setGrade(float newGrade);
 
-        void printAssignmentInfo(std::ostream &os);
+        void printAssignmentInfo(std::ostream &os = std::cout);
 
         bool operator==(const Assignment &other) const;
 };
 
-#endif
+#endif  // ASSIGNMENT_HPP
