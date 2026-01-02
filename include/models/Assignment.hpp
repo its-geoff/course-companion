@@ -13,7 +13,6 @@
 
 #include <string>       // for string variables
 #include <chrono>       // for date and time-related variables
-#include <optional>     // for optional variables
 #include <iostream>     // for i/o streams
 
 /**
