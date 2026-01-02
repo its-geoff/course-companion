@@ -76,6 +76,7 @@ TEST(UtilsTest, DefaultStartDate) {
 }
 
 TEST(UtilsTest, DefaultEndDate) {
+    // NOTE: must change line below before each test; time in UTC
     std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/2};
     std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
     std::chrono::year_month_day result = utils::defaultEndDate(todayDate);

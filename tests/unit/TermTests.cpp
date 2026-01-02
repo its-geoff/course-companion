@@ -280,6 +280,16 @@ TEST_F(TermTest, ThreeParamInitializationInvalidEndDate) {
     ASSERT_THROW((Term{"Spring 2026", std::chrono::year_month_day{2026y/1/18}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
 }
 
+TEST_F(TermTest, ThreeParamInitializationDefaultDates) {
+    Term term2{"Spring 2026", {}, {}};
+    // NOTE: must change line below before each test; time in UTC
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/2};
+    std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
+    ASSERT_EQ(term2.getTitle(), "Spring 2026");
+    ASSERT_EQ(term2.getStartDate(), todayDate);
+    ASSERT_EQ(term2.getEndDate(), defaultEnd);
+}
+
 // ====================================
 // FUNCTION EDGE CASES
 // ====================================
