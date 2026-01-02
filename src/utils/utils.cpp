@@ -121,12 +121,7 @@ namespace utils {
         auto today = std::chrono::floor<std::chrono::days>(
             std::chrono::system_clock::now()
         );
-        return std::chrono::year_month_day{
-            // cast to signed or unsigned int for conversion to year_month_day
-            std::chrono::year{static_cast<int>(std::chrono::year_month_day{today}.year())},
-            std::chrono::month{static_cast<unsigned>(std::chrono::year_month_day{today}.month())},
-            std::chrono::day{static_cast<unsigned>(std::chrono::year_month_day{today}.day())}
-        };
+        return std::chrono::year_month_day{today};
     }
 
     // TO-DO: allow the user to change the default term length
