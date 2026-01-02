@@ -288,6 +288,7 @@ TEST_F(TermTest, ThreeParamInitializationDefaultDates) {
     ASSERT_EQ(term2.getTitle(), "Spring 2026");
     ASSERT_EQ(term2.getStartDate(), todayDate);
     ASSERT_EQ(term2.getEndDate(), defaultEnd);
+    ASSERT_TRUE(term2.getActive());
 }
 
 // ====================================
