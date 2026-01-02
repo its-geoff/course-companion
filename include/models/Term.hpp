@@ -40,9 +40,8 @@ class Term {
         float calculateOvrGpa();        // calculates overall gpa - need to auto call during add or remove Course
 
     public:
-        Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate);
         Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate,
-            bool active);
+            bool active = true);
 
         std::string getId() const;
         std::string getTitle() const;

@@ -115,4 +115,18 @@ namespace utils {
 
         return std::fabs(a - b) <= std::max(relEps * std::max(std::fabs(a), std::fabs(b)), absEps);
     }
+
+    // returns today's date as the default start date
+    std::chrono::year_month_day defaultStartDate() {
+        auto today = std::chrono::floor<std::chrono::days>(
+            std::chrono::system_clock::now()
+        );
+        return std::chrono::year_month_day{today};
+    }
+
+    // TO-DO: allow the user to change the default term length
+    // returns today's date + 4 months as the default end date
+    std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate) {
+        return startDate + std::chrono::months{4};
+    }
 }

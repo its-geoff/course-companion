@@ -47,7 +47,17 @@ float Term::calculateOvrGpa() {
 }
 
 Term::Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day 
-    endDate) : id_{utils::generateUuid()} {
+    endDate, bool active) : id_{utils::generateUuid()} {
+    // internal defaulting for user input
+    if (startDate == std::chrono::year_month_day{}) {
+        startDate = utils::defaultStartDate();
+    }
+
+    if (endDate == std::chrono::year_month_day{}) {
+        endDate = utils::defaultEndDate(startDate);
+    }
+
+    // input validation before moving to member variables
     utils::validateTitle(title);
     utils::validateDate(startDate);
     utils::validateDate(endDate);
@@ -55,10 +65,6 @@ Term::Term(std::string title, std::chrono::year_month_day startDate, std::chrono
     title_ = std::move(title);
     startDate_ = startDate;
     endDate_ = endDate;
-}
-
-Term::Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day 
-    endDate, bool active) : Term(title, startDate, endDate) {
     active_ = active;
 }
 

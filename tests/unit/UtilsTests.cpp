@@ -68,6 +68,21 @@ TEST(UtilsTest, FloatEqual) {
     ASSERT_FALSE(utils::floatEqual(1.0f, 1.1f));
 }
 
+TEST(UtilsTest, DefaultStartDate) {
+    std::chrono::year_month_day result = utils::defaultStartDate();
+    // NOTE: must change line below before each test; time in UTC
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/2};
+    ASSERT_EQ(result, todayDate);
+}
+
+TEST(UtilsTest, DefaultEndDate) {
+    // NOTE: must change line below before each test; time in UTC
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/2};
+    std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
+    std::chrono::year_month_day result = utils::defaultEndDate(todayDate);
+    ASSERT_EQ(result, defaultEnd);
+}
+
 TEST(UtilsTest, PrintMap) {
     std::map<int, std::string> numbers = {
         {1, "one"},
