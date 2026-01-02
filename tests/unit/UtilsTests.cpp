@@ -63,6 +63,11 @@ TEST(UtilsTest, DefaultEndDate) {
     ASSERT_EQ(result, defaultEnd);
 }
 
+TEST(UtilsTest, StringLower) {
+    std::string input{"HELLO WORLD"};
+    ASSERT_EQ(utils::stringLower(input), "hello world");
+}
+
 TEST(UtilsTest, PrintMap) {
     std::map<int, std::string> numbers = {
         {1, "one"},
@@ -105,4 +110,14 @@ TEST(UtilsTest, FloatEqualVeryLarge) {
 
 TEST(UtilsTest, FloatEqualNanValue) {
     ASSERT_FALSE(utils::floatEqual(1.0f, std::nanf("")));
+}
+
+TEST(UtilsTest, StringLowerMixedCase) {
+    std::string input1{"tEsTiNg"};
+    std::string input2{"TESTing"};
+    std::string input3{"testING"};
+
+    ASSERT_EQ(utils::stringLower(input1), "testing");
+    ASSERT_EQ(utils::stringLower(input2), "testing");
+    ASSERT_EQ(utils::stringLower(input3), "testing");
 }

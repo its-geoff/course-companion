@@ -74,4 +74,12 @@ namespace utils {
     std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate) {
         return startDate + std::chrono::months{4};
     }
+
+    // transform string to all lowercase
+    std::string stringLower(std::string input) {
+        std::transform(input.begin(), input.end(), input.begin(),
+            [](unsigned char c){ return std::tolower(c); });
+
+        return input;
+    }
 }

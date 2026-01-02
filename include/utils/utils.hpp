@@ -23,6 +23,7 @@ namespace utils {
     bool floatEqual(float a, float b, float relEps = std::numeric_limits<float>::epsilon() * 10, float absEps = 1e-8f);
     std::chrono::year_month_day defaultStartDate();
     std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate);
+    std::string stringLower(std::string input);
 
     // included in header since it's a template function
     // prints a map in the format "first -> second"
