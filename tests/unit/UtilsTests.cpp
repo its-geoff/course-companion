@@ -69,17 +69,16 @@ TEST(UtilsTest, FloatEqual) {
 }
 
 TEST(UtilsTest, DefaultStartDate) {
-    auto result = utils::defaultStartDate();
-    auto today = std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now());
-    ASSERT_EQ(result, today);
+    std::chrono::year_month_day result = utils::defaultStartDate();
+    // NOTE: must change line below before each test; time in UTC
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/2};
+    ASSERT_EQ(result, todayDate);
 }
 
 TEST(UtilsTest, DefaultEndDate) {
-    auto today = std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now());
-    std::chrono::year_month_day todayConverted = std::chrono::year_month_day{today};
-
-    auto result = utils::defaultEndDate(todayConverted);
-    auto defaultEnd = todayConverted + std::chrono::months{4};
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/2};
+    std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
+    std::chrono::year_month_day result = utils::defaultEndDate(todayDate);
     ASSERT_EQ(result, defaultEnd);
 }
 

@@ -23,9 +23,9 @@ option(ENABLE_COVERAGE "Enable code test coverage" OFF)
 # ------------------------
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# -------------------------------
-# Library containing app logic
-# -------------------------------
+# ------------------------------------------
+# Library containing app logic for testing
+# ------------------------------------------
 add_library(CourseCompanion_lib
     src/models/Assignment.cpp
     src/models/Course.cpp
@@ -33,7 +33,6 @@ add_library(CourseCompanion_lib
     src/controller/TermController.cpp
     src/utils/utils.cpp
     src/view/CliView.cpp
-    src/main.cpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
