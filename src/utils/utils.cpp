@@ -115,4 +115,15 @@ namespace utils {
 
         return std::fabs(a - b) <= std::max(relEps * std::max(std::fabs(a), std::fabs(b)), absEps);
     }
+
+    std::chrono::year_month_day defaultStartDate() {
+        return std::chrono::floor<std::chrono::days>(
+            std::chrono::system_clock::now()
+        );
+    }
+
+    // TO-DO: allow the user to change the default term length
+    std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate) {
+        return startDate + std::chrono::months{4};
+    }
 }

@@ -68,6 +68,21 @@ TEST(UtilsTest, FloatEqual) {
     ASSERT_FALSE(utils::floatEqual(1.0f, 1.1f));
 }
 
+TEST(UtilsTest, DefaultStartDate) {
+    auto result = utils::defaultStartDate();
+    auto today = std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now());
+    ASSERT_EQ(result, today);
+}
+
+TEST(UtilsTest, DefaultEndDate) {
+    auto today = std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now());
+    std::chrono::year_month_day todayConverted = std::chrono::year_month_day{today};
+
+    auto result = utils::defaultEndDate(todayConverted);
+    auto defaultEnd = todayConverted + std::chrono::months{4};
+    ASSERT_EQ(result, defaultEnd);
+}
+
 TEST(UtilsTest, PrintMap) {
     std::map<int, std::string> numbers = {
         {1, "one"},
