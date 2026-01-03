@@ -18,7 +18,7 @@ enable_coverage(CourseCompanion_lib)
 # ---------------------------
 # AssignmentTests executable
 # ---------------------------
-add_executable(AssignmentTests unit/AssignmentTests.cpp)
+add_executable(AssignmentTests unit/model/AssignmentTests.cpp)
 target_link_libraries(AssignmentTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME AssignmentTests COMMAND AssignmentTests)
 enable_coverage(AssignmentTests)
@@ -26,7 +26,7 @@ enable_coverage(AssignmentTests)
 # ---------------------------
 # CourseTests executable
 # ---------------------------
-add_executable(CourseTests unit/CourseTests.cpp)
+add_executable(CourseTests unit/model/CourseTests.cpp)
 target_link_libraries(CourseTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME CourseTests COMMAND CourseTests)
 enable_coverage(CourseTests)
@@ -34,7 +34,7 @@ enable_coverage(CourseTests)
 # ---------------------------
 # TermTests executable
 # ---------------------------
-add_executable(TermTests unit/TermTests.cpp)
+add_executable(TermTests unit/model/TermTests.cpp)
 target_link_libraries(TermTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME TermTests COMMAND TermTests)
 enable_coverage(TermTests)
@@ -42,7 +42,7 @@ enable_coverage(TermTests)
 # ---------------------------
 # CliViewTests executable
 # ---------------------------
-add_executable(CliViewTests unit/CliViewTests.cpp)
+add_executable(CliViewTests unit/view/CliViewTests.cpp)
 target_link_libraries(CliViewTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME CliViewTests COMMAND CliViewTests)
 enable_coverage(CliViewTests)
@@ -50,7 +50,7 @@ enable_coverage(CliViewTests)
 # ---------------------------
 # UtilsTests executable
 # ---------------------------
-add_executable(UtilsTests unit/UtilsTests.cpp)
+add_executable(UtilsTests unit/utils/UtilsTests.cpp)
 target_link_libraries(UtilsTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME UtilsTests COMMAND UtilsTests)
 enable_coverage(UtilsTests)
