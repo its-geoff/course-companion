@@ -11,23 +11,20 @@
 
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
-#include <optional>         // for optional variables
 #include <iostream>         // for i/o streams
-#include "models/Assignment.hpp"   // for references to Assignment
+#include "model/Assignment.hpp"   // for references to Assignment
 
 namespace utils {
     bool isOnlyWhitespace(const std::string str);
     std::string generateUuid();
     void validateTitle(std::string title);
     void validateDate(std::chrono::year_month_day dueDate);
-    std::optional<std::string> readOptionalString(std::istream &is = std::cin);
-    std::optional<std::chrono::year_month_day> readOptionalDate(std::istream &is = std::cin);
-    std::optional<bool> readOptionalBool(std::istream &is = std::cin);
-    std::optional<float> readOptionalFloat(std::istream &is = std::cin);
     std::string boolToString(bool value);
     bool floatEqual(float a, float b, float relEps = std::numeric_limits<float>::epsilon() * 10, float absEps = 1e-8f);
     std::chrono::year_month_day defaultStartDate();
     std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate);
+    std::string stringLower(std::string input);
+    std::string stringTrim(const std::string str);
 
     // included in header since it's a template function
     // prints a map in the format "first -> second"

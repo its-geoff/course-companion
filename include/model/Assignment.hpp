@@ -13,7 +13,6 @@
 
 #include <string>       // for string variables
 #include <chrono>       // for date and time-related variables
-#include <optional>     // for optional variables
 #include <iostream>     // for i/o streams
 
 /**
@@ -57,7 +56,7 @@ class Assignment {
         void setCompleted(bool newCompleted);
         void setGrade(float newGrade);
 
-        void printAssignmentInfo(std::ostream &os = std::cout);
+        void printAssignmentInfo(std::ostream &os = std::cout) const;
 
         bool operator==(const Assignment &other) const;
 };

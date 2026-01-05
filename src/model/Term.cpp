@@ -1,4 +1,4 @@
-#include "models/Term.hpp"
+#include "model/Term.hpp"
 
 /**
  * @file Term.cpp
@@ -119,8 +119,8 @@ void Term::setActive(bool newActive) {
     active_ = newActive;
 }
 
-void Term::printTermInfo(std::ostream &os) {
-    os << "ID: " << id_ << "\n";
+void Term::printTermInfo(std::ostream &os) const {
+    os << "ID: " << id_ << "\n";        // NOTE: make this a debug or admin option, not visible to all users
     os << "Term: " << title_ << "\n";
     os << "Duration: " << startDate_ << " - " << endDate_ << "\n";
     os << "Total Credits: " << totalCredits_ << "\n";
@@ -130,10 +130,10 @@ void Term::printTermInfo(std::ostream &os) {
 
 // adds a Course to the end of the list from the given input
 void Term::addCourse(const Course& course) {
-    auto [it, inserted] = courseList_.emplace(course.getId(), course);
+    auto [_, inserted] = courseList_.emplace(course.getId(), course);
 
     if (!inserted) {
-        throw std::logic_error("Course with same ID already exists.");
+        throw std::logic_error("Course with the same ID already exists.");
     }
 
     // update total credits and overall GPA after adding to list

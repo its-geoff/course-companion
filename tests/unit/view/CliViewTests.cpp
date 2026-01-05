@@ -64,7 +64,10 @@ TEST(CliViewTest, DefaultIstreamCin) {
 
     std::istringstream fakeInput("x\n");
     // redirect input buffer
-    auto *oldBuf = std::cin.rdbuf(fakeInput.rdbuf());
+    auto *oldCinBuf = std::cin.rdbuf(fakeInput.rdbuf());
+
+    std::ostringstream fakeOutput;
+    auto* oldCoutBuf = std::cout.rdbuf(fakeOutput.rdbuf());
 
     // create scope for view
     {
@@ -72,7 +75,8 @@ TEST(CliViewTest, DefaultIstreamCin) {
         view.run();
     }
 
-    std::cin.rdbuf(oldBuf);  // restore old buffer
+    std::cin.rdbuf(oldCinBuf);  // restore old buffer
+    std::cout.rdbuf(oldCoutBuf);
 
     // check that input didn't hang
     SUCCEED();
@@ -122,12 +126,13 @@ TEST(CliViewTest, LowercaseInput) {
     // create scope for view
     {
         CliView view(controller, simInput, os);
-        view.run();
+        // throw invalid argument since empty title is given
+        ASSERT_THROW(view.run(), std::invalid_argument);
     }
 
-    // verify that intro message and add term placeholder were sent
+    // verify that intro message and add term prompt were sent
     ASSERT_NE(os.str().find("Welcome to Course Companion!"), std::string::npos);
-    ASSERT_NE(os.str().find("Add term placeholder"), std::string::npos);
+    ASSERT_NE(os.str().find("Enter the following information"), std::string::npos);
 }
 
 TEST(CliViewTest, LongInput) {
@@ -143,5 +148,5 @@ TEST(CliViewTest, LongInput) {
 
     // verify that intro message and invalid char input message was sent
     ASSERT_NE(os.str().find("Welcome to Course Companion!"), std::string::npos);
-    ASSERT_NE(os.str().find("Invalid input."), std::string::npos);
+    ASSERT_NE(os.str().find("Invalid input"), std::string::npos);
 }

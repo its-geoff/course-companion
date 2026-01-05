@@ -42,61 +42,6 @@ namespace utils {
             throw std::invalid_argument("Date is invalid.");
     }
 
-    // reads optional string from user input
-    std::optional<std::string> readOptionalString(std::istream &is) {
-        std::string response;
-        std::getline(is, response);
-
-        if (isOnlyWhitespace(response))
-            return std::nullopt;
-
-        return response;
-    }
-
-    // reads optional date from user input and converts to the year_month_day format
-    std::optional<std::chrono::year_month_day> readOptionalDate(std::istream &is) {
-        std::string response;
-        std::getline(is, response);
-        if (isOnlyWhitespace(response))
-            return std::nullopt;
-
-        int y;
-        unsigned int m, d;
-        if (sscanf(response.c_str(), "%d-%d-%d", &y, &m, &d) != 3)
-            return std::nullopt;
-
-        std::chrono::year_month_day output{std::chrono::year{y}, std::chrono::month{m}, std::chrono::day{d}};
-        if (!output.ok())
-            return std::nullopt;
-
-        return output;
-    }
-
-    // reads optional bool from user input and converts to the bool format
-    std::optional<bool> readOptionalBool(std::istream &is) {
-        std::string response;
-        std::getline(is, response);
-        if (isOnlyWhitespace(response))
-            return std::nullopt;
-
-        if (response == "yes" || response == "y" || response == "true" || response == "1")
-            return true;
-        else if (response == "no" || response == "n" || response == "false" || response == "0")
-            return false;
-
-        return std::nullopt;
-    }
-
-    // reads optional float from user input and converts to the float format
-    std::optional<float> readOptionalFloat(std::istream &is) {
-        std::string response;
-        std::getline(is, response);
-        if (isOnlyWhitespace(response))
-            return std::nullopt;
-
-        return std::stof(response);
-    }
-
     // converts bool value of completed into a string for output
     std::string boolToString(bool value) {
         if (value)
@@ -128,5 +73,28 @@ namespace utils {
     // returns today's date + 4 months as the default end date
     std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate) {
         return startDate + std::chrono::months{4};
+    }
+
+    // transform string to all lowercase
+    std::string stringLower(std::string input) {
+        std::transform(input.begin(), input.end(), input.begin(),
+            [](unsigned char c){ return std::tolower(c); });
+
+        return input;
+    }
+
+    // trims leading and trailing whitespace from a string
+    std::string stringTrim(const std::string str) {
+        auto start = std::find_if_not(str.begin(), str.end(),
+            [](unsigned char c) { return std::isspace(c); });
+
+        auto end = std::find_if_not(str.rbegin(), str.rend(),
+            [](unsigned char c) { return std::isspace(c); }).base();
+
+        if (start >= end) {
+            return "";
+        }
+
+        return std::string(start, end);
     }
 }
