@@ -123,10 +123,15 @@ TEST_F(TermControllerTest, RemoveTerm) {
     const std::unordered_map<std::string, Term> &listOfTerms = controller.getTermList();
     ASSERT_EQ(listOfTerms.size(), 1);
 
-    // check that this term is no longer in the list
-    std::string id1 = controller.getTermId("Fall 2025");
-    auto it1 = listOfTerms.find(id1);
-    ASSERT_FALSE(it1 != listOfTerms.end());
+    // check that this term is no longer in the list by inspecting titles directly
+    bool foundRemovedItem = false;
+    for (const auto &entry : listOfTerms) {
+        if (entry.second.getTitle() == "Fall 2025") {
+            foundRemovedItem = true;
+            break;
+        }
+    }
+    ASSERT_FALSE(foundRemovedItem);
 
     std::string id2 = controller.getTermId("Spring 2026");
     auto it2 = listOfTerms.find(id2);

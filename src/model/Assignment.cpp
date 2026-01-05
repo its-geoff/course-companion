@@ -125,7 +125,7 @@ void Assignment::validateGrade(float grade) {
 }
 
 // prints information held by an Assignment object
-void Assignment::printAssignmentInfo(std::ostream &os) {
+void Assignment::printAssignmentInfo(std::ostream &os) const {
     os << "ID: " << id_ << "\n";
     os << "Assignment: " << title_ << "\n";
     if (!description_.empty()) {

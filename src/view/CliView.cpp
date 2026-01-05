@@ -103,9 +103,9 @@ void CliView::displayAssignmentMenu() const {
 
 // displays information about all terms from TermController
 void CliView::displayTermListInfo() const {
-    std::unordered_map<std::string, Term> terms = controller_.getTermList();
+    const std::unordered_map<std::string, Term>& terms = controller_.getTermList();
 
-    for (auto& [id, term] : terms) {
+    for (const auto& [id, term] : terms) {
         displaySecondaryDelim();
         term.printTermInfo(out_);
         displaySecondaryDelim();
@@ -143,60 +143,62 @@ void CliView::promptEditTerm() {
     toUpdate = utils::stringLower(toUpdate);
     editFields = splitStringByComma(toUpdate);
     // get updated info and perform update
-    for (auto field : editFields) {
+    for (auto& field : editFields) {
         // trim whitespace from strings
         field = utils::stringTrim(field);
 
         if (field == "title") {
-            editTitle = true;
             std::string newTitle = getStringInput("New title", " ");
 
             try {
                 utils::validateTitle(newTitle);
                 controller_.editTitle(id, newTitle);
-            } catch (std::exception& e) {
+                editTitle = true;
+            } catch (const std::exception& e) {
                 out_ << "Invalid string. Cannot update title." << "\n";
             }
         } else if (field == "start date" || field == "startdate") {
-            editStartDate = true;
             std::chrono::year_month_day newStartDate = getDateInput("New start date", {});
 
             try {
                 utils::validateDate(newStartDate);
                 controller_.editStartDate(id, newStartDate);
-            } catch (std::exception& e) {
+                editStartDate = true;
+            } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update start date." << "\n";
             }
         } else if (field == "end date" || field == "enddate") {
-            editEndDate = true;
             std::chrono::year_month_day newEndDate = getDateInput("New end date", {});
             
             try {
                 utils::validateDate(newEndDate);
                 controller_.editEndDate(id, newEndDate);
-            } catch (std::exception& e) {
+                editEndDate = true;
+            } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update end date." << "\n";
             }
         } else if (field == "active") {
-            editActive = true;
             bool newActive = getBoolInput("Is this a current term? (yes/no)", true);
             controller_.editActive(id, newActive);
+            editActive = true;
         }
     }
 
     // show new values to confirm
-    out_ << "New values:" << "\n";
+    if (editTitle || editStartDate || editEndDate || editActive) {
+        out_ << "New values:" << "\n";
 
-    if (editTitle) {
-        out_ << "Title: " << selectedTerm_->get().getTitle() << "\n";
-    }
+        if (editTitle) {
+            out_ << "Title: " << selectedTerm_->get().getTitle() << "\n";
+        }
 
-    if (editStartDate || editEndDate) {
-        out_ << "Duration: " << selectedTerm_->get().getStartDate() << " - " << selectedTerm_->get().getEndDate() << "\n";
-    }
+        if (editStartDate || editEndDate) {
+            out_ << "Duration: " << selectedTerm_->get().getStartDate() << " - " << selectedTerm_->get().getEndDate() << "\n";
+        }
 
-    if (editActive) {
-        out_ << "Current? " << utils::boolToString(selectedTerm_->get().getActive()) << "\n";
+        if (editActive) {
+            out_ << "Current? " << utils::boolToString(selectedTerm_->get().getActive()) << "\n";
+        }
     }
 
     // reset selectedTerm to allow the selection of a new one
@@ -214,7 +216,7 @@ void CliView::promptSelectTerm() {
     try {
         selectedTerm_ = controller_.getTerm(title);
         out_ << "Term '" << title << "' was selected." << "\n";
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         out_ << "Term not found. No selection made." << "\n";
         selectedTerm_.reset();
     }
@@ -227,8 +229,13 @@ void CliView::promptRemoveTerm() {
 
     // confirmation before removal
     bool confirm = getBoolInput("Are you sure you want to remove this term? (yes/no)", false);
-    controller_.removeTerm(title);
-    out_ << "Term '" << title << "' was removed." << "\n";
+
+    if (confirm) {
+        controller_.removeTerm(title);
+        out_ << "Term '" << title << "' was removed." << "\n";
+    } else {
+        out_ << "Operation cancelled. Term '" << title << "' was not removed." << "\n";
+    }
 }
 
 // ask the user for a char input, using the default value in the case of an invalid input 
@@ -342,7 +349,7 @@ bool CliView::getBoolInput(const std::string &label, const bool defaultVal) cons
     }
 
     // convert string to lowercase
-    utils::stringLower(input);
+    input = utils::stringLower(input);
 
     // manually convert string to bool
     if (input == "true" || input == "1" || input == "yes" || input == "y") {
@@ -350,8 +357,7 @@ bool CliView::getBoolInput(const std::string &label, const bool defaultVal) cons
     } else if (input == "false" || input == "0" || input == "no" || input == "n") {
         return false;
     } else {
-        throw std::invalid_argument("Invalid boolean string. Using default.");
-        return defaultVal;
+        throw std::invalid_argument("Invalid boolean string.");
     }
 }
 

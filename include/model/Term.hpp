@@ -56,7 +56,7 @@ class Term {
         void setEndDate(std::chrono::year_month_day newEndDate);
         void setActive(bool newActive);
 
-        void printTermInfo(std::ostream &os = std::cout);
+        void printTermInfo(std::ostream &os = std::cout) const;
         void addCourse(const Course& course);
         void removeCourse(const std::string& id);
         const Course& findCourse(const std::string& id) const;    // non-mutable version

@@ -94,7 +94,7 @@ class Course {
         void setGpaVal();
         void setActive(bool newActive);
 
-        void printCourseInfo(std::ostream& os = std::cout);
+        void printCourseInfo(std::ostream& os = std::cout) const;
         void addAssignment(const Assignment& assignment);
         void removeAssignment(const std::string& id);
         const Assignment& findAssignment(const std::string& id) const;    // non-mutable version

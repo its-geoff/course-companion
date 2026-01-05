@@ -119,7 +119,7 @@ void Term::setActive(bool newActive) {
     active_ = newActive;
 }
 
-void Term::printTermInfo(std::ostream &os) {
+void Term::printTermInfo(std::ostream &os) const {
     os << "ID: " << id_ << "\n";        // NOTE: make this a debug or admin option, not visible to all users
     os << "Term: " << title_ << "\n";
     os << "Duration: " << startDate_ << " - " << endDate_ << "\n";

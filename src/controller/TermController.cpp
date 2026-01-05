@@ -50,13 +50,14 @@ void TermController::editTitle(const std::string& id, const std::string& newTitl
     Term &term = termList_.at(id);
     std::string oldTitle = term.getTitle();
 
-    // change the title -> id mapping for the new title
-    titleToId_.erase(oldTitle);
     auto [_, inserted] = titleToId_.emplace(utils::stringLower(newTitle), id);
 
     if (!inserted) {
-        throw std::logic_error("Title to ID pairing already exists.");
+        throw std::logic_error("A term with this title already exists.");
     }
+
+    // change the title -> id mapping for the new title
+    titleToId_.erase(utils::stringLower(oldTitle));
 
     // set title after insertion to title -> id mapping
     term.setTitle(newTitle);
@@ -84,4 +85,5 @@ void TermController::editActive(const std::string& id, bool newActive) {
 void TermController::removeTerm(const std::string& title) {
     std::string id = getTermId(title);
     termList_.erase(id);
+    titleToId_.erase(utils::stringLower(title));
 }

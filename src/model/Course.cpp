@@ -281,7 +281,7 @@ void Course::setGradeScale(const std::map<float, std::string>& newGradeScale) {
 }
 
 // prints information held by a Course object
-void Course::printCourseInfo(std::ostream &os) {
+void Course::printCourseInfo(std::ostream &os) const {
     os << "ID: " << id_ << "\n";
     os << "Course: " << title_ << "\n";
     if (!description_.empty()) {

@@ -56,7 +56,7 @@ class Assignment {
         void setCompleted(bool newCompleted);
         void setGrade(float newGrade);
 
-        void printAssignmentInfo(std::ostream &os = std::cout);
+        void printAssignmentInfo(std::ostream &os = std::cout) const;
 
         bool operator==(const Assignment &other) const;
 };
