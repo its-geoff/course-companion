@@ -51,13 +51,13 @@ TEST(UtilsTest, FloatEqual) {
 TEST(UtilsTest, DefaultStartDate) {
     std::chrono::year_month_day result = utils::defaultStartDate();
     // NOTE: must change line below before each test; time in UTC
-    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/2};
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/5};
     ASSERT_EQ(result, todayDate);
 }
 
 TEST(UtilsTest, DefaultEndDate) {
     // NOTE: must change line below before each test; time in UTC
-    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/2};
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/5};
     std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
     std::chrono::year_month_day result = utils::defaultEndDate(todayDate);
     ASSERT_EQ(result, defaultEnd);
@@ -66,6 +66,11 @@ TEST(UtilsTest, DefaultEndDate) {
 TEST(UtilsTest, StringLower) {
     std::string input{"HELLO WORLD"};
     ASSERT_EQ(utils::stringLower(input), "hello world");
+}
+
+TEST(UtilsTest, StringTrim) {
+    std::string str{"  space  "};
+    ASSERT_EQ(utils::stringTrim(str), "space");
 }
 
 TEST(UtilsTest, PrintMap) {
@@ -120,4 +125,19 @@ TEST(UtilsTest, StringLowerMixedCase) {
     ASSERT_EQ(utils::stringLower(input1), "testing");
     ASSERT_EQ(utils::stringLower(input2), "testing");
     ASSERT_EQ(utils::stringLower(input3), "testing");
+}
+
+TEST(UtilsTest, StringTrimLeadingWhitespace) {
+    std::string str{"      sock"};
+    ASSERT_EQ(utils::stringTrim(str), "sock");
+}
+
+TEST(UtilsTest, StringTrimTrailingWhitespace) {
+    std::string str{"weight          "};
+    ASSERT_EQ(utils::stringTrim(str), "weight");
+}
+
+TEST(UtilsTest, StringTrimNoWhitespace) {
+    std::string str{"hello"};
+    ASSERT_EQ(utils::stringTrim(str), "hello");
 }

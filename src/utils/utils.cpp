@@ -82,4 +82,19 @@ namespace utils {
 
         return input;
     }
+
+    // trims leading and trailing whitespace from a stirng
+    std::string stringTrim(const std::string str) {
+        auto start = std::find_if_not(str.begin(), str.end(),
+            [](unsigned char c) { return std::isspace(c); });
+
+        auto end = std::find_if_not(str.rbegin(), str.rend(),
+            [](unsigned char c) { return std::isspace(c); }).base();
+
+        if (start >= end) {
+            return "";
+        }
+
+        return std::string(start, end);
+    }
 }

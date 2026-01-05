@@ -16,7 +16,7 @@
 #include <iostream>         // for i/o streams
 #include <map>              // for GPA scale
 #include <unordered_map>    // for weights, GPA values, and assignmentList
-#include "models/Assignment.hpp"   // for usage of Assignment objects in Course
+#include "model/Assignment.hpp"   // for usage of Assignment objects in Course
 
 /**
  * @class Course
@@ -35,7 +35,7 @@ class Course {
         std::string description_{};
         std::chrono::year_month_day startDate_{};
         std::chrono::year_month_day endDate_{};
-        std::unordered_map<std::string, Assignment> assignmentList_{};
+        std::unordered_map<std::string, Assignment> assignmentList_{};  // id -> Assignment
         static const std::unordered_map<std::string, float> gradeWeightsDefault_;   // default grade weights if not set
         std::unordered_map<std::string, float> gradeWeights_{gradeWeightsDefault_}; // weights of each assignment type
         int numCredits_{3};     // default number of credits for a class, TO-DO: allow user to override default

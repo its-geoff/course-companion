@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>      // diverts output from terminal to separate stream
 #include <regex>        // regular expression matching for UUIDs
-#include "models/Course.hpp"
+#include "model/Course.hpp"
 #include "utils/utils.hpp"
 
 using namespace std::chrono_literals;
@@ -268,7 +268,7 @@ TEST_F(CourseTest, PrintCourseInfo) {
     course1.printCourseInfo(ss);
     std::string output = ss.str();
 
-    // find and remove the UUID part
+    // find and replace the UUID part
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
@@ -563,7 +563,7 @@ TEST_F(CourseTest, PrintCourseInfoPartial) {
     course2.printCourseInfo(ss);
     std::string output = ss.str();
 
-    // find and remove the UUID part
+    // find and replace the UUID part
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
@@ -578,7 +578,7 @@ TEST_F(CourseTest, PrintCourseInfoDescPartial) {
     course2.printCourseInfo(ss);
     std::string output = ss.str();
 
-    // find and remove the UUID part
+    // find and replace the UUID part
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 

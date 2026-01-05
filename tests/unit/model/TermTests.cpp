@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>      // diverts output from terminal to separate stream
 #include <regex>        // regular expression matching for UUIDs
-#include "models/Term.hpp"
+#include "model/Term.hpp"
 #include "utils/utils.hpp"
 
 using namespace std::chrono_literals;
@@ -147,7 +147,7 @@ TEST_F(TermTest, PrintTermInfo) {
     term1.printTermInfo(ss);
     std::string output = ss.str();
 
-    // find and remove the UUID part
+    // find and replace the UUID part
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
@@ -283,7 +283,7 @@ TEST_F(TermTest, ThreeParamInitializationInvalidEndDate) {
 TEST_F(TermTest, ThreeParamInitializationDefaultDates) {
     Term term2{"Spring 2026", {}, {}};
     // NOTE: must change line below before each test; time in UTC
-    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/2};
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/5};
     std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
     ASSERT_EQ(term2.getTitle(), "Spring 2026");
     ASSERT_EQ(term2.getStartDate(), todayDate);
@@ -303,7 +303,7 @@ TEST_F(TermTest, PrintTermInfoPartial) {
     term2.printTermInfo(ss);
     std::string output = ss.str();
 
-    // find and remove the UUID part
+    // find and replace the UUID part
     std::regex uuidRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 

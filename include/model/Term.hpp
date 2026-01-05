@@ -14,7 +14,7 @@
 #include <chrono>           // for date and time-related variables
 #include <iostream>         // for i/o streams
 #include <unordered_map>    // for courseList
-#include "models/Course.hpp"   // for usage of Course objects in vector
+#include "model/Course.hpp"   // for usage of Course objects in vector
 
 /**
  * @class Term
@@ -31,7 +31,7 @@ class Term {
         std::string title_{};
         std::chrono::year_month_day startDate_{};
         std::chrono::year_month_day endDate_{};
-        std::unordered_map<std::string, Course> courseList_{};
+        std::unordered_map<std::string, Course> courseList_{};  // id -> Course
         int totalCredits_{0};
         float ovrGpa_{0.0};
         bool active_{true}; // indicates whether the term is currently ongoing

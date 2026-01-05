@@ -13,6 +13,10 @@
 
 #include <iostream>         // for i/o streams
 #include <chrono>           // for date and time-related variables
+#include <vector>           // for vector of changed fields
+#include <optional>         // for selected Term, Course, and Assignment
+#include <functional>       // for reference wrapper
+#include <unordered_map>    // for Term objects
 #include "controller/TermController.hpp"
 
 /**
@@ -25,6 +29,10 @@
 class CliView {
     private:
         TermController &controller_;
+        // may or may not exist
+        std::optional<std::reference_wrapper<const Term>> selectedTerm_;
+        std::optional<std::reference_wrapper<const Course>> selectedCourse_;
+        std::optional<std::reference_wrapper<const Assignment>> selectedAssignment_;
         std::istream &in_;
         std::ostream &out_;
         enum class MenuState {
@@ -34,13 +42,21 @@ class CliView {
             exit
         };
 
-        std::chrono::year_month_day parseDate(const std::string& input) const;
+        std::chrono::year_month_day parseDate(const std::string &input) const;
+        std::vector<std::string> splitStringByComma(const std::string &str);
 
+        void displayDelim() const;
+        void displaySecondaryDelim() const;
         void displayIntro() const;
         void displayTermMenu() const;
         void displayCourseMenu() const;
         void displayAssignmentMenu() const;
-        void displayDelim() const;
+        void displayTermListInfo() const;
+
+        void promptAddTerm();
+        void promptEditTerm();
+        void promptSelectTerm();
+        void promptRemoveTerm();
 
         char getCharInput(const std::string &label, const char defaultVal) const;
         std::string getStringInput(const std::string &label, const std::string &defaultVal) const;

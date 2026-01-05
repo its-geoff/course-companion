@@ -27,12 +27,12 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # Library containing app logic for testing
 # ------------------------------------------
 add_library(CourseCompanion_lib
-    src/models/Assignment.cpp
-    src/models/Course.cpp
-    src/models/Term.cpp
+    src/model/Assignment.cpp
+    src/model/Course.cpp
+    src/model/Term.cpp
+    src/view/CliView.cpp
     src/controller/TermController.cpp
     src/utils/utils.cpp
-    src/view/CliView.cpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)

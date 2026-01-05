@@ -1,4 +1,4 @@
-#include "models/Assignment.hpp"
+#include "model/Assignment.hpp"
 
 /**
  * @file Assignment.cpp

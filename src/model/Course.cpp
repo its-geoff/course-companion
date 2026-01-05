@@ -1,4 +1,4 @@
-#include "models/Course.hpp"
+#include "model/Course.hpp"
 
 /**
  * @file Course.cpp
@@ -297,10 +297,10 @@ void Course::printCourseInfo(std::ostream &os) {
 
 // adds an Assignment to the end of the list from the given input
 void Course::addAssignment(const Assignment &assignment) {
-    auto [it, inserted] = assignmentList_.emplace(assignment.getId(), assignment);
+    auto [_, inserted] = assignmentList_.emplace(assignment.getId(), assignment);
 
     if (!inserted) {
-        throw std::logic_error("Assignment with same ID already exists.");
+        throw std::logic_error("Assignment with the same ID already exists.");
     }
 }
 
