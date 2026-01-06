@@ -18,6 +18,36 @@
 #include "controller/TermController.hpp"    // connection to TermController
 #include "utils/utils.hpp"      // for reused custom functions
 
+// anonymous namespace for local scope; only this file can see these structs
+namespace {
+    // edit term result struct to replace multiple flags
+    struct EditTermResult {
+        bool titleRequested{false};
+        bool titleUpdated{false};
+
+        bool startDateRequested{false};
+        bool startDateUpdated{false};
+
+        bool endDateRequested{false};
+        bool endDateUpdated{false};
+
+        bool activeRequested{false};
+        bool activeUpdated{false};
+
+        bool anyRequested() const {
+            return titleRequested || startDateRequested || endDateRequested || activeRequested;
+        }
+
+        bool datesRequested() const {
+            return startDateRequested || endDateRequested;
+        }
+
+        bool datesUpdated() const {
+            return startDateUpdated || endDateUpdated;
+        }
+    };
+}
+
 // takes date as string input and converts to year_month_day format
 std::chrono::year_month_day CliView::parseDate(const std::string &input) const {
     int y, m, d;
@@ -65,11 +95,17 @@ void CliView::displayTermMenu() const {
     displayDelim();
     out_ << "                                             Term Menu                                             " << "\n";
     out_ << "                                 What would you like to do today?                                  " << "\n";
-    out_ << "[A] Add term" << "\n";
-    out_ << "[E] Edit term" << "\n";
-    out_ << "[S] Select term" << "\n";
-    out_ << "[R] Remove term" << "\n";
-    out_ << "[X] Exit program" << "\n";
+
+    if (controller_.getTermList().size() > 0) {
+        out_ << "[A] Add term" << "\n";
+        out_ << "[E] Edit term" << "\n";
+        out_ << "[S] Select term" << "\n";
+        out_ << "[R] Remove term" << "\n";
+        out_ << "[X] Exit program" << "\n";
+    } else {
+        out_ << "[A] Add term" << "\n";
+        out_ << "[X] Exit program" << "\n";
+    }
 }
 
 // prints a menu of choices for the user to select a Course
@@ -112,29 +148,88 @@ void CliView::displayTermListInfo() const {
     }
 }
 
+// displays invalid selection output
+void CliView::displayInvalidSelection() const {
+    out_ << "Invalid selection. Please try again." << "\n";
+}
+
 // prompt the user for information to add a term to the list
 void CliView::promptAddTerm() {
-    out_ << "Enter the following information for the term you'd like to add: " << "\n";
-    std::string title = getStringInput("Title", " ");
-    std::chrono::year_month_day startDate = getDateInput("Start Date (YYYY-MM-DD)", {});
-    std::chrono::year_month_day endDate = getDateInput("End Date (YYYY-MM-DD)", {});
-    bool active = getBoolInput("Current term? (yes/no)", true);
+    bool titleEmpty{true};
+    bool invalidStartDate{true};
+    bool invalidEndDate{true};
+    bool invalidActive{true};
 
-    controller_.addTerm(title, startDate, endDate, active);
-    out_ << "Term '" << title << "' successfully added." << "\n";
+    out_ << "Enter the following information for the term you'd like to add: " << "\n";
+
+    std::string title{};
+    while (titleEmpty) {
+        title = getStringInput("Title", " ");
+
+        if (utils::isOnlyWhitespace(title)) {
+            out_ << "Invalid title. Title must be non-empty. Please try again." << "\n";
+        } else {
+            titleEmpty = false;
+        }
+    }
+    
+    std::chrono::year_month_day startDate{};
+    while (invalidStartDate) {
+        try {
+            startDate = getDateInput("Start Date (YYYY-MM-DD)", {});
+            // check if date exists before advancing
+            utils::validateDate(startDate);
+            invalidStartDate = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid start date. Start date must be a valid date. Please try again." << "\n";
+        }
+    }
+    
+    std::chrono::year_month_day endDate{};
+    while (invalidEndDate) {
+        try {
+            endDate = getDateInput("End Date (YYYY-MM-DD)", {});
+            // check if date exists before advancing
+            utils::validateDate(endDate);
+            invalidEndDate = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid end date. End date must be a valid date. Please try again." << "\n";
+        }
+    }
+
+    bool active{true};
+    while (invalidActive) {
+        try {
+            active = getBoolInput("Current term? (yes/no)", true);
+            invalidActive = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid active flag. Active flag must be a valid boolean. Please try again." << "\n";
+        }
+    }
+
+    try {
+        controller_.addTerm(title, startDate, endDate, active);
+        out_ << "Term '" << title << "' successfully added." << "\n";
+    } catch (const std::exception& e) {
+        out_ << "A term with that title already exists. Please choose a new title." << "\n";
+    }
 }
 
 // prompt the user for the information to edit a term in the current list
 void CliView::promptEditTerm() {
-    bool editTitle{false};
-    bool editStartDate{false};
-    bool editEndDate{false};
-    bool editActive{false};
+    // update request and success flags
+    EditTermResult resultFlags;
     std::vector<std::string> editFields{};
 
     out_ << "Enter the following information for the term you'd like to edit: " << "\n";
     std::string title = getStringInput("Title", " ");
-    selectedTerm_ = controller_.getTerm(title);
+
+    try {
+        selectedTerm_ = controller_.getTerm(title);
+    } catch (const std::exception& e) {
+        out_ << "Term not found. Operation cancelled." << "\n";
+        return;
+    }
     std::string id = selectedTerm_->get().getId();
 
     // get fields that need to be updated and normalize input
@@ -148,56 +243,77 @@ void CliView::promptEditTerm() {
         field = utils::stringTrim(field);
 
         if (field == "title") {
-            std::string newTitle = getStringInput("New title", " ");
+            resultFlags.titleRequested = true;
 
             try {
+                std::string newTitle = getStringInput("New title", " ");
                 utils::validateTitle(newTitle);
                 controller_.editTitle(id, newTitle);
-                editTitle = true;
+                resultFlags.titleUpdated = true;
             } catch (const std::exception& e) {
                 out_ << "Invalid string. Cannot update title." << "\n";
             }
         } else if (field == "start date" || field == "startdate") {
-            std::chrono::year_month_day newStartDate = getDateInput("New start date", {});
+            resultFlags.startDateRequested = true;
 
             try {
+                std::chrono::year_month_day newStartDate = getDateInput("New start date", {});
                 utils::validateDate(newStartDate);
                 controller_.editStartDate(id, newStartDate);
-                editStartDate = true;
+                resultFlags.startDateUpdated = true;
             } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update start date." << "\n";
             }
         } else if (field == "end date" || field == "enddate") {
-            std::chrono::year_month_day newEndDate = getDateInput("New end date", {});
-            
+            resultFlags.endDateRequested = true;
+
             try {
+                std::chrono::year_month_day newEndDate = getDateInput("New end date", {});
                 utils::validateDate(newEndDate);
                 controller_.editEndDate(id, newEndDate);
-                editEndDate = true;
+                resultFlags.endDateUpdated = true;
             } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update end date." << "\n";
             }
         } else if (field == "active") {
-            bool newActive = getBoolInput("Is this a current term? (yes/no)", true);
-            controller_.editActive(id, newActive);
-            editActive = true;
+            resultFlags.activeRequested = true;
+
+            try {
+                bool newActive = getBoolInput("Is this a current term? (yes/no)", true);
+                controller_.editActive(id, newActive);
+                resultFlags.activeUpdated = true;
+            } catch (const std::exception& e) {
+                out_ << "Invalid boolean. Cannot update active flag." << "\n";
+            }
         }
     }
 
-    // show new values to confirm
-    if (editTitle || editStartDate || editEndDate || editActive) {
-        out_ << "New values:" << "\n";
+    // update result output
+    if (resultFlags.anyRequested()) {
+        out_ << "Update results:" << "\n";
 
-        if (editTitle) {
-            out_ << "Title: " << selectedTerm_->get().getTitle() << "\n";
+        if (resultFlags.titleRequested) {
+            if (resultFlags.titleUpdated) {
+                out_ << "Title: " << selectedTerm_->get().getTitle() << "\n";
+            } else {
+                out_ << "Title: (unchanged)" << "\n";
+            }
         }
 
-        if (editStartDate || editEndDate) {
-            out_ << "Duration: " << selectedTerm_->get().getStartDate() << " - " << selectedTerm_->get().getEndDate() << "\n";
+        if (resultFlags.datesRequested()) {
+            if (resultFlags.datesUpdated()) {
+                out_ << "Duration: " << selectedTerm_->get().getStartDate() << " - " << selectedTerm_->get().getEndDate() << "\n";
+            } else {
+                out_ << "Duration: (unchanged)" << "\n";
+            }
         }
 
-        if (editActive) {
-            out_ << "Current? " << utils::boolToString(selectedTerm_->get().getActive()) << "\n";
+        if (resultFlags.activeRequested) {
+            if (resultFlags.activeUpdated) {
+                out_ << "Current? " << utils::boolToString(selectedTerm_->get().getActive()) << "\n";
+            } else {
+                out_ << "Current? (unchanged)" << "\n";
+            }
         }
     }
 
@@ -224,15 +340,29 @@ void CliView::promptSelectTerm() {
 
 // prompt the user for the title to remove a term from the list
 void CliView::promptRemoveTerm() {
+    bool invalidBool{true};
+
     out_ << "Enter the following information for the term you'd like to remove: " << "\n";
     std::string title = getStringInput("Title", " ");
 
     // confirmation before removal
-    bool confirm = getBoolInput("Are you sure you want to remove this term? (yes/no)", false);
+    bool confirm{false};
+    while (invalidBool) {
+        try {
+            confirm = getBoolInput("Are you sure you want to remove this term? (yes/no)", false);
+            invalidBool = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid response. Please try again." << "\n";
+        }
+    }
 
     if (confirm) {
-        controller_.removeTerm(title);
-        out_ << "Term '" << title << "' was removed." << "\n";
+        try {
+            controller_.removeTerm(title);
+            out_ << "Term '" << title << "' was removed." << "\n";
+        } catch (const std::exception& e) {
+            out_ << "Term not found. Operation cancelled." << "\n";
+        }
     } else {
         out_ << "Operation cancelled. Term '" << title << "' was not removed." << "\n";
     }
@@ -285,9 +415,8 @@ std::chrono::year_month_day CliView::getDateInput(const std::string &label, cons
 
     try {
         return parseDate(input);
-    } catch (const std::invalid_argument &e) {
-        out_ << "Invalid date. Using default." << "\n";
-        return defaultVal;
+    } catch (std::exception& e) {
+        throw std::invalid_argument("Invalid date format. Expected YYYY-MM-DD.");
     }
 }
 
@@ -383,20 +512,34 @@ void CliView::run() {
                     break;
                 case 'E':
                     // edit term
-                    promptEditTerm();
+                    if (controller_.getTermList().size() > 0) {
+                        promptEditTerm();
+                    } else {
+                        displayInvalidSelection();
+                    }
+
                     break;
                 case 'S':
                     // select term
-                    promptSelectTerm();
+                    if (controller_.getTermList().size() > 0) {
+                        promptSelectTerm();
 
-                    if (selectedTerm_) {
-                        state = MenuState::course;
+                        if (selectedTerm_) {
+                            state = MenuState::course;
+                        }
+                    } else {
+                        displayInvalidSelection();
                     }
                     
                     break;
                 case 'R':
                     // remove term
-                    promptRemoveTerm();
+                    if (controller_.getTermList().size() > 0) {
+                        promptRemoveTerm();
+                    } else {
+                        displayInvalidSelection();
+                    }
+
                     break;
                 case 'X':
                     // exit
@@ -404,8 +547,8 @@ void CliView::run() {
                     break;
                 default:
                     // invalid selection
-                    out_ << "Invalid selection. Please try again." << "\n";
-            }
+                    displayInvalidSelection();
+                }
         }
 
         while (state == MenuState::course) {
