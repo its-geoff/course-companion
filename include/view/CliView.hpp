@@ -52,6 +52,7 @@ class CliView {
         void displayCourseMenu() const;
         void displayAssignmentMenu() const;
         void displayTermListInfo() const;
+        void displayInvalidSelection() const;
 
         void promptAddTerm();
         void promptEditTerm();

@@ -4,13 +4,11 @@
 #include "model/Course.hpp"
 #include "model/Term.hpp"
 #include "controller/TermController.hpp"
-#include "controller/MockController.hpp"
 #include "view/CliView.hpp"
 
 int main() {
-    // TermController controller;
-    MockController mController;
-    CliView view(mController);
+    TermController controller;
+    CliView view(controller);
 
     view.run();
 
