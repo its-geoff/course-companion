@@ -210,8 +210,10 @@ void CliView::promptAddTerm() {
     try {
         controller_.addTerm(title, startDate, endDate, active);
         out_ << "Term '" << title << "' successfully added." << "\n";
+    } catch (const std::logic_error& e) {
+        out_ << "A term with this title already exists. Please choose a new title." << "\n";
     } catch (const std::exception& e) {
-        out_ << "A term with that title already exists. Please choose a new title." << "\n";
+        out_ << "An expected error occurred while adding the term." << "\n";
     }
 }
 
@@ -250,8 +252,10 @@ void CliView::promptEditTerm() {
                 utils::validateTitle(newTitle);
                 controller_.editTitle(id, newTitle);
                 resultFlags.titleUpdated = true;
-            } catch (const std::exception& e) {
+            } catch (const std::invalid_argument& e) {
                 out_ << "Invalid string. Cannot update title." << "\n";
+            } catch (const std::logic_error& e) {
+                out_ << "A term with this title already exists. Cannot update title." << "\n";
             }
         } else if (field == "start date" || field == "startdate") {
             resultFlags.startDateRequested = true;
@@ -415,7 +419,7 @@ std::chrono::year_month_day CliView::getDateInput(const std::string &label, cons
 
     try {
         return parseDate(input);
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         throw std::invalid_argument("Invalid date format. Expected YYYY-MM-DD.");
     }
 }
@@ -548,6 +552,7 @@ void CliView::run() {
                 default:
                     // invalid selection
                     displayInvalidSelection();
+                    break;
                 }
         }
 
@@ -580,8 +585,9 @@ void CliView::run() {
                     break;
                 default:
                     // invalid selection
-                    out_ << "Invalid selection. Please try again." << "\n";
-            }
+                    displayInvalidSelection();
+                    break;
+                }
         }
 
         while (state == MenuState::assignment) {
@@ -612,8 +618,9 @@ void CliView::run() {
                     break;
                 default:
                     // invalid selection
-                    out_ << "Invalid selection. Please try again." << "\n";
-            }
+                    displayInvalidSelection();
+                    break;
+                }
         }
     }
 }

@@ -299,8 +299,8 @@ TEST(CliViewTest, LongInput) {
     );
     std::ostringstream os;
 
-        CliView view(controller, simInput, os);
-        view.run();
+    CliView view(controller, simInput, os);
+    view.run();
 
     // verify that intro message and invalid char input message was sent
     ASSERT_TRUE(os.str().find("Welcome to Course Companion") != std::string::npos);
@@ -549,6 +549,35 @@ TEST(CliViewTest, AddTermActiveInvalid) {
     ASSERT_TRUE(userOut.find("must be a valid boolean") != std::string::npos);
 }
 
+TEST(CliViewTest, AddTermAlreadyExists) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-22\n"
+        "2025-5-18\n"
+        "yes\n"
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-22\n"
+        "2025-5-18\n"
+        "yes\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("with this title already exists") != std::string::npos);
+    ASSERT_TRUE(userOut.find("choose a new title") != std::string::npos);
+}
+
 TEST(CliViewTest, EditTermNotFound) {
     std::istringstream input(
         // add term
@@ -643,6 +672,44 @@ TEST(CliViewTest, EditTermNewTitleEmpty) {
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid string") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Cannot update title") != std::string::npos);
+}
+
+TEST(CliViewTest, EditTermNewTitleAlreadyExists) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        "A\n"
+        "Fall 2025\n"
+        "2025-8-2\n"
+        "2025-12-11\n"
+        "no\n"
+        // edit term
+        "E\n"
+        "Spring 2025\n"
+        "title\n"
+        "Spring 2025\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check that termList size is not 0
+    const std::unordered_map<std::string, Term>& listOfTerms = controller.getTermList();
+    ASSERT_EQ(listOfTerms.size(), 2);
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("with this title already exists") != std::string::npos);
     ASSERT_TRUE(userOut.find("Cannot update title") != std::string::npos);
 }
 
