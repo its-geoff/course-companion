@@ -227,7 +227,7 @@ void CliView::promptEditTerm() {
     std::string title = getStringInput("Title", " ");
 
     try {
-        selectedTerm_ = controller_.getTerm(title);
+        selectedTerm_ = controller_.findTerm(title);
     } catch (const std::exception& e) {
         out_ << "Term not found. Operation cancelled." << "\n";
         return;
@@ -334,7 +334,7 @@ void CliView::promptSelectTerm() {
     std::string title = getStringInput("Title", " ");
 
     try {
-        selectedTerm_ = controller_.getTerm(title);
+        selectedTerm_ = controller_.findTerm(title);
         out_ << "Term '" << title << "' was selected." << "\n";
     } catch (const std::exception& e) {
         out_ << "Term not found. No selection made." << "\n";

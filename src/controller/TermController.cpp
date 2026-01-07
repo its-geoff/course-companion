@@ -10,11 +10,6 @@
 
 #include "utils/utils.hpp"      // for stringLower
 
-const Term& TermController::getTerm(const std::string& title) const {
-    std::string id = getTermId(title);
-    return termList_.at(id);
-}
-
 const std::unordered_map<std::string, Term>& TermController::getTermList() const {
     return termList_;
 }
@@ -86,4 +81,16 @@ void TermController::removeTerm(const std::string& title) {
     std::string id = getTermId(title);
     termList_.erase(id);
     titleToId_.erase(utils::stringLower(title));
+}
+
+// find a Term in termList based on ID; non-mutable (read-only)
+const Term& TermController::findTerm(const std::string& title) const {
+    std::string id = getTermId(title);
+    return termList_.at(id);
+}
+
+// find a Term in termList based on ID; mutable (read and write access)
+Term& TermController::findTerm(const std::string& title) {
+    std::string id = getTermId(title);
+    return termList_.at(id);
 }
