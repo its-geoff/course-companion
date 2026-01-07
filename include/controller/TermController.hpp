@@ -28,7 +28,6 @@ class TermController {
         std::unordered_map<std::string, std::string> titleToId_{};   // title -> id, titles in lowercase for easier comparison
 
     public:
-        const Term& getTerm(const std::string& title) const;
         const std::unordered_map<std::string, Term>& getTermList() const;
         std::string getTermId(const std::string& title) const;
 
@@ -38,6 +37,8 @@ class TermController {
         void editEndDate(const std::string& id, const std::chrono::year_month_day& newEndDate);
         void editActive(const std::string& id, bool active);
         void removeTerm(const std::string& title);
+        const Term& findTerm(const std::string& title) const;    // non-mutable version
+        Term &findTerm(const std::string &title);    // mutable version
 };
 
 #endif  // TERMCONTROLLER_HPP

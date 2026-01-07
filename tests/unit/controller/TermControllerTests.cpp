@@ -16,17 +16,6 @@ class TermControllerTest : public testing::Test {
 // GETTER SMOKE TESTS
 // ====================================
 
-TEST_F(TermControllerTest, TermGetter) {
-    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
-    controller.addTerm("Spring 2026", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/24}, true);
-
-    const Term& selectedTerm = controller.getTerm("Spring 2026");
-    ASSERT_EQ(selectedTerm.getTitle(), "Spring 2026");
-    ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2026y/1/2});
-    ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2026y/5/24});
-    ASSERT_TRUE(selectedTerm.getActive());
-}
-
 TEST_F(TermControllerTest, TermListGetter) {
     controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
     controller.addTerm("Spring 2026", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/24}, true);
@@ -65,7 +54,7 @@ TEST_F(TermControllerTest, TermIdGetter) {
 TEST_F(TermControllerTest, AddTerm) {
     controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
 
-    const Term& selectedTerm = controller.getTerm("Fall 2025");
+    const Term& selectedTerm = controller.findTerm("Fall 2025");
     ASSERT_EQ(selectedTerm.getTitle(), "Fall 2025");
     ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2025y/8/15});
     ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2025y/12/17});
@@ -79,7 +68,7 @@ TEST_F(TermControllerTest, EditTitle) {
     controller.editTitle(id, "Winter 2026");
 
     // check that title has been edited and title -> id mapping is correct
-    const Term& selectedTerm = controller.getTerm("Winter 2026");
+    const Term& selectedTerm = controller.findTerm("Winter 2026");
     ASSERT_EQ(selectedTerm.getTitle(), "Winter 2026");
     ASSERT_EQ(controller.getTermId("Winter 2026"), id);
 }
@@ -90,7 +79,7 @@ TEST_F(TermControllerTest, EditStartDate) {
     std::string id = controller.getTermId("Fall 2025");
     controller.editStartDate(id, std::chrono::year_month_day{2025y/8/20});
 
-    const Term& selectedTerm = controller.getTerm("Fall 2025");
+    const Term& selectedTerm = controller.findTerm("Fall 2025");
     ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2025y/8/20});
 }
 
@@ -100,7 +89,7 @@ TEST_F(TermControllerTest, EditEndDate) {
     std::string id = controller.getTermId("Fall 2025");
     controller.editEndDate(id, std::chrono::year_month_day{2025y/12/20});
 
-    const Term& selectedTerm = controller.getTerm("Fall 2025");
+    const Term& selectedTerm = controller.findTerm("Fall 2025");
     ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2025y/12/20});
 }
 
@@ -110,7 +99,7 @@ TEST_F(TermControllerTest, EditActive) {
     std::string id = controller.getTermId("Fall 2025");
     controller.editActive(id, true);
 
-    const Term& selectedTerm = controller.getTerm("Fall 2025");
+    const Term& selectedTerm = controller.findTerm("Fall 2025");
     ASSERT_TRUE(selectedTerm.getActive());
 }
 
@@ -138,17 +127,32 @@ TEST_F(TermControllerTest, RemoveTerm) {
     ASSERT_TRUE(it2 != listOfTerms.end());
 }
 
-// ====================================
-// GETTER EDGE CASES
-// ====================================
-
-TEST_F(TermControllerTest, TermGetterNotFound) {
+TEST_F(TermControllerTest, FindTermConst) {
     controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
     controller.addTerm("Spring 2026", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/24}, true);
 
-    // out of range error since term cannot be found
-    ASSERT_THROW(controller.getTerm("Fall 2026"), std::out_of_range);
+    const TermController &constController = controller;
+    const Term &selectedTerm = constController.findTerm("Spring 2026");
+    ASSERT_EQ(selectedTerm.getTitle(), "Spring 2026");
+    ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2026y/1/2});
+    ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2026y/5/24});
+    ASSERT_TRUE(selectedTerm.getActive());
 }
+
+TEST_F(TermControllerTest, FindTermNonConst) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+    controller.addTerm("Spring 2026", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/24}, true);
+
+    Term& selectedTerm = controller.findTerm("Spring 2026");
+    ASSERT_EQ(selectedTerm.getTitle(), "Spring 2026");
+    ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2026y/1/2});
+    ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2026y/5/24});
+    ASSERT_TRUE(selectedTerm.getActive());
+}
+
+// ====================================
+// GETTER EDGE CASES
+// ====================================
 
 TEST_F(TermControllerTest, TermListGetterEmpty) {
     const std::unordered_map<std::string, Term> &listOfTerms = controller.getTermList();
@@ -219,4 +223,21 @@ TEST_F(TermControllerTest, RemoveTermNotFound) {
 
     // out of range since term cannot be found
     ASSERT_THROW(controller.removeTerm("Fall 2026"), std::out_of_range);
+}
+
+TEST_F(TermControllerTest, FindTermConstNotFound) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+    controller.addTerm("Spring 2026", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/24}, true);
+
+    // out of range error since term cannot be found
+    const TermController &constController = controller;
+    ASSERT_THROW(constController.findTerm("Fall 2026"), std::out_of_range);
+}
+
+TEST_F(TermControllerTest, FindTermNonConstNotFound) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+    controller.addTerm("Spring 2026", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/24}, true);
+
+    // out of range error since term cannot be found
+    ASSERT_THROW(controller.findTerm("Fall 2026"), std::out_of_range);
 }

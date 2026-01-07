@@ -51,13 +51,13 @@ TEST(UtilsTest, FloatEqual) {
 TEST(UtilsTest, DefaultStartDate) {
     std::chrono::year_month_day result = utils::defaultStartDate();
     // NOTE: must change line below before each test; time in UTC
-    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/6};
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/7};
     ASSERT_EQ(result, todayDate);
 }
 
 TEST(UtilsTest, DefaultEndDate) {
     // NOTE: must change line below before each test; time in UTC
-    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/6};
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/7};
     std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
     std::chrono::year_month_day result = utils::defaultEndDate(todayDate);
     ASSERT_EQ(result, defaultEnd);

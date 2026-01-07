@@ -126,50 +126,30 @@ float Course::calculateGpaVal(const std::string& letterGrade) {
     return gpaScale_.at(letterGrade);
 }
 
-Course::Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day 
-    endDate) : id_{utils::generateUuid()} {
+Course::Course(std::string title, std::string description, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate, 
+    int numCredits, bool active) : id_{utils::generateUuid()} {
+    // internal defaulting for user input
+    if (startDate == std::chrono::year_month_day{}) {
+        startDate = utils::defaultStartDate();
+    }
+
+    if (endDate == std::chrono::year_month_day{}) {
+        endDate = utils::defaultEndDate(startDate);
+    }
+    
+    // input validation before moving to member variables
     utils::validateTitle(title);
     utils::validateDate(startDate);
     utils::validateDate(endDate);
-
-    title_ = std::move(title);
-    startDate_ = startDate;
-    endDate_ = endDate;
-}
-
-Course::Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day 
-    endDate, int numCredits) : Course(title, startDate, endDate) {
     validateNumCredits(numCredits);
 
-    numCredits_ = numCredits;
-}
-
-Course::Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day 
-    endDate, int numCredits, bool active) : Course(title, startDate, endDate, numCredits) {
-    active_ = active;
-}
-
-Course::Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
-    std::chrono::year_month_day endDate) : id_{utils::generateUuid()} {
-    utils::validateTitle(title);
-    utils::validateDate(startDate);
-    utils::validateDate(endDate);
-
     title_ = std::move(title);
-    description_ = std::move(description);
+    if (!utils::isOnlyWhitespace(description)) {
+        description_ = std::move(description);
+    }
     startDate_ = startDate;
     endDate_ = endDate;
-}
-
-Course::Course(std::string title, std::string description, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate, 
-    int numCredits) : Course(title, description, startDate, endDate) {
-    validateNumCredits(numCredits);
-
     numCredits_ = numCredits;
-}
-
-Course::Course(std::string title, std::string description, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate, 
-    int numCredits, bool active) : Course(title, description, startDate, endDate, numCredits) {
     active_ = active;
 }
 
@@ -231,7 +211,11 @@ void Course::setTitle(std::string newTitle) {
 }
 
 void Course::setDescription(std::string newDescription) {
-    description_ = newDescription;
+    if (!utils::isOnlyWhitespace(newDescription)) {
+        description_ = std::move(newDescription);
+    } else {
+        description_ = "";
+    }
 }
 
 void Course::setStartDate(std::chrono::year_month_day newStartDate) {

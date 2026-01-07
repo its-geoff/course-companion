@@ -58,7 +58,7 @@ TEST(CliViewTest, AddTerm) {
     ASSERT_EQ(listOfTerms.size(), 1);
     
     // check that Term was added to the list
-    const Term &selectedTerm = controller.getTerm("Spring 2025");
+    const Term &selectedTerm = controller.findTerm("Spring 2025");
     ASSERT_EQ(selectedTerm.getTitle(), "Spring 2025");
     ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2025y/1/10});
     ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2025y/5/23});
@@ -100,7 +100,7 @@ TEST(CliViewTest, EditTerm) {
     ASSERT_EQ(listOfTerms.size(), 1);
 
     // check that info was updated in list
-    const Term &selectedTerm = controller.getTerm("Fall 2025");
+    const Term &selectedTerm = controller.findTerm("Fall 2025");
     ASSERT_EQ(selectedTerm.getTitle(), "Fall 2025");
     ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2025y/8/2});
     ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2025y / 12 / 11});
@@ -173,7 +173,7 @@ TEST(CliViewTest, RemoveTerm) {
     ASSERT_EQ(listOfTerms.size(), 1);
 
     // check that termList does not include removed Term
-    ASSERT_THROW(controller.getTerm("Spring 2025"), std::out_of_range);
+    ASSERT_THROW(controller.findTerm("Spring 2025"), std::out_of_range);
 
     // check user output for both the prompt and the success message
     const std::string userOut = output.str();
