@@ -40,7 +40,7 @@ TEST_F(TermTest, EndDateGetter) {
 
 TEST_F(TermTest, CourseListGetter) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     term1.addCourse(course1);
     term1.addCourse(course2);
     std::string id1 = course1.getId();
@@ -52,7 +52,7 @@ TEST_F(TermTest, CourseListGetter) {
 
 TEST_F(TermTest, CourseListGetterCheckSize) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     term1.addCourse(course1);
     term1.addCourse(course2);
     auto list = term1.getCourseList();
@@ -61,7 +61,7 @@ TEST_F(TermTest, CourseListGetterCheckSize) {
 
 TEST_F(TermTest, TotalCreditsGetter) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     term1.addCourse(course1);
     term1.addCourse(course2);
 
@@ -70,7 +70,7 @@ TEST_F(TermTest, TotalCreditsGetter) {
 
 TEST_F(TermTest, OvrGpaGetter) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     
     course1.setGradePct(89.5f);
     course1.setGpaVal();
@@ -140,7 +140,7 @@ TEST_F(TermTest, PrintTermInfo) {
 
     // initialize courses for totalCredits and ovrGpa
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     term1.addCourse(course1);
     term1.addCourse(course2);
 
@@ -165,7 +165,7 @@ TEST_F(TermTest, AddCourse) {
 
 TEST_F(TermTest, RemoveCourse) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
 
     term1.addCourse(course1);
     term1.addCourse(course2);
@@ -179,7 +179,7 @@ TEST_F(TermTest, RemoveCourse) {
 
 TEST_F(TermTest, FindCourseConst) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
 
     term1.addCourse(course1);
     term1.addCourse(course2);
@@ -191,7 +191,7 @@ TEST_F(TermTest, FindCourseConst) {
 
 TEST_F(TermTest, FindCourseNonConst) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     Course course3 = course1;   // make course3 the same as course1
 
     term1.addCourse(course1);
@@ -283,7 +283,7 @@ TEST_F(TermTest, ThreeParamInitializationInvalidEndDate) {
 TEST_F(TermTest, ThreeParamInitializationDefaultDates) {
     Term term2{"Spring 2026", {}, {}};
     // NOTE: must change line below before each test; time in UTC
-    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/6};
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/7};
     std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
     ASSERT_EQ(term2.getTitle(), "Spring 2026");
     ASSERT_EQ(term2.getStartDate(), todayDate);
@@ -323,7 +323,7 @@ TEST_F(TermTest, AddCourseAlreadyExists) {
 
 TEST_F(TermTest, RemoveCourseNotFound) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     std::string id = course2.getId();
 
     term1.addCourse(course1);
@@ -334,7 +334,7 @@ TEST_F(TermTest, RemoveCourseNotFound) {
 
 TEST_F(TermTest, FindCourseConstNotFound) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
 
     term1.addCourse(course1);
     std::string id = course2.getId();
@@ -346,7 +346,7 @@ TEST_F(TermTest, FindCourseConstNotFound) {
 
 TEST_F(TermTest, FindCourseNonConstNotFound) {
     Course course1{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
 
     term1.addCourse(course1);
     std::string id = course2.getId();

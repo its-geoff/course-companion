@@ -185,7 +185,7 @@ TEST_F(CourseTest, ActiveSetter) {
 }
 
 TEST_F(CourseTest, GradeScaleSetter) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {70.0, "P"},
         {0.0, "NP"}
@@ -199,35 +199,6 @@ TEST_F(CourseTest, GradeScaleSetter) {
 // INITIALIZATION SMOKE TESTS
 // ====================================
 
-// initializations without description defined
-TEST_F(CourseTest, ThreeParamInitialization) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
-    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
-    ASSERT_EQ(course2.getTitle(), "ENGR 195A");
-    ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
-    ASSERT_EQ(course2.getEndDate(), std::chrono::year_month_day{2025y/12/18});
-}
-
-TEST_F(CourseTest, FourParamInitialization) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
-    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
-    ASSERT_EQ(course2.getTitle(), "ENGR 195A");
-    ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
-    ASSERT_EQ(course2.getEndDate(), std::chrono::year_month_day{2025y/12/18});
-    ASSERT_EQ(course2.getNumCredits(), 1);
-}
-
-TEST_F(CourseTest, FiveParamInitialization) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1, false};
-    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
-    ASSERT_EQ(course2.getTitle(), "ENGR 195A");
-    ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
-    ASSERT_EQ(course2.getEndDate(), std::chrono::year_month_day{2025y/12/18});
-    ASSERT_EQ(course2.getNumCredits(), 1);
-    ASSERT_FALSE(course2.getActive());
-}
-
-// initializations with description defined
 TEST_F(CourseTest, FourParamDescInitialization) {
     Course course2{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
@@ -325,7 +296,7 @@ TEST_F(CourseTest, FindAssignmentNonConst) {
 }
 
 TEST_F(CourseTest, OverloadedEquals) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
     Course course4 = course1;
 
@@ -340,17 +311,17 @@ TEST_F(CourseTest, OverloadedEquals) {
 
 // empty parameters
 TEST_F(CourseTest, DescriptionGetterEmpty) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     ASSERT_EQ(course2.getDescription(), "");
 }
 
 TEST_F(CourseTest, NumCreditsGetterEmpty) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     ASSERT_EQ(course2.getNumCredits(), 3);
 }
 
 TEST_F(CourseTest, ActiveGetterEmpty) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     ASSERT_TRUE(course2.getActive());
 }
 
@@ -370,6 +341,18 @@ TEST_F(CourseTest, TitleSetterWhitespaceInvalid) {
     ASSERT_EQ(course1.getTitle(), "CMPE 142");
 }
 
+TEST_F(CourseTest, DescriptionSetterEmpty) {
+    course1.setDescription("");
+    // check if description is empty
+    ASSERT_TRUE(course1.getDescription().empty());
+}
+
+TEST_F(CourseTest, DescriptionSetterWhitespace) {
+    course1.setDescription("  ");
+    // check if description is empty
+    ASSERT_TRUE(course1.getDescription().empty());
+}
+
 TEST_F(CourseTest, StartDateSetterInvalid) {
     // throw invalid argument since date does not exist
     ASSERT_THROW(course1.setStartDate(std::chrono::year_month_day{2025y/2/30}), std::invalid_argument);
@@ -383,7 +366,7 @@ TEST_F(CourseTest, EndDateSetterInvalid) {
 }
 
 TEST_F(CourseTest, GradeWeightsSetterInvalid) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::unordered_map<std::string, float> gradeWeights2 = {
         {"Homework", 0.4},
         {"Midterm", 0.4},
@@ -471,14 +454,14 @@ TEST_F(CourseTest, GpaValSetterLowF) {
 }
 
 TEST_F(CourseTest, GradeScaleSetterEmpty) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {};
 
     ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
 }
 
 TEST_F(CourseTest, GradeScaleSetterMissingZero) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {80.0, "A"},
         {60.0, "C"}
@@ -488,7 +471,7 @@ TEST_F(CourseTest, GradeScaleSetterMissingZero) {
 }
 
 TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {110.0, "A++"},
         {60.0, "C"},
@@ -499,7 +482,7 @@ TEST_F(CourseTest, GradeScaleSetterInvalidHigh) {
 }
 
 TEST_F(CourseTest, GradeScaleSetterUpperBound) {
-    Course course2{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {
         {100.0, "A++"},
         {90.0, "A-"},
@@ -512,26 +495,6 @@ TEST_F(CourseTest, GradeScaleSetterUpperBound) {
 // ====================================
 // INITIALIZATION EDGE CASES
 // ====================================
-
-TEST_F(CourseTest, ThreeParamInitializationNoTitle) {
-    // throw invalid argument since title is empty
-    ASSERT_THROW((Course{"", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
-}
-
-TEST_F(CourseTest, ThreeParamInitializationInvalidStartDate) {
-    // throw invalid argument since start date does not exist
-    ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/2/31}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
-}
-
-TEST_F(CourseTest, ThreeParamInitializationInvalidEndDate) {
-    // throw invalid argument since end date does not exist
-    ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
-}
-
-TEST_F(CourseTest, FiveParamInitializationInvalidNumCredits) {
-    // throw out of range since input is not greater than or equal to 0
-    ASSERT_THROW((Course{"ENGR 195A", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, -4}), std::out_of_range);
-}
 
 TEST_F(CourseTest, FourParamDescInitializationNoTitle) {
     // throw invalid argument since title is empty
@@ -559,7 +522,7 @@ TEST_F(CourseTest, SixParamInitializationInvalidNumCredits) {
 
 TEST_F(CourseTest, PrintCourseInfoPartial) {
     std::stringstream ss;
-    Course course2{"CMPE 142", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
+    Course course2{"CMPE 142", "", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
     course2.printCourseInfo(ss);
     std::string output = ss.str();
 

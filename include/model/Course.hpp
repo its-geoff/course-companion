@@ -53,21 +53,12 @@ class Course {
         void validateGradeScale(const std::map<float, std::string>& gradeScale);
 
         std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const; // auto set during add or remove Assignment?
-        std::string calculateLetterGrade(float gradePct) const; // auto set during add or remove Assignment?
-        float calculateGpaVal(const std::string& letterGrade); // auto set during add or remove Assignment?
+        std::string calculateLetterGrade(float gradePct) const;
+        float calculateGpaVal(const std::string& letterGrade);
 
     public:
-        Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate);
-        Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate,
-            int numCredits);
-        Course(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate,
-            int numCredits, bool active);
         Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
-            std::chrono::year_month_day endDate);
-        Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
-            std::chrono::year_month_day endDate, int numCredits);
-        Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
-            std::chrono::year_month_day endDate, int numCredits, bool active);
+            std::chrono::year_month_day endDate, int numCredits = 3, bool active = true);
 
         std::string getId() const;
         std::string getTitle() const;
