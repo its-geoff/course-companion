@@ -501,17 +501,31 @@ TEST_F(CourseTest, FourParamDescInitializationNoTitle) {
     ASSERT_THROW((Course{"", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
 }
 
-TEST_F(CourseTest, FourParamInitializationInvalidStartDate) {
+TEST_F(CourseTest, FourParamDescInitializationInvalidStartDate) {
     // throw invalid argument since start date does not exist
     ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/2/31}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
 }
 
-TEST_F(CourseTest, FourParamInitializationInvalidEndDate) {
+TEST_F(CourseTest, FourParamDescInitializationInvalidEndDate) {
     // throw invalid argument since end date does not exist
     ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
 }
 
-TEST_F(CourseTest, SixParamInitializationInvalidNumCredits) {
+TEST_F(CourseTest, FourParamDescInitializationDefaultDates) {
+    Course course2{"ENGR 195A", "Global and Social Issues in Engineering", {}, {}};
+
+    // NOTE: must change line below before each test; time in UTC
+    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/7};
+    std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
+    ASSERT_EQ(course2.getTitle(), "ENGR 195A");
+    ASSERT_EQ(course2.getDescription(), "Global and Social Issues in Engineering");
+    ASSERT_EQ(course2.getStartDate(), todayDate);
+    ASSERT_EQ(course2.getEndDate(), defaultEnd);
+    ASSERT_EQ(course2.getNumCredits(), 3);
+    ASSERT_EQ(course2.getActive(), true);
+}
+
+TEST_F(CourseTest, SixParamDescInitializationInvalidNumCredits) {
     // throw out of range since input is not greater than or equal to 0
     ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, -4}), std::out_of_range);
 }

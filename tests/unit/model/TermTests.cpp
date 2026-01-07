@@ -282,6 +282,7 @@ TEST_F(TermTest, ThreeParamInitializationInvalidEndDate) {
 
 TEST_F(TermTest, ThreeParamInitializationDefaultDates) {
     Term term2{"Spring 2026", {}, {}};
+    
     // NOTE: must change line below before each test; time in UTC
     std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/7};
     std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};

@@ -146,8 +146,6 @@ Course::Course(std::string title, std::string description, std::chrono::year_mon
     title_ = std::move(title);
     if (!utils::isOnlyWhitespace(description)) {
         description_ = std::move(description);
-    } else {
-        description_ = "";
     }
     startDate_ = startDate;
     endDate_ = endDate;
