@@ -1,4 +1,4 @@
-build/
 .zshrc
 CMakeUserPresets.json
+build/
 tests/output_logs/

@@ -48,6 +48,14 @@ add_test(NAME CliViewTests COMMAND CliViewTests)
 enable_coverage(CliViewTests)
 
 # --------------------------------
+# CourseControllerTests executable
+# --------------------------------
+add_executable(CourseControllerTests unit/controller/CourseControllerTests.cpp)
+target_link_libraries(CourseControllerTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME CourseControllerTests COMMAND CourseControllerTests)
+enable_coverage(CourseControllerTests)
+
+# --------------------------------
 # TermControllerTests executable
 # --------------------------------
 add_executable(TermControllerTests unit/controller/TermControllerTests.cpp)
@@ -71,6 +79,7 @@ foreach(test_target
     CourseTests 
     TermTests 
     CliViewTests 
+    CourseControllerTests 
     TermControllerTests 
     UtilsTests
     )

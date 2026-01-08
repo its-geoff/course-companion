@@ -46,6 +46,40 @@ namespace {
             return startDateUpdated || endDateUpdated;
         }
     };
+
+    // edit course result struct to replace multiple flags
+    struct EditCourseResult {
+        bool titleRequested{false};
+        bool titleUpdated{false};
+        
+        bool descriptionRequested{false};
+        bool descriptionUpdated{false};
+
+        bool startDateRequested{false};
+        bool startDateUpdated{false};
+
+        bool endDateRequested{false};
+        bool endDateUpdated{false};
+
+        bool numCreditsRequested{false};
+        bool numCreditsUpdated{false};
+
+        bool activeRequested{false};
+        bool activeUpdated{false};
+
+        bool anyRequested() const {
+            return titleRequested || descriptionRequested || startDateRequested 
+                || endDateRequested || numCreditsRequested || activeRequested;
+        }
+
+        bool datesRequested() const {
+            return startDateRequested || endDateRequested;
+        }
+
+        bool datesUpdated() const {
+            return startDateUpdated || endDateUpdated;
+        }
+    };
 }
 
 // takes date as string input and converts to year_month_day format
@@ -96,6 +130,7 @@ void CliView::displayTermMenu() const {
     out_ << "                                             Term Menu                                             " << "\n";
     out_ << "                                 What would you like to do today?                                  " << "\n";
 
+    // check if there are terms in the list
     if (controller_.getTermList().size() > 0) {
         out_ << "[A] Add term" << "\n";
         out_ << "[E] Edit term" << "\n";
@@ -115,18 +150,25 @@ void CliView::displayCourseMenu() const {
     displayDelim();
     out_ << "                                            Course Menu                                            " << "\n";
     out_ << "                                 What would you like to do today?                                  " << "\n";
-    out_ << "[A] Add course" << "\n";
-    out_ << "[E] Edit course" << "\n";
-    out_ << "[S] Select course" << "\n";
-    out_ << "[R] Remove course" << "\n";
-    out_ << "[X] Exit to term menu" << "\n";
+
+    // check if there are courses in the list
+    if (selectedTerm_->get().getCourseList().size() > 0) {
+            out_ << "[A] Add course" << "\n";
+            out_ << "[E] Edit course" << "\n";
+            out_ << "[S] Select course" << "\n";
+            out_ << "[R] Remove course" << "\n";
+            out_ << "[X] Exit to term menu" << "\n";
+    } else {
+            out_ << "[A] Add course" << "\n";
+            out_ << "[X] Exit to term menu" << "\n";
+    }
 }
 
 // prints a menu of choices for the user to select an Assignment
 void CliView::displayAssignmentMenu() const {
     displayDelim();
     out_ << "Term: " << selectedTerm_->get().getTitle() << "\n";
-    out_ << "Course: " << "\n";
+    out_ << "Course: " << selectedCourse_->get().getTitle() << "\n";
     displayDelim();
     out_ << "                                          Assignment Menu                                          " << "\n";
     out_ << "                                 What would you like to do today?                                  " << "\n";
@@ -144,6 +186,17 @@ void CliView::displayTermListInfo() const {
     for (const auto& [id, term] : terms) {
         displaySecondaryDelim();
         term.printTermInfo(out_);
+        displaySecondaryDelim();
+    }
+}
+
+// displays informationa about all courses from the selected term
+void CliView::displayCourseListInfo() const {
+    const std::unordered_map<std::string, Course>& courses = selectedTerm_->get().getCourseList();
+
+    for (const auto& [id, course] : courses) {
+        displaySecondaryDelim();
+        course.printCourseInfo(out_);
         displaySecondaryDelim();
     }
 }
@@ -174,11 +227,18 @@ void CliView::promptAddTerm() {
     }
     
     std::chrono::year_month_day startDate{};
+    constexpr std::chrono::year_month_day emptyDate{};
     while (invalidStartDate) {
         try {
             startDate = getDateInput("Start Date (YYYY-MM-DD)", {});
-            // check if date exists before advancing
-            utils::validateDate(startDate);
+            
+            // check if date is empty (default); if not, validate input
+            if (startDate == emptyDate) {
+                out_ << "Using default date." << "\n";
+            } else {
+                utils::validateDate(startDate);
+            }
+
             invalidStartDate = false;
         } catch (const std::exception& e) {
             out_ << "Invalid start date. Start date must be a valid date. Please try again." << "\n";
@@ -189,15 +249,21 @@ void CliView::promptAddTerm() {
     while (invalidEndDate) {
         try {
             endDate = getDateInput("End Date (YYYY-MM-DD)", {});
-            // check if date exists before advancing
-            utils::validateDate(endDate);
+
+            // check if date is empty (default); if not, validate input
+            if (endDate == emptyDate) {
+                out_ << "Using default date." << "\n";
+            } else {
+                utils::validateDate(endDate);
+            }
+
             invalidEndDate = false;
         } catch (const std::exception& e) {
             out_ << "Invalid end date. End date must be a valid date. Please try again." << "\n";
         }
     }
 
-    bool active{true};
+    bool active{};
     while (invalidActive) {
         try {
             active = getBoolInput("Current term? (yes/no)", true);
@@ -219,7 +285,6 @@ void CliView::promptAddTerm() {
 
 // prompt the user for the information to edit a term in the current list
 void CliView::promptEditTerm() {
-    // update request and success flags
     EditTermResult resultFlags;
     std::vector<std::string> editFields{};
 
@@ -239,6 +304,7 @@ void CliView::promptEditTerm() {
     std::string toUpdate = getStringInput("Fields to update (comma separated)", " ");
     toUpdate = utils::stringLower(toUpdate);
     editFields = splitStringByComma(toUpdate);
+
     // get updated info and perform update
     for (auto& field : editFields) {
         // trim whitespace from strings
@@ -253,7 +319,7 @@ void CliView::promptEditTerm() {
                 controller_.editTitle(id, newTitle);
                 resultFlags.titleUpdated = true;
             } catch (const std::invalid_argument& e) {
-                out_ << "Invalid string. Cannot update title." << "\n";
+                out_ << "Empty string. Cannot update title." << "\n";
             } catch (const std::logic_error& e) {
                 out_ << "A term with this title already exists. Cannot update title." << "\n";
             }
@@ -369,6 +435,300 @@ void CliView::promptRemoveTerm() {
         }
     } else {
         out_ << "Operation cancelled. Term '" << title << "' was not removed." << "\n";
+    }
+}
+
+// prompt the user for information to add a course into the list
+void CliView::promptAddCourse() {
+    bool titleEmpty{true};
+    bool invalidStartDate{true};
+    bool invalidEndDate{true};
+    bool invalidNumCredits{true};
+    bool invalidActive{true};
+
+    out_ << "Enter the following information for the course you'd like to add: " << "\n";
+
+    std::string title{};
+    while (titleEmpty) {
+        title = getStringInput("Title", " ");
+
+        if (utils::isOnlyWhitespace(title)) {
+            out_ << "Invalid title. Title must be non-empty. Please try again." << "\n";
+        } else {
+            titleEmpty = false;
+        }
+    }
+
+    std::string description{};
+    description = getStringInput("Description", " ");
+
+    // empty description condition
+    if (utils::isOnlyWhitespace(description)) {
+        description = "";
+    }
+
+    std::chrono::year_month_day startDate{};
+    constexpr std::chrono::year_month_day emptyDate{};
+    while (invalidStartDate) {
+        try {
+            startDate = getDateInput("Start Date (YYYY-MM-DD)", {});
+            
+            // check if date is empty (default); if not, validate input
+            if (startDate == emptyDate) {
+                out_ << "Using default date." << "\n";
+            } else {
+                utils::validateDate(startDate);
+            }
+
+            invalidStartDate = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid start date. Start date must be a valid date. Please try again." << "\n";
+        }
+    }
+    
+    std::chrono::year_month_day endDate{};
+    while (invalidEndDate) {
+        try {
+            endDate = getDateInput("End Date (YYYY-MM-DD)", {});
+
+            // check if date is empty (default); if not, validate input
+            if (endDate == emptyDate) {
+                out_ << "Using default date." << "\n";
+            } else {
+                utils::validateDate(endDate);
+            }
+
+            invalidEndDate = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid end date. End date must be a valid date. Please try again." << "\n";
+        }
+    }
+
+    int numCredits{};
+    while (invalidNumCredits) {
+        numCredits = getIntInput("Number of credits", 3);
+        
+        if (numCredits < 0) {
+            out_ << "Invalid number of credits. Number of credits must be greater than or equal to 0. Please try again." << "\n";
+        } else {
+            invalidNumCredits = false;
+        }
+    }
+
+    bool active{};
+    while (invalidActive) {
+        try {
+            active = getBoolInput("Current term? (yes/no)", true);
+            invalidActive = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid active flag. Active flag must be a valid boolean. Please try again." << "\n";
+        }
+    }
+
+    try {
+        CourseController& courseController = controller_.getCourseController(selectedTerm_->get());
+        courseController.addCourse(title, description, startDate, endDate, numCredits, active);
+    } catch (const std::logic_error& e) {
+        out_ << "A course with this title already exists. Please choose a new title." << "\n";
+    } catch (const std::exception& e) {
+        out_ << "An unexpected error occurred while adding the term." << "\n";
+    }
+}
+
+// prompt the user for information to edit a course in the current list
+void CliView::promptEditCourse() {
+    EditCourseResult resultFlags;
+    std::vector<std::string> editFields{};
+    CourseController& courseController = controller_.getCourseController(selectedTerm_->get());
+
+    out_ << "Enter the following information for the course you'd like to edit: " << "\n";
+    std::string title = getStringInput("Title", " ");
+
+    try {
+        selectedCourse_ = courseController.findCourse(title);
+    } catch (const std::exception& e) {
+        out_ << "Course not found. Operation cancelled." << "\n";
+        return;
+    }
+    std::string id = selectedCourse_->get().getId();
+
+    // get fields that need to be updated and normalize input
+    out_ << "Fields available: title, description, start date, end date, number of credits, active" << "\n";
+    std::string toUpdate = getStringInput("Fields to update (comma separated)", " ");
+    toUpdate = utils::stringLower(toUpdate);
+    editFields = splitStringByComma(toUpdate);
+
+    // get updated info and perform update
+    for (auto& field : editFields) {
+        // trim whitespace from strings
+        field = utils::stringTrim(field);
+
+        if (field == "title") {
+            resultFlags.titleRequested = true;
+
+            try {
+                std::string newTitle = getStringInput("New title", " ");
+                utils::validateTitle(newTitle);
+                courseController.editTitle(id, newTitle);
+                resultFlags.titleUpdated = true;
+            } catch (const std::invalid_argument& e) {
+                out_ << "Empty string. Cannot update title." << "\n";
+            } catch (const std::logic_error& e) {
+                out_ << "A course with this title already exists. Cannot update title." << "\n";
+            }
+        } else if (field == "description") {
+            resultFlags.descriptionRequested = true;
+
+            std::string oldDescription = selectedCourse_->get().getDescription();
+            std::string newDescription = getStringInput("New description", " ");
+            courseController.editDescription(id, newDescription);
+
+            // only set descriptionUpdated if old and new descriptions are not both whitespace
+            if (!(utils::isOnlyWhitespace(oldDescription)) || !(utils::isOnlyWhitespace(newDescription))) {
+                resultFlags.descriptionUpdated = true;
+            }
+        } else if (field == "start date" || field == "startdate") {
+            resultFlags.startDateRequested = true;
+
+            try {
+                std::chrono::year_month_day newStartDate = getDateInput("New start date", {});
+                utils::validateDate(newStartDate);
+                courseController.editStartDate(id, newStartDate);
+                resultFlags.startDateUpdated = true;
+            } catch (const std::exception& e) {
+                out_ << "Invalid date. Cannot update start date." << "\n";
+            }
+        } else if (field == "end date" || field == "enddate") {
+            resultFlags.endDateRequested = true;
+
+            try {
+                std::chrono::year_month_day newEndDate = getDateInput("New end date", {});
+                utils::validateDate(newEndDate);
+                courseController.editEndDate(id, newEndDate);
+                resultFlags.endDateUpdated = true;
+            } catch (const std::exception& e) {
+                out_ << "Invalid date. Cannot update end date." << "\n";
+            }
+        } else if (field == "number of credits" || field == "numberofcredits" || field == "numcredits") {
+            resultFlags.numCreditsRequested = true;
+
+            int newNumCredits = getIntInput("New number of credits", 3);
+
+            if (newNumCredits < 0) {
+                out_ << "Number of credits must be greater than or equal to 0. Cannot update number of credits." << "\n";
+            } else {
+                courseController.editNumCredits(id, newNumCredits);
+                resultFlags.numCreditsUpdated = true;
+            }
+        } else if (field == "active") {
+            resultFlags.activeRequested = true;
+
+            try {
+                bool newActive = getBoolInput("Is this a current term? (yes/no)", true);
+                courseController.editActive(id, newActive);
+                resultFlags.activeUpdated = true;
+            } catch (const std::exception& e) {
+                out_ << "Invalid boolean. Cannot update active flag." << "\n";
+            }
+        }
+    }
+
+    if (resultFlags.anyRequested()) {
+        out_ << "Update results:" << "\n";
+
+        if (resultFlags.titleRequested) {
+            if (resultFlags.titleUpdated) {
+                out_ << "Title: " << selectedCourse_->get().getTitle() << "\n";
+            } else {
+                out_ << "Title: (unchanged)" << "\n";
+            }
+        }
+
+        if (resultFlags.descriptionRequested) {
+            if (resultFlags.descriptionUpdated) {
+                out_ << "Description: " << selectedCourse_->get().getDescription() << "\n";
+            } else {
+                out_ << "Description: (unchanged)" << "\n";
+            }
+        }
+
+        if (resultFlags.datesRequested()) {
+            if (resultFlags.datesUpdated()) {
+                out_ << "Duration: " << selectedCourse_->get().getStartDate() << " - " << selectedTerm_->get().getEndDate() << "\n";
+            } else {
+                out_ << "Duration: (unchanged)" << "\n";
+            }
+        }
+
+        if (resultFlags.numCreditsRequested) {
+            if (resultFlags.numCreditsUpdated) {
+                out_ << "Number of credits: " << selectedCourse_->get().getNumCredits() << "\n";
+            } else {
+                out_ << "Number of credits: (unchanged)" << "\n";
+            }
+        }
+
+        if (resultFlags.activeRequested) {
+            if (resultFlags.activeUpdated) {
+                out_ << "Current? " << utils::boolToString(selectedCourse_->get().getActive()) << "\n";
+            } else {
+                out_ << "Current? (unchanged)" << "\n";
+            }
+        }
+    }
+
+    // reset selectedCourse to allow the selection of a new one
+    selectedCourse_.reset();
+}
+
+// prompt the uesr for the title to select a course from the list
+void CliView::promptSelectCourse() {
+    CourseController& courseController = controller_.getCourseController(selectedTerm_->get());;
+
+    out_ << "Here is a list of all courses:" << "\n";
+    displayCourseListInfo();
+
+    out_ << "Enter the following information for the course you'd like to select: " << "\n";
+    std::string title = getStringInput("Title", " ");
+
+    try {
+        selectedCourse_ = courseController.findCourse(title);
+        out_ << "Course '" << title << "' was selected." << "\n";
+    } catch (const std::exception& e) {
+        out_ << courseController.getCourseId(title);
+        // out_ << "Course not found. No selection made." << "\n";
+        selectedCourse_.reset();
+    }
+}
+
+// prompt the user for the title to remove a course from the list
+void CliView::promptRemoveCourse() {
+    bool invalidBool{true};
+    CourseController& courseController = controller_.getCourseController(selectedTerm_->get());
+
+    out_ << "Enter the following information for the course you'd like to remove: " << "\n";
+    std::string title = getStringInput("Title", " ");
+
+    // confirmation before removal
+    bool confirm{false};
+    while (invalidBool) {
+        try {
+            confirm = getBoolInput("Are you sure you want to remove this course? (yes/no)", false);
+            invalidBool = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid response. Please try again." << "\n";
+        }
+    }
+
+    if (confirm) {
+        try {
+            courseController.removeCourse(title);
+            out_ << "Course '" << title << "' was removed." << "\n";
+        } catch (const std::exception& e) {
+            out_ << "Course not found. Operation cancelled." << "\n";
+        }
+    } else {
+        out_ << "Operation cancelled. Course '" << title << "' was not removed." << "\n";
     }
 }
 
@@ -564,23 +924,42 @@ void CliView::run() {
             switch (userInput) {
                 case 'A':
                     // add course
-                    out_ << "Add course placeholder" << "\n";
+                    promptAddCourse();
                     break;
                 case 'E':
                     // edit course
-                    out_ << "Edit course placeholder" << "\n";
+                    if (selectedTerm_->get().getCourseList().size() > 0) {
+                        promptEditCourse();
+                    } else {
+                        displayInvalidSelection();
+                    }
+
                     break;
                 case 'S':
                     // select course
-                    out_ << "Select course placeholder" << "\n";
-                    state = MenuState::assignment;
+                    if (selectedTerm_->get().getCourseList().size() > 0) {
+                        promptSelectCourse();
+
+                        if (selectedCourse_) {
+                            state = MenuState::assignment;
+                        }
+                    } else {
+                        displayInvalidSelection();
+                    }
+
                     break;
                 case 'R':
                     // remove course
-                    out_ << "Remove course placeholder" << "\n";
+                    if (selectedTerm_->get().getCourseList().size() > 0) {
+                        promptRemoveCourse();
+                    } else {
+                        displayInvalidSelection();
+                    }
+
                     break;
                 case 'X':
                     // exit
+                    selectedTerm_.reset();
                     state = MenuState::term;
                     break;
                 default:
@@ -614,6 +993,7 @@ void CliView::run() {
                     break;
                 case 'X':
                     // exit
+                    selectedCourse_.reset();
                     state = MenuState::course;
                     break;
                 default:

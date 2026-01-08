@@ -15,6 +15,7 @@
 #include "model/Assignment.hpp"   // for references to Assignment
 
 namespace utils {
+    std::chrono::year_month_day getTodayDate();
     bool isOnlyWhitespace(const std::string str);
     std::string generateUuid();
     void validateTitle(std::string title);

@@ -12,6 +12,7 @@
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
 #include <unordered_map>    // for Term objects
+#include "controller/CourseController.hpp"  // reference to CourseController
 #include "model/Term.hpp"
 
 /**
@@ -26,19 +27,27 @@ class TermController {
     private:
         std::unordered_map<std::string, Term> termList_{};     // id -> Term
         std::unordered_map<std::string, std::string> titleToId_{};   // title -> id, titles in lowercase for easier comparison
+        std::unordered_map<std::string, CourseController> courseControllers_{};    // all CourseControllers
 
     public:
+        TermController() = default;
+        // prevent copies and require references
+        TermController(const TermController&) = delete;
+        TermController& operator=(const TermController&) = delete;
+
         const std::unordered_map<std::string, Term>& getTermList() const;
         std::string getTermId(const std::string& title) const;
+        CourseController& getCourseController(Term &term);
 
-        void addTerm(const std::string& title, const std::chrono::year_month_day& startDate, const std::chrono::year_month_day& endDate, bool active);
+        void addTerm(const std::string& title, const std::chrono::year_month_day& startDate, 
+            const std::chrono::year_month_day& endDate, bool active);
         void editTitle(const std::string& id, const std::string& newTitle);
         void editStartDate(const std::string& id, const std::chrono::year_month_day& newStartDate);
         void editEndDate(const std::string& id, const std::chrono::year_month_day& newEndDate);
-        void editActive(const std::string& id, bool active);
+        void editActive(const std::string& id, bool newActive);
         void removeTerm(const std::string& title);
         const Term& findTerm(const std::string& title) const;    // non-mutable version
-        Term &findTerm(const std::string &title);    // mutable version
+        Term &findTerm(const std::string& title);    // mutable version
 };
 
 #endif  // TERMCONTROLLER_HPP

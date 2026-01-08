@@ -369,11 +369,10 @@ TEST(CliViewTest, AddTermStartDateEmpty) {
     CliView view(controller, input, output);
     view.run();
 
-    // check for intro and invalid input message
+    // check for intro and default date message
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
-    ASSERT_TRUE(userOut.find("Invalid start date") != std::string::npos);
-    ASSERT_TRUE(userOut.find("Start date must be a valid date") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Using default date") != std::string::npos);
 }
 
 TEST(CliViewTest, AddTermStartDateWrongFormat) {
@@ -444,11 +443,10 @@ TEST(CliViewTest, AddTermEndDateEmpty) {
     CliView view(controller, input, output);
     view.run();
 
-    // check for intro and invalid input message
+    // check for intro and default date message
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
-    ASSERT_TRUE(userOut.find("Invalid end date") != std::string::npos);
-    ASSERT_TRUE(userOut.find("End date must be a valid date") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Using default date") != std::string::npos);
 }
 
 TEST(CliViewTest, AddTermEndDateWrongFormat) {
@@ -671,7 +669,7 @@ TEST(CliViewTest, EditTermNewTitleEmpty) {
     // check for intro and invalid input message
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
-    ASSERT_TRUE(userOut.find("Invalid string") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Empty string") != std::string::npos);
     ASSERT_TRUE(userOut.find("Cannot update title") != std::string::npos);
 }
 
@@ -1142,3 +1140,7 @@ TEST(CliViewTest, RemoveTermNotConfirmed) {
     ASSERT_TRUE(userOut.find("Operation cancelled") != std::string::npos);
     ASSERT_TRUE(userOut.find("not removed") != std::string::npos);
 }
+
+// NOTE: add edit tests where fields are changed to the same value
+//      - expected: result says (unchanged)
+//      - if this is not the case, add this functionality

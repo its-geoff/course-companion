@@ -514,8 +514,7 @@ TEST_F(CourseTest, FourParamDescInitializationInvalidEndDate) {
 TEST_F(CourseTest, FourParamDescInitializationDefaultDates) {
     Course course2{"ENGR 195A", "Global and Social Issues in Engineering", {}, {}};
 
-    // NOTE: must change line below before each test; time in UTC
-    std::chrono::year_month_day todayDate = std::chrono::year_month_day{2026y/1/7};
+    std::chrono::year_month_day todayDate = utils::getTodayDate();
     std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
     ASSERT_EQ(course2.getTitle(), "ENGR 195A");
     ASSERT_EQ(course2.getDescription(), "Global and Social Issues in Engineering");
