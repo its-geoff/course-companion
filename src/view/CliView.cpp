@@ -190,7 +190,7 @@ void CliView::displayTermListInfo() const {
     }
 }
 
-// displays informationa about all courses from the selected term
+// displays information about all courses from the selected term
 void CliView::displayCourseListInfo() const {
     const std::unordered_map<std::string, Course>& courses = selectedTerm_->get().getCourseList();
 
@@ -519,7 +519,7 @@ void CliView::promptAddCourse() {
     bool active{};
     while (invalidActive) {
         try {
-            active = getBoolInput("Current term? (yes/no)", true);
+            active = getBoolInput("Current course? (yes/no)", true);
             invalidActive = false;
         } catch (const std::exception& e) {
             out_ << "Invalid active flag. Active flag must be a valid boolean. Please try again." << "\n";
@@ -532,7 +532,7 @@ void CliView::promptAddCourse() {
     } catch (const std::logic_error& e) {
         out_ << "A course with this title already exists. Please choose a new title." << "\n";
     } catch (const std::exception& e) {
-        out_ << "An unexpected error occurred while adding the term." << "\n";
+        out_ << "An unexpected error occurred while adding the course." << "\n";
     }
 }
 
@@ -625,7 +625,7 @@ void CliView::promptEditCourse() {
             resultFlags.activeRequested = true;
 
             try {
-                bool newActive = getBoolInput("Is this a current term? (yes/no)", true);
+                bool newActive = getBoolInput("Is this a current course? (yes/no)", true);
                 courseController.editActive(id, newActive);
                 resultFlags.activeUpdated = true;
             } catch (const std::exception& e) {
@@ -655,7 +655,7 @@ void CliView::promptEditCourse() {
 
         if (resultFlags.datesRequested()) {
             if (resultFlags.datesUpdated()) {
-                out_ << "Duration: " << selectedCourse_->get().getStartDate() << " - " << selectedTerm_->get().getEndDate() << "\n";
+                out_ << "Duration: " << selectedCourse_->get().getStartDate() << " - " << selectedCourse_->get().getEndDate() << "\n";
             } else {
                 out_ << "Duration: (unchanged)" << "\n";
             }
@@ -682,9 +682,9 @@ void CliView::promptEditCourse() {
     selectedCourse_.reset();
 }
 
-// prompt the uesr for the title to select a course from the list
+// prompt the user for the title to select a course from the list
 void CliView::promptSelectCourse() {
-    CourseController& courseController = controller_.getCourseController();;
+    CourseController& courseController = controller_.getCourseController();
 
     out_ << "Here is a list of all courses:" << "\n";
     displayCourseListInfo();

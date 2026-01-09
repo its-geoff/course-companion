@@ -195,7 +195,7 @@ TEST_F(CourseControllerTest, CourseIdGetterNotFound) {
 // FUNCTION EDGE CASES
 // ====================================
 
-TEST_F(CourseControllerTest, AddTermAlreadyExists) {
+TEST_F(CourseControllerTest, AddCourseAlreadyExists) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
     // logic error since course already exists
     ASSERT_THROW(controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false), std::logic_error);
@@ -205,7 +205,7 @@ TEST_F(CourseControllerTest, EditTitleAlreadyExists) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
     std::string id = controller.getCourseId("ENGR 195A");
 
-    // logic error since term alraedy exists (title not changed)
+    // logic error since term already exists (title not changed)
     ASSERT_THROW(controller.editTitle(id, "ENGR 195A"), std::logic_error);
 }
 
@@ -213,7 +213,7 @@ TEST_F(CourseControllerTest, EditTitleAlreadyExistsDifferentCase) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
     std::string id = controller.getCourseId("ENGR 195A");
 
-    // logic error since term alraedy exists (title not changed)
+    // logic error since term already exists (title not changed)
     ASSERT_THROW(controller.editTitle(id, "engr 195A"), std::logic_error);
 }
 

@@ -2,7 +2,7 @@
 
 /**
  * @file CourseController.cpp
- * @brief Implementation of an a controller that manages interaction between the views and Course.
+ * @brief Implementation of a controller that manages interaction between the views and Course.
  * 
  * This controller implements functions that integrate the classes together and allow for code 
  * reusability within the main function.
@@ -36,8 +36,7 @@ void CourseController::addCourse(const std::string& title, const std::string& de
     try {
         term_.addCourse(course);
     } catch (const std::exception& e) {
-        // if error found, skip rest of function
-        return;
+        throw std::runtime_error("An unexpected error occurred when adding the course.");
     }
 
     // make title lowercase in titleToId for easier comparison
@@ -47,8 +46,6 @@ void CourseController::addCourse(const std::string& title, const std::string& de
         term_.removeCourse(course.getId());     // erase Course object if there's an error
         throw std::logic_error("Course with the same title already exists.");
     }
-
-    std::string titleLower = utils::stringLower(course.getTitle());
 }
 
 // edits the title of the Course with the given ID

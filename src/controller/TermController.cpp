@@ -2,7 +2,7 @@
 
 /**
  * @file TermController.cpp
- * @brief Implementation of an a controller that manages interaction between the views and Term. 
+ * @brief Implementation of a controller that manages interaction between the views and Term. 
  * 
  * This controller implements functions that integrate the classes together and allow for code 
  * reusability within the main function.

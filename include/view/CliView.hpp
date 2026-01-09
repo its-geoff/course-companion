@@ -53,7 +53,7 @@ class CliView {
         void displayAssignmentMenu() const;
         void displayTermListInfo() const;
         void displayCourseListInfo() const;
-        void displayAssignmentListInfo() const;
+        // void displayAssignmentListInfo() const;
         void displayInvalidSelection() const;
 
         void promptAddTerm();
