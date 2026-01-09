@@ -17,6 +17,23 @@ class CourseControllerTest : public testing::Test {
 // GETTER SMOKE TESTS
 // ====================================
 
+TEST_F(CourseControllerTest, CourseListGetter) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+    controller.addCourse("CMPE 142", "Operating Systems", {}, {}, 3, true);
+
+    const std::unordered_map<std::string, Course> &listOfCourses = controller.getCourseList();
+    ASSERT_EQ(listOfCourses.size(), 2);
+
+    // check if both added courses are in the list
+    std::string id1 = controller.getCourseId("ENGR 195A");
+    auto it1 = listOfCourses.find(id1);
+    ASSERT_TRUE(it1 != listOfCourses.end());
+
+    std::string id2 = controller.getCourseId("CMPE 142");
+    auto it2 = listOfCourses.find(id2);
+    ASSERT_TRUE(it2 != listOfCourses.end());
+}
+
 TEST_F(CourseControllerTest, CourseIdGetter) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
     controller.addCourse("CMPE 142", "Operating Systems", {}, {}, 3, true);
@@ -119,7 +136,7 @@ TEST_F(CourseControllerTest, RemoveCourse) {
 
     controller.removeCourse("ENGR 195A");
 
-    const std::unordered_map<std::string, Course>& listOfCourses = term.getCourseList();
+    const std::unordered_map<std::string, Course>& listOfCourses = controller.getCourseList();
     ASSERT_EQ(listOfCourses.size(), 1);
 
     // throw out of range since the course is not in the list
@@ -160,6 +177,11 @@ TEST_F(CourseControllerTest, FindCourseNonConst) {
 // ====================================
 // GETTER EDGE CASES
 // ====================================
+
+TEST_F(CourseControllerTest, CourseListGetterEmpty) {
+    const std::unordered_map<std::string, Course>& listOfCourses = controller.getCourseList();
+    ASSERT_EQ(listOfCourses.size(), 0);
+}
 
 TEST_F(CourseControllerTest, CourseIdGetterNotFound) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);

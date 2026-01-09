@@ -25,17 +25,12 @@ std::string TermController::getTermId(const std::string& title) const {
     return it->second;
 }
 
-CourseController& TermController::getCourseController(Term& term) {
-    std::string termId = term.getId();
-
-    // create controller if it doesn't exist
-    auto it = courseControllers_.find(termId);
-
-    if (it == courseControllers_.end()) {
-        courseControllers_.emplace(termId, CourseController{term});
+CourseController& TermController::getCourseController() {
+    if (!courseController_.has_value()) {
+        throw std::logic_error("No term selected.");
     }
 
-    return courseControllers_.at(termId);
+    return *courseController_;
 }
 
 // uses info from CliView to create a Term object then add it to the list of terms
@@ -106,4 +101,15 @@ const Term& TermController::findTerm(const std::string& title) const {
 Term& TermController::findTerm(const std::string& title) {
     std::string id = getTermId(title);
     return termList_.at(id);
+}
+
+// selects a term and makes it "active", creating a CourseController for that term
+void TermController::selectTerm(const std::string& title) {
+    try {
+        Term& termRef = findTerm(title);
+        activeTerm_ = &termRef;
+        courseController_.emplace(*activeTerm_);
+    } catch (const std::exception& e) {
+        throw std::out_of_range("Term not found.");
+    }
 }

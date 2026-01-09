@@ -103,7 +103,7 @@ TEST(CliViewTest, EditTerm) {
     const Term &selectedTerm = controller.findTerm("Fall 2025");
     ASSERT_EQ(selectedTerm.getTitle(), "Fall 2025");
     ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2025y/8/2});
-    ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2025y / 12 / 11});
+    ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2025y/12/11});
     ASSERT_FALSE(selectedTerm.getActive());
 
     // check user output for both the prompt and the success message
@@ -179,6 +179,202 @@ TEST(CliViewTest, RemoveTerm) {
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("Enter the following information") != std::string::npos);
     ASSERT_TRUE(userOut.find("was removed") != std::string::npos);
+}
+
+TEST(CliViewTest, AddCourse) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check that courseList size is not 0
+    const std::unordered_map<std::string, Course>& listofCourses = controller.getCourseController().getCourseList();
+    ASSERT_EQ(listofCourses.size(), 1);
+    
+    // check that Term was added to the list
+    const Term &selectedTerm = controller.findTerm("Spring 2025");
+    ASSERT_EQ(selectedTerm.getTitle(), "Spring 2025");
+    ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2025y/1/10});
+    ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2025y/5/23});
+    ASSERT_TRUE(selectedTerm.getActive());
+
+    // check user output for both the prompt and the success message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Enter the following information") != std::string::npos);
+    ASSERT_TRUE(userOut.find("successfully added") != std::string::npos);
+}
+
+TEST(CliViewTest, EditCourse) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // edit course
+        "E\n"
+        "ENGR 195A\n"
+        "title, description, start date, end date, number of credits, active\n"
+        "CMPE 152\n"
+        "Compiler Design\n"
+        "2026-1-3\n"
+        "2026-5-22\n"
+        "2\n"
+        "no\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check that courseList size is not 0
+    const std::unordered_map<std::string, Course>& listofCourses = controller.getCourseController().getCourseList();
+    ASSERT_EQ(listofCourses.size(), 1);
+
+    // check that info was updated in list
+    const Course &selectedCourse = controller.getCourseController().findCourse("CMPE 152");
+    ASSERT_EQ(selectedCourse.getTitle(), "CMPE 152");
+    ASSERT_EQ(selectedCourse.getDescription(), "Compiler Design");
+    ASSERT_EQ(selectedCourse.getStartDate(), std::chrono::year_month_day{2026y/1/3});
+    ASSERT_EQ(selectedCourse.getEndDate(), std::chrono::year_month_day{2026y/5/22});
+    ASSERT_EQ(selectedCourse.getNumCredits(), 2);
+    ASSERT_FALSE(selectedCourse.getActive());
+
+    // check user output for both the prompt and the success message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("for the course you'd like to edit") != std::string::npos);
+    ASSERT_TRUE(userOut.find("New number of credits") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Update results") != std::string::npos);
+}
+
+TEST(CliViewTest, SelectCourse) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check that courseList size is not 0
+    const std::unordered_map<std::string, Course>& listofCourses = controller.getCourseController().getCourseList();
+    ASSERT_EQ(listofCourses.size(), 1);
+
+    // check user output for both the prompt and the success message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("for the course you'd like to select") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Course 'ENGR 195A' was selected") != std::string::npos);
+}
+
+TEST(CliViewTest, RemoveCourse) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        "A\n"
+        "CMPE 142\n"
+        "Operating Systems\n"
+        "2025-1-1\n"
+        "2025-5-23\n"
+        "3\n"
+        "no\n"
+        // remove course
+        "R\n"
+        "ENGR 195A\n"
+        "yes\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check that courseList size is 1
+    const std::unordered_map<std::string, Course>& listofCourses = controller.getCourseController().getCourseList();
+    ASSERT_EQ(listofCourses.size(), 1);
+
+    // check that courseList does not include removed Course
+    ASSERT_THROW(controller.getCourseController().findCourse("ENGR 195A"), std::out_of_range);
+
+    // check user output for both the prompt and the success message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("for the course you'd like to remove") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Course 'ENGR 195A' was removed") != std::string::npos);
 }
 
 // ====================================
@@ -325,6 +521,37 @@ TEST(CliViewTest, TermMenuInvalidSelection) {
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid selection") != std::string::npos);
 }
+
+TEST(CliViewTest, CourseMenuInvalidSelection) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // try to remove course
+        "R\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid selection message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Term 'Spring 2025' was selected") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid selection") != std::string::npos);
+}
+
+// START WITH ADD COURSE EDGE CASES
 
 TEST(CliViewTest, AddTermTitleEmpty) {
     std::istringstream input(

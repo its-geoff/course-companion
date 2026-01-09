@@ -400,6 +400,7 @@ void CliView::promptSelectTerm() {
     std::string title = getStringInput("Title", " ");
 
     try {
+        controller_.selectTerm(title);
         selectedTerm_ = controller_.findTerm(title);
         out_ << "Term '" << title << "' was selected." << "\n";
     } catch (const std::exception& e) {
@@ -526,7 +527,7 @@ void CliView::promptAddCourse() {
     }
 
     try {
-        CourseController& courseController = controller_.getCourseController(selectedTerm_->get());
+        CourseController& courseController = controller_.getCourseController();
         courseController.addCourse(title, description, startDate, endDate, numCredits, active);
     } catch (const std::logic_error& e) {
         out_ << "A course with this title already exists. Please choose a new title." << "\n";
@@ -539,7 +540,7 @@ void CliView::promptAddCourse() {
 void CliView::promptEditCourse() {
     EditCourseResult resultFlags;
     std::vector<std::string> editFields{};
-    CourseController& courseController = controller_.getCourseController(selectedTerm_->get());
+    CourseController& courseController = controller_.getCourseController();
 
     out_ << "Enter the following information for the course you'd like to edit: " << "\n";
     std::string title = getStringInput("Title", " ");
@@ -683,7 +684,7 @@ void CliView::promptEditCourse() {
 
 // prompt the uesr for the title to select a course from the list
 void CliView::promptSelectCourse() {
-    CourseController& courseController = controller_.getCourseController(selectedTerm_->get());;
+    CourseController& courseController = controller_.getCourseController();;
 
     out_ << "Here is a list of all courses:" << "\n";
     displayCourseListInfo();
@@ -704,7 +705,7 @@ void CliView::promptSelectCourse() {
 // prompt the user for the title to remove a course from the list
 void CliView::promptRemoveCourse() {
     bool invalidBool{true};
-    CourseController& courseController = controller_.getCourseController(selectedTerm_->get());
+    CourseController& courseController = controller_.getCourseController();
 
     out_ << "Enter the following information for the course you'd like to remove: " << "\n";
     std::string title = getStringInput("Title", " ");

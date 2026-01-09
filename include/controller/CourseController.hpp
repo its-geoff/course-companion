@@ -12,6 +12,7 @@
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
 #include <unordered_map>    // for Course objects
+#include <optional>         // for AssignmentController
 #include "model/Term.hpp"   // for Term reference
 #include "model/Course.hpp"
 
@@ -26,7 +27,9 @@
 class CourseController {
     private:
         Term& term_;
+        Course* activeCourse_ = nullptr;
         std::unordered_map<std::string, std::string> titleToId_{}; // title -> id, titles in lowercase for easier comparison
+        // std::optional<AssignmentController> assignmentController_{};
 
     public:
         CourseController(Term& term);
@@ -37,6 +40,7 @@ class CourseController {
         CourseController(CourseController&&) = default;
         CourseController& operator=(CourseController&&) = delete;
 
+        const std::unordered_map<std::string, Course>& getCourseList() const;
         std::string getCourseId(const std::string &title) const;
 
         void addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate, 
@@ -50,6 +54,7 @@ class CourseController {
         void removeCourse(const std::string& title);
         const Course& findCourse(const std::string& title) const;   // non-mutable version
         Course &findCourse(const std::string& title);   // mutable version
+        void selectCourse(const std::string& title);
 };
 
 #endif

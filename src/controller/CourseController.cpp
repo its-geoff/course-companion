@@ -13,6 +13,10 @@
 
 CourseController::CourseController(Term& term) : term_{term} {}
 
+const std::unordered_map<std::string, Course>& CourseController::getCourseList() const {
+    return term_.getCourseList();
+}
+
 std::string CourseController::getCourseId(const std::string &title) const {
     std::string titleLower = utils::stringLower(title);
     auto it = titleToId_.find(titleLower);
@@ -112,4 +116,17 @@ const Course& CourseController::findCourse(const std::string &title) const {
 Course& CourseController::findCourse(const std::string& title) {
     std::string id = getCourseId(title);
     return term_.findCourse(id);
+}
+
+// selects a course and makes it "active", creating an AssignmentController for that course
+void CourseController::selectCourse(const std::string& title) {
+    std::string id = getCourseId(title);
+    
+    try {
+        Course& courseRef = term_.findCourse(id);
+        activeCourse_ = &courseRef;
+        // assignmentController_.emplace(*activeCourse_);
+    } catch (const std::exception& e) {
+        throw std::out_of_range("Course not found.");
+    }
 }

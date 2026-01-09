@@ -148,7 +148,7 @@ TEST_F(TermControllerTest, FindTermNonConst) {
 // ====================================
 
 TEST_F(TermControllerTest, TermListGetterEmpty) {
-    const std::unordered_map<std::string, Term> &listOfTerms = controller.getTermList();
+    const std::unordered_map<std::string, Term>& listOfTerms = controller.getTermList();
     ASSERT_EQ(listOfTerms.size(), 0);
 }
 
