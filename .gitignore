@@ -1,4 +1,5 @@
 .zshrc
+c_cpp_properties.json
 CMakeUserPresets.json
 build/
 tests/output_logs/

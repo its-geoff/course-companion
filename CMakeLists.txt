@@ -43,13 +43,26 @@ target_link_libraries(CourseCompanion_lib PRIVATE $<$<PLATFORM_ID:Linux>:uuid>) 
 # Helper function for coverage
 # -------------------------------
 function(enable_coverage target)
-    if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
+    if(NOT ENABLE_COVERAGE)
+        return()
+    endif()
+
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
         target_compile_options(${target} PRIVATE
             -fprofile-instr-generate -fcoverage-mapping
         )
         target_link_options(${target} PRIVATE
             -fprofile-instr-generate
         )
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        target_compile_options(${target} PRIVATE
+            -g -O0 --coverage
+        )
+        target_link_options(${target} PRIVATE
+            --coverage
+        )
+    else()
+        message(WARNING "Coverage not supported for compiler ${CMAKE_CXX_COMPILER_ID}")
     endif()
 endfunction()
 

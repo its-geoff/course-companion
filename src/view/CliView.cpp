@@ -696,8 +696,7 @@ void CliView::promptSelectCourse() {
         selectedCourse_ = courseController.findCourse(title);
         out_ << "Course '" << title << "' was selected." << "\n";
     } catch (const std::exception& e) {
-        out_ << courseController.getCourseId(title);
-        // out_ << "Course not found. No selection made." << "\n";
+        out_ << "Course not found. No selection made." << "\n";
         selectedCourse_.reset();
     }
 }
@@ -793,6 +792,7 @@ float CliView::getFloatInput(const std::string &label, const float defaultVal) c
     std::getline(in_, input);
 
     if (input.empty() || utils::isOnlyWhitespace(input)) {
+        out_ << "No input. Using default." << "\n";
         return defaultVal;
     }
 
@@ -815,6 +815,7 @@ int CliView::getIntInput(const std::string &label, const int defaultVal) const {
     std::getline(in_, input);
 
     if (input.empty() || utils::isOnlyWhitespace(input)) {
+        out_ << "No input. Using default." << "\n";
         return defaultVal;
     }
 
@@ -839,6 +840,7 @@ bool CliView::getBoolInput(const std::string &label, const bool defaultVal) cons
     std::getline(in_, input);
 
     if (input.empty() || utils::isOnlyWhitespace(input)) {
+        out_ << "No input. Using default." << "\n";
         return defaultVal;
     }
 
