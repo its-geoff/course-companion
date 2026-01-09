@@ -15,7 +15,14 @@
 #include <limits>           // for numeric limits
 #include <uuid/uuid.h>      // for UUID
 
+using namespace std::chrono_literals;
+
 namespace utils {
+    // get today's date to use for tests
+    std::chrono::year_month_day getTodayDate() {
+        return std::chrono::year_month_day{floor<std::chrono::days>(std::chrono::system_clock::now())};
+    } 
+
     // checks if a string is only whitespace
     bool isOnlyWhitespace(const std::string str) {
         return std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); });

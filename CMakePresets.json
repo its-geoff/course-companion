@@ -7,6 +7,8 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/build_main",
             "cacheVariables": {
+                "CMAKE_C_COMPILER": "/usr/bin/clang",
+                "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/build_main/conan_toolchain.cmake",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "BUILD_TESTING": "OFF"
@@ -18,6 +20,8 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/build_test",
             "cacheVariables": {
+                "CMAKE_C_COMPILER": "/usr/bin/clang",
+                "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/build_test/conan_toolchain.cmake",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "BUILD_TESTING": "ON",

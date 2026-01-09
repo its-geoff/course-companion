@@ -2,9 +2,9 @@
 
 /**
  * @file TermController.cpp
- * @brief Implementation of an a controller that manages interaction between Assignment, Course, and Term. 
+ * @brief Implementation of a controller that manages interaction between the views and Term. 
  * 
- * This controller implements functions that integrate the three classes together and allow for code 
+ * This controller implements functions that integrate the classes together and allow for code 
  * reusability within the main function.
  */
 
@@ -25,6 +25,14 @@ std::string TermController::getTermId(const std::string& title) const {
     return it->second;
 }
 
+CourseController& TermController::getCourseController() {
+    if (!courseController_.has_value()) {
+        throw std::logic_error("No term selected.");
+    }
+
+    return *courseController_;
+}
+
 // uses info from CliView to create a Term object then add it to the list of terms
 void TermController::addTerm(const std::string& title, const std::chrono::year_month_day& startDate, 
     const std::chrono::year_month_day& endDate, bool active) {
@@ -40,9 +48,9 @@ void TermController::addTerm(const std::string& title, const std::chrono::year_m
     }
 }
 
-// edits the title of the term with the given ID
+// edits the title of the Term with the given ID
 void TermController::editTitle(const std::string& id, const std::string& newTitle) {
-    Term &term = termList_.at(id);
+    Term& term = termList_.at(id);
     std::string oldTitle = term.getTitle();
 
     auto [_, inserted] = titleToId_.emplace(utils::stringLower(newTitle), id);
@@ -58,39 +66,50 @@ void TermController::editTitle(const std::string& id, const std::string& newTitl
     term.setTitle(newTitle);
 }
 
-// edits the start date of the term with the given ID
+// edits the start date of the Term with the given ID
 void TermController::editStartDate(const std::string& id, const std::chrono::year_month_day& newStartDate) {
-    Term &term = termList_.at(id);
+    Term& term = termList_.at(id);
     term.setStartDate(newStartDate);
 }
 
-// edits the end date of the term with the given ID
+// edits the end date of the Term with the given ID
 void TermController::editEndDate(const std::string& id, const std::chrono::year_month_day& newEndDate) {
-    Term &term = termList_.at(id);
+    Term& term = termList_.at(id);
     term.setEndDate(newEndDate);
 }
 
 // edits the active bool of the term with the given ID
 void TermController::editActive(const std::string& id, bool newActive) {
-    Term &term = termList_.at(id);
+    Term& term = termList_.at(id);
     term.setActive(newActive);
 }
 
-// searches name -> id and erases the named term from the list
+// searches title -> id and erases the named Term from the list
 void TermController::removeTerm(const std::string& title) {
     std::string id = getTermId(title);
     termList_.erase(id);
     titleToId_.erase(utils::stringLower(title));
 }
 
-// find a Term in termList based on ID; non-mutable (read-only)
+// find a Term in termList based on title; non-mutable (read-only)
 const Term& TermController::findTerm(const std::string& title) const {
     std::string id = getTermId(title);
     return termList_.at(id);
 }
 
-// find a Term in termList based on ID; mutable (read and write access)
+// find a Term in termList based on title; mutable (read and write access)
 Term& TermController::findTerm(const std::string& title) {
     std::string id = getTermId(title);
     return termList_.at(id);
+}
+
+// selects a term and makes it "active", creating a CourseController for that term
+void TermController::selectTerm(const std::string& title) {
+    try {
+        Term& termRef = findTerm(title);
+        activeTerm_ = &termRef;
+        courseController_.emplace(*activeTerm_);
+    } catch (const std::exception& e) {
+        throw std::out_of_range("Term not found.");
+    }
 }

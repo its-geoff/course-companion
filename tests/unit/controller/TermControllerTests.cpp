@@ -109,18 +109,11 @@ TEST_F(TermControllerTest, RemoveTerm) {
 
     controller.removeTerm("Fall 2025");
 
-    const std::unordered_map<std::string, Term> &listOfTerms = controller.getTermList();
+    const std::unordered_map<std::string, Term>& listOfTerms = controller.getTermList();
     ASSERT_EQ(listOfTerms.size(), 1);
 
-    // check that this term is no longer in the list by inspecting titles directly
-    bool foundRemovedItem = false;
-    for (const auto &entry : listOfTerms) {
-        if (entry.second.getTitle() == "Fall 2025") {
-            foundRemovedItem = true;
-            break;
-        }
-    }
-    ASSERT_FALSE(foundRemovedItem);
+    // throw out of range since the term is not in the list
+    ASSERT_THROW(controller.getTermId("Fall 2025"), std::out_of_range);
 
     std::string id2 = controller.getTermId("Spring 2026");
     auto it2 = listOfTerms.find(id2);
@@ -131,8 +124,8 @@ TEST_F(TermControllerTest, FindTermConst) {
     controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
     controller.addTerm("Spring 2026", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/24}, true);
 
-    const TermController &constController = controller;
-    const Term &selectedTerm = constController.findTerm("Spring 2026");
+    const TermController& constController = controller;
+    const Term&selectedTerm = constController.findTerm("Spring 2026");
     ASSERT_EQ(selectedTerm.getTitle(), "Spring 2026");
     ASSERT_EQ(selectedTerm.getStartDate(), std::chrono::year_month_day{2026y/1/2});
     ASSERT_EQ(selectedTerm.getEndDate(), std::chrono::year_month_day{2026y/5/24});
@@ -155,7 +148,7 @@ TEST_F(TermControllerTest, FindTermNonConst) {
 // ====================================
 
 TEST_F(TermControllerTest, TermListGetterEmpty) {
-    const std::unordered_map<std::string, Term> &listOfTerms = controller.getTermList();
+    const std::unordered_map<std::string, Term>& listOfTerms = controller.getTermList();
     ASSERT_EQ(listOfTerms.size(), 0);
 }
 
@@ -230,7 +223,7 @@ TEST_F(TermControllerTest, FindTermConstNotFound) {
     controller.addTerm("Spring 2026", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/24}, true);
 
     // out of range error since term cannot be found
-    const TermController &constController = controller;
+    const TermController& constController = controller;
     ASSERT_THROW(constController.findTerm("Fall 2026"), std::out_of_range);
 }
 

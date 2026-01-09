@@ -30,9 +30,9 @@ class CliView {
     private:
         TermController &controller_;
         // may or may not exist
-        std::optional<std::reference_wrapper<const Term>> selectedTerm_;
-        std::optional<std::reference_wrapper<const Course>> selectedCourse_;
-        std::optional<std::reference_wrapper<const Assignment>> selectedAssignment_;
+        std::optional<std::reference_wrapper<Term>> selectedTerm_;
+        std::optional<std::reference_wrapper<Course>> selectedCourse_;
+        std::optional<std::reference_wrapper<Assignment>> selectedAssignment_;
         std::istream &in_;
         std::ostream &out_;
         enum class MenuState {
@@ -52,12 +52,18 @@ class CliView {
         void displayCourseMenu() const;
         void displayAssignmentMenu() const;
         void displayTermListInfo() const;
+        void displayCourseListInfo() const;
+        // void displayAssignmentListInfo() const;
         void displayInvalidSelection() const;
 
         void promptAddTerm();
         void promptEditTerm();
         void promptSelectTerm();
         void promptRemoveTerm();
+        void promptAddCourse();
+        void promptEditCourse();
+        void promptSelectCourse();
+        void promptRemoveCourse();
 
         char getCharInput(const std::string &label, const char defaultVal) const;
         std::string getStringInput(const std::string &label, const std::string &defaultVal) const;

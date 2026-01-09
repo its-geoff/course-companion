@@ -31,23 +31,38 @@ add_library(CourseCompanion_lib
     src/model/Course.cpp
     src/model/Term.cpp
     src/view/CliView.cpp
+    src/controller/CourseController.cpp
     src/controller/TermController.cpp
     src/utils/utils.cpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
+target_link_libraries(CourseCompanion_lib PRIVATE $<$<PLATFORM_ID:Linux>:uuid>)     # only link on Linux
 
 # -------------------------------
 # Helper function for coverage
 # -------------------------------
 function(enable_coverage target)
-    if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
+    if(NOT ENABLE_COVERAGE)
+        return()
+    endif()
+
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
         target_compile_options(${target} PRIVATE
             -fprofile-instr-generate -fcoverage-mapping
         )
         target_link_options(${target} PRIVATE
             -fprofile-instr-generate
         )
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        target_compile_options(${target} PRIVATE
+            -g -O0 --coverage
+        )
+        target_link_options(${target} PRIVATE
+            --coverage
+        )
+    else()
+        message(WARNING "Coverage not supported for compiler ${CMAKE_CXX_COMPILER_ID}")
     endif()
 endfunction()
 
