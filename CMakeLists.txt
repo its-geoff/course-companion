@@ -37,7 +37,7 @@ add_library(CourseCompanion_lib
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
-target_link_libraries(CourseCompanion_lib PRIVATE uuid)
+target_link_libraries(CourseCompanion_lib PRIVATE $<$<PLATFORM_ID:Linux>:uuid>)     # only link on Linux
 
 # -------------------------------
 # Helper function for coverage
