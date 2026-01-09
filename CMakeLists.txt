@@ -37,6 +37,7 @@ add_library(CourseCompanion_lib
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
+target_link_libraries(CourseCompanion_lib PRIVATE uuid)
 
 # -------------------------------
 # Helper function for coverage

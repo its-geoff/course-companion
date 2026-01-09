@@ -2,6 +2,7 @@
 #include <sstream>
 #include <regex>        // for UUID testing
 #include <unordered_set>    // for UUID testing
+#include <limits>       // for numeric_limits
 #include "utils/utils.hpp"
 
 using namespace std::chrono_literals;
@@ -112,7 +113,7 @@ TEST(UtilsTest, FloatEqualVeryLarge) {
 }
 
 TEST(UtilsTest, FloatEqualNanValue) {
-    ASSERT_FALSE(utils::floatEqual(1.0f, std::nanf("")));
+    ASSERT_FALSE(utils::floatEqual(1.0f, std::numeric_limits<float>::quiet_NaN()));
 }
 
 TEST(UtilsTest, StringLowerMixedCase) {
