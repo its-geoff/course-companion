@@ -47,6 +47,14 @@ target_link_libraries(CliViewTests PRIVATE CourseCompanion_lib GTest::gtest_main
 add_test(NAME CliViewTests COMMAND CliViewTests)
 enable_coverage(CliViewTests)
 
+# --------------------------------------
+# AssignmentControllerTests executable
+# --------------------------------------
+add_executable(AssignmentControllerTests unit/controller/AssignmentControllerTests.cpp)
+target_link_libraries(AssignmentControllerTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME AssignmentControllerTests COMMAND AssignmentControllerTests)
+enable_coverage(AssignmentControllerTests)
+
 # --------------------------------
 # CourseControllerTests executable
 # --------------------------------

@@ -28,7 +28,7 @@ std::string CourseController::getCourseId(const std::string &title) const {
     return it->second;
 }
 
-// uses info from CliView to create a Course object then adds it to the list of Courses in Term
+// uses info from view to create a Course object then adds it to the list of Courses in Term
 void CourseController::addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate,
     const std::chrono::year_month_day& endDate, int numCredits, bool active) {
     Course course{title, description, startDate, endDate, numCredits, active};
@@ -104,7 +104,7 @@ void CourseController::removeCourse(const std::string& title) {
 }
 
 // find a Course in courseList based on title; non-mutable (read-only)
-const Course& CourseController::findCourse(const std::string &title) const {
+const Course& CourseController::findCourse(const std::string& title) const {
     std::string id = getCourseId(title);
     return term_.findCourse(id);
 }
@@ -115,14 +115,14 @@ Course& CourseController::findCourse(const std::string& title) {
     return term_.findCourse(id);
 }
 
-// selects a course and makes it "active", creating an AssignmentController for that course
+// selects a Course and makes it "active", creating an AssignmentController for that course
 void CourseController::selectCourse(const std::string& title) {
     std::string id = getCourseId(title);
     
     try {
         Course& courseRef = term_.findCourse(id);
         activeCourse_ = &courseRef;
-        // assignmentController_.emplace(*activeCourse_);
+        assignmentController_.emplace(*activeCourse_);
     } catch (const std::exception& e) {
         throw std::out_of_range("Course not found.");
     }
