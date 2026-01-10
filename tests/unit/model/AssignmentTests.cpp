@@ -82,20 +82,20 @@ TEST_F(AssignmentTest, GradeSetter) {
 
 // initializations without description defined
 TEST_F(AssignmentTest, OneParamInitialization) {
-    Assignment assignment2{"Homework 1"};
+    Assignment assignment2{"Homework 1", "", {}};
     ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
 }
 
 TEST_F(AssignmentTest, TwoParamInitialization) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}};
     ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
 }
 
 TEST_F(AssignmentTest, ThreeParamInitialization) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false};
     ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
@@ -103,7 +103,7 @@ TEST_F(AssignmentTest, ThreeParamInitialization) {
 }
 
 TEST_F(AssignmentTest, FourParamInitialization) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
@@ -113,7 +113,7 @@ TEST_F(AssignmentTest, FourParamInitialization) {
 
 // initializations with description defined
 TEST_F(AssignmentTest, TwoParamDescInitialization) {
-    Assignment assignment2{"Homework 1", "Focus on lexical analysis."};
+    Assignment assignment2{"Homework 1", "Focus on lexical analysis.", {}};
     ASSERT_FALSE(utils::isOnlyWhitespace(assignment2.getId()));
     ASSERT_EQ(assignment2.getTitle(), "Homework 1");
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
@@ -180,24 +180,24 @@ TEST_F(AssignmentTest, OverloadedEquals) {
 
 // empty parameters
 TEST_F(AssignmentTest, DescriptionGetterEmpty) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     ASSERT_EQ(assignment2.getDescription(), "");
 }
 
 TEST_F(AssignmentTest, DueDateGetterEmpty) {
-    Assignment assignment2{"Homework 1"};
+    Assignment assignment2{"Homework 1", "", {}};
     auto now = std::chrono::system_clock::now();
     auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
     ASSERT_EQ(assignment2.getDueDate(), today);
 }
 
 TEST_F(AssignmentTest, CompletedGetterEmpty) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}};
     ASSERT_FALSE(assignment2.getCompleted());
 }
 
 TEST_F(AssignmentTest, GradeGetterEmpty) {
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false};
     ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
 }
 
@@ -252,28 +252,28 @@ TEST_F(AssignmentTest, GradeSetterBoundaryHigh) {
 // invalid initializations without description defined
 TEST_F(AssignmentTest, OneParamInitializationInvalidTitle) {
     // throw invalid argument since input is empty
-    ASSERT_THROW((Assignment{""}), std::invalid_argument);
+    ASSERT_THROW((Assignment{"", "", {}}), std::invalid_argument);
 }
 
 TEST_F(AssignmentTest, TwoParamInitializationInvalidDate) {
     // throw invalid argument since date does not exist 
-    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/2/30}}), std::invalid_argument);
+    ASSERT_THROW((Assignment{"Homework 1", "", std::chrono::year_month_day{2025y/2/30}}), std::invalid_argument);
 }
 
 TEST_F(AssignmentTest, FourParamInitializationInvalidGradeLow) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, -20.24f}), std::out_of_range);
+    ASSERT_THROW((Assignment{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, -20.24f}), std::out_of_range);
 }
 
 TEST_F(AssignmentTest, FourParamInitializationInvalidGradeHigh) {
     // throw out of range since input is not in range 0 to 100
-    ASSERT_THROW((Assignment{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 200.24f}), std::out_of_range);
+    ASSERT_THROW((Assignment{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 200.24f}), std::out_of_range);
 }
 
 // invalid initializations with description defined
 TEST_F(AssignmentTest, TwoParamDescInitializationInvalidTitle) {
     // throw invalid argument since title is empty
-    ASSERT_THROW((Assignment{"", "Focus on lexical analysis."}), std::invalid_argument);
+    ASSERT_THROW((Assignment{"", "Focus on lexical analysis.", {}}), std::invalid_argument);
 }
 
 TEST_F(AssignmentTest, ThreeParamDescInitializationInvalidDate) {
@@ -297,7 +297,7 @@ TEST_F(AssignmentTest, FiveParamDescInitializationInvalidGradeHigh) {
 
 TEST_F(AssignmentTest, PrintAssignmentInfoPartial) {
     std::stringstream ss;
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}};
     assignment2.printAssignmentInfo(ss);
     std::string output = ss.str();
 

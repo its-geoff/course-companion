@@ -15,59 +15,24 @@
 
 using namespace std::chrono_literals;
 
-Assignment::Assignment(std::string title) : id_{utils::generateUuid()} {
+Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, 
+    bool completed, float grade) : id_{utils::generateUuid()} {
+    // internal defaulting for user input
+    if (dueDate == std::chrono::year_month_day{}) {
+        dueDate = utils::getTodayDate();
+    }
+
+    // input validation before moving to member variables
     utils::validateTitle(title);
-
-    title_ = std::move(title);
-    auto now = std::chrono::system_clock::now();
-    auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
-    dueDate_ = std::chrono::year_month_day(today);
-}
-
-Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate) : 
-    Assignment(title) {
     utils::validateDate(dueDate);
-
-    dueDate_ = dueDate;
-}
-
-Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed)
-    : Assignment(title, dueDate) {
-    completed_ = completed;
-}
-
-Assignment::Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed, 
-    float grade) : Assignment(title, dueDate, completed) {
     validateGrade(grade);
 
-    grade_ = grade;
-}
-
-Assignment::Assignment(std::string title, std::string description) : id_{utils::generateUuid()} {
-    utils::validateTitle(title);
-
     title_ = std::move(title);
-    description_ = std::move(description);
-    auto now = std::chrono::system_clock::now();
-    auto today = std::chrono::time_point_cast<std::chrono::days>(now);    // set to today
-    dueDate_ = std::chrono::year_month_day(today);
-}
-
-Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate)
-    : Assignment(title, description) {
-    utils::validateDate(dueDate);
-
+    if (!utils::isOnlyWhitespace(description)) {
+        description_ = std::move(description);
+    }
     dueDate_ = dueDate;
-}
-
-Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, 
-    bool completed) : Assignment(title, description, dueDate) {
     completed_ = completed;
-}
-
-Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, 
-    bool completed, float grade) : Assignment(title, description, dueDate, completed) {
-    validateGrade(grade);
     grade_ = grade;
 }
 

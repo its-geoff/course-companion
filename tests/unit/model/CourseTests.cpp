@@ -46,7 +46,7 @@ TEST_F(CourseTest, EndDateGetter) {
 
 TEST_F(CourseTest, AssignmentListGetter) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
     std::string id1 = assignment1.getId();
@@ -58,7 +58,7 @@ TEST_F(CourseTest, AssignmentListGetter) {
 
 TEST_F(CourseTest, AssignmentListGetterCheckSize) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
     auto list = course1.getAssignmentList();
@@ -199,6 +199,36 @@ TEST_F(CourseTest, GradeScaleSetter) {
 // INITIALIZATION SMOKE TESTS
 // ====================================
 
+TEST_F(CourseTest, ThreeParamInitialization) {
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
+    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
+    ASSERT_EQ(course2.getTitle(), "ENGR 195A");
+    ASSERT_EQ(course2.getDescription(), "");
+    ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
+    ASSERT_EQ(course2.getEndDate(), std::chrono::year_month_day{2025y/12/18});
+}
+
+TEST_F(CourseTest, FourParamInitialization) {
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
+    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
+    ASSERT_EQ(course2.getTitle(), "ENGR 195A");
+    ASSERT_EQ(course2.getDescription(), "");
+    ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
+    ASSERT_EQ(course2.getEndDate(), std::chrono::year_month_day{2025y/12/18});
+    ASSERT_EQ(course2.getNumCredits(), 1);
+}
+
+TEST_F(CourseTest, FiveParamInitialization) {
+    Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1, false};
+    ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
+    ASSERT_EQ(course2.getTitle(), "ENGR 195A");
+    ASSERT_EQ(course2.getDescription(), "");
+    ASSERT_EQ(course2.getStartDate(), std::chrono::year_month_day{2025y/8/14});
+    ASSERT_EQ(course2.getEndDate(), std::chrono::year_month_day{2025y/12/18});
+    ASSERT_EQ(course2.getNumCredits(), 1);
+    ASSERT_FALSE(course2.getActive());
+}
+
 TEST_F(CourseTest, FourParamDescInitialization) {
     Course course2{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     ASSERT_FALSE(utils::isOnlyWhitespace(course2.getId()));
@@ -257,7 +287,7 @@ TEST_F(CourseTest, AddAssignment) {
 
 TEST_F(CourseTest, RemoveAssignment) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
@@ -271,7 +301,7 @@ TEST_F(CourseTest, RemoveAssignment) {
 
 TEST_F(CourseTest, FindAssignmentConst) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
@@ -283,7 +313,7 @@ TEST_F(CourseTest, FindAssignmentConst) {
 
 TEST_F(CourseTest, FindAssignmentNonConst) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     Assignment assignment3 = assignment1;    // make assignment3 the same as assignment1
 
     course1.addAssignment(assignment1);
@@ -496,6 +526,39 @@ TEST_F(CourseTest, GradeScaleSetterUpperBound) {
 // INITIALIZATION EDGE CASES
 // ====================================
 
+TEST_F(CourseTest, ThreeParamInitializationNoTitle) {
+    // throw invalid argument since title is empty
+    ASSERT_THROW((Course{"", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, ThreeParamInitializationInvalidStartDate) {
+    // throw invalid argument since start date does not exist
+    ASSERT_THROW((Course{"ENGR 195A", "", std::chrono::year_month_day{2025y/2/31}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, ThreeParamInitializationInvalidEndDate) {
+    // throw invalid argument since end date does not exist
+    ASSERT_THROW((Course{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2026y/2/31}}), std::invalid_argument);
+}
+
+TEST_F(CourseTest, ThreeParamInitializationDefaultDates) {
+    Course course2{"ENGR 195A", "", {}, {}};
+
+    std::chrono::year_month_day todayDate = utils::getTodayDate();
+    std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{4};
+    ASSERT_EQ(course2.getTitle(), "ENGR 195A");
+    ASSERT_EQ(course2.getDescription(), "");
+    ASSERT_EQ(course2.getStartDate(), todayDate);
+    ASSERT_EQ(course2.getEndDate(), defaultEnd);
+    ASSERT_EQ(course2.getNumCredits(), 3);
+    ASSERT_EQ(course2.getActive(), true);
+}
+
+TEST_F(CourseTest, FourParamInitializationInvalidNumCredits) {
+    // throw out of range since input is not greater than or equal to 0
+    ASSERT_THROW((Course{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, -4}), std::out_of_range);
+}
+
 TEST_F(CourseTest, FourParamDescInitializationNoTitle) {
     // throw invalid argument since title is empty
     ASSERT_THROW((Course{"", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
@@ -524,7 +587,7 @@ TEST_F(CourseTest, FourParamDescInitializationDefaultDates) {
     ASSERT_EQ(course2.getActive(), true);
 }
 
-TEST_F(CourseTest, SixParamDescInitializationInvalidNumCredits) {
+TEST_F(CourseTest, FiveParamDescInitializationInvalidNumCredits) {
     // throw out of range since input is not greater than or equal to 0
     ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, -4}), std::out_of_range);
 }
@@ -574,7 +637,7 @@ TEST_F(CourseTest, AddAssignmentAlreadyExists) {
 
 TEST_F(CourseTest, RemoveAssignmentNotFound) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     std::string id = assignment2.getId();
 
     course1.addAssignment(assignment1);
@@ -585,7 +648,7 @@ TEST_F(CourseTest, RemoveAssignmentNotFound) {
 
 TEST_F(CourseTest, FindAssignmentConstNotFound) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
     std::string id = assignment2.getId();
@@ -597,7 +660,7 @@ TEST_F(CourseTest, FindAssignmentConstNotFound) {
 
 TEST_F(CourseTest, FindAssignmentNonConstNotFound) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
     std::string id = assignment2.getId();
