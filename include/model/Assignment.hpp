@@ -35,14 +35,8 @@ class Assignment {
         void validateGrade(float grade);
 
     public:
-        Assignment(std::string title);
-        Assignment(std::string title, std::chrono::year_month_day dueDate);
-        Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed);
-        Assignment(std::string title, std::chrono::year_month_day dueDate, bool completed, float grade);
-        Assignment(std::string title, std::string description);
-        Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate);
-        Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed);
-        Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, bool completed, float grade);
+        Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, 
+            bool completed = false, float grade = 0.0);
 
         std::string getId() const;
         std::string getTitle() const;
