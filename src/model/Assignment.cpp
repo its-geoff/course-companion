@@ -19,7 +19,7 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
     bool completed, float grade) : id_{utils::generateUuid()} {
     // internal defaulting for user input
     if (dueDate == std::chrono::year_month_day{}) {
-        dueDate = utils::defaultStartDate();
+        dueDate = utils::getTodayDate();
     }
 
     // input validation before moving to member variables
