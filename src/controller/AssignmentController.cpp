@@ -28,7 +28,7 @@ std::string AssignmentController::getAssignmentId(const std::string& title) cons
     return it->second;
 }
 
-// uses info from view to create an Assignment object then adds it to the list of Assignments in Assignment
+// uses info from view to create an Assignment object then adds it to the list of Assignments in Course
 void AssignmentController::addAssignment(const std::string& title, const std::string& description, 
     const std::chrono::year_month_day& dueDate, bool completed, float grade) {
     Assignment assignment{title, description, dueDate, completed, grade};
@@ -117,6 +117,6 @@ void AssignmentController::selectAssignment(const std::string& title) {
         Assignment& assignmentRef = course_.findAssignment(id);
         activeAssignment_ = &assignmentRef;
     } catch (const std::exception& e) {
-        throw std::out_of_range("Assignment not found");
+        throw std::out_of_range("Assignment not found.");
     }
 }
