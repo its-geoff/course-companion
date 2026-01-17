@@ -2605,7 +2605,3 @@ TEST(CliViewTest, RemoveCourseNotConfirmed) {
     ASSERT_TRUE(userOut.find("Operation cancelled") != std::string::npos);
     ASSERT_TRUE(userOut.find("not removed") != std::string::npos);
 }
-
-// NOTE: add edit tests where fields are changed to the same value
-//      - expected: result says (unchanged)
-//      - if this is not the case, add this functionality

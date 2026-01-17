@@ -170,7 +170,7 @@ TEST_F(AssignmentControllerTest, AssignmentIdGetterNotFound) {
     controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
-    // out of range error since course cannot be found
+    // out of range error since assignment cannot be found
     ASSERT_THROW(controller.getAssignmentId("Homework 4"), std::out_of_range);
 }
 
@@ -180,8 +180,8 @@ TEST_F(AssignmentControllerTest, AssignmentIdGetterNotFound) {
 
 TEST_F(AssignmentControllerTest, AddAssignmentAlreadyExists) {
     controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    // logic error since course already exists
-    ASSERT_THROW(controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);, std::logic_error);
+    // logic error since assignment already exists
+    ASSERT_THROW(controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f), std::logic_error);
 }
 
 TEST_F(AssignmentControllerTest, EditTitleAlreadyExists) {
@@ -212,7 +212,7 @@ TEST_F(AssignmentControllerTest, EditDueDateInvalid) {
     controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
-    // invalid argument since start date doesn't exist
+    // invalid argument since due date doesn't exist
     ASSERT_THROW(controller.editDueDate(id, std::chrono::year_month_day{2026y/3/33}), std::invalid_argument);
 }
 
@@ -220,7 +220,7 @@ TEST_F(AssignmentControllerTest, EditGradeInvalidLow) {
     controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
-    // out of range since grade is over 100
+    // out of range since grade is below 0
     ASSERT_THROW(controller.editGrade(id, -10.0f), std::out_of_range);
 }
 
