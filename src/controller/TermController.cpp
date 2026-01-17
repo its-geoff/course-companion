@@ -33,7 +33,7 @@ CourseController& TermController::getCourseController() {
     return *courseController_;
 }
 
-// uses info from CliView to create a Term object then add it to the list of terms
+// uses info from view to create a Term object then add it to the list of terms
 void TermController::addTerm(const std::string& title, const std::chrono::year_month_day& startDate, 
     const std::chrono::year_month_day& endDate, bool active) {
     Term term{title, startDate, endDate, active};

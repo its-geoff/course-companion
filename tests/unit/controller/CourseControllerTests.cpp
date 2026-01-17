@@ -89,7 +89,6 @@ TEST_F(CourseControllerTest, EditDescription) {
 TEST_F(CourseControllerTest, EditStartDate) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
 
-
     std::string id = controller.getCourseId("ENGR 195A");
     controller.editStartDate(id, std::chrono::year_month_day{2026y/2/11});
 
@@ -99,7 +98,6 @@ TEST_F(CourseControllerTest, EditStartDate) {
 
 TEST_F(CourseControllerTest, EditEndDate) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
-
 
     std::string id = controller.getCourseId("ENGR 195A");
     controller.editEndDate(id, std::chrono::year_month_day{2026y/5/30});
@@ -111,7 +109,6 @@ TEST_F(CourseControllerTest, EditEndDate) {
 TEST_F(CourseControllerTest, EditNumCredits) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
 
-
     std::string id = controller.getCourseId("ENGR 195A");
     controller.editNumCredits(id, 4);
 
@@ -121,7 +118,6 @@ TEST_F(CourseControllerTest, EditNumCredits) {
 
 TEST_F(CourseControllerTest, EditActive) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
-
 
     std::string id = controller.getCourseId("ENGR 195A");
     controller.editActive(id, true);
@@ -205,7 +201,7 @@ TEST_F(CourseControllerTest, EditTitleAlreadyExists) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
     std::string id = controller.getCourseId("ENGR 195A");
 
-    // logic error since term already exists (title not changed)
+    // logic error since course already exists (title not changed)
     ASSERT_THROW(controller.editTitle(id, "ENGR 195A"), std::logic_error);
 }
 
@@ -213,7 +209,7 @@ TEST_F(CourseControllerTest, EditTitleAlreadyExistsDifferentCase) {
     controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
     std::string id = controller.getCourseId("ENGR 195A");
 
-    // logic error since term already exists (title not changed)
+    // logic error since course already exists (title not changed)
     ASSERT_THROW(controller.editTitle(id, "engr 195A"), std::logic_error);
 }
 
