@@ -28,6 +28,14 @@ std::string CourseController::getCourseId(const std::string &title) const {
     return it->second;
 }
 
+AssignmentController& CourseController::getAssignmentController() {
+    if (!assignmentController_.has_value()) {
+        throw std::logic_error("No term selected.");
+    }
+
+    return *assignmentController_;
+}
+
 // uses info from view to create a Course object then adds it to the list of Courses in Term
 void CourseController::addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate,
     const std::chrono::year_month_day& endDate, int numCredits, bool active) {

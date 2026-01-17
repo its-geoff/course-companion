@@ -43,6 +43,7 @@ class CourseController {
 
         const std::unordered_map<std::string, Course>& getCourseList() const;
         std::string getCourseId(const std::string& title) const;
+        AssignmentController& getAssignmentController();
 
         void addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate, 
             const std::chrono::year_month_day& endDate, int numCredits, bool active);
