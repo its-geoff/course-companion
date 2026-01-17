@@ -102,7 +102,7 @@ namespace {
             return titleRequested || descriptionRequested || dueDateRequested
                 || completedRequested || gradeRequested;
         }
-    }
+    };
 }
 
 // takes date as string input and converts to year_month_day format
@@ -853,7 +853,7 @@ void CliView::promptEditAssignment() {
     out_ << "Enter the following information for the assignment you'd like to edit: " << "\n";
     std::string title = getStringInput("Title", " ");
     try {
-        selectedAssignment_ = assignmentController.findAssignment(title)
+        selectedAssignment_ = assignmentController.findAssignment(title);
     } catch (const std::exception& e) {
         out_ << "Assignment not found. Operation cancelled." << "\n";
         return;
