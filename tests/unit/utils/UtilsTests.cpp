@@ -134,9 +134,21 @@ TEST(UtilsTest, FloatRoundAlreadyRounded) {
     ASSERT_FLOAT_EQ(utils::floatRound(3.1400f, 3), 3.140f);
 }
 
-TEST(UtilsTest, DefaultEndDateUserInputInvalid) {
+TEST(UtilsTest, DefaultEndDateUserInputNegative) {
     std::chrono::year_month_day todayDate = utils::getTodayDate();
     ASSERT_THROW(utils::defaultEndDate(todayDate, -3), std::out_of_range);
+}
+
+TEST(UtilsTest, DefaultEndDateUserInputZero) {
+    std::chrono::year_month_day todayDate = utils::getTodayDate();
+    ASSERT_THROW(utils::defaultEndDate(todayDate, 0), std::out_of_range);
+}
+
+TEST(UtilsTest, DefaultEndDateUserInputMinimum) {
+    std::chrono::year_month_day todayDate = utils::getTodayDate();
+    std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{1};
+    std::chrono::year_month_day result = utils::defaultEndDate(todayDate, 1);
+    ASSERT_EQ(result, defaultEnd);
 }
 
 TEST(UtilsTest, StringLowerMixedCase) {

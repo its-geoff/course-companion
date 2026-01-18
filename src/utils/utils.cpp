@@ -83,13 +83,13 @@ namespace utils {
         return std::chrono::year_month_day{today};
     }
 
-    // returns today's date + 4 months as the default end date
+    // returns start date + 4 months as the default end date
     std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate) {
         return startDate + std::chrono::months{4};
     }
 
     // TO-DO: add this to settings when that feature is added
-    // returns today's date + interval user input as the default end date
+    // returns start date + user-specified interval as the default end date
     std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate, int numMonths) {
         if (numMonths < 1) {
             // ensures that default end is not the same as default start
