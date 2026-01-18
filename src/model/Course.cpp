@@ -100,7 +100,6 @@ void Course::validateGradeScale(const std::map<float, std::string>& gradeScale) 
     }
 }
 
-
 // calculate letter grade based on grade scale
 // TO-DO: allow the user to change the grading scale
 std::string Course::calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const {
@@ -124,6 +123,19 @@ std::string Course::calculateLetterGrade(float gradePct) const {
 // calculate GPA value based on the letter grade
 float Course::calculateGpaVal(const std::string& letterGrade) {
     return gpaScale_.at(letterGrade);
+}
+
+// calculate number of completed assignments by using the boolean values of Assignment
+int Course::calculateCompletedAssignments() const {
+    int completedAssignments = 0;
+
+    for (const auto& [id, assignment] : assignmentList_) {
+        if (assignment.getCompleted()) {
+            completedAssignments++;
+        }
+    }
+
+    return completedAssignments;
 }
 
 Course::Course(std::string title, std::string description, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate, 
@@ -248,7 +260,7 @@ void Course::setLetterGrade() {
 }
 
 void Course::setGpaVal() {
-    if (letterGrade_ == "") {
+    if (letterGrade_ == "N/A") {
         setLetterGrade();
     }
     
@@ -276,6 +288,8 @@ void Course::printCourseInfo(std::ostream &os) const {
     os << "Grade Percentage: " << std::fixed << std::setprecision(2) << gradePct_ << "%\n";
     os << "Letter Grade: " << letterGrade_ << "\n";
     os << "GPA Value: " << std::fixed << std::setprecision(1) << gpaVal_ << "\n";
+    os << "Total Assignments: " << assignmentList_.size() << "\n";
+    os << "Incomplete Assignments: " << assignmentList_.size() - calculateCompletedAssignments() << "\n";
     os << "Current? " << utils::boolToString(active_) << "\n";
 }
 
