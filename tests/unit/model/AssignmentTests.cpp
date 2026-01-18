@@ -224,13 +224,13 @@ TEST_F(AssignmentTest, DueDateSetterInvalid) {
 }
 
 TEST_F(AssignmentTest, GradeSetterInvalidLow) {
-    // throw out of range since input is not in range 0 to 100
+    // throw out of range since input is not in range 0 to 150
     ASSERT_THROW(assignment1.setGrade(-20.24f), std::out_of_range);
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
 }
 
 TEST_F(AssignmentTest, GradeSetterInvalidHigh) {
-    // throw out of range since input is not in range 0 to 100
+    // throw out of range since input is not in range 0 to 150
     ASSERT_THROW(assignment1.setGrade(200.24f), std::out_of_range);
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
 }
@@ -261,12 +261,12 @@ TEST_F(AssignmentTest, TwoParamInitializationInvalidDate) {
 }
 
 TEST_F(AssignmentTest, FourParamInitializationInvalidGradeLow) {
-    // throw out of range since input is not in range 0 to 100
+    // throw out of range since input is not in range 0 to 150
     ASSERT_THROW((Assignment{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, -20.24f}), std::out_of_range);
 }
 
 TEST_F(AssignmentTest, FourParamInitializationInvalidGradeHigh) {
-    // throw out of range since input is not in range 0 to 100
+    // throw out of range since input is not in range 0 to 150
     ASSERT_THROW((Assignment{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 200.24f}), std::out_of_range);
 }
 
@@ -282,12 +282,12 @@ TEST_F(AssignmentTest, ThreeParamDescInitializationInvalidDate) {
 }
 
 TEST_F(AssignmentTest, FiveParamDescInitializationInvalidGradeLow) {
-    // throw out of range since input is not in range 0 to 100
+    // throw out of range since input is not in range 0 to 150
     ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, -20.24f}), std::out_of_range);
 }
 
 TEST_F(AssignmentTest, FiveParamDescInitializationInvalidGradeHigh) {
-    // throw out of range since input is not in range 0 to 100
+    // throw out of range since input is not in range 0 to 150
     ASSERT_THROW((Assignment{"Homework 1", "Focus on lexical analysis.", std::chrono::year_month_day{2025y/10/31}, false, 200.24f}), std::out_of_range);
 }
 

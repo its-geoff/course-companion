@@ -449,13 +449,13 @@ TEST_F(CourseTest, GradePctSetterAutomaticNoCompleteAssignments) {
 }
 
 TEST_F(CourseTest, GradePctSetterManualInvalidLow) {
-    // throw out of range since input is not in range 0 to 100
+    // throw out of range since input is not in range 0 to 150
     ASSERT_THROW(course1.setGradePct(-20.24f), std::out_of_range);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
 }
 
 TEST_F(CourseTest, GradePctSetterManualInvalidHigh) {
-    // throw out of range since input is not in range 0 to 100
+    // throw out of range since input is not in range 0 to 150
     ASSERT_THROW(course1.setGradePct(200.24f), std::out_of_range);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
 }
@@ -466,8 +466,8 @@ TEST_F(CourseTest, GradePctSetterManualBoundaryLow) {
 }
 
 TEST_F(CourseTest, GradePctSetterManualBoundaryHigh) {
-    course1.setGradePct(100.0f);
-    ASSERT_FLOAT_EQ(course1.getGradePct(), 100.0f);
+    course1.setGradePct(150.0f);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 150.0f);
 }
 
 TEST_F(CourseTest, LetterGradeSetterRangeHigh) {
@@ -483,7 +483,7 @@ TEST_F(CourseTest, LetterGradeSetterLowF) {
 }
 
 TEST_F(CourseTest, LetterGradeSetterBoundaryHigh) {
-    course1.setGradePct(100.0f);
+    course1.setGradePct(150.0f);
     course1.setLetterGrade();
     ASSERT_EQ(course1.getLetterGrade(), "A+");
 }
@@ -521,6 +521,13 @@ TEST_F(CourseTest, GpaValSetterLowF) {
     course1.setLetterGrade();
     course1.setGpaVal();
     ASSERT_EQ(course1.getGpaVal(), 0.0f);
+}
+
+TEST_F(CourseTest, GpaValSetterOverHundred) {
+    course1.setGradePct(147.1f);
+    course1.setLetterGrade();
+    course1.setGpaVal();
+    ASSERT_EQ(course1.getGpaVal(), 4.0f);
 }
 
 TEST_F(CourseTest, GradeScaleSetterEmpty) {
