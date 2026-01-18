@@ -228,8 +228,8 @@ TEST_F(AssignmentControllerTest, EditGradeInvalidHigh) {
     controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
-    // out of range since grade is over 100
-    ASSERT_THROW(controller.editGrade(id, 110.0f), std::out_of_range);
+    // out of range since grade is over 150
+    ASSERT_THROW(controller.editGrade(id, 160.0f), std::out_of_range);
 }
 
 TEST_F(AssignmentControllerTest, EditGradeBoundaryLow) {

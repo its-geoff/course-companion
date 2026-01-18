@@ -77,11 +77,10 @@ void Course::validateNumCredits(int numCredits) {
     }
 }
 
-// throws an exception if a grade is less than 0 or greater than 100
-// TO-DO: enable functionality for extra credit (> 100%)
+// throws an exception if a grade is less than 0 or greater than 150
 void Course::validateGradePct(float gradePct) {
-    if (gradePct < 0.0f || gradePct > 100.0f)
-        throw std::out_of_range("Grade percentage must be from 0 to 100.");
+    if (gradePct < 0.0f || gradePct > 150.0f)
+        throw std::out_of_range("Grade percentage must be from 0 to 150.");
 }
 
 // throws an exception if the grade scale is empty or does not provide grades for 0-100

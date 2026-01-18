@@ -83,10 +83,10 @@ void Assignment::setGrade(float newGrade) {
     grade_ = newGrade;
 }
 
-// throws an exception if a grade is less than 0 or greater than 100
+// throws an exception if a grade is less than 0 or greater than 150
 void Assignment::validateGrade(float grade) {
-    if (grade < 0.0f || grade > 100.0f)
-        throw std::out_of_range("Grade must be from 0 to 100.");
+    if (grade < 0.0f || grade > 150.0f)
+        throw std::out_of_range("Grade must be from 0 to 150.");
 }
 
 // prints information held by an Assignment object
