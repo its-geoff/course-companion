@@ -3,6 +3,7 @@
 #include <regex>        // for UUID testing
 #include <unordered_set>    // for UUID testing
 #include <limits>       // for numeric_limits
+#include <exception>    // for exception throwing
 #include "utils/utils.hpp"
 
 using namespace std::chrono_literals;
@@ -67,6 +68,13 @@ TEST(UtilsTest, DefaultEndDate) {
     ASSERT_EQ(result, defaultEnd);
 }
 
+TEST(UtilsTest, DefaultEndDateUserInput) {
+    std::chrono::year_month_day todayDate = utils::getTodayDate();
+    std::chrono::year_month_day defaultEnd = todayDate + std::chrono::months{6};
+    std::chrono::year_month_day result = utils::defaultEndDate(todayDate, 6);
+    ASSERT_EQ(result, defaultEnd);
+}
+
 TEST(UtilsTest, StringLower) {
     std::string input{"HELLO WORLD"};
     ASSERT_EQ(utils::stringLower(input), "hello world");
@@ -124,6 +132,11 @@ TEST(UtilsTest, FloatEqualNanValue) {
 TEST(UtilsTest, FloatRoundAlreadyRounded) {
     ASSERT_FLOAT_EQ(utils::floatRound(1.0000000f, 2), 1.00f);
     ASSERT_FLOAT_EQ(utils::floatRound(3.1400f, 3), 3.140f);
+}
+
+TEST(UtilsTest, DefaultEndDateUserInputInvalid) {
+    std::chrono::year_month_day todayDate = utils::getTodayDate();
+    ASSERT_THROW(utils::defaultEndDate(todayDate, -3), std::out_of_range);
 }
 
 TEST(UtilsTest, StringLowerMixedCase) {

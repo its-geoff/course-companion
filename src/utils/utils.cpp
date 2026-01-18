@@ -83,10 +83,20 @@ namespace utils {
         return std::chrono::year_month_day{today};
     }
 
-    // TO-DO: allow the user to change the default term length
     // returns today's date + 4 months as the default end date
     std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate) {
         return startDate + std::chrono::months{4};
+    }
+
+    // TO-DO: add this to settings when that feature is added
+    // returns today's date + interval user input as the default end date
+    std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate, int numMonths) {
+        if (numMonths < 1) {
+            // ensures that default end is not the same as default start
+            throw std::out_of_range("Number of months must be 1 or greater.");
+        }
+
+        return startDate + std::chrono::months{numMonths};
     }
 
     // transform string to all lowercase
