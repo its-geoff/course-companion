@@ -161,7 +161,14 @@ TEST_F(CourseTest, GradeWeightsSetter) {
     ASSERT_FLOAT_EQ(weights.find("Midterm")->second, 0.4);
 }
 
-TEST_F(CourseTest, GradePctSetter) {
+TEST_F(CourseTest, GradePctSetterAutomatic) {
+    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/18}, true, 89.17f};
+    course1.addAssignment(assignment1);
+    course1.setGradePct();
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 89.17f);
+}
+
+TEST_F(CourseTest, GradePctSetterManual) {
     course1.setGradePct(89.17f);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 89.17f);
 }
@@ -281,8 +288,14 @@ TEST_F(CourseTest, PrintCourseInfo) {
 TEST_F(CourseTest, AddAssignment) {
     Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
 
+    // check size and success of addition
     course1.addAssignment(assignment1);
     ASSERT_EQ(course1.getAssignmentList().size(), 1);
+
+    // check correct grade information
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 95.18f);
+    ASSERT_EQ(course1.getLetterGrade(), "A");
+    ASSERT_EQ(course1.getGpaVal(), 4.0f);
 }
 
 TEST_F(CourseTest, RemoveAssignment) {
@@ -297,6 +310,11 @@ TEST_F(CourseTest, RemoveAssignment) {
     // check size and success of removal
     ASSERT_EQ(course1.getAssignmentList().size(), 1);
     ASSERT_THROW(course1.getAssignmentList().at(id), std::out_of_range);
+
+    // check correct grade information
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 90.50f);
+    ASSERT_EQ(course1.getLetterGrade(), "A-");
+    ASSERT_EQ(course1.getGpaVal(), 3.7f);
 }
 
 TEST_F(CourseTest, FindAssignmentConst) {
@@ -422,24 +440,24 @@ TEST_F(CourseTest, NumCreditsSetterZero) {
     ASSERT_EQ(course1.getNumCredits(), 0);
 }
 
-TEST_F(CourseTest, GradePctSetterInvalidLow) {
+TEST_F(CourseTest, GradePctSetterManualInvalidLow) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW(course1.setGradePct(-20.24f), std::out_of_range);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
 }
 
-TEST_F(CourseTest, GradePctSetterInvalidHigh) {
+TEST_F(CourseTest, GradePctSetterManualInvalidHigh) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW(course1.setGradePct(200.24f), std::out_of_range);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
 }
 
-TEST_F(CourseTest, GradePctSetterBoundaryLow) {
+TEST_F(CourseTest, GradePctSetterManualBoundaryLow) {
     course1.setGradePct(0.0f);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
 }
 
-TEST_F(CourseTest, GradePctSetterBoundaryHigh) {
+TEST_F(CourseTest, GradePctSetterManualBoundaryHigh) {
     course1.setGradePct(100.0f);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 100.0f);
 }
@@ -643,8 +661,8 @@ TEST_F(CourseTest, PrintCourseInfoCompletedAssignments) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: N/A\n"
-                        "GPA Value: 0.0\nTotal Assignments: 3\nIncomplete Assignments: 0\nCurrent? Yes\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 92.46%\nLetter Grade: A-\n"
+                        "GPA Value: 3.7\nTotal Assignments: 3\nIncomplete Assignments: 0\nCurrent? Yes\n");
 }
 
 TEST_F(CourseTest, PrintCourseInfoMixedAssignments) {
@@ -664,7 +682,7 @@ TEST_F(CourseTest, PrintCourseInfoMixedAssignments) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: N/A\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 59.13%\nLetter Grade: F\n"
                         "GPA Value: 0.0\nTotal Assignments: 3\nIncomplete Assignments: 1\nCurrent? Yes\n");
 }
 
@@ -685,7 +703,7 @@ TEST_F(CourseTest, PrintCourseInfoIncompleteAssignments) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: N/A\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: F\n"
                         "GPA Value: 0.0\nTotal Assignments: 3\nIncomplete Assignments: 3\nCurrent? Yes\n");
 }
 
@@ -696,6 +714,11 @@ TEST_F(CourseTest, AddAssignmentAlreadyExists) {
 
     // throw logic error since Assignment already exists in list
     ASSERT_THROW(course1.addAssignment(assignment1), std::logic_error);
+
+    // check correct grade information after failed addition
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 95.18f);
+    ASSERT_EQ(course1.getLetterGrade(), "A");
+    ASSERT_EQ(course1.getGpaVal(), 4.0f);
 }
 
 TEST_F(CourseTest, RemoveAssignmentNotFound) {
@@ -707,6 +730,11 @@ TEST_F(CourseTest, RemoveAssignmentNotFound) {
 
     // throw out of range since ID was not found
     ASSERT_THROW(course1.removeAssignment(id), std::out_of_range);
+
+    // check correct grade information after failed removal
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 95.18f);
+    ASSERT_EQ(course1.getLetterGrade(), "A");
+    ASSERT_EQ(course1.getGpaVal(), 4.0f);
 }
 
 TEST_F(CourseTest, FindAssignmentConstNotFound) {

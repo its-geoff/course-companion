@@ -11,7 +11,7 @@
 
 #include <algorithm>        // for all_of
 #include <cctype>           // for isspace
-#include <cmath>            // for fabs, min, and max
+#include <cmath>            // for fabs, min, max, and round
 #include <limits>           // for numeric limits
 #include <uuid/uuid.h>      // for UUID
 
@@ -66,6 +66,13 @@ namespace utils {
             return false;
 
         return std::fabs(a - b) <= std::max(relEps * std::max(std::fabs(a), std::fabs(b)), absEps);
+    }
+
+    // rounds a float to a specified number of decimal places
+    float floatRound(float value, int decimalPlaces) {
+        // scale number, round to int, then unscale
+        float scaledNum = std::pow(10.0f, decimalPlaces);
+        return std::round(value * scaledNum) / scaledNum;
     }
 
     // returns today's date as the default start date

@@ -11,7 +11,6 @@
  */
 
 #include <stdexcept>            // for exceptions
-#include <cmath>                // for round
 #include <iomanip>              // for string formatting in print statement
 #include "utils/utils.hpp"        // for reused custom functions
 

@@ -22,6 +22,7 @@ namespace utils {
     void validateDate(std::chrono::year_month_day dueDate);
     std::string boolToString(bool value);
     bool floatEqual(float a, float b, float relEps = std::numeric_limits<float>::epsilon() * 10, float absEps = 1e-8f);
+    float floatRound(float value, int decimalPlaces);
     std::chrono::year_month_day defaultStartDate();
     std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate);
     std::string stringLower(std::string input);
