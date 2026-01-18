@@ -312,9 +312,9 @@ TEST_F(CourseTest, RemoveAssignment) {
     ASSERT_THROW(course1.getAssignmentList().at(id), std::out_of_range);
 
     // check correct grade information
-    ASSERT_FLOAT_EQ(course1.getGradePct(), 90.50f);
-    ASSERT_EQ(course1.getLetterGrade(), "A-");
-    ASSERT_EQ(course1.getGpaVal(), 3.7f);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
+    ASSERT_EQ(course1.getLetterGrade(), "N/A");
+    ASSERT_EQ(course1.getGpaVal(), 0.0f);
 }
 
 TEST_F(CourseTest, FindAssignmentConst) {
@@ -440,6 +440,14 @@ TEST_F(CourseTest, NumCreditsSetterZero) {
     ASSERT_EQ(course1.getNumCredits(), 0);
 }
 
+TEST_F(CourseTest, GradePctSetterAutomaticNoCompleteAssignments) {
+    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/20}, false, 90.2f};
+    Assignment assignment2{"Homework 2", "", std::chrono::year_month_day{2026y/1/31}, false, 0.0f};
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
+}
+
 TEST_F(CourseTest, GradePctSetterManualInvalidLow) {
     // throw out of range since input is not in range 0 to 100
     ASSERT_THROW(course1.setGradePct(-20.24f), std::out_of_range);
@@ -483,6 +491,20 @@ TEST_F(CourseTest, LetterGradeSetterBoundaryHigh) {
 TEST_F(CourseTest, LetterGradeSetterBoundaryLow) {
     course1.setGradePct(0.0f);
     course1.setLetterGrade();
+    ASSERT_EQ(course1.getLetterGrade(), "N/A");
+}
+
+TEST_F(CourseTest, LetterGradeSetterNoCompleteAssignments) {
+    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/20}, false, 90.2f};
+    Assignment assignment2{"Homework 2", "", std::chrono::year_month_day{2026y/1/31}, false, 0.0f};
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    ASSERT_EQ(course1.getLetterGrade(), "N/A");
+}
+
+TEST_F(CourseTest, LetterGradeSetterCompletedZeroGrade) {
+    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/20}, true, 0.0f};
+    course1.addAssignment(assignment1);
     ASSERT_EQ(course1.getLetterGrade(), "F");
 }
 
@@ -682,8 +704,8 @@ TEST_F(CourseTest, PrintCourseInfoMixedAssignments) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 59.13%\nLetter Grade: F\n"
-                        "GPA Value: 0.0\nTotal Assignments: 3\nIncomplete Assignments: 1\nCurrent? Yes\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 88.69%\nLetter Grade: B+\n"
+                        "GPA Value: 3.3\nTotal Assignments: 3\nIncomplete Assignments: 1\nCurrent? Yes\n");
 }
 
 TEST_F(CourseTest, PrintCourseInfoIncompleteAssignments) {
@@ -703,7 +725,7 @@ TEST_F(CourseTest, PrintCourseInfoIncompleteAssignments) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: F\n"
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: N/A\n"
                         "GPA Value: 0.0\nTotal Assignments: 3\nIncomplete Assignments: 3\nCurrent? Yes\n");
 }
 
