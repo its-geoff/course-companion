@@ -195,7 +195,7 @@ void CliView::displayAssignmentMenu() const {
     displayDelim();
     out_ << "                                          Assignment Menu                                          " << "\n";
     out_ << "                                 What would you like to do today?                                  " << "\n";
-    
+
     // check if there are assignments in the list
     if (selectedCourse_->get().getAssignmentList().size() > 0) {
         out_ << "[A] Add assignment" << "\n";
@@ -1310,10 +1310,11 @@ void CliView::run() {
                     } else {
                         displayInvalidSelection();
                     }
-                    
+
                     break;
                 case 'X':
                     // exit
+                    selectedCourse_.reset();
                     selectedAssignment_.reset();
                     state = MenuState::course;
                     break;

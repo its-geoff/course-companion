@@ -4099,7 +4099,7 @@ TEST(CliViewTest, EditAssignmentGradeBoundaryLow) {
     // check for intro and that invalid message does not appear
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
-    ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to edit") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid grade") == std::string::npos);
     ASSERT_TRUE(userOut.find("must be from 0 to 100") == std::string::npos);
 }
@@ -4150,7 +4150,7 @@ TEST(CliViewTest, EditAssignmentGradeBoundaryHigh) {
     // check for intro and that invalid message does not appear
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
-    ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to edit") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid grade") == std::string::npos);
     ASSERT_TRUE(userOut.find("must be from 0 to 100") == std::string::npos);
 }
