@@ -54,7 +54,8 @@ const std::unordered_map<std::string, float> Course::gpaScale_ = {
     {"D+", 1.3},
     {"D", 1.0},
     {"D-", 0.7},
-    {"F", 0.0}
+    {"F", 0.0},
+    {"N/A", 0.0}
 };
 
 // throws an exception if the grade weights do not add up to 1.0
@@ -100,24 +101,33 @@ void Course::validateGradeScale(const std::map<float, std::string>& gradeScale) 
     }
 }
 
-// calculate grade percentage after a change is made to the assignment list
+// calculate course grade percentage using only completed assignments
 float Course::calculateGradePct() {
-    if (assignmentList_.size() == 0) {
+    if (assignmentList_.size() == 0 || calculateCompletedAssignments() == 0) {
         return 0.0f;
     }
 
     float total{0.0};
-    unsigned long numAssignments{assignmentList_.size()};
+    unsigned int numAssignments{0};
 
     for (const auto& [id, assignment] : assignmentList_) {
-        total += assignment.getGrade();
+        // only consider grades from completed assignments
+        if (assignment.getCompleted()) {
+            total += assignment.getGrade();
+            numAssignments++;
+        }
     }
 
     return utils::floatRound(total / numAssignments, 2);
 }
 
-// calculate letter grade based on grade percentage and given grade scale
+// calculate letter grade based on grade percentage and given grade scale; returns "N/A" when no assignments are completed
 std::string Course::calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const {
+    if (utils::floatEqual(gradePct, 0.0f) && calculateCompletedAssignments() == 0) {
+        // grade not determined if all assignments are incomplete
+        return "N/A";
+    }
+    
     auto iter = gradeScale.upper_bound(gradePct);
 
     // if gradePct > the highest key, use the last entry
