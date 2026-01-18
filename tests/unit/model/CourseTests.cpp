@@ -731,7 +731,7 @@ TEST_F(CourseTest, RemoveAssignmentNotFound) {
     // throw out of range since ID was not found
     ASSERT_THROW(course1.removeAssignment(id), std::out_of_range);
 
-    // check correct grade information after failed addition
+    // check correct grade information after failed removal
     ASSERT_FLOAT_EQ(course1.getGradePct(), 95.18f);
     ASSERT_EQ(course1.getLetterGrade(), "A");
     ASSERT_EQ(course1.getGpaVal(), 4.0f);
