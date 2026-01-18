@@ -25,6 +25,7 @@ namespace utils {
     float floatRound(float value, int decimalPlaces);
     std::chrono::year_month_day defaultStartDate();
     std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate);
+    std::chrono::year_month_day defaultEndDate(std::chrono::year_month_day startDate, int numMonths);
     std::string stringLower(std::string input);
     std::string stringTrim(const std::string str);
 
