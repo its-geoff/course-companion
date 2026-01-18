@@ -49,6 +49,11 @@ TEST(UtilsTest, FloatEqual) {
     ASSERT_FALSE(utils::floatEqual(1.0f, 1.1f));
 }
 
+TEST(UtilsTest, FloatRound) {
+    ASSERT_FLOAT_EQ(utils::floatRound(48.271905f, 2), 48.27f);
+    ASSERT_FLOAT_EQ(utils::floatRound(1.578918579f, 5), 1.57892f);
+}
+
 TEST(UtilsTest, DefaultStartDate) {
     std::chrono::year_month_day result = utils::defaultStartDate();
     std::chrono::year_month_day todayDate = utils::getTodayDate();
@@ -114,6 +119,11 @@ TEST(UtilsTest, FloatEqualVeryLarge) {
 
 TEST(UtilsTest, FloatEqualNanValue) {
     ASSERT_FALSE(utils::floatEqual(1.0f, std::numeric_limits<float>::quiet_NaN()));
+}
+
+TEST(UtilsTest, FloatRoundAlreadyRounded) {
+    ASSERT_FLOAT_EQ(utils::floatRound(1.0000000f, 2), 1.00f);
+    ASSERT_FLOAT_EQ(utils::floatRound(3.1400f, 3), 3.140f);
 }
 
 TEST(UtilsTest, StringLowerMixedCase) {

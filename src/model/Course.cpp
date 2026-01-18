@@ -100,8 +100,23 @@ void Course::validateGradeScale(const std::map<float, std::string>& gradeScale) 
     }
 }
 
-// calculate letter grade based on grade scale
-// TO-DO: allow the user to change the grading scale
+// calculate grade percentage after a change is made to the assignment list
+float Course::calculateGradePct() {
+    if (assignmentList_.size() == 0) {
+        return 0.0f;
+    }
+
+    float total{0.0};
+    unsigned long numAssignments{assignmentList_.size()};
+
+    for (const auto& [id, assignment] : assignmentList_) {
+        total += assignment.getGrade();
+    }
+
+    return utils::floatRound(total / numAssignments, 2);
+}
+
+// calculate letter grade based on grade percentage and given grade scale
 std::string Course::calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const {
     auto iter = gradeScale.upper_bound(gradePct);
 
@@ -116,6 +131,7 @@ std::string Course::calculateLetterGrade(float gradePct, const std::map<float, s
     return iter->second;
 }
 
+// calculate letter grade using the existing grade scale
 std::string Course::calculateLetterGrade(float gradePct) const {
     return calculateLetterGrade(gradePct, gradeScale_);
 }
@@ -250,6 +266,12 @@ void Course::setNumCredits(int newNumCredits) {
     numCredits_ = newNumCredits;
 }
 
+// sets grade percentage automatically through calculation
+void Course::setGradePct() {
+    gradePct_ = calculateGradePct();
+}
+
+// sets grade percentage manually through user input
 void Course::setGradePct(float newGradePct) {
     validateGradePct(newGradePct);
     gradePct_ = newGradePct;
@@ -300,6 +322,11 @@ void Course::addAssignment(const Assignment &assignment) {
     if (!inserted) {
         throw std::logic_error("Assignment with the same ID already exists.");
     }
+
+    // update grade information
+    setGradePct();
+    setLetterGrade();
+    setGpaVal();
 }
 
 // removes an Assignment with the specified UUID
@@ -307,6 +334,11 @@ void Course::removeAssignment(const std::string& id) {
     if (assignmentList_.erase(id) == 0) {
         throw std::out_of_range("Assignment not found.");
     }
+
+    // update grade information
+    setGradePct();
+    setLetterGrade();
+    setGpaVal();
 }
 
 // finds an Assignment in assignmentList based on ID; non-mutable (read-only)
