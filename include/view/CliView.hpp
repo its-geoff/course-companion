@@ -53,7 +53,7 @@ class CliView {
         void displayAssignmentMenu() const;
         void displayTermListInfo() const;
         void displayCourseListInfo() const;
-        // void displayAssignmentListInfo() const;
+        void displayAssignmentListInfo() const;
         void displayInvalidSelection() const;
 
         void promptAddTerm();
@@ -64,6 +64,10 @@ class CliView {
         void promptEditCourse();
         void promptSelectCourse();
         void promptRemoveCourse();
+        void promptAddAssignment();
+        void promptEditAssignment();
+        void promptSelectAssignment();
+        void promptRemoveAssignment();
 
         char getCharInput(const std::string &label, const char defaultVal) const;
         std::string getStringInput(const std::string &label, const std::string &defaultVal) const;

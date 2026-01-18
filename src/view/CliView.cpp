@@ -80,6 +80,29 @@ namespace {
             return startDateUpdated || endDateUpdated;
         }
     };
+
+    // edit assignment result struct to replace multiple flags
+    struct EditAssignmentResult {
+        bool titleRequested{false};
+        bool titleUpdated{false};
+
+        bool descriptionRequested{false};
+        bool descriptionUpdated{false};
+
+        bool dueDateRequested{false};
+        bool dueDateUpdated{false};
+
+        bool completedRequested{false};
+        bool completedUpdated{false};
+
+        bool gradeRequested{false};
+        bool gradeUpdated{false};
+
+        bool anyRequested() const {
+            return titleRequested || descriptionRequested || dueDateRequested
+                || completedRequested || gradeRequested;
+        }
+    };
 }
 
 // takes date as string input and converts to year_month_day format
@@ -172,11 +195,18 @@ void CliView::displayAssignmentMenu() const {
     displayDelim();
     out_ << "                                          Assignment Menu                                          " << "\n";
     out_ << "                                 What would you like to do today?                                  " << "\n";
-    out_ << "[A] Add assignment" << "\n";
-    out_ << "[E] Edit assignment" << "\n";
-    out_ << "[S] Select assignment" << "\n";
-    out_ << "[R] Remove assignment" << "\n";
-    out_ << "[X] Exit to course menu" << "\n";
+
+    // check if there are assignments in the list
+    if (selectedCourse_->get().getAssignmentList().size() > 0) {
+        out_ << "[A] Add assignment" << "\n";
+        out_ << "[E] Edit assignment" << "\n";
+        out_ << "[S] Select assignment" << "\n";
+        out_ << "[R] Remove assignment" << "\n";
+        out_ << "[X] Exit to course menu" << "\n";
+    } else {
+        out_ << "[A] Add assignment" << "\n";
+        out_ << "[X] Exit to course menu" << "\n";
+    }
 }
 
 // displays information about all terms from TermController
@@ -197,6 +227,17 @@ void CliView::displayCourseListInfo() const {
     for (const auto& [id, course] : courses) {
         displaySecondaryDelim();
         course.printCourseInfo(out_);
+        displaySecondaryDelim();
+    }
+}
+
+// displays information about all assignments from the selected course
+void CliView::displayAssignmentListInfo() const {
+    const std::unordered_map<std::string, Assignment>& assignments = selectedCourse_->get().getAssignmentList();
+
+    for (const auto& [id, assignment] : assignments) {
+        displaySecondaryDelim();
+        assignment.printAssignmentInfo(out_);
         displaySecondaryDelim();
     }
 }
@@ -732,6 +773,266 @@ void CliView::promptRemoveCourse() {
     }
 }
 
+// prompt the user for information to add an assignment into the list
+void CliView::promptAddAssignment() {
+    bool titleEmpty{true};
+    bool invalidDueDate{true};
+    bool invalidCompleted{true};
+    bool invalidGrade{true};
+
+    out_ << "Enter the following information for the assignment you'd like to add: " << "\n";
+
+    std::string title{};
+    while (titleEmpty) {
+        title = getStringInput("Title", " ");
+
+        if (utils::isOnlyWhitespace(title)) {
+            out_ << "Invalid title. Title must be non-empty. Please try again." << "\n";
+        } else {
+            titleEmpty = false;
+        }
+    }
+
+    std::string description{};
+    description = getStringInput("Description", " ");
+
+    // empty description condition
+    if (utils::isOnlyWhitespace(description)) {
+        description = "";
+    }
+
+    std::chrono::year_month_day dueDate{};
+    constexpr std::chrono::year_month_day emptyDate{};
+    while (invalidDueDate) {
+        try {
+            dueDate = getDateInput("Due Date (YYYY-MM-DD)", {});
+
+            // check if date is empty (default); if not, validate input
+            if (dueDate == emptyDate) {
+                out_ << "Using default date." << "\n";
+            } else {
+                utils::validateDate(dueDate);
+            }
+
+            invalidDueDate = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid due date. Due date must be a valid date. Please try again." << "\n";
+        }
+    }
+
+    bool completed{};
+    while (invalidCompleted) {
+        try {
+            completed = getBoolInput("Completed assignment? (yes/no)", false);
+            invalidCompleted = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid completed flag. Completed flag must be a valid boolean. Please try again." << "\n";
+        }
+    }
+
+    float grade{};
+    while (invalidGrade) {
+        grade = getFloatInput("Grade", 0.0f);
+
+        if (grade > 100.0f || grade < 0.0f) {
+            out_ << "Invalid grade. Grade must be from 0 to 100. Please try again." << "\n";
+        } else {
+            invalidGrade = false;
+        }
+    }
+
+    try {
+        AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
+        assignmentController.addAssignment(title, description, dueDate, completed, grade);
+    } catch (const std::logic_error& e) {
+        out_ << "An assignment with this title already exists. Please choose a new title." << "\n";
+    } catch (const std::exception& e) {
+        out_ << "An unexpected error occurred while adding the assignment." << "\n";
+    }
+}
+
+// prompt the user for information to edit an assignment in the current list
+void CliView::promptEditAssignment() {
+    EditAssignmentResult resultFlags;
+    std::vector<std::string> editFields{};
+    AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
+
+    out_ << "Enter the following information for the assignment you'd like to edit: " << "\n";
+    std::string title = getStringInput("Title", " ");
+    try {
+        selectedAssignment_ = assignmentController.findAssignment(title);
+    } catch (const std::exception& e) {
+        out_ << "Assignment not found. Operation cancelled." << "\n";
+        return;
+    }
+    std::string id = selectedAssignment_->get().getId();
+
+    // get fields that need to be updated and normalize input
+    out_ << "Fields available: title, description, due date, completed, grade" << "\n";
+    std::string toUpdate = getStringInput("Fields to update (comma separated)", " ");
+    toUpdate = utils::stringLower(toUpdate);
+    editFields = splitStringByComma(toUpdate);
+
+    // get updated info and perform update
+    for (auto& field : editFields) {
+        // trim whitespace from strings
+        field = utils::stringTrim(field);
+
+        if (field == "title") {
+            resultFlags.titleRequested = true;
+
+            try {
+                std::string newTitle = getStringInput("New title", " ");
+                utils::validateTitle(newTitle);
+                assignmentController.editTitle(id, newTitle);
+                resultFlags.titleUpdated = true;
+            } catch (const std::invalid_argument& e) {
+                out_ << "Empty string. Cannot update title." << "\n";
+            } catch (const std::logic_error& e) {
+                out_ << "An assignment with this title already exists. Cannot update title." << "\n";
+            }
+        } else if (field == "description") {
+            resultFlags.descriptionRequested = true;
+
+            std::string oldDescription = selectedAssignment_->get().getDescription();
+            std::string newDescription = getStringInput("New description", " ");
+            assignmentController.editDescription(id, newDescription);
+
+            // only set descriptionUpdated if old and new description are not both whitespace
+            if (!(utils::isOnlyWhitespace(oldDescription)) || !(utils::isOnlyWhitespace(newDescription))) {
+                resultFlags.descriptionUpdated = true;
+            }
+        } else if (field == "due date" || field == "duedate") {
+            resultFlags.dueDateRequested = true;
+
+            try {
+                std::chrono::year_month_day newDueDate = getDateInput("New due date", {});
+                utils::validateDate(newDueDate);
+                assignmentController.editDueDate(id, newDueDate);
+                resultFlags.dueDateUpdated = true;
+            } catch (const std::exception& e) {
+                out_ << "Invalid date. Cannot update due date." << "\n";
+            }
+        } else if (field == "completed") {
+            resultFlags.completedRequested = true;
+
+            try {
+                bool newCompleted = getBoolInput("Is this assignment completed? (yes/no)", false);
+                assignmentController.editCompleted(id, newCompleted);
+                resultFlags.completedUpdated = true;
+            } catch (const std::exception& e) {
+                out_ << "Invalid boolean. Cannot update completed flag." << "\n";
+            }
+        } else if (field == "grade") {
+            resultFlags.gradeRequested = true;
+            float newGrade = getFloatInput("New grade", 0.0f);
+
+            if (newGrade < 0.0f || newGrade > 100.0f) {
+                out_ << "Grade must be from 0 to 100. Cannot update grade." << "\n";
+            } else {
+                assignmentController.editGrade(id, newGrade);
+                resultFlags.gradeUpdated = true;
+            }
+        }
+    }
+
+    if (resultFlags.anyRequested()) {
+        out_ << "Update results:" << "\n";
+
+        if (resultFlags.titleRequested) {
+            if (resultFlags.titleUpdated) {
+                out_ << "Title: " << selectedAssignment_->get().getTitle() << "\n";
+            } else {
+                out_ << "Title: (unchanged)" << "\n";
+            }
+        }
+
+        if (resultFlags.descriptionRequested) {
+            if (resultFlags.descriptionUpdated) {
+                out_ << "Description: " << selectedAssignment_->get().getDescription() << "\n";
+            } else {
+                out_ << "Description: (unchanged)" << "\n";
+            }
+        }
+
+        if (resultFlags.dueDateRequested) {
+            if (resultFlags.dueDateUpdated) {
+                out_ << "Due Date: " << selectedAssignment_->get().getDueDate() << "\n";
+            } else {
+                out_ << "Due Date: (unchanged)" << "\n";
+            }
+        }
+
+        if (resultFlags.completedRequested) {
+            if (resultFlags.completedUpdated) {
+                out_ << "Completed? " << utils::boolToString(selectedAssignment_->get().getCompleted()) << "\n";
+            } else {
+                out_ << "Completed? (unchanged)" << "\n";
+            }
+        }
+
+        if (resultFlags.gradeRequested) {
+            if (resultFlags.gradeUpdated) {
+                out_ << "Grade: " << selectedAssignment_->get().getGrade() << "\n";
+            } else {
+                out_ << "Grade: (unchanged)" << "\n";
+            }
+        }
+    }
+
+    // reset selectedAssignment to allow the selection of a new one
+    selectedAssignment_.reset();
+}
+
+// prompt the user or the title to select an assignment from the list
+void CliView::promptSelectAssignment() {
+    AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
+
+    out_ << "Here is a list of all assignments:" << "\n";
+    displayAssignmentListInfo();
+
+    out_ << "Enter the following information for the assignment you'd like to select: " << "\n";
+    std::string title = getStringInput("Title", " ");
+
+    try {
+        selectedAssignment_ = assignmentController.findAssignment(title);
+        out_ << "Assignment '" << title << "' was selected." << "\n";
+    } catch (const std::exception& e) {
+        out_ << "Assignment not found. No selection made." << "\n";
+        selectedAssignment_.reset();
+    }
+}
+
+// prompt the user for the title to remove an assignment from the list
+void CliView::promptRemoveAssignment() {
+    bool invalidBool{true};
+
+    out_ << "Enter the following information for the assignment you'd like to remove: " << "\n";
+    std::string title = getStringInput("Title", " ");
+
+    // confirmation before removal
+    bool confirm{false};
+    while (invalidBool) {
+        try {
+            confirm = getBoolInput("Are you sure you want to remove this assignment? (yes/no)", false);
+            invalidBool = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid response. Please try again." << "\n";
+        }
+    }
+
+    if (confirm) {
+        try {
+            controller_.getCourseController().getAssignmentController().removeAssignment(title);
+            out_ << "Assignment '" << title << "' was removed." << "\n";
+        } catch (const std::exception& e) {
+            out_ << "Assignment not found. Operation cancelled." << "\n";
+        }
+    } else {
+        out_ << "Operation cancelled. Assignment '" << title << "' was not removed." << "\n";
+    }
+}
+
 // ask the user for a char input, using the default value in the case of an invalid input 
 char CliView::getCharInput(const std::string &label, const char defaultVal) const {
     out_ << label << " [default: " << defaultVal << "]: ";
@@ -892,6 +1193,7 @@ void CliView::run() {
                         promptSelectTerm();
 
                         if (selectedTerm_) {
+                            controller_.selectTerm(selectedTerm_->get().getTitle());
                             state = MenuState::course;
                         }
                     } else {
@@ -944,6 +1246,7 @@ void CliView::run() {
                         promptSelectCourse();
 
                         if (selectedCourse_) {
+                            controller_.getCourseController().selectCourse(selectedCourse_->get().getTitle());
                             state = MenuState::assignment;
                         }
                     } else {
@@ -980,23 +1283,39 @@ void CliView::run() {
             switch (userInput) {
                 case 'A':
                     // add assignment
-                    out_ << "Add assignment placeholder" << "\n";
+                    promptAddAssignment();
                     break;
                 case 'E':
                     // edit assignment
-                    out_ << "Edit assignment placeholder" << "\n";
+                    if (selectedCourse_->get().getAssignmentList().size() > 0) {
+                        promptEditAssignment();
+                    } else {
+                        displayInvalidSelection();
+                    }
+
                     break;
                 case 'S':
                     // select assignment
-                    out_ << "Select assignment placeholder" << "\n";
+                    if (selectedCourse_->get().getAssignmentList().size() > 0) {
+                        promptSelectAssignment();
+                    } else {
+                        displayInvalidSelection();
+                    }
+
                     break;
                 case 'R':
                     // remove assignment
-                    out_ << "Remove assignment placeholder" << "\n";
+                    if (selectedCourse_->get().getAssignmentList().size() > 0) {
+                        promptRemoveAssignment();
+                    } else {
+                        displayInvalidSelection();
+                    }
+
                     break;
                 case 'X':
                     // exit
                     selectedCourse_.reset();
+                    selectedAssignment_.reset();
                     state = MenuState::course;
                     break;
                 default:

@@ -30,7 +30,7 @@ class CourseController {
         Term& term_;
         Course* activeCourse_ = nullptr;
         std::unordered_map<std::string, std::string> titleToId_{};  // title -> id, titles in lowercase for easier comparison
-        std::optional<AssignmentController> assignmentController_{};
+        std::optional<AssignmentController> assignmentController_{};    // controller for currently selected course
 
     public:
         CourseController(Term& term);
@@ -43,6 +43,7 @@ class CourseController {
 
         const std::unordered_map<std::string, Course>& getCourseList() const;
         std::string getCourseId(const std::string& title) const;
+        AssignmentController& getAssignmentController();
 
         void addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate, 
             const std::chrono::year_month_day& endDate, int numCredits, bool active);
