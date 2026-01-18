@@ -30,7 +30,7 @@ std::string CourseController::getCourseId(const std::string &title) const {
 
 AssignmentController& CourseController::getAssignmentController() {
     if (!assignmentController_.has_value()) {
-        throw std::logic_error("No term selected.");
+        throw std::logic_error("No course selected.");
     }
 
     return *assignmentController_;
