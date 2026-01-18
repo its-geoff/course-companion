@@ -101,7 +101,7 @@ void Course::validateGradeScale(const std::map<float, std::string>& gradeScale) 
     }
 }
 
-// calculate grade percentage after a change is made to the assignment list
+// calculate course grade percentage using only completed assignments
 float Course::calculateGradePct() {
     if (assignmentList_.size() == 0 || calculateCompletedAssignments() == 0) {
         return 0.0f;
@@ -121,9 +121,9 @@ float Course::calculateGradePct() {
     return utils::floatRound(total / numAssignments, 2);
 }
 
-// calculate letter grade based on grade percentage and given grade scale
+// calculate letter grade based on grade percentage and given grade scale; returns "N/A" when no assignments are completed
 std::string Course::calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const {
-    if (utils::floatEqual(gradePct_, 0.0f) && calculateCompletedAssignments() == 0) {
+    if (utils::floatEqual(gradePct, 0.0f) && calculateCompletedAssignments() == 0) {
         // grade not determined if all assignments are incomplete
         return "N/A";
     }
