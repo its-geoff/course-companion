@@ -523,6 +523,13 @@ TEST_F(CourseTest, GpaValSetterLowF) {
     ASSERT_EQ(course1.getGpaVal(), 0.0f);
 }
 
+TEST_F(CourseTest, GpaValSetterOverHundred) {
+    course1.setGradePct(147.1f);
+    course1.setLetterGrade();
+    course1.setGpaVal();
+    ASSERT_EQ(course1.getGpaVal(), 4.0f);
+}
+
 TEST_F(CourseTest, GradeScaleSetterEmpty) {
     Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, 1};
     std::map<float, std::string> gradeScale2 = {};
