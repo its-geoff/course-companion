@@ -274,8 +274,8 @@ TEST_F(CourseTest, PrintCourseInfo) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
-                        "GPA Value: 0.0\nCurrent? No\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: N/A\n"
+                        "GPA Value: 0.0\nTotal Assignments: 0\nIncomplete Assignments: 0\nCurrent? No\n");
 }
 
 TEST_F(CourseTest, AddAssignment) {
@@ -607,8 +607,8 @@ TEST_F(CourseTest, PrintCourseInfoPartial) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
-                        "GPA Value: 0.0\nCurrent? Yes\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: N/A\n"
+                        "GPA Value: 0.0\nTotal Assignments: 0\nIncomplete Assignments: 0\nCurrent? Yes\n");
 }
 
 TEST_F(CourseTest, PrintCourseInfoDescPartial) {
@@ -622,8 +622,8 @@ TEST_F(CourseTest, PrintCourseInfoDescPartial) {
     output = std::regex_replace(output, uuidRegex, "<UUID>");
 
     ASSERT_EQ(output, "ID: <UUID>\nCourse: CMPE 142\nDescription: Operating Systems\n"
-                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: \n"
-                        "GPA Value: 0.0\nCurrent? Yes\n");
+                        "Duration: 2025-08-12 - 2025-12-05\nNumber of Credits: 3\nGrade Percentage: 0.00%\nLetter Grade: N/A\n"
+                        "GPA Value: 0.0\nTotal Assignments: 0\nIncomplete Assignments: 0\nCurrent? Yes\n");
 }
 
 TEST_F(CourseTest, AddAssignmentAlreadyExists) {

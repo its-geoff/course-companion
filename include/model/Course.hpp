@@ -40,7 +40,7 @@ class Course {
         std::unordered_map<std::string, float> gradeWeights_{gradeWeightsDefault_}; // weights of each assignment type
         int numCredits_{3};     // default number of credits for a class, TO-DO: allow user to override default
         float gradePct_{0.0};   // grade percentage from 0 to 100%
-        std::string letterGrade_{};
+        std::string letterGrade_{"N/A"};
         float gpaVal_{0.0};     // GPA value associated with letter grade
         bool active_{true};     // indicates whether the course is currently ongoing
         static const std::map<float, std::string> gradeScaleDefault_;    // default grade scale if not set
@@ -55,6 +55,7 @@ class Course {
         std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const; // auto set during add or remove Assignment?
         std::string calculateLetterGrade(float gradePct) const;
         float calculateGpaVal(const std::string& letterGrade);
+        int calculateCompletedAssignments() const;
 
     public:
         Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
