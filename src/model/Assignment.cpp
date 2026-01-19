@@ -41,7 +41,7 @@ Assignment::Assignment(std::string title, std::string description, std::string c
     category_ = std::move(category);
     dueDate_ = dueDate;
     completed_ = completed;
-    grade_ = grade;
+    grade_ = utils::floatRound(grade, 2);   // round to 2 decimal places for consistency
 }
 
 std::string Assignment::getId() const {
@@ -103,7 +103,11 @@ void Assignment::setGrade(float newGrade) {
 
 // overload for point-based grading; need to calculate percentage before assignment
 void Assignment::setGrade(float pointsEarned, float totalPoints) {
-    float calculatedGrade = (pointsEarned / totalPoints) * 100.0;
+    if (totalPoints <= 0.0f) {
+        throw std::invalid_argument("Total points must be greater than 0.");
+    }
+
+    float calculatedGrade = (pointsEarned / totalPoints) * 100.0f;
     setGrade(calculatedGrade);
 }
 

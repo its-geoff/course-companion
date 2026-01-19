@@ -290,6 +290,16 @@ TEST_F(AssignmentTest, GradeSetterPointsBoundaryHigh) {
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 100.0f);
 }
 
+TEST_F(AssignmentTest, GradeSetterPointsNegativeTotal) {
+    // throw invalid argument since total points is negative
+    ASSERT_THROW(assignment1.setGrade(20, -20), std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, GradeSetterPointsZeroTotal) {
+    // throw invalid argument since total points is zero
+    ASSERT_THROW(assignment1.setGrade(20, 0), std::invalid_argument);
+}
+
 // ====================================
 // INITIALIZATION EDGE CASES
 // ====================================
