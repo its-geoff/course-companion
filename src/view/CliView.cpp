@@ -294,16 +294,17 @@ void CliView::promptAddTerm() {
             // check if date is empty (default); if not, validate input
             if (endDate == emptyDate) {
                 out_ << "Using default date." << "\n";
+                endDate = utils::defaultEndDate(startDate);
             } else {
                 utils::validateDate(endDate);
             }
             utils::validateDateOrder(startDate, endDate);
 
             invalidEndDate = false;
+        } catch (const std::invalid_argument& e) {
+            out_ << "Invalid end date. End date must be a valid date. Please try again." << "\n";
         } catch (const std::logic_error& e) {
             out_ << "Invalid end date. End date cannot be before start date. Please try again." << "\n";
-        } catch (const std::exception& e) {
-            out_ << "Invalid end date. End date must be a valid date. Please try again." << "\n";
         }
     }
 
@@ -384,10 +385,10 @@ void CliView::promptEditTerm() {
 
                 controller_.editStartDate(id, newStartDate);
                 resultFlags.startDateUpdated = true;
+            } catch (const std::invalid_argument& e) {
+                out_ << "Invalid date. Cannot update start date." << "\n";
             } catch (const std::logic_error& e) {
                 out_ << "Start date cannot be after end date. Cannot update start date." << "\n";
-            } catch (const std::exception& e) {
-                out_ << "Invalid date. Cannot update start date." << "\n";
             }
         } else if (field == "end date" || field == "enddate") {
             resultFlags.endDateRequested = true;
@@ -400,10 +401,10 @@ void CliView::promptEditTerm() {
 
                 controller_.editEndDate(id, newEndDate);
                 resultFlags.endDateUpdated = true;
+            } catch (const std::invalid_argument e) {
+                out_ << "Invalid date. Cannot update end date." << "\n";
             } catch (const std::logic_error& e) {
                 out_ << "End date cannot be before start date. Cannot update end date." << "\n";
-            } catch (const std::exception& e) {
-                out_ << "Invalid date. Cannot update end date." << "\n";
             }
         } else if (field == "active") {
             resultFlags.activeRequested = true;
@@ -555,16 +556,17 @@ void CliView::promptAddCourse() {
             // check if date is empty (default); if not, validate input
             if (endDate == emptyDate) {
                 out_ << "Using default date." << "\n";
+                endDate = utils::defaultEndDate(startDate);
             } else {
                 utils::validateDate(endDate);
             }
             utils::validateDateOrder(startDate, endDate);
 
             invalidEndDate = false;
-        } catch (const std::logic_error& e) {
-            out_ << "Invalid end date. End date cannot be after start date. Please try again." << "\n";
-        } catch (const std::exception& e) {
+        } catch (const std::invalid_argument& e) {
             out_ << "Invalid end date. End date must be a valid date. Please try again." << "\n";
+        } catch (const std::logic_error& e) {
+            out_ << "Invalid end date. End date cannot be before start date. Please try again." << "\n";
         }
     }
 
@@ -668,10 +670,10 @@ void CliView::promptEditCourse() {
 
                 courseController.editStartDate(id, newStartDate);
                 resultFlags.startDateUpdated = true;
+            } catch (const std::invalid_argument& e) {
+                out_ << "Invalid date. Cannot update start date." << "\n";
             } catch (const std::logic_error& e) {
                 out_ << "Start date cannot be after end date. Cannot update start date." << "\n";
-            } catch (const std::exception& e) {
-                out_ << "Invalid date. Cannot update start date." << "\n";
             }
         } else if (field == "end date" || field == "enddate") {
             resultFlags.endDateRequested = true;
@@ -684,10 +686,10 @@ void CliView::promptEditCourse() {
 
                 courseController.editEndDate(id, newEndDate);
                 resultFlags.endDateUpdated = true;
+            } catch (const std::invalid_argument e) {
+                out_ << "Invalid date. Cannot update end date." << "\n";
             } catch (const std::logic_error& e) {
                 out_ << "End date cannot be before start date. Cannot update end date." << "\n";
-            } catch (const std::exception& e) {
-                out_ << "Invalid date. Cannot update end date." << "\n";
             }
         } else if (field == "number of credits" || field == "numberofcredits" || field == "numcredits") {
             resultFlags.numCreditsRequested = true;
