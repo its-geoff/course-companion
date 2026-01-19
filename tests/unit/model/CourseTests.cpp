@@ -456,6 +456,44 @@ TEST_F(CourseTest, GradePctSetterAutomaticDifferentCategories) {
     ASSERT_FLOAT_EQ(course1.getGradePct(), 89.35f);
 }
 
+TEST_F(CourseTest, GradePctSetterAutomaticAllCategories) {
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, true, 90.2f};
+    Assignment assignment2{"Midterm", "", "Midterm", std::chrono::year_month_day{2026y/2/28}, true, 88.74f};
+    Assignment assignment3{"Final Exam", "", "Final Exam", std::chrono::year_month_day{2026y/4/17}, true, 76.11f};
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    course1.addAssignment(assignment3);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 84.05f);
+}
+
+TEST_F(CourseTest, GradePctSetterAutomaticMultipleAssignmentsSameCategory) {
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, true, 90.2f};
+    Assignment assignment2{"Homework 2", "", "Homework", std::chrono::year_month_day{2026y/2/28}, true, 88.74f};
+    Assignment assignment3{"Homework 3", "", "Homework", std::chrono::year_month_day{2026y/4/17}, true, 76.11f};
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    course1.addAssignment(assignment3);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 85.02f);
+}
+
+TEST_F(CourseTest, GradePctSetterAutomaticUnevenCategorySplit) {
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, true, 90.2f};
+    Assignment assignment2{"Homework 2", "", "Homework", std::chrono::year_month_day{2026y/2/28}, true, 88.74f};
+    Assignment assignment3{"Final Exam", "", "Final Exam", std::chrono::year_month_day{2026y/4/17}, true, 76.11f};
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    course1.addAssignment(assignment3);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 81.25f);
+}
+
+TEST_F(CourseTest, GradePctSetterAutomaticCategoriesNonexistent) {
+    Assignment assignment1{"Quiz 1", "", "Quizzes", std::chrono::year_month_day{2026y/1/20}, true, 90.2f};
+    Assignment assignment2{"Quiz 2", "", "Quizzes", std::chrono::year_month_day{2026y/2/28}, true, 88.74f};
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
+}
+
 TEST_F(CourseTest, GradePctSetterManualInvalidLow) {
     // throw out of range since input is not in range 0 to 150
     ASSERT_THROW(course1.setGradePct(-20.24f), std::out_of_range);

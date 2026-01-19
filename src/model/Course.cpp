@@ -100,7 +100,9 @@ void Course::validateGradeScale(const std::map<float, std::string>& gradeScale) 
     }
 }
 
-// calculate grades by category and store them in the map
+// iterates over all assignments in the Course, groups completed assignments by category, and computes
+// raw percentage grade for each category; the per-category averages will be weighted for the total 
+// grade calculation
 void Course::calculateGradesByCategory() {
     std::unordered_map<std::string, float> totals;
     std::unordered_map<std::string, unsigned int> counts;
@@ -127,10 +129,7 @@ void Course::calculateGradesByCategory() {
         }
 
         float categoryGrade = totals[categoryName] / it->second;
-        // only add to map if there is a completed assignment in the category
-        if (counts[categoryName] > 0) {
-            gradesByCategory_.emplace(categoryName, utils::floatRound(categoryGrade, 2));
-        }
+        gradesByCategory_.emplace(categoryName, utils::floatRound(categoryGrade, 2));
     }
 }
 
@@ -149,6 +148,11 @@ float Course::calculateGradePct() {
         if (gradesByCategory_.contains(category)) {
             activeWeightTotal += weight;
         }
+    }
+
+    // return early if no active categories
+    if (utils::floatEqual(activeWeightTotal, 0.0f)) {
+        return 0.0f;
     }
     
     // normalize weights and calculate overall grade

@@ -38,7 +38,7 @@ class Course {
         std::unordered_map<std::string, Assignment> assignmentList_{};  // id -> Assignment
         static const std::unordered_map<std::string, float> gradeWeightsDefault_;   // default grade weights if not set
         std::unordered_map<std::string, float> gradeWeights_{gradeWeightsDefault_}; // weights of each assignment category
-        std::unordered_map<std::string, float> gradesByCategory_;   // map of each raw percentage grade by category
+        std::unordered_map<std::string, float> gradesByCategory_;   // average percentage grade per category for categories with at least one completed assignment
         int numCredits_{3};     // default number of credits for a class, TO-DO: allow user to override default
         float gradePct_{0.0};   // grade percentage from 0 to 100%
         std::string letterGrade_{"N/A"};
