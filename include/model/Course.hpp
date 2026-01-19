@@ -83,8 +83,8 @@ class Course {
         void setEndDate(std::chrono::year_month_day newEndDate);
         void setGradeWeights(const std::unordered_map<std::string, float>& newGradeWeights);
         void setNumCredits(int newNumCredits);
-        void setGradePct();
-        void setGradePct(float newGradePct);
+        void setGradePct();     // overload for automatic calculation
+        void setGradePct(float newGradePct);    // overload for manual input
         void setGradeScale(const std::map<float, std::string>& newGradeScale);      // need to test
         void setLetterGrade();
         void setGpaVal();

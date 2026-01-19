@@ -51,7 +51,8 @@ class Assignment {
         void setCategory(std::string newCategory);
         void setDueDate(std::chrono::year_month_day newDueDate);
         void setCompleted(bool newCompleted);
-        void setGrade(float newGrade);
+        void setGrade(float newGrade);  // overload for percentage-based grading
+        void setGrade(float pointsEarned, float totalPoints);   // overload for point-based grading
 
         void printAssignmentInfo(std::ostream &os = std::cout) const;
 
