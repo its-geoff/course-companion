@@ -18,7 +18,7 @@ namespace utils {
     std::chrono::year_month_day getTodayDate();
     bool isOnlyWhitespace(const std::string str);
     std::string generateUuid();
-    void validateTitle(std::string title);
+    void validateReqString(std::string str, std::string label);
     void validateDate(std::chrono::year_month_day dueDate);
     void validateDateOrder(std::chrono::year_month_day startDate, std::chrono::year_month_day endDate);
     std::string boolToString(bool value);

@@ -57,7 +57,7 @@ Term::Term(std::string title, std::chrono::year_month_day startDate, std::chrono
     }
 
     // input validation before moving to member variables
-    utils::validateTitle(title);
+    utils::validateReqString(title, "Title");
     utils::validateDate(startDate);
     utils::validateDate(endDate);
     utils::validateDateOrder(startDate, endDate);
@@ -101,7 +101,7 @@ bool Term::getActive() const {
 }
 
 void Term::setTitle(std::string newTitle) {
-    utils::validateTitle(newTitle);
+    utils::validateReqString(newTitle, "Title");
     title_ = newTitle;
 }
 

@@ -29,9 +29,14 @@ std::string AssignmentController::getAssignmentId(const std::string& title) cons
 }
 
 // uses info from view to create an Assignment object then adds it to the list of Assignments in Course
-void AssignmentController::addAssignment(const std::string& title, const std::string& description, 
+void AssignmentController::addAssignment(const std::string& title, const std::string& description, const std::string& category,
     const std::chrono::year_month_day& dueDate, bool completed, float grade) {
-    Assignment assignment{title, description, dueDate, completed, grade};
+    Assignment assignment{title, description, category, dueDate, completed, grade};
+
+    // validate category before adding to assignment list
+    if (!course_.getGradeWeights().contains(category)) {
+        throw std::out_of_range("Invalid category. Category must be in grade weights.");
+    }
 
     try {
         course_.addAssignment(assignment);
@@ -70,6 +75,21 @@ void AssignmentController::editTitle(const std::string& id, const std::string& n
 void AssignmentController::editDescription(const std::string& id, const std::string& newDescription) {
     Assignment& assignment = course_.findAssignment(id);
     assignment.setDescription(newDescription);
+}
+
+// edits the category of the Assignment with the given ID
+void AssignmentController::editCategory(const std::string& id, const std::string& newCategory) {
+    Assignment& assignment = course_.findAssignment(id);
+    
+    if (utils::isOnlyWhitespace(newCategory)) {
+        throw std::invalid_argument("Category must be non-empty.");
+    }
+
+    // validate category before editing
+    if (!course_.getGradeWeights().contains(newCategory)) {
+        throw std::out_of_range("Invalid category. Category must be in grade weights.");
+    }
+    assignment.setCategory(newCategory);
 }
 
 // edits the due date of the Assignment with the given ID

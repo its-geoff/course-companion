@@ -45,8 +45,8 @@ TEST_F(CourseTest, EndDateGetter) {
 }
 
 TEST_F(CourseTest, AssignmentListGetter) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", "", "Homework", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
     std::string id1 = assignment1.getId();
@@ -57,8 +57,8 @@ TEST_F(CourseTest, AssignmentListGetter) {
 }
 
 TEST_F(CourseTest, AssignmentListGetterCheckSize) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", "", "Homework", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
     auto list = course1.getAssignmentList();
@@ -162,7 +162,7 @@ TEST_F(CourseTest, GradeWeightsSetter) {
 }
 
 TEST_F(CourseTest, GradePctSetterAutomatic) {
-    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/18}, true, 89.17f};
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/18}, true, 89.17f};
     course1.addAssignment(assignment1);
     course1.setGradePct();
     ASSERT_FLOAT_EQ(course1.getGradePct(), 89.17f);
@@ -286,7 +286,7 @@ TEST_F(CourseTest, PrintCourseInfo) {
 }
 
 TEST_F(CourseTest, AddAssignment) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
 
     // check size and success of addition
     course1.addAssignment(assignment1);
@@ -299,8 +299,8 @@ TEST_F(CourseTest, AddAssignment) {
 }
 
 TEST_F(CourseTest, RemoveAssignment) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", "", "Homework", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
@@ -318,8 +318,8 @@ TEST_F(CourseTest, RemoveAssignment) {
 }
 
 TEST_F(CourseTest, FindAssignmentConst) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", "", "Homework", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
@@ -330,8 +330,8 @@ TEST_F(CourseTest, FindAssignmentConst) {
 }
 
 TEST_F(CourseTest, FindAssignmentNonConst) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", "", "Homework", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     Assignment assignment3 = assignment1;    // make assignment3 the same as assignment1
 
     course1.addAssignment(assignment1);
@@ -441,8 +441,8 @@ TEST_F(CourseTest, NumCreditsSetterZero) {
 }
 
 TEST_F(CourseTest, GradePctSetterAutomaticNoCompleteAssignments) {
-    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/20}, false, 90.2f};
-    Assignment assignment2{"Homework 2", "", std::chrono::year_month_day{2026y/1/31}, false, 0.0f};
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, false, 90.2f};
+    Assignment assignment2{"Homework 2", "", "Homework", std::chrono::year_month_day{2026y/1/31}, false, 0.0f};
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
@@ -495,15 +495,15 @@ TEST_F(CourseTest, LetterGradeSetterBoundaryLow) {
 }
 
 TEST_F(CourseTest, LetterGradeSetterNoCompleteAssignments) {
-    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/20}, false, 90.2f};
-    Assignment assignment2{"Homework 2", "", std::chrono::year_month_day{2026y/1/31}, false, 0.0f};
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, false, 90.2f};
+    Assignment assignment2{"Homework 2", "", "Homework", std::chrono::year_month_day{2026y/1/31}, false, 0.0f};
     course1.addAssignment(assignment1);
     course1.addAssignment(assignment2);
     ASSERT_EQ(course1.getLetterGrade(), "N/A");
 }
 
 TEST_F(CourseTest, LetterGradeSetterCompletedZeroGrade) {
-    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/20}, true, 0.0f};
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, true, 0.0f};
     course1.addAssignment(assignment1);
     ASSERT_EQ(course1.getLetterGrade(), "F");
 }
@@ -676,9 +676,9 @@ TEST_F(CourseTest, PrintCourseInfoDescPartial) {
 TEST_F(CourseTest, PrintCourseInfoCompletedAssignments) {
     std::stringstream ss;
     Course course2{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
-    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/20}, true, 90.2f};
-    Assignment assignment2{"Homework 2", "", std::chrono::year_month_day{2026y/2/5}, true, 87.18f};
-    Assignment assignment3{"Homework 3", "", std::chrono::year_month_day{2026y/2/23}, true, 100.0f};
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, true, 90.2f};
+    Assignment assignment2{"Homework 2", "", "Homework", std::chrono::year_month_day{2026y/2/5}, true, 87.18f};
+    Assignment assignment3{"Homework 3", "", "Homework", std::chrono::year_month_day{2026y/2/23}, true, 100.0f};
     course2.addAssignment(assignment1);
     course2.addAssignment(assignment2);
     course2.addAssignment(assignment3);
@@ -697,9 +697,9 @@ TEST_F(CourseTest, PrintCourseInfoCompletedAssignments) {
 TEST_F(CourseTest, PrintCourseInfoMixedAssignments) {
     std::stringstream ss;
     Course course2{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
-    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/20}, true, 90.2f};
-    Assignment assignment2{"Homework 2", "", std::chrono::year_month_day{2026y/2/5}, true, 87.18f};
-    Assignment assignment3{"Homework 3", "", std::chrono::year_month_day{2026y/2/23}, false, 0.0f};
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, true, 90.2f};
+    Assignment assignment2{"Homework 2", "", "Homework", std::chrono::year_month_day{2026y/2/5}, true, 87.18f};
+    Assignment assignment3{"Homework 3", "", "Homework", std::chrono::year_month_day{2026y/2/23}, false, 0.0f};
     course2.addAssignment(assignment1);
     course2.addAssignment(assignment2);
     course2.addAssignment(assignment3);
@@ -718,9 +718,9 @@ TEST_F(CourseTest, PrintCourseInfoMixedAssignments) {
 TEST_F(CourseTest, PrintCourseInfoIncompleteAssignments) {
     std::stringstream ss;
     Course course2{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}};
-    Assignment assignment1{"Homework 1", "", std::chrono::year_month_day{2026y/1/20}, false, 0.0f};
-    Assignment assignment2{"Homework 2", "", std::chrono::year_month_day{2026y/2/5}, false, 0.0f};
-    Assignment assignment3{"Homework 3", "", std::chrono::year_month_day{2026y/2/23}, false, 0.0f};
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, false, 0.0f};
+    Assignment assignment2{"Homework 2", "", "Homework", std::chrono::year_month_day{2026y/2/5}, false, 0.0f};
+    Assignment assignment3{"Homework 3", "", "Homework", std::chrono::year_month_day{2026y/2/23}, false, 0.0f};
     course2.addAssignment(assignment1);
     course2.addAssignment(assignment2);
     course2.addAssignment(assignment3);
@@ -737,7 +737,7 @@ TEST_F(CourseTest, PrintCourseInfoIncompleteAssignments) {
 }
 
 TEST_F(CourseTest, AddAssignmentAlreadyExists) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
 
     course1.addAssignment(assignment1);
 
@@ -751,8 +751,8 @@ TEST_F(CourseTest, AddAssignmentAlreadyExists) {
 }
 
 TEST_F(CourseTest, RemoveAssignmentNotFound) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", "", "Homework", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
     std::string id = assignment2.getId();
 
     course1.addAssignment(assignment1);
@@ -767,8 +767,8 @@ TEST_F(CourseTest, RemoveAssignmentNotFound) {
 }
 
 TEST_F(CourseTest, FindAssignmentConstNotFound) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", "", "Homework", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
     std::string id = assignment2.getId();
@@ -779,8 +779,8 @@ TEST_F(CourseTest, FindAssignmentConstNotFound) {
 }
 
 TEST_F(CourseTest, FindAssignmentNonConstNotFound) {
-    Assignment assignment1{"Homework 3", "Focus on variables and strings.", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
-    Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
+    Assignment assignment1{"Homework 3", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+    Assignment assignment2{"Homework 1", "", "Homework", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
 
     course1.addAssignment(assignment1);
     std::string id = assignment2.getId();

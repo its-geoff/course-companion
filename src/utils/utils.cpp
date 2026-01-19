@@ -37,10 +37,10 @@ namespace utils {
         return std::string(str);
     }
 
-    // throws an exception if a string is empty
-    void validateTitle(std::string title) {
-        if (isOnlyWhitespace(title))
-            throw std::invalid_argument("Title must be non-empty.");
+    // throws an exception if a required string is empty
+    void validateReqString(std::string str, std::string label) {
+        if (isOnlyWhitespace(str))
+            throw std::invalid_argument(label + " must be non-empty.");
     }
 
     // throws an exception if a date is non-existent

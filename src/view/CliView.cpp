@@ -89,6 +89,9 @@ namespace {
         bool descriptionRequested{false};
         bool descriptionUpdated{false};
 
+        bool categoryRequested{false};
+        bool categoryUpdated{false};
+
         bool dueDateRequested{false};
         bool dueDateUpdated{false};
 
@@ -362,7 +365,7 @@ void CliView::promptEditTerm() {
 
             try {
                 std::string newTitle = getStringInput("New title", " ");
-                utils::validateTitle(newTitle);
+                utils::validateReqString(newTitle, "Title");
                 controller_.editTitle(id, newTitle);
                 resultFlags.titleUpdated = true;
             } catch (const std::invalid_argument& e) {
@@ -374,7 +377,7 @@ void CliView::promptEditTerm() {
             resultFlags.startDateRequested = true;
 
             try {
-                std::chrono::year_month_day newStartDate = getDateInput("New start date", {});
+                std::chrono::year_month_day newStartDate = getDateInput("New start date (YYYY-MM-DD)", {});
                 utils::validateDate(newStartDate);
 
                 // check date order if only start date is being edited
@@ -394,7 +397,7 @@ void CliView::promptEditTerm() {
             resultFlags.endDateRequested = true;
 
             try {
-                std::chrono::year_month_day newEndDate = getDateInput("New end date", {});
+                std::chrono::year_month_day newEndDate = getDateInput("New end date (YYYY-MM-DD)", {});
                 utils::validateDate(newEndDate);
                 // check date order
                 utils::validateDateOrder(selectedTerm_->get().getStartDate(), newEndDate);
@@ -636,7 +639,7 @@ void CliView::promptEditCourse() {
 
             try {
                 std::string newTitle = getStringInput("New title", " ");
-                utils::validateTitle(newTitle);
+                utils::validateReqString(newTitle, "Title");
                 courseController.editTitle(id, newTitle);
                 resultFlags.titleUpdated = true;
             } catch (const std::invalid_argument& e) {
@@ -659,7 +662,7 @@ void CliView::promptEditCourse() {
             resultFlags.startDateRequested = true;
 
             try {
-                std::chrono::year_month_day newStartDate = getDateInput("New start date", {});
+                std::chrono::year_month_day newStartDate = getDateInput("New start date (YYYY-MM-DD)", {});
                 utils::validateDate(newStartDate);
 
                 // check date order if only start date is being edited
@@ -679,7 +682,7 @@ void CliView::promptEditCourse() {
             resultFlags.endDateRequested = true;
 
             try {
-                std::chrono::year_month_day newEndDate = getDateInput("New end date", {});
+                std::chrono::year_month_day newEndDate = getDateInput("New end date (YYYY-MM-DD)", {});
                 utils::validateDate(newEndDate);
                 // check date order
                 utils::validateDateOrder(selectedCourse_->get().getStartDate(), newEndDate);
@@ -816,6 +819,7 @@ void CliView::promptRemoveCourse() {
 // prompt the user for information to add an assignment into the list
 void CliView::promptAddAssignment() {
     bool titleEmpty{true};
+    bool invalidCategory{true};
     bool invalidDueDate{true};
     bool invalidCompleted{true};
     bool invalidGrade{true};
@@ -839,6 +843,25 @@ void CliView::promptAddAssignment() {
     // empty description condition
     if (utils::isOnlyWhitespace(description)) {
         description = "";
+    }
+
+    std::string category{};
+    while (invalidCategory) {
+        try {
+            category = getStringInput("Category", " ");
+
+            if (utils::isOnlyWhitespace(category)) {
+                out_ << "Invalid category. Category must be non-empty. Please try again." << "\n";
+            } else {
+                invalidCategory = false;
+            }
+
+            if (!selectedCourse_->get().getGradeWeights().contains(category)) {
+                throw std::out_of_range("Invalid category. Category must be in grade weights.");
+            }
+        } catch (const std::out_of_range& e) {
+            out_ << "Invalid category. Category must be in grade weights. Please try again." << "\n";
+        }
     }
 
     std::chrono::year_month_day dueDate{};
@@ -883,7 +906,7 @@ void CliView::promptAddAssignment() {
 
     try {
         AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
-        assignmentController.addAssignment(title, description, dueDate, completed, grade);
+        assignmentController.addAssignment(title, description, category, dueDate, completed, grade);
     } catch (const std::logic_error& e) {
         out_ << "An assignment with this title already exists. Please choose a new title." << "\n";
     } catch (const std::exception& e) {
@@ -908,7 +931,7 @@ void CliView::promptEditAssignment() {
     std::string id = selectedAssignment_->get().getId();
 
     // get fields that need to be updated and normalize input
-    out_ << "Fields available: title, description, due date, completed, grade" << "\n";
+    out_ << "Fields available: title, description, category, due date, completed, grade" << "\n";
     std::string toUpdate = getStringInput("Fields to update (comma separated)", " ");
     toUpdate = utils::stringLower(toUpdate);
     editFields = splitStringByComma(toUpdate);
@@ -925,11 +948,11 @@ void CliView::promptEditAssignment() {
 
             try {
                 std::string newTitle = getStringInput("New title", " ");
-                utils::validateTitle(newTitle);
+                utils::validateReqString(newTitle, "Title");
                 assignmentController.editTitle(id, newTitle);
                 resultFlags.titleUpdated = true;
             } catch (const std::invalid_argument& e) {
-                out_ << "Empty string. Cannot update title." << "\n";
+                out_ << "Invalid title. Title must be non-empty. Cannot update title." << "\n";
             } catch (const std::logic_error& e) {
                 out_ << "An assignment with this title already exists. Cannot update title." << "\n";
             }
@@ -944,11 +967,24 @@ void CliView::promptEditAssignment() {
             if (!(utils::isOnlyWhitespace(oldDescription)) || !(utils::isOnlyWhitespace(newDescription))) {
                 resultFlags.descriptionUpdated = true;
             }
+        } else if (field == "category") {
+            resultFlags.categoryRequested = true;
+
+            try {
+                std::string newCategory = getStringInput("New category", " ");
+                utils::validateReqString(newCategory, "Category");
+                assignmentController.editCategory(id, newCategory);
+                resultFlags.categoryUpdated = true;
+            } catch (const std::invalid_argument& e) {
+                out_ << "Invalid category. Category must be non-empty. Cannot update category." << "\n";
+            } catch (const std::out_of_range& e) {
+                out_ << "Invalid category. Category must be in grade weights. Cannot update category." << "\n";
+            }
         } else if (field == "due date" || field == "duedate") {
             resultFlags.dueDateRequested = true;
 
             try {
-                std::chrono::year_month_day newDueDate = getDateInput("New due date", {});
+                std::chrono::year_month_day newDueDate = getDateInput("New due date (YYYY-MM-DD)", {});
                 utils::validateDate(newDueDate);
                 assignmentController.editDueDate(id, newDueDate);
                 resultFlags.dueDateUpdated = true;
@@ -994,6 +1030,14 @@ void CliView::promptEditAssignment() {
                 out_ << "Description: " << selectedAssignment_->get().getDescription() << "\n";
             } else {
                 out_ << "Description: (unchanged)" << "\n";
+            }
+        }
+
+        if (resultFlags.categoryRequested) {
+            if (resultFlags.categoryUpdated) {
+                out_ << "Category: " << selectedAssignment_->get().getCategory() << "\n";
+            } else {
+                out_ << "Category: (unchanged)" << "\n";
             }
         }
 
