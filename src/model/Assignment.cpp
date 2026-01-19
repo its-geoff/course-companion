@@ -15,15 +15,22 @@
 
 using namespace std::chrono_literals;
 
-Assignment::Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, 
-    bool completed, float grade) : id_{utils::generateUuid()} {
+// throws an exception if a grade is less than 0 or greater than 150
+void Assignment::validateGrade(float grade) {
+    if (grade < 0.0f || grade > 150.0f)
+        throw std::out_of_range("Grade must be from 0 to 150.");
+}
+
+Assignment::Assignment(std::string title, std::string description, std::string category, 
+    std::chrono::year_month_day dueDate, bool completed, float grade) : id_{utils::generateUuid()} {
     // internal defaulting for user input
     if (dueDate == std::chrono::year_month_day{}) {
         dueDate = utils::getTodayDate();
     }
 
     // input validation before moving to member variables
-    utils::validateTitle(title);
+    utils::validateReqString(title, "Title");
+    utils::validateReqString(category, "Category");
     utils::validateDate(dueDate);
     validateGrade(grade);
 
@@ -31,6 +38,7 @@ Assignment::Assignment(std::string title, std::string description, std::chrono::
     if (!utils::isOnlyWhitespace(description)) {
         description_ = std::move(description);
     }
+    category_ = std::move(category);
     dueDate_ = dueDate;
     completed_ = completed;
     grade_ = grade;
@@ -48,6 +56,10 @@ std::string Assignment::getDescription() const {
     return description_;
 }
 
+std::string Assignment::getCategory() const {
+    return category_;
+}
+
 std::chrono::year_month_day Assignment::getDueDate() const {
     return dueDate_;
 }
@@ -61,12 +73,17 @@ float Assignment::getGrade() const {
 }
 
 void Assignment::setTitle(std::string newTitle) {
-    utils::validateTitle(newTitle);
+    utils::validateReqString(newTitle, "Title");
     title_ = newTitle;
 }
 
 void Assignment::setDescription(std::string newDescription) {
     description_ = newDescription;
+}
+
+void Assignment::setCategory(std::string newCategory) {
+    utils::validateReqString(newCategory, "Category");
+    category_ = newCategory;
 }
 
 void Assignment::setDueDate(std::chrono::year_month_day newDueDate) {
@@ -83,12 +100,6 @@ void Assignment::setGrade(float newGrade) {
     grade_ = newGrade;
 }
 
-// throws an exception if a grade is less than 0 or greater than 150
-void Assignment::validateGrade(float grade) {
-    if (grade < 0.0f || grade > 150.0f)
-        throw std::out_of_range("Grade must be from 0 to 150.");
-}
-
 // prints information held by an Assignment object
 void Assignment::printAssignmentInfo(std::ostream &os) const {
     os << "ID: " << id_ << "\n";
@@ -96,7 +107,7 @@ void Assignment::printAssignmentInfo(std::ostream &os) const {
     if (!description_.empty()) {
         os << "Description: " << description_ << "\n";
     };
-    // os << "Course: " << course_.getTitle() << "\n";  -> no Course implementation yet
+    os << "Category: " << category_ << "\n";
     os << "Due Date: " << dueDate_ << "\n";
     os << "Completed? " << utils::boolToString(completed_) << "\n";
     os << "Grade: " << grade_ << "\n";

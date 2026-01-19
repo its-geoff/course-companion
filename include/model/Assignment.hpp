@@ -28,6 +28,7 @@ class Assignment {
         std::string id_{};  // UUID v4 automatically generated during construction
         std::string title_{};
         std::string description_{};
+        std::string category_{};    // validation handled in higher-level application logic
         std::chrono::year_month_day dueDate_{};
         bool completed_{false};
         float grade_{0.0f};
@@ -35,17 +36,19 @@ class Assignment {
         void validateGrade(float grade);
 
     public:
-        Assignment(std::string title, std::string description, std::chrono::year_month_day dueDate, 
-            bool completed = false, float grade = 0.0);
+        Assignment(std::string title, std::string description, std::string category, 
+            std::chrono::year_month_day dueDate, bool completed = false, float grade = 0.0);
 
         std::string getId() const;
         std::string getTitle() const;
         std::string getDescription() const;
+        std::string getCategory() const;
         std::chrono::year_month_day getDueDate() const;
         bool getCompleted() const;
         float getGrade() const;
         void setTitle(std::string newTitle);
         void setDescription(std::string newDescription);
+        void setCategory(std::string newCategory);
         void setDueDate(std::chrono::year_month_day newDueDate);
         void setCompleted(bool newCompleted);
         void setGrade(float newGrade);

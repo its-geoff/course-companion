@@ -175,7 +175,7 @@ Course::Course(std::string title, std::string description, std::chrono::year_mon
     }
     
     // input validation before moving to member variables
-    utils::validateTitle(title);
+    utils::validateReqString(title, "Title");
     utils::validateDate(startDate);
     utils::validateDate(endDate);
     utils::validateDateOrder(startDate, endDate);
@@ -244,7 +244,7 @@ std::map<float, std::string> Course::getGradeScale() const {
 }
 
 void Course::setTitle(std::string newTitle) {
-    utils::validateTitle(newTitle);
+    utils::validateReqString(newTitle, "Title");
     title_ = newTitle;
 }
 

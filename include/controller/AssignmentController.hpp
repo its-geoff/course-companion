@@ -41,10 +41,11 @@ class AssignmentController {
         const std::unordered_map<std::string, Assignment>& getAssignmentList() const;
         std::string getAssignmentId(const std::string& title) const;
 
-        void addAssignment(const std::string& title, const std::string& description, 
+        void addAssignment(const std::string& title, const std::string& description, const std::string& category, 
             const std::chrono::year_month_day& dueDate, bool completed, float grade);
         void editTitle(const std::string& id, const std::string& newTitle);
         void editDescription(const std::string& id, const std::string& newDescription);
+        void editCategory(const std::string& id, const std::string& newCategory);
         void editDueDate(const std::string& id, const std::chrono::year_month_day& newDueDate);
         void editCompleted(const std::string& id, bool newCompleted);
         void editGrade(const std::string& id, float newGrade);

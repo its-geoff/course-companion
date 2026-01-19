@@ -18,8 +18,8 @@ class AssignmentControllerTest : public testing::Test {
 // ====================================
 
 TEST_F(AssignmentControllerTest, AssignmentListGetter) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 2", "Functions and variables", "Homework", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
     const std::unordered_map<std::string, Assignment> &listOfAssignments = controller.getAssignmentList();
     ASSERT_EQ(listOfAssignments.size(), 2);
@@ -35,8 +35,8 @@ TEST_F(AssignmentControllerTest, AssignmentListGetter) {
 }
 
 TEST_F(AssignmentControllerTest, AssignmentIdGetter) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 2", "Functions and variables", "Homework", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
     std::string id = controller.getAssignmentId("Homework 1");
 
@@ -53,18 +53,19 @@ TEST_F(AssignmentControllerTest, AssignmentIdGetter) {
 // ====================================
 
 TEST_F(AssignmentControllerTest, AddAssignment) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
 
     const Assignment& selectedAssignment = controller.findAssignment("Homework 1");
     ASSERT_EQ(selectedAssignment.getTitle(), "Homework 1");
     ASSERT_EQ(selectedAssignment.getDescription(), "");
+    ASSERT_EQ(selectedAssignment.getCategory(), "Homework");
     ASSERT_EQ(selectedAssignment.getDueDate(), std::chrono::year_month_day{2026y/1/12});
     ASSERT_TRUE(selectedAssignment.getCompleted());
     ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 90.0f);
 }
 
 TEST_F(AssignmentControllerTest, EditTitle) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
 
     std::string id = controller.getAssignmentId("Homework 1");
     controller.editTitle(id, "Homework 3");
@@ -76,7 +77,7 @@ TEST_F(AssignmentControllerTest, EditTitle) {
 }
 
 TEST_F(AssignmentControllerTest, EditDescription) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
 
     std::string id = controller.getAssignmentId("Homework 1");
     controller.editDescription(id, "Linked lists and hash maps");
@@ -85,8 +86,18 @@ TEST_F(AssignmentControllerTest, EditDescription) {
     ASSERT_EQ(selectedAssignment.getDescription(), "Linked lists and hash maps");
 }
 
+TEST_F(AssignmentControllerTest, EditCategory) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+
+    std::string id = controller.getAssignmentId("Homework 1");
+    controller.editCategory(id, "Midterm");
+
+    const Assignment& selectedAssignment = controller.findAssignment("Homework 1");
+    ASSERT_EQ(selectedAssignment.getCategory(), "Midterm");
+}
+
 TEST_F(AssignmentControllerTest, EditDueDate) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
 
     std::string id = controller.getAssignmentId("Homework 1");
     controller.editDueDate(id, std::chrono::year_month_day{2026y/1/15});
@@ -96,7 +107,7 @@ TEST_F(AssignmentControllerTest, EditDueDate) {
 }
 
 TEST_F(AssignmentControllerTest, EditCompleted) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
 
     std::string id = controller.getAssignmentId("Homework 1");
     controller.editCompleted(id, false);
@@ -106,7 +117,7 @@ TEST_F(AssignmentControllerTest, EditCompleted) {
 }
 
 TEST_F(AssignmentControllerTest, EditGrade) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
 
     std::string id = controller.getAssignmentId("Homework 1");
     controller.editGrade(id, 95.0f);
@@ -116,8 +127,8 @@ TEST_F(AssignmentControllerTest, EditGrade) {
 }
 
 TEST_F(AssignmentControllerTest, RemoveAssignment) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 2", "Functions and variables", "Homework", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
     controller.removeAssignment("Homework 1");
 
@@ -133,8 +144,8 @@ TEST_F(AssignmentControllerTest, RemoveAssignment) {
 }
 
 TEST_F(AssignmentControllerTest, FindAssignmentConst) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 2", "Functions and variables", "Homework", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
     const AssignmentController& constController = controller;
     const Assignment& selectedAssignment = constController.findAssignment("Homework 2");
@@ -146,8 +157,8 @@ TEST_F(AssignmentControllerTest, FindAssignmentConst) {
 }
 
 TEST_F(AssignmentControllerTest, FindAssignmentNonConst) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 2", "Functions and variables", "Homework", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
     const Assignment& selectedAssignment = controller.findAssignment("Homework 2");
     ASSERT_EQ(selectedAssignment.getTitle(), "Homework 2");
@@ -167,8 +178,8 @@ TEST_F(AssignmentControllerTest, AssignmentListGetterEmpty) {
 }
 
 TEST_F(AssignmentControllerTest, AssignmentIdGetterNotFound) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 2", "Functions and variables", "Homework", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
     // out of range error since assignment cannot be found
     ASSERT_THROW(controller.getAssignmentId("Homework 4"), std::out_of_range);
@@ -179,13 +190,13 @@ TEST_F(AssignmentControllerTest, AssignmentIdGetterNotFound) {
 // ====================================
 
 TEST_F(AssignmentControllerTest, AddAssignmentAlreadyExists) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     // logic error since assignment already exists
-    ASSERT_THROW(controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f), std::logic_error);
+    ASSERT_THROW(controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f), std::logic_error);
 }
 
 TEST_F(AssignmentControllerTest, EditTitleAlreadyExists) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
     // logic error since assignment already exists (title not changed)
@@ -193,7 +204,7 @@ TEST_F(AssignmentControllerTest, EditTitleAlreadyExists) {
 }
 
 TEST_F(AssignmentControllerTest, EditTitleAlreadyExistsDifferentCase) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
     // logic error since assignment already exists (title not changed)
@@ -201,15 +212,23 @@ TEST_F(AssignmentControllerTest, EditTitleAlreadyExistsDifferentCase) {
 }
 
 TEST_F(AssignmentControllerTest, EditTitleEmpty) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
     // invalid argument since title is empty
     ASSERT_THROW(controller.editTitle(id, ""), std::invalid_argument);
 }
 
+TEST_F(AssignmentControllerTest, EditCategoryEmpty) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    std::string id = controller.getAssignmentId("Homework 1");
+
+    // invalid argument since category is empty
+    ASSERT_THROW(controller.editCategory(id, ""), std::invalid_argument);
+}
+
 TEST_F(AssignmentControllerTest, EditDueDateInvalid) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
     // invalid argument since due date doesn't exist
@@ -217,7 +236,7 @@ TEST_F(AssignmentControllerTest, EditDueDateInvalid) {
 }
 
 TEST_F(AssignmentControllerTest, EditGradeInvalidLow) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
     // out of range since grade is below 0
@@ -225,7 +244,7 @@ TEST_F(AssignmentControllerTest, EditGradeInvalidLow) {
 }
 
 TEST_F(AssignmentControllerTest, EditGradeInvalidHigh) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
     // out of range since grade is over 150
@@ -233,7 +252,7 @@ TEST_F(AssignmentControllerTest, EditGradeInvalidHigh) {
 }
 
 TEST_F(AssignmentControllerTest, EditGradeBoundaryLow) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
     controller.editGrade(id, 0.0f);
@@ -243,7 +262,7 @@ TEST_F(AssignmentControllerTest, EditGradeBoundaryLow) {
 }
 
 TEST_F(AssignmentControllerTest, EditGradeBoundaryHigh) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
 
     controller.editGrade(id, 100.0f);
@@ -253,16 +272,16 @@ TEST_F(AssignmentControllerTest, EditGradeBoundaryHigh) {
 }
 
 TEST_F(AssignmentControllerTest, RemoveAssignmentNotFound) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 2", "Functions and variables", "Homework", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
     // out of range since assignment cannot be found
     ASSERT_THROW(controller.removeAssignment("Homework 4"), std::out_of_range);
 }
 
 TEST_F(AssignmentControllerTest, FindAssignmentConstNotFound) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 2", "Functions and variables", "Homework", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
     // out of range error since assignment cannot be found
     const AssignmentController& constController = controller;
@@ -270,8 +289,8 @@ TEST_F(AssignmentControllerTest, FindAssignmentConstNotFound) {
 }
 
 TEST_F(AssignmentControllerTest, FindAssignmentNonConstNotFound) {
-    controller.addAssignment("Homework 1", "", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    controller.addAssignment("Homework 2", "Functions and variables", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    controller.addAssignment("Homework 2", "Functions and variables", "Homework", std::chrono::year_month_day{2026y/1/22}, false, 0.0f);
 
     // out of range error since assignment cannot be found
     ASSERT_THROW(controller.findAssignment("Homework 4"), std::out_of_range);

@@ -410,6 +410,7 @@ TEST(CliViewTest, AddAssignment) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -467,6 +468,7 @@ TEST(CliViewTest, EditAssignment) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -534,6 +536,7 @@ TEST(CliViewTest, SelectAssignment) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -586,12 +589,14 @@ TEST(CliViewTest, RemoveAssignment) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
         "A\n"
         "Homework 3\n"
         "Hash maps and sets\n"
+        "Homework\n"
         "2025-2-15\n"
         "no\n"
         "0.0\n"
@@ -1007,6 +1012,31 @@ TEST(CliViewTest, AddTermEndDateNonexistent) {
     ASSERT_TRUE(userOut.find("End date must be a valid date") != std::string::npos);
 }
 
+TEST(CliViewTest, AddTermEndDateBeforeStartDate) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-22\n"
+        "2024-12-20\n"
+        "2025-5-23\n"
+        "yes\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid end date") != std::string::npos);
+    ASSERT_TRUE(userOut.find("End date cannot be before start date") != std::string::npos);
+}
+
 TEST(CliViewTest, AddTermActiveEmpty) {
     std::istringstream input(
         // add term
@@ -1321,6 +1351,40 @@ TEST(CliViewTest, EditTermNewStartDateNonexistent) {
     ASSERT_TRUE(userOut.find("Cannot update start date") != std::string::npos);
 }
 
+TEST(CliViewTest, EditTermNewStartDateAfterEndDate) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // edit term
+        "E\n"
+        "Spring 2025\n"
+        "start date\n"
+        "2025-8-1\n"
+        "2025-2-2\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check that termList size is not 0
+    const std::unordered_map<std::string, Term>& listOfTerms = controller.getTermList();
+    ASSERT_EQ(listOfTerms.size(), 1);
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Start date cannot be after end date") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Cannot update start date") != std::string::npos);
+}
+
 TEST(CliViewTest, EditTermNewEndDateEmpty) {
     std::istringstream input(
         // add term
@@ -1421,6 +1485,74 @@ TEST(CliViewTest, EditTermNewEndDateNonexistent) {
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid date") != std::string::npos);
     ASSERT_TRUE(userOut.find("Cannot update end date") != std::string::npos);
+}
+
+TEST(CliViewTest, EditTermNewEndDateBeforeStartDate) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // edit term
+        "E\n"
+        "Spring 2025\n"
+        "end date\n"
+        "2025-1-1\n"
+        "2025-2-3\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check that termList size is not 0
+    const std::unordered_map<std::string, Term>& listOfTerms = controller.getTermList();
+    ASSERT_EQ(listOfTerms.size(), 1);
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("End date cannot be before start date") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Cannot update end date") != std::string::npos);
+}
+
+TEST(CliViewTest, EditTermNewStartDateEndDateCombo) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // edit term
+        "E\n"
+        "Spring 2025\n"
+        "start date, end date\n"
+        "2025-6-10\n"
+        "2025-8-12\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check that termList size is not 0
+    const std::unordered_map<std::string, Term>& listOfTerms = controller.getTermList();
+    ASSERT_EQ(listOfTerms.size(), 1);
+
+    // check for intro and edit results message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Update results") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Duration") != std::string::npos);
 }
 
 TEST(CliViewTest, EditTermNewActiveEmpty) {
@@ -1888,6 +2020,43 @@ TEST(CliViewTest, AddCourseEndDateNonexistent) {
     ASSERT_TRUE(userOut.find("for the course you'd like to add") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid end date") != std::string::npos);
     ASSERT_TRUE(userOut.find("End date must be a valid date") != std::string::npos);
+}
+
+TEST(CliViewTest, AddCourseEndDateBeforeStartDate) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2024-12-1\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and default date message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the course you'd like to add") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid end date") != std::string::npos);
+    ASSERT_TRUE(userOut.find("End date cannot be before start date") != std::string::npos);
 }
 
 TEST(CliViewTest, AddCourseNumCreditsEmpty) {
@@ -2397,6 +2566,53 @@ TEST(CliViewTest, EditCourseNewStartDateNonexistent) {
     ASSERT_TRUE(userOut.find("Cannot update start date") != std::string::npos);
 }
 
+TEST(CliViewTest, EditCourseNewStartDateAfterEndDate) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // edit course
+        "E\n"
+        "ENGR 195A\n"
+        "start date\n"
+        "2025-5-23\n"
+        "2025-1-12\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+    CourseController& courseController = controller.getCourseController();
+
+    // check that courseList size is not 0
+    const std::unordered_map<std::string, Course>& listOfCourses = courseController.getCourseList();
+    ASSERT_EQ(listOfCourses.size(), 1);
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("course you'd like to edit") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Start date cannot be after end date") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Cannot update start date") != std::string::npos);
+}
+
 TEST(CliViewTest, EditCourseNewEndDateEmpty) {
     std::istringstream input(
         // add term
@@ -2536,6 +2752,100 @@ TEST(CliViewTest, EditCourseNewEndDateNonexistent) {
     ASSERT_TRUE(userOut.find("course you'd like to edit") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid date") != std::string::npos);
     ASSERT_TRUE(userOut.find("Cannot update end date") != std::string::npos);
+}
+
+TEST(CliViewTest, EditCourseNewEndDateBeforeStartDate) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // edit course
+        "E\n"
+        "ENGR 195A\n"
+        "end date\n"
+        "2024-11-8\n"
+        "2025-3-2\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+    CourseController& courseController = controller.getCourseController();
+
+    // check that courseList size is not 0
+    const std::unordered_map<std::string, Course>& listOfCourses = courseController.getCourseList();
+    ASSERT_EQ(listOfCourses.size(), 1);
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("course you'd like to edit") != std::string::npos);
+    ASSERT_TRUE(userOut.find("End date cannot be before start date") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Cannot update end date") != std::string::npos);
+}
+
+TEST(CliViewTest, EditCourseNewStartDateEndDateCombo) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // edit course
+        "E\n"
+        "ENGR 195A\n"
+        "start date, end date\n"
+        "2025-6-11\n"
+        "2025-9-8\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+    CourseController& courseController = controller.getCourseController();
+
+    // check that courseList size is not 0
+    const std::unordered_map<std::string, Course>& listOfCourses = courseController.getCourseList();
+    ASSERT_EQ(listOfCourses.size(), 1);
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("course you'd like to edit") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Update results") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Duration") != std::string::npos);
 }
 
 TEST(CliViewTest, EditCourseNewNumCreditsEmpty) {
@@ -2954,6 +3264,7 @@ TEST(CliViewTest, AddAssignmentTitleEmpty) {
         "\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -2972,6 +3283,102 @@ TEST(CliViewTest, AddAssignmentTitleEmpty) {
     ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid title") != std::string::npos);
     ASSERT_TRUE(userOut.find("must be non-empty") != std::string::npos);
+}
+
+TEST(CliViewTest, AddAssignmentCategoryEmpty) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "90.5\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid category") != std::string::npos);
+    ASSERT_TRUE(userOut.find("must be non-empty") != std::string::npos);
+}
+
+TEST(CliViewTest, AddAssignmentCategoryInvalid) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Quizzes\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "90.5\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid category") != std::string::npos);
+    ASSERT_TRUE(userOut.find("must be in grade weights") != std::string::npos);
 }
 
 TEST(CliViewTest, AddAssignmentDueDateEmpty) {
@@ -3000,6 +3407,7 @@ TEST(CliViewTest, AddAssignmentDueDateEmpty) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "\n"
         "yes\n"
         "90.5\n"
@@ -3045,6 +3453,7 @@ TEST(CliViewTest, AddAssignmentDueDateWrongFormat) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2-12-2025\n"
         "2025-1-30\n"
         "yes\n"
@@ -3092,6 +3501,7 @@ TEST(CliViewTest, AddAssignmentDueDateNonexistent) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-2-33\n"
         "2025-1-30\n"
         "yes\n"
@@ -3139,6 +3549,7 @@ TEST(CliViewTest, AddAssignmentCompletedEmpty) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "\n"
         "90.5\n"
@@ -3184,6 +3595,7 @@ TEST(CliViewTest, AddAssignmentCompletedInvalid) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "maybe\n"
         "yes\n"
@@ -3231,6 +3643,7 @@ TEST(CliViewTest, AddAssignmentGradeInvalidLow) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "-11.3\n"
@@ -3278,6 +3691,7 @@ TEST(CliViewTest, AddAssignmentGradeInvalidHigh) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "200.18\n"
@@ -3325,6 +3739,7 @@ TEST(CliViewTest, AddAssignmentGradeBoundaryLow) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "0.0\n"
@@ -3371,6 +3786,7 @@ TEST(CliViewTest, AddAssignmentGradeBoundaryHigh) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "100.0\n"
@@ -3417,12 +3833,14 @@ TEST(CliViewTest, AddAssignmentAlreadyExists) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3468,6 +3886,7 @@ TEST(CliViewTest, EditAssignmentNotFound) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3521,6 +3940,7 @@ TEST(CliViewTest, EditAssignmentNoEditFields) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3576,6 +3996,7 @@ TEST(CliViewTest, EditAssignmentNewTitleEmpty) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3603,7 +4024,7 @@ TEST(CliViewTest, EditAssignmentNewTitleEmpty) {
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
     ASSERT_TRUE(userOut.find("assignment you'd like to edit") != std::string::npos);
-    ASSERT_TRUE(userOut.find("Empty string") != std::string::npos);
+    ASSERT_TRUE(userOut.find("must be non-empty") != std::string::npos);
     ASSERT_TRUE(userOut.find("Cannot update title") != std::string::npos);
 }
 
@@ -3633,6 +4054,7 @@ TEST(CliViewTest, EditAssignmentNewTitleAlreadyExists) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3664,6 +4086,122 @@ TEST(CliViewTest, EditAssignmentNewTitleAlreadyExists) {
     ASSERT_TRUE(userOut.find("Cannot update title") != std::string::npos);
 }
 
+TEST(CliViewTest, EditAssignmentNewCategoryEmpty) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "90.5\n"
+        // edit assignment
+        "E\n"
+        "Homework 1\n"
+        "category\n"
+        "\n"
+        "Midterm\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+    AssignmentController &assignmentController = controller.getCourseController().getAssignmentController();
+
+    // check that assignmentList size is not 0
+    const std::unordered_map<std::string, Assignment>& listOfAssignments = assignmentController.getAssignmentList();
+    ASSERT_EQ(listOfAssignments.size(), 1);
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("assignment you'd like to edit") != std::string::npos);
+    ASSERT_TRUE(userOut.find("must be non-empty") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Cannot update category") != std::string::npos);
+}
+
+TEST(CliViewTest, EditAssignmentNewCategoryInvalid) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "90.5\n"
+        // edit assignment
+        "E\n"
+        "Homework 1\n"
+        "category\n"
+        "Quizzes\n"
+        "Midterm\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+    AssignmentController &assignmentController = controller.getCourseController().getAssignmentController();
+
+    // check that assignmentList size is not 0
+    const std::unordered_map<std::string, Assignment>& listOfAssignments = assignmentController.getAssignmentList();
+    ASSERT_EQ(listOfAssignments.size(), 1);
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("assignment you'd like to edit") != std::string::npos);
+    ASSERT_TRUE(userOut.find("must be in grade weights") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Cannot update category") != std::string::npos);
+}
+
 TEST(CliViewTest, EditAssignmentNewDueDateEmpty) {
     std::istringstream input(
         // add term
@@ -3690,6 +4228,7 @@ TEST(CliViewTest, EditAssignmentNewDueDateEmpty) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3747,6 +4286,7 @@ TEST(CliViewTest, EditAssignmentNewDueDateWrongFormat) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3804,6 +4344,7 @@ TEST(CliViewTest, EditAssignmentNewDueDateNonexistent) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3861,6 +4402,7 @@ TEST(CliViewTest, EditAssignmentNewCompletedEmpty) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3918,6 +4460,7 @@ TEST(CliViewTest, EditAssignmentNewCompletedInvalid) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -3975,6 +4518,7 @@ TEST(CliViewTest, EditAssignmentGradeInvalidLow) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -4027,6 +4571,7 @@ TEST(CliViewTest, EditAssignmentGradeInvalidHigh) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -4079,6 +4624,7 @@ TEST(CliViewTest, EditAssignmentGradeBoundaryLow) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -4130,6 +4676,7 @@ TEST(CliViewTest, EditAssignmentGradeBoundaryHigh) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
@@ -4181,12 +4728,14 @@ TEST(CliViewTest, SelectAssignmentNotFound) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
         "A\n"
         "Homework 2\n"
         "Linked lists\n"
+        "Homework\n"
         "2025-2-3\n"
         "no\n"
         "0.0\n"
@@ -4241,12 +4790,14 @@ TEST(CliViewTest, RemoveAssignmentNotFound) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
         "A\n"
         "Homework 2\n"
         "Linked lists\n"
+        "Homework\n"
         "2025-2-3\n"
         "no\n"
         "0.0\n"
@@ -4302,12 +4853,14 @@ TEST(CliViewTest, RemoveAssignmentInvalidBool) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
         "A\n"
         "Homework 2\n"
         "Linked lists\n"
+        "Homework\n"
         "2025-2-3\n"
         "no\n"
         "0.0\n"
@@ -4364,12 +4917,14 @@ TEST(CliViewTest, RemoveAssignmentNotConfirmed) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"
         "A\n"
         "Homework 2\n"
         "Linked lists\n"
+        "Homework\n"
         "2025-2-3\n"
         "no\n"
         "0.0\n"

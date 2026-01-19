@@ -37,7 +37,7 @@ class Course {
         std::chrono::year_month_day endDate_{};
         std::unordered_map<std::string, Assignment> assignmentList_{};  // id -> Assignment
         static const std::unordered_map<std::string, float> gradeWeightsDefault_;   // default grade weights if not set
-        std::unordered_map<std::string, float> gradeWeights_{gradeWeightsDefault_}; // weights of each assignment type
+        std::unordered_map<std::string, float> gradeWeights_{gradeWeightsDefault_}; // weights of each assignment category
         int numCredits_{3};     // default number of credits for a class, TO-DO: allow user to override default
         float gradePct_{0.0};   // grade percentage from 0 to 100%
         std::string letterGrade_{"N/A"};
