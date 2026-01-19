@@ -3840,6 +3840,7 @@ TEST(CliViewTest, AddAssignmentAlreadyExists) {
         "A\n"
         "Homework 1\n"
         "\n"
+        "Homework\n"
         "2025-1-30\n"
         "yes\n"
         "90.5\n"

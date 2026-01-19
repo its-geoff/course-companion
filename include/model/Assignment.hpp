@@ -28,7 +28,7 @@ class Assignment {
         std::string id_{};  // UUID v4 automatically generated during construction
         std::string title_{};
         std::string description_{};
-        std::string category_{};    // validation handled in Course
+        std::string category_{};    // validation handled in higher-level application logic
         std::chrono::year_month_day dueDate_{};
         bool completed_{false};
         float grade_{0.0f};

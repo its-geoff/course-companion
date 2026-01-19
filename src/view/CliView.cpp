@@ -849,16 +849,15 @@ void CliView::promptAddAssignment() {
     while (invalidCategory) {
         try {
             category = getStringInput("Category", " ");
-
-            if (utils::isOnlyWhitespace(category)) {
-                out_ << "Invalid category. Category must be non-empty. Please try again." << "\n";
-            } else {
-                invalidCategory = false;
-            }
+            utils::validateReqString(category, "Category");
 
             if (!selectedCourse_->get().getGradeWeights().contains(category)) {
-                throw std::out_of_range("Invalid category. Category must be in grade weights.");
+                throw std::out_of_range("Category must be in grade weights.");
             }
+
+            invalidCategory = false;
+        } catch (const std::invalid_argument& e) {
+            out_ << "Invalid category. Category must be non-empty. Please try again." << "\n";
         } catch (const std::out_of_range& e) {
             out_ << "Invalid category. Category must be in grade weights. Please try again." << "\n";
         }
@@ -972,7 +971,6 @@ void CliView::promptEditAssignment() {
 
             try {
                 std::string newCategory = getStringInput("New category", " ");
-                utils::validateReqString(newCategory, "Category");
                 assignmentController.editCategory(id, newCategory);
                 resultFlags.categoryUpdated = true;
             } catch (const std::invalid_argument& e) {

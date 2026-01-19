@@ -82,6 +82,7 @@ void Assignment::setDescription(std::string newDescription) {
 }
 
 void Assignment::setCategory(std::string newCategory) {
+    utils::validateReqString(newCategory, "Category");
     category_ = newCategory;
 }
 
