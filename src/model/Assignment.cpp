@@ -95,9 +95,16 @@ void Assignment::setCompleted(bool newCompleted) {
     completed_ = newCompleted;
 }
 
+// overload for percentage-based grading; simple assignment to member variable
 void Assignment::setGrade(float newGrade) {
     validateGrade(newGrade);
-    grade_ = newGrade;
+    grade_ = utils::floatRound(newGrade, 2);    // round to 2 decimal places for consistency
+}
+
+// overload for point-based grading; need to calculate percentage before assignment
+void Assignment::setGrade(float pointsEarned, float totalPoints) {
+    float calculatedGrade = (pointsEarned / totalPoints) * 100.0;
+    setGrade(calculatedGrade);
 }
 
 // prints information held by an Assignment object

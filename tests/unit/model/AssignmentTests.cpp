@@ -81,9 +81,14 @@ TEST_F(AssignmentTest, CompletedSetter) {
     ASSERT_FALSE(assignment1.getCompleted());
 }
 
-TEST_F(AssignmentTest, GradeSetter) {
+TEST_F(AssignmentTest, GradeSetterPercentage) {
     assignment1.setGrade(96.20f);
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 96.20f);
+}
+
+TEST_F(AssignmentTest, GradeSetterPoints) {
+    assignment1.setGrade(18, 20);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 90.0f);
 }
 
 // ====================================
@@ -241,25 +246,47 @@ TEST_F(AssignmentTest, DueDateSetterInvalid) {
     ASSERT_EQ(assignment1.getDueDate(), std::chrono::year_month_day{2025y/11/20});
 }
 
-TEST_F(AssignmentTest, GradeSetterInvalidLow) {
+TEST_F(AssignmentTest, GradeSetterPercentageInvalidLow) {
     // throw out of range since input is not in range 0 to 150
     ASSERT_THROW(assignment1.setGrade(-20.24f), std::out_of_range);
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
 }
 
-TEST_F(AssignmentTest, GradeSetterInvalidHigh) {
+TEST_F(AssignmentTest, GradeSetterPercentageInvalidHigh) {
     // throw out of range since input is not in range 0 to 150
     ASSERT_THROW(assignment1.setGrade(200.24f), std::out_of_range);
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
 }
 
-TEST_F(AssignmentTest, GradeSetterBoundaryLow) {
+TEST_F(AssignmentTest, GradeSetterPercentageBoundaryLow) {
     assignment1.setGrade(0.0f);
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 0.0f);
 }
 
-TEST_F(AssignmentTest, GradeSetterBoundaryHigh) {
-    assignment1.setGrade(100.0);
+TEST_F(AssignmentTest, GradeSetterPercentageBoundaryHigh) {
+    assignment1.setGrade(100.0f);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 100.0f);
+}
+
+TEST_F(AssignmentTest, GradeSetterPointsInvalidLow) {
+    // throw out of range since input is not in range 0 to 150
+    ASSERT_THROW(assignment1.setGrade(-3, 20), std::out_of_range);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
+}
+
+TEST_F(AssignmentTest, GradeSetterPointsInvalidHigh) {
+    // throw out of range since input is not in range 0 to 150
+    ASSERT_THROW(assignment1.setGrade(40, 20), std::out_of_range);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
+}
+
+TEST_F(AssignmentTest, GradeSetterPointsBoundaryLow) {
+    assignment1.setGrade(0, 20);
+    ASSERT_FLOAT_EQ(assignment1.getGrade(), 0.0f);
+}
+
+TEST_F(AssignmentTest, GradeSetterPointsBoundaryHigh) {
+    assignment1.setGrade(20, 20);
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 100.0f);
 }
 
