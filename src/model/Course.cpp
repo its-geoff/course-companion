@@ -178,6 +178,7 @@ Course::Course(std::string title, std::string description, std::chrono::year_mon
     utils::validateTitle(title);
     utils::validateDate(startDate);
     utils::validateDate(endDate);
+    utils::validateDateOrder(startDate, endDate);
     validateNumCredits(numCredits);
 
     title_ = std::move(title);

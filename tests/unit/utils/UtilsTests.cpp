@@ -38,6 +38,14 @@ TEST(UtilsTest, GenerateUuidLength) {
     ASSERT_EQ(uuid.length(), 36);
 }
 
+TEST(UtilsTest, ValidateDateOrder) {
+    std::chrono::year_month_day date1{2026y/2/20};
+    std::chrono::year_month_day date2{2026y/1/18};
+
+    // throw invalid argument since date1 is after date2
+    ASSERT_THROW(utils::validateDateOrder(date1, date2), std::logic_error);
+}
+
 TEST(UtilsTest, BoolToString) {
     Assignment assignment1{"Homework 3", "", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
     Assignment assignment2{"Homework 1", "", std::chrono::year_month_day{2025y/10/31}, false, 90.50f};
@@ -115,6 +123,15 @@ TEST(UtilsTest, UuidUniqueness) {
     // to check uniqueness, compare size of unordered set to number of UUIDs
     // (unordered set doesn't include duplicates)
     ASSERT_EQ(uuids.size(), static_cast<std::size_t>(n));
+}
+
+TEST(UtilsTest, ValidateDateOrderSameDay) {
+    std::chrono::year_month_day date1{2026y/1/18};
+    std::chrono::year_month_day date2{2026y/1/18};
+
+    // no error since date1 and date2 are the same day
+    utils::validateDateOrder(date1, date2);
+    SUCCEED();
 }
 
 TEST(UtilsTest, FloatEqualVerySmall) {

@@ -49,6 +49,13 @@ namespace utils {
             throw std::invalid_argument("Date is invalid.");
     }
 
+    // throws an exception if end date is before start date
+    void validateDateOrder(std::chrono::year_month_day startDate, std::chrono::year_month_day endDate) {
+        if (endDate < startDate) {
+            throw std::logic_error("End date cannot be before start date.");
+        }
+    } 
+
     // converts bool value of completed into a string for output
     std::string boolToString(bool value) {
         if (value)

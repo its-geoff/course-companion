@@ -792,7 +792,7 @@ TEST_F(CourseTest, FindAssignmentNonConstNotFound) {
 TEST_F(CourseTest, OverloadedEqualsSameTitleDifferentParams) {
     Course course2{"CMPE 142", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
     Course course3{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/9/2}, std::chrono::year_month_day{2025y/12/5}, 3, false};
-    Course course4{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2024y/12/5}, 3, false};
+    Course course4{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2026y/12/5}, 3, false};
     Course course5{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 1, false};
     Course course6{"CMPE 142", "Operating Systems", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, true};
 
