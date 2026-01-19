@@ -665,7 +665,7 @@ void CliView::promptEditCourse() {
                 // check date order if only start date is being edited
                 auto it = std::find(editFields.begin(), editFields.end(), "end date");
                 if (it == editFields.end()) {
-                    utils::validateDateOrder(newStartDate, selectedTerm_->get().getEndDate());
+                    utils::validateDateOrder(newStartDate, selectedCourse_->get().getEndDate());
                 }
 
                 courseController.editStartDate(id, newStartDate);
