@@ -297,8 +297,11 @@ void CliView::promptAddTerm() {
             } else {
                 utils::validateDate(endDate);
             }
+            utils::validateDateOrder(startDate, endDate);
 
             invalidEndDate = false;
+        } catch (const std::logic_error& e) {
+            out_ << "Invalid end date. End date cannot be before start date. Please try again." << "\n";
         } catch (const std::exception& e) {
             out_ << "Invalid end date. End date must be a valid date. Please try again." << "\n";
         }
@@ -346,11 +349,13 @@ void CliView::promptEditTerm() {
     toUpdate = utils::stringLower(toUpdate);
     editFields = splitStringByComma(toUpdate);
 
+    // trim whitespace from strings
+    for (auto& field : editFields) {
+        field = utils::stringTrim(field);
+    }
+
     // get updated info and perform update
     for (auto& field : editFields) {
-        // trim whitespace from strings
-        field = utils::stringTrim(field);
-
         if (field == "title") {
             resultFlags.titleRequested = true;
 
@@ -370,8 +375,17 @@ void CliView::promptEditTerm() {
             try {
                 std::chrono::year_month_day newStartDate = getDateInput("New start date", {});
                 utils::validateDate(newStartDate);
+
+                // check date order if only start date is being edited
+                auto it = std::find(editFields.begin(), editFields.end(), "end date");
+                if (it == editFields.end()) {
+                    utils::validateDateOrder(newStartDate, selectedTerm_->get().getEndDate());
+                }
+
                 controller_.editStartDate(id, newStartDate);
                 resultFlags.startDateUpdated = true;
+            } catch (const std::logic_error& e) {
+                out_ << "Start date cannot be after end date. Cannot update start date." << "\n";
             } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update start date." << "\n";
             }
@@ -381,8 +395,13 @@ void CliView::promptEditTerm() {
             try {
                 std::chrono::year_month_day newEndDate = getDateInput("New end date", {});
                 utils::validateDate(newEndDate);
+                // check date order
+                utils::validateDateOrder(selectedTerm_->get().getStartDate(), newEndDate);
+
                 controller_.editEndDate(id, newEndDate);
                 resultFlags.endDateUpdated = true;
+            } catch (const std::logic_error& e) {
+                out_ << "End date cannot be before start date. Cannot update end date." << "\n";
             } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update end date." << "\n";
             }
@@ -539,8 +558,11 @@ void CliView::promptAddCourse() {
             } else {
                 utils::validateDate(endDate);
             }
+            utils::validateDateOrder(startDate, endDate);
 
             invalidEndDate = false;
+        } catch (const std::logic_error& e) {
+            out_ << "Invalid end date. End date cannot be after start date. Please try again." << "\n";
         } catch (const std::exception& e) {
             out_ << "Invalid end date. End date must be a valid date. Please try again." << "\n";
         }
@@ -600,11 +622,13 @@ void CliView::promptEditCourse() {
     toUpdate = utils::stringLower(toUpdate);
     editFields = splitStringByComma(toUpdate);
 
+    // trim whitespace from strings
+    for (auto& field : editFields) {
+        field = utils::stringTrim(field);
+    }
+
     // get updated info and perform update
     for (auto& field : editFields) {
-        // trim whitespace from strings
-        field = utils::stringTrim(field);
-
         if (field == "title") {
             resultFlags.titleRequested = true;
 
@@ -635,8 +659,17 @@ void CliView::promptEditCourse() {
             try {
                 std::chrono::year_month_day newStartDate = getDateInput("New start date", {});
                 utils::validateDate(newStartDate);
+
+                // check date order if only start date is being edited
+                auto it = std::find(editFields.begin(), editFields.end(), "end date");
+                if (it == editFields.end()) {
+                    utils::validateDateOrder(newStartDate, selectedTerm_->get().getEndDate());
+                }
+
                 courseController.editStartDate(id, newStartDate);
                 resultFlags.startDateUpdated = true;
+            } catch (const std::logic_error& e) {
+                out_ << "Start date cannot be after end date. Cannot update start date." << "\n";
             } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update start date." << "\n";
             }
@@ -646,8 +679,13 @@ void CliView::promptEditCourse() {
             try {
                 std::chrono::year_month_day newEndDate = getDateInput("New end date", {});
                 utils::validateDate(newEndDate);
+                // check date order
+                utils::validateDateOrder(selectedCourse_->get().getStartDate(), newEndDate);
+
                 courseController.editEndDate(id, newEndDate);
                 resultFlags.endDateUpdated = true;
+            } catch (const std::logic_error& e) {
+                out_ << "End date cannot be before start date. Cannot update end date." << "\n";
             } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update end date." << "\n";
             }
@@ -873,11 +911,13 @@ void CliView::promptEditAssignment() {
     toUpdate = utils::stringLower(toUpdate);
     editFields = splitStringByComma(toUpdate);
 
+    // trim whitespace from strings
+    for (auto& field : editFields) {
+        field = utils::stringTrim(field);
+    }
+
     // get updated info and perform update
     for (auto& field : editFields) {
-        // trim whitespace from strings
-        field = utils::stringTrim(field);
-
         if (field == "title") {
             resultFlags.titleRequested = true;
 

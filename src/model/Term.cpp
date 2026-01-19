@@ -60,6 +60,7 @@ Term::Term(std::string title, std::chrono::year_month_day startDate, std::chrono
     utils::validateTitle(title);
     utils::validateDate(startDate);
     utils::validateDate(endDate);
+    utils::validateDateOrder(startDate, endDate);
 
     title_ = std::move(title);
     startDate_ = startDate;

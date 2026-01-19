@@ -20,6 +20,7 @@ namespace utils {
     std::string generateUuid();
     void validateTitle(std::string title);
     void validateDate(std::chrono::year_month_day dueDate);
+    void validateDateOrder(std::chrono::year_month_day earlierDate, std::chrono::year_month_day laterDate);
     std::string boolToString(bool value);
     bool floatEqual(float a, float b, float relEps = std::numeric_limits<float>::epsilon() * 10, float absEps = 1e-8f);
     float floatRound(float value, int decimalPlaces);
