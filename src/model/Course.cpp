@@ -100,24 +100,67 @@ void Course::validateGradeScale(const std::map<float, std::string>& gradeScale) 
     }
 }
 
-// calculate course grade percentage using only completed assignments
+// calculate grades by category and store them in the map
+void Course::calculateGradesByCategory() {
+    std::unordered_map<std::string, float> totals;
+    std::unordered_map<std::string, unsigned int> counts;
+
+    // add values from assignmentList to totals and counts
+    for (const auto& [id, assignment] : assignmentList_) {
+        if (!assignment.getCompleted()) {
+            continue;
+        }
+
+        const std::string& category = assignment.getCategory();
+        totals[category] += assignment.getGrade();
+        counts[category]++;
+    }
+
+    gradesByCategory_.clear();
+
+    // calculate category grades and store in map
+    for (const auto& [categoryName, _] : gradeWeights_) {
+        auto it = counts.find(categoryName);
+
+        if (it == counts.end() || it->second == 0) {
+            continue;
+        }
+
+        float categoryGrade = totals[categoryName] / it->second;
+        // only add to map if there is a completed assignment in the category
+        if (counts[categoryName] > 0) {
+            gradesByCategory_.emplace(categoryName, utils::floatRound(categoryGrade, 2));
+        }
+    }
+}
+
+// calculate course grade percentage using grades from each category
 float Course::calculateGradePct() {
     if (assignmentList_.size() == 0 || calculateCompletedAssignments() == 0) {
         return 0.0f;
     }
 
-    float total{0.0};
-    unsigned int numAssignments{0};
+    float total{0.0f};
+    float activeWeightTotal{0.0f};  // used to redistribute weights if 1+ categories are empty
 
-    for (const auto& [id, assignment] : assignmentList_) {
-        // only consider grades from completed assignments
-        if (assignment.getCompleted()) {
-            total += assignment.getGrade();
-            numAssignments++;
+    calculateGradesByCategory();    // call this to get category grades before weighing each piece
+    // sum categories that have grades
+    for (const auto& [category, weight] : gradeWeights_) {
+        if (gradesByCategory_.contains(category)) {
+            activeWeightTotal += weight;
         }
     }
+    
+    // normalize weights and calculate overall grade
+    for (const auto& [categoryName, grade] : gradesByCategory_) {
+        auto it = gradeWeights_.find(categoryName);
+        
+        float normalizedWeight = it->second / activeWeightTotal;
+        float weightedGrade = grade * normalizedWeight;
+        total += weightedGrade;
+    }
 
-    return utils::floatRound(total / numAssignments, 2);
+    return utils::floatRound(total, 2);
 }
 
 // calculate letter grade based on grade percentage and given grade scale; returns "N/A" when no assignments are completed

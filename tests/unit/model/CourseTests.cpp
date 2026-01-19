@@ -448,6 +448,14 @@ TEST_F(CourseTest, GradePctSetterAutomaticNoCompleteAssignments) {
     ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
 }
 
+TEST_F(CourseTest, GradePctSetterAutomaticDifferentCategories) {
+    Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/20}, true, 90.2f};
+    Assignment assignment2{"Midterm", "", "Midterm", std::chrono::year_month_day{2026y/2/28}, true, 88.74f};
+    course1.addAssignment(assignment1);
+    course1.addAssignment(assignment2);
+    ASSERT_FLOAT_EQ(course1.getGradePct(), 89.35f);
+}
+
 TEST_F(CourseTest, GradePctSetterManualInvalidLow) {
     // throw out of range since input is not in range 0 to 150
     ASSERT_THROW(course1.setGradePct(-20.24f), std::out_of_range);
