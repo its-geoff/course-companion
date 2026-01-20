@@ -1114,6 +1114,30 @@ TEST(CliViewTest, AddTermAlreadyExists) {
     ASSERT_TRUE(userOut.find("choose a new title") != std::string::npos);
 }
 
+TEST(CliViewTest, AddTermAllDefaults) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "\n"
+        "\n"
+        "\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("successfully added") != std::string::npos);
+    ASSERT_TRUE(userOut.find("term with this title already exists") == std::string::npos);
+}
+
 TEST(CliViewTest, EditTermNotFound) {
     std::istringstream input(
         // add term
@@ -2241,6 +2265,41 @@ TEST(CliViewTest, AddCourseAlreadyExists) {
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
     ASSERT_TRUE(userOut.find("course with this title already exists") != std::string::npos);
     ASSERT_TRUE(userOut.find("choose a new title") != std::string::npos);
+}
+
+TEST(CliViewTest, AddCourseAllDefaults) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("successfully added") != std::string::npos);
+    ASSERT_TRUE(userOut.find("course with this title already exists") == std::string::npos);
 }
 
 TEST(CliViewTest, EditCourseNotFound) {
@@ -3858,6 +3917,52 @@ TEST(CliViewTest, AddAssignmentAlreadyExists) {
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
     ASSERT_TRUE(userOut.find("assignment with this title already exists") != std::string::npos);
     ASSERT_TRUE(userOut.find("choose a new title") != std::string::npos);
+}
+
+TEST(CliViewTest, AddAssignmentAllDefaults) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "\n"
+        "\n"
+        "\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("successfully added") != std::string::npos);
+    ASSERT_TRUE(userOut.find("assignment with this title already exists") == std::string::npos);
 }
 
 TEST(CliViewTest, EditAssignmentNotFound) {
