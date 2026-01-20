@@ -98,16 +98,33 @@ void AssignmentController::editDueDate(const std::string& id, const std::chrono:
     assignment.setDueDate(newDueDate);
 }
 
-// edits the completed flag of the Assignment with the given ID
-void AssignmentController::editCompleted(const std::string& id, bool newCompleted) {
-    Assignment& assignment = course_.findAssignment(id);
-    assignment.setCompleted(newCompleted);
+// adds a grade to an incomplete assignment and sets it to completed; percentage-based overload
+void AssignmentController::addGrade(const std::string& title, float grade) {
+    std::string id = getAssignmentId(title);
+    Assignment& selectedAssignment = course_.findAssignment(id);
+
+    try {
+        grade = utils::floatRound(grade, 2);
+        selectedAssignment.setGrade(grade);
+        selectedAssignment.setCompleted(true);
+    } catch (const std::exception& e) {
+        throw std::out_of_range("Grade must be in range 0 to 150.");
+    }
 }
 
-// edits the grade of the Assignment with the given ID
-void AssignmentController::editGrade(const std::string& id, float newGrade) {
-    Assignment& assignment = course_.findAssignment(id);
-    assignment.setGrade(newGrade);
+// adds a grade to an incomplete assignment and sets it to completed; point-based overload
+void AssignmentController::addGrade(const std::string& title, float pointsEarned, float totalPoints) {
+    float calculatedGrade = (pointsEarned / totalPoints) * 100.0f;
+    addGrade(title, calculatedGrade);
+}
+
+// removes a grade from a completed assignment, resetting the grade and completion status
+void AssignmentController::removeGrade(const std::string& title) {
+    std::string id = getAssignmentId(title);
+    Assignment& selectedAssignment = course_.findAssignment(id);
+
+    selectedAssignment.setGrade(0.0f);
+    selectedAssignment.setCompleted(false);
 }
 
 // searches title -> id and erases the named Assignment from the list
@@ -127,16 +144,4 @@ const Assignment& AssignmentController::findAssignment(const std::string& title)
 Assignment& AssignmentController::findAssignment(const std::string& title) {
     std::string id = getAssignmentId(title);
     return course_.findAssignment(id);
-}
-
-// selects an Assignment and makes it "active"
-void AssignmentController::selectAssignment(const std::string& title) {
-    std::string id = getAssignmentId(title);
-
-    try {
-        Assignment& assignmentRef = course_.findAssignment(id);
-        activeAssignment_ = &assignmentRef;
-    } catch (const std::exception& e) {
-        throw std::out_of_range("Assignment not found.");
-    }
 }

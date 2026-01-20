@@ -106,24 +106,37 @@ TEST_F(AssignmentControllerTest, EditDueDate) {
     ASSERT_EQ(selectedAssignment.getDueDate(), std::chrono::year_month_day{2026y/1/15});
 }
 
-TEST_F(AssignmentControllerTest, EditCompleted) {
-    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+TEST_F(AssignmentControllerTest, AddGradePercentage) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
 
-    std::string id = controller.getAssignmentId("Homework 1");
-    controller.editCompleted(id, false);
+    controller.addGrade("Homework 1", 89.92f);
 
     const Assignment& selectedAssignment = controller.findAssignment("Homework 1");
-    ASSERT_FALSE(selectedAssignment.getCompleted());
+    ASSERT_EQ(selectedAssignment.getTitle(), "Homework 1");
+    ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 89.92f);
+    ASSERT_TRUE(selectedAssignment.getCompleted());
 }
 
-TEST_F(AssignmentControllerTest, EditGrade) {
-    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+TEST_F(AssignmentControllerTest, AddGradePoints) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
 
-    std::string id = controller.getAssignmentId("Homework 1");
-    controller.editGrade(id, 95.0f);
+    controller.addGrade("Homework 1", 18, 20);
 
     const Assignment& selectedAssignment = controller.findAssignment("Homework 1");
-    ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 95.0f);
+    ASSERT_EQ(selectedAssignment.getTitle(), "Homework 1");
+    ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 90.0f);
+    ASSERT_TRUE(selectedAssignment.getCompleted());
+}
+
+TEST_F(AssignmentControllerTest, RemoveGrade) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+
+    controller.removeGrade("Homework 1");
+
+    const Assignment& selectedAssignment = controller.findAssignment("Homework 1");
+    ASSERT_EQ(selectedAssignment.getTitle(), "Homework 1");
+    ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 0.0f);
+    ASSERT_FALSE(selectedAssignment.getCompleted());
 }
 
 TEST_F(AssignmentControllerTest, RemoveAssignment) {
@@ -235,40 +248,84 @@ TEST_F(AssignmentControllerTest, EditDueDateInvalid) {
     ASSERT_THROW(controller.editDueDate(id, std::chrono::year_month_day{2026y/3/33}), std::invalid_argument);
 }
 
-TEST_F(AssignmentControllerTest, EditGradeInvalidLow) {
-    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    std::string id = controller.getAssignmentId("Homework 1");
+TEST_F(AssignmentControllerTest, AddGradeAssignmentNotFound) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+    // out of range since assignment cannot be found
+    ASSERT_THROW(controller.addGrade("Homework 3", 89.92f), std::out_of_range);
+}
 
+TEST_F(AssignmentControllerTest, AddGradePercentageOutOfRangeLow) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
     // out of range since grade is below 0
-    ASSERT_THROW(controller.editGrade(id, -10.0f), std::out_of_range);
+    ASSERT_THROW(controller.addGrade("Homework 1", -2.63f), std::out_of_range);
 }
 
-TEST_F(AssignmentControllerTest, EditGradeInvalidHigh) {
-    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    std::string id = controller.getAssignmentId("Homework 1");
-
-    // out of range since grade is over 150
-    ASSERT_THROW(controller.editGrade(id, 160.0f), std::out_of_range);
+TEST_F(AssignmentControllerTest, AddGradePercentageOutOfRangeHigh) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+    // out of range since grade is above 150
+    ASSERT_THROW(controller.addGrade("Homework 1", 162.11f), std::out_of_range);
 }
 
-TEST_F(AssignmentControllerTest, EditGradeBoundaryLow) {
-    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    std::string id = controller.getAssignmentId("Homework 1");
+TEST_F(AssignmentControllerTest, AddGradePercentageBoundaryLow) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
 
-    controller.editGrade(id, 0.0f);
+    controller.addGrade("Homework 1", 0.0f);
 
     const Assignment& selectedAssignment = controller.findAssignment("Homework 1");
+    ASSERT_EQ(selectedAssignment.getTitle(), "Homework 1");
     ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 0.0f);
+    ASSERT_TRUE(selectedAssignment.getCompleted());
 }
 
-TEST_F(AssignmentControllerTest, EditGradeBoundaryHigh) {
-    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
-    std::string id = controller.getAssignmentId("Homework 1");
+TEST_F(AssignmentControllerTest, AddGradePercentageBoundaryHigh) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
 
-    controller.editGrade(id, 100.0f);
-    
+    controller.addGrade("Homework 1", 150.0f);
+
     const Assignment& selectedAssignment = controller.findAssignment("Homework 1");
-    ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 100.0f);
+    ASSERT_EQ(selectedAssignment.getTitle(), "Homework 1");
+    ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 150.0f);
+    ASSERT_TRUE(selectedAssignment.getCompleted());
+}
+
+TEST_F(AssignmentControllerTest, AddGradePointsOutOfRangeLow) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+    // out of range since grade is below 0
+    ASSERT_THROW(controller.addGrade("Homework 1", -12, 20), std::out_of_range);
+}
+
+TEST_F(AssignmentControllerTest, AddGradePointsOutOfRangeHigh) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+    // out of range since grade is above 150
+    ASSERT_THROW(controller.addGrade("Homework 1", 40, 20), std::out_of_range);
+}
+
+TEST_F(AssignmentControllerTest, AddGradePointsBoundaryLow) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+
+    controller.addGrade("Homework 1", 0, 20);
+
+    const Assignment& selectedAssignment = controller.findAssignment("Homework 1");
+    ASSERT_EQ(selectedAssignment.getTitle(), "Homework 1");
+    ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 0.0f);
+    ASSERT_TRUE(selectedAssignment.getCompleted());
+}
+
+TEST_F(AssignmentControllerTest, AddGradePointsBoundaryHigh) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+
+    controller.addGrade("Homework 1", 30, 20);
+
+    const Assignment& selectedAssignment = controller.findAssignment("Homework 1");
+    ASSERT_EQ(selectedAssignment.getTitle(), "Homework 1");
+    ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 150.0f);
+    ASSERT_TRUE(selectedAssignment.getCompleted());
+}
+
+TEST_F(AssignmentControllerTest, RemoveGradeAssignmentNotFound) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+    // out of range since assignment cannot be found
+    ASSERT_THROW(controller.removeGrade("Homework 3"), std::out_of_range);
 }
 
 TEST_F(AssignmentControllerTest, RemoveAssignmentNotFound) {
