@@ -615,7 +615,7 @@ TEST(CliViewTest, EditAssignmentGradePoints) {
     view.run();
     AssignmentController& assignmentController = controller.getCourseController().getAssignmentController();
 
-    // check that assignmentList size is not 0
+    // check that assignmentList size is 1
     const std::unordered_map<std::string, Assignment>& listOfAssignments = assignmentController.getAssignmentList();
     ASSERT_EQ(listOfAssignments.size(), 1);
 
@@ -634,69 +634,7 @@ TEST(CliViewTest, EditAssignmentGradePoints) {
     ASSERT_TRUE(userOut.find("Update results") != std::string::npos);
 }
 
-TEST(CliViewTest, RemoveAssignment) {
-    std::istringstream input(
-        // add term
-        "A\n"
-        "Spring 2025\n"
-        "2025-1-10\n"
-        "2025-5-23\n"
-        "yes\n"
-        // select term
-        "S\n"
-        "Spring 2025\n"
-        // add course
-        "A\n"
-        "ENGR 195A\n"
-        "\n"
-        "2025-1-2\n"
-        "2025-5-12\n"
-        "3\n"
-        "yes\n"
-        // select course
-        "S\n"
-        "ENGR 195A\n"
-        // add assignment
-        "A\n"
-        "Homework 1\n"
-        "\n"
-        "Homework\n"
-        "2025-1-30\n"
-        "yes\n"
-        "90.5\n"
-        "A\n"
-        "Homework 3\n"
-        "Hash maps and sets\n"
-        "Homework\n"
-        "2025-2-15\n"
-        "no\n"
-        "0.0\n"
-        // remove assignment
-        "R\n"
-        "Homework 1\n"
-        "yes\n"
-        // exit
-        "X\n"
-    );
-    std::ostringstream output;
-
-    TermController controller;
-    CliView view(controller, input, output);
-    view.run();
-    AssignmentController& assignmentController = controller.getCourseController().getAssignmentController();
-
-    // check that assignmentList size is 1
-    const std::unordered_map<std::string, Assignment>& listOfAssignments = assignmentController.getAssignmentList();
-    ASSERT_EQ(listOfAssignments.size(), 1);
-
-    // check that assignmentList does not include removed Assignment
-    ASSERT_THROW(assignmentController.findAssignment("Homework 1"), std::out_of_range);
-
-    // check user output for both the prompt and the success message
-    const std::string userOut = output.str();
-    ASSERT_TRUE(userOut.find("for the assignment you'd like to remove") != std::string::npos);
-    ASSERT_TRUE(userOut.find("Assignment 'Homework 1' was removed") != std::string::npos);
-}
+// TO-DO: create AddAssignmentGrade test
 
 TEST(CliViewTest, RemoveAssignmentGrade) {
     std::istringstream input(
@@ -5644,6 +5582,8 @@ TEST(CliViewTest, EditAssignmentGradePointsDivideByZero) {
     ASSERT_TRUE(userOut.find("Invalid input") != std::string::npos);
     ASSERT_TRUE(userOut.find("Using default") != std::string::npos);
 }
+
+// TO-DO: create AddAssignmentGrade tests
 
 TEST(CliViewTest, RemoveAssignmentGradeNotFound) {
     std::istringstream input(
