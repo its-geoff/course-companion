@@ -1004,7 +1004,7 @@ void CliView::promptEditAssignment() {
             }
         } else if (field == "grade") {
             resultFlags.gradeRequested = true;
-            float newGrade = getFloatInput("New grade", 0.0f);
+            float newGrade = getGradeInput("New grade", 0.0f);
 
             if (newGrade < 0.0f || newGrade > 150.0f) {
                 out_ << "Grade must be from 0 to 150. Cannot update grade." << "\n";
