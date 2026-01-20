@@ -69,12 +69,15 @@ class CliView {
         void promptSelectAssignment();
         void promptRemoveAssignment();
 
-        char getCharInput(const std::string &label, const char defaultVal) const;
-        std::string getStringInput(const std::string &label, const std::string &defaultVal) const;
-        std::chrono::year_month_day getDateInput(const std::string &label, const std::chrono::year_month_day defaultVal) const;
-        float getFloatInput(const std::string &label, const float defaultVal) const;
-        int getIntInput(const std::string &label, const int defaultVal) const;
-        bool getBoolInput(const std::string &label, const bool defaultVal) const;
+        char getCharInput(const std::string& label, const char defaultVal) const;
+        std::string getStringInput(const std::string& label, const std::string &defaultVal) const;
+        std::chrono::year_month_day getDateInput(const std::string& label, const std::chrono::year_month_day defaultVal) const;
+        float getFloatInput(const std::string& label, const float defaultVal) const;
+        int getIntInput(const std::string& label, const int defaultVal) const;
+        bool getBoolInput(const std::string& label, const bool defaultVal) const;
+        float getGradeInput(const std::string& label, const float defaultVal) const;
+        float getGradePctInput(const std::string& input, const float defaultVal) const;
+        float getGradePointsInput(const std::string& input, const float defaultVal) const;
 
     public:
         explicit CliView(TermController &controller, std::istream& is = std::cin, std::ostream& os = std::cout);

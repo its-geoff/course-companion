@@ -852,6 +852,7 @@ void CliView::promptAddAssignment() {
         try {
             category = getStringInput("Category", " ");
             utils::validateReqString(category, "Category");
+            category = utils::stringTrim(category);
 
             if (!selectedCourse_->get().getGradeWeights().contains(category)) {
                 throw std::out_of_range("Category must be in grade weights.");
@@ -896,10 +897,10 @@ void CliView::promptAddAssignment() {
 
     float grade{};
     while (invalidGrade) {
-        grade = getFloatInput("Grade", 0.0f);
+        grade = getGradeInput("Grade", 0.0f);
 
-        if (grade > 100.0f || grade < 0.0f) {
-            out_ << "Invalid grade. Grade must be from 0 to 100. Please try again." << "\n";
+        if (grade > 150.0f || grade < 0.0f) {
+            out_ << "Invalid grade. Grade must be from 0 to 150. Please try again." << "\n";
         } else {
             invalidGrade = false;
         }
@@ -1005,8 +1006,8 @@ void CliView::promptEditAssignment() {
             resultFlags.gradeRequested = true;
             float newGrade = getFloatInput("New grade", 0.0f);
 
-            if (newGrade < 0.0f || newGrade > 100.0f) {
-                out_ << "Grade must be from 0 to 100. Cannot update grade." << "\n";
+            if (newGrade < 0.0f || newGrade > 150.0f) {
+                out_ << "Grade must be from 0 to 150. Cannot update grade." << "\n";
             } else {
                 assignmentController.editGrade(id, newGrade);
                 resultFlags.gradeUpdated = true;
@@ -1241,6 +1242,77 @@ bool CliView::getBoolInput(const std::string &label, const bool defaultVal) cons
         return false;
     } else {
         throw std::invalid_argument("Invalid boolean string.");
+    }
+}
+
+// ask the user for grade input and detect the format based on the input string
+float CliView::getGradeInput(const std::string &label, const float defaultVal) const {
+    out_ << label << " [default: " << defaultVal << "]: ";
+
+    std::string input{};
+    std::getline(in_, input);
+
+    if (input.empty() || utils::isOnlyWhitespace(input)) {
+        out_ << "No input. Using default." << "\n";
+        return defaultVal;
+    }
+
+    if (input.find("/") != std::string::npos) {
+        // slash found, use point-based version
+        return getGradePointsInput(input, defaultVal);
+    } else {
+        // slash not found, use percentage-based version
+        return getGradePctInput(input, defaultVal);
+    }
+}
+
+// parse grade point input in float form and output the value, using the default value 
+// in the case of an invalid input
+float CliView::getGradePctInput(const std::string& input, const float defaultVal) const {
+    try {
+        return utils::floatRound(std::stof(input), 2);
+    } catch (const std::invalid_argument &e) {
+        out_ << "Invalid float. Using default." << "\n";
+        return defaultVal;
+    } catch (const std::out_of_range &e) {
+        out_ << "Value out of range. Using default." << "\n";
+        return defaultVal;
+    }
+}
+
+// parse grade point input in the form 0.0/0.0 and output the calculation, 
+// using the default value in the case of an invalid input
+float CliView::getGradePointsInput(const std::string &input, const float defaultVal) const {
+    std::vector<std::string> values;
+    std::string current;
+
+    // add each value to the vector as a separate element
+    for (char c : input) {
+        if (c == '/') {
+            values.push_back(current);
+            current.clear();
+        } else {
+            current += c;
+        }
+    }
+    values.push_back(current);
+
+    for (std::string value : values) {
+        value = utils::stringTrim(value);
+    }
+
+    try {
+        float pointsEarned = std::stof(values[0]);
+        float totalPoints = std::stof(values[1]);
+        float calculatedGrade = (pointsEarned / totalPoints) * 100; 
+
+        return utils::floatRound(calculatedGrade, 2);
+    } catch (const std::invalid_argument &e) {
+        out_ << "Invalid result. Using default." << "\n";
+        return defaultVal;
+    } catch (const std::out_of_range &e) {
+        out_ << "Value out of range. Using default." << "\n";
+        return defaultVal;
     }
 }
 
