@@ -279,6 +279,7 @@ void CliView::promptAddTerm() {
             // check if date is empty (default); if not, validate input
             if (startDate == emptyDate) {
                 out_ << "Using default date." << "\n";
+                startDate = utils::defaultStartDate();
             } else {
                 utils::validateDate(startDate);
             }
@@ -541,6 +542,7 @@ void CliView::promptAddCourse() {
             // check if date is empty (default); if not, validate input
             if (startDate == emptyDate) {
                 out_ << "Using default date." << "\n";
+                startDate = utils::defaultStartDate();
             } else {
                 utils::validateDate(startDate);
             }
