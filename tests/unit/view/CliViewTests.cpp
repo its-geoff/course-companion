@@ -4182,6 +4182,147 @@ TEST(CliViewTest, AddAssignmentGradePointsBoundaryHigh) {
     ASSERT_TRUE(userOut.find("must be from 0 to 150") == std::string::npos);
 }
 
+TEST(CliViewTest, AddAssignmentGradePointsMissingDividend) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "/20\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid input") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Using default") != std::string::npos);
+}
+
+TEST(CliViewTest, AddAssignmentGradePointsNegativeDivisor) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "20/-10\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid grade") != std::string::npos);
+    ASSERT_TRUE(userOut.find("must be from 0 to 150") != std::string::npos);
+}
+
+TEST(CliViewTest, AddAssignmentGradePointsDivideByZero) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "20/0\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid input") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Using default") != std::string::npos);
+}
+
 TEST(CliViewTest, AddAssignmentAlreadyExists) {
     std::istringstream input(
         // add term
@@ -5331,6 +5472,162 @@ TEST(CliViewTest, EditAssignmentGradePointsBoundaryHigh) {
     ASSERT_TRUE(userOut.find("for the assignment you'd like to edit") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid grade") == std::string::npos);
     ASSERT_TRUE(userOut.find("must be from 0 to 150") == std::string::npos);
+}
+
+TEST(CliViewTest, EditAssignmentGradePointsMissingDividend) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "17/20\n"
+        // edit assignment
+        "E\n"
+        "Homework 1\n"
+        "grade\n"
+        "/20\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to edit") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid input") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Using default") != std::string::npos);
+}
+
+TEST(CliViewTest, EditAssignmentGradePointsNegativeDivisor) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "17/20\n"
+        // edit assignment
+        "E\n"
+        "Homework 1\n"
+        "grade\n"
+        "20/-10\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to edit") != std::string::npos);
+    ASSERT_TRUE(userOut.find("must be from 0 to 150") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Cannot update grade") != std::string::npos);
+}
+
+TEST(CliViewTest, EditAssignmentGradePointsDivideByZero) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "yes\n"
+        "17/20\n"
+        // edit assignment
+        "E\n"
+        "Homework 1\n"
+        "grade\n"
+        "20/0\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+
+    // check for intro and invalid input message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to edit") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Invalid input") != std::string::npos);
+    ASSERT_TRUE(userOut.find("Using default") != std::string::npos);
 }
 
 TEST(CliViewTest, SelectAssignmentNotFound) {

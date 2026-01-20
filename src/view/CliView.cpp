@@ -1266,8 +1266,8 @@ float CliView::getGradeInput(const std::string &label, const float defaultVal) c
     }
 }
 
-// parse grade point input in float form and output the value, using the default value 
-// in the case of an invalid input
+// parse percentage-based grade input in float form (0.0) and output the value, 
+// using the default value in the case of an invalid input
 float CliView::getGradePctInput(const std::string& input, const float defaultVal) const {
     try {
         return utils::floatRound(std::stof(input), 2);
@@ -1280,7 +1280,7 @@ float CliView::getGradePctInput(const std::string& input, const float defaultVal
     }
 }
 
-// parse grade point input in the form 0.0/0.0 and output the calculation, 
+// parse point-based grade input in the form 0.0/0.0 and output the calculation, 
 // using the default value in the case of an invalid input
 float CliView::getGradePointsInput(const std::string &input, const float defaultVal) const {
     std::vector<std::string> values;
@@ -1289,7 +1289,10 @@ float CliView::getGradePointsInput(const std::string &input, const float default
     // add each value to the vector as a separate element
     for (char c : input) {
         if (c == '/') {
-            values.push_back(current);
+            // empty strings are not pushed into vector
+            if (!utils::isOnlyWhitespace(current)) {
+                values.push_back(current);
+            }
             current.clear();
         } else {
             current += c;
@@ -1297,8 +1300,14 @@ float CliView::getGradePointsInput(const std::string &input, const float default
     }
     values.push_back(current);
 
-    for (std::string value : values) {
+    for (std::string& value : values) {
         value = utils::stringTrim(value);
+    }
+
+    // ensure that only two values are input and that there is no division by 0
+    if (values.size() != 2 || utils::floatEqual(std::stof(values[1]), 0.0f)) {
+        out_ << "Invalid input. Using default." << "\n";
+        return defaultVal;
     }
 
     try {
