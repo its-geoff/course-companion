@@ -1146,9 +1146,9 @@ void CliView::promptAddAssignmentGrade() {
     }
 
     try {
-        float grade = getFloatInput("Grade", -1.0f);
+        float grade = getGradeInput("Grade", -1.0f);
         assignmentController.addGrade(title, grade);
-        out_ << "Grade successfully changed." << "\n";
+        out_ << "Grade successfully added." << "\n";
     } catch (const std::out_of_range& e) {
         out_ << "Invalid grade. Grade must be in range 0 to 150." << "\n";
     }
@@ -1571,7 +1571,7 @@ void CliView::run() {
                     }
 
                     break;
-                case 'I':
+                case 'M':
                     // remove grade
                     if (selectedCourse_->get().getAssignmentList().size() > 0) {
                         promptRemoveAssignmentGrade();
@@ -1582,7 +1582,11 @@ void CliView::run() {
                     break;
                 case 'V':
                     // view assignment
-                    promptViewAssignment();
+                    if (selectedCourse_->get().getAssignmentList().size() > 0) {
+                        promptViewAssignment();
+                    } else {
+                        displayInvalidSelection();
+                    }
                     break;
                 case 'X':
                     // exit
