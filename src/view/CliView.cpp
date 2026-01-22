@@ -949,16 +949,20 @@ void CliView::promptAddAssignment() {
         }
     }
 
-    // TO-DO: couple grade and completed by only setting grade if completed is true
+    // only set grade if completed is true; otherwise, use default
     float grade{};
-    while (invalidGrade) {
-        grade = getGradeInput("Grade", 0.0f);
+    if (completed) {
+        while (invalidGrade) {
+            grade = getGradeInput("Grade", 0.0f);
 
-        if (grade > 150.0f || grade < 0.0f) {
-            out_ << "Invalid grade. Grade must be from 0 to 150. Please try again." << "\n";
-        } else {
-            invalidGrade = false;
+            if (grade > 150.0f || grade < 0.0f) {
+                out_ << "Invalid grade. Grade must be from 0 to 150. Please try again." << "\n";
+            } else {
+                invalidGrade = false;
+            }
         }
+    } else {
+        grade = 0.0f;
     }
 
     try {

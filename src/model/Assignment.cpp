@@ -41,7 +41,9 @@ Assignment::Assignment(std::string title, std::string description, std::string c
     category_ = std::move(category);
     dueDate_ = dueDate;
     completed_ = completed;
-    grade_ = utils::floatRound(grade, 2);   // round to 2 decimal places for consistency
+    if (completed_) {
+        grade_ = utils::floatRound(grade, 2);   // round to 2 decimal places for consistency
+    }
 }
 
 std::string Assignment::getId() const {

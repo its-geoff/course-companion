@@ -3939,7 +3939,7 @@ TEST(CliViewTest, AddAssignmentCompletedEmpty) {
         "Homework\n"
         "2025-1-30\n"
         "\n"
-        "90.5\n"
+        "0.0\n"
         // exit
         "X\n"
     );
@@ -4002,6 +4002,61 @@ TEST(CliViewTest, AddAssignmentCompletedInvalid) {
     ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
     ASSERT_TRUE(userOut.find("Invalid completed flag") != std::string::npos);
     ASSERT_TRUE(userOut.find("must be a valid boolean") != std::string::npos);
+}
+
+TEST(CliViewTest, AddAssignmentCompletedFalseWithGrade) {
+    std::istringstream input(
+        // add term
+        "A\n"
+        "Spring 2025\n"
+        "2025-1-10\n"
+        "2025-5-23\n"
+        "yes\n"
+        // select term
+        "S\n"
+        "Spring 2025\n"
+        // add course
+        "A\n"
+        "ENGR 195A\n"
+        "\n"
+        "2025-1-2\n"
+        "2025-5-12\n"
+        "3\n"
+        "yes\n"
+        // select course
+        "S\n"
+        "ENGR 195A\n"
+        // add assignment
+        "A\n"
+        "Homework 1\n"
+        "\n"
+        "Homework\n"
+        "2025-1-30\n"
+        "no\n"
+        "90.05\n"
+        // exit
+        "X\n"
+    );
+    std::ostringstream output;
+
+    TermController controller;
+    CliView view(controller, input, output);
+    view.run();
+    AssignmentController &assignmentController = controller.getCourseController().getAssignmentController();
+
+    // check that Assignment was added to the list and that grade is default
+    const Assignment& selectedAssignment = assignmentController.findAssignment("Homework 1");
+    ASSERT_EQ(selectedAssignment.getTitle(), "Homework 1");
+    ASSERT_EQ(selectedAssignment.getDescription(), "");
+    ASSERT_EQ(selectedAssignment.getDueDate(), std::chrono::year_month_day{2025y/1/30});
+    ASSERT_FALSE(selectedAssignment.getCompleted());
+    ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 0.0f);
+
+    // check for intro and successful add message
+    const std::string userOut = output.str();
+    ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
+    ASSERT_TRUE(userOut.find("for the assignment you'd like to add") != std::string::npos);
+    ASSERT_TRUE(userOut.find("successfully added") != std::string::npos);
 }
 
 TEST(CliViewTest, AddAssignmentPctInvalidLow) {
