@@ -103,17 +103,17 @@ void AssignmentController::addGrade(const std::string& title, float grade) {
     std::string id = getAssignmentId(title);
     Assignment& selectedAssignment = course_.findAssignment(id);
 
-    try {
-        grade = utils::floatRound(grade, 2);
-        selectedAssignment.setGrade(grade);
-        selectedAssignment.setCompleted(true);
-    } catch (const std::exception& e) {
-        throw std::out_of_range("Grade must be in range 0 to 150.");
-    }
+    grade = utils::floatRound(grade, 2);
+    selectedAssignment.setGrade(grade);
+    selectedAssignment.setCompleted(true);
 }
 
 // adds a grade to an incomplete assignment and sets it to completed; point-based overload
 void AssignmentController::addGrade(const std::string& title, float pointsEarned, float totalPoints) {
+    if (utils::floatEqual(totalPoints, 0.0f)) {
+        throw std::invalid_argument("Division by zero not allowed.");
+    } 
+    
     float calculatedGrade = (pointsEarned / totalPoints) * 100.0f;
     addGrade(title, calculatedGrade);
 }

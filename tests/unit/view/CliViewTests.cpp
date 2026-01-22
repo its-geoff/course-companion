@@ -6187,7 +6187,7 @@ TEST(CliViewTest, ViewAssignmentsCompletedEmpty) {
     // check user output for invalid input
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("would you like to view") != std::string::npos);
-    ASSERT_TRUE(userOut.find("No assignments to display") != std::string::npos);
+    ASSERT_TRUE(userOut.find("No completed assignments to display") != std::string::npos);
 }
 
 TEST(CliViewTest, ViewAssignmentsIncompleteEmpty) {
@@ -6254,7 +6254,7 @@ TEST(CliViewTest, ViewAssignmentsIncompleteEmpty) {
     // check user output for invalid input
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("would you like to view") != std::string::npos);
-    ASSERT_TRUE(userOut.find("No assignments to display") != std::string::npos);
+    ASSERT_TRUE(userOut.find("No incomplete assignments to display") != std::string::npos);
 }
 
 TEST(CliViewTest, ViewAssignmentsInvalidSelection) {

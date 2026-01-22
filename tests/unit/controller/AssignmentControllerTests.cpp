@@ -329,6 +329,13 @@ TEST_F(AssignmentControllerTest, AddGradePointsNegativeDivisor) {
     ASSERT_THROW(controller.addGrade("Homework 1", 5, -20), std::out_of_range);
 }
 
+TEST_F(AssignmentControllerTest, AddGradePointsDivisionByZero) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+
+    // throw invalid argument since division by zero is not allowed
+    ASSERT_THROW(controller.addGrade("Homework 1", 20, 0), std::invalid_argument);
+}
+
 TEST_F(AssignmentControllerTest, RemoveGradeAssignmentNotFound) {
     controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
     // out of range since assignment cannot be found

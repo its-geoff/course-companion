@@ -198,7 +198,7 @@ void CliView::displayAssignmentMenu() const {
         out_ << "[E] Edit assignment" << "\n";
         out_ << "[R] Remove assignment" << "\n";
         out_ << "[G] Add grade" << "\n";
-        out_ << "[I] Remove grade" << "\n";
+        out_ << "[M] Remove grade" << "\n";
         out_ << "[V] View assignments" << "\n";
         out_ << "[X] Exit to course menu" << "\n";
     } else {
@@ -260,25 +260,20 @@ void CliView::displayAssignmentListInfo() const {
 // displays information about completed assignments from the selected course
 void CliView::displayCompletedAssignmentInfo() const {
     const std::unordered_map<std::string, Assignment>& assignments = selectedCourse_->get().getAssignmentList();
-    int completedAssignments = 0;
+    bool completedAssignments{false};
 
     for (const auto& [id, assignment] : assignments) {
         if (assignment.getCompleted()) {
-            completedAssignments++;
+            displaySecondaryDelim();
+            assignment.printAssignmentInfo(out_);
+            displaySecondaryDelim();
+            completedAssignments = true;
         }
     }
-
-    if (completedAssignments > 0) {
-        for (const auto& [id, assignment] : assignments) {
-            if (assignment.getCompleted()) {
-                displaySecondaryDelim();
-                assignment.printAssignmentInfo(out_);
-                displaySecondaryDelim();
-            }
-        }
-    } else {
+    
+    if (!completedAssignments) {
         displaySecondaryDelim();
-        out_ << "No assignments to display." << "\n";
+        out_ << "No completed assignments to display." << "\n";
         displaySecondaryDelim();
     }
 }
@@ -286,25 +281,20 @@ void CliView::displayCompletedAssignmentInfo() const {
 // displays information about incomplete assignments from the selected course
 void CliView::displayIncompleteAssignmentInfo() const {
     const std::unordered_map<std::string, Assignment>& assignments = selectedCourse_->get().getAssignmentList();
-    int incompleteAssignments = 0;
+    bool incompleteAssignments{false};
 
     for (const auto& [id, assignment] : assignments) {
         if (!assignment.getCompleted()) {
-            incompleteAssignments++;
+            displaySecondaryDelim();
+            assignment.printAssignmentInfo(out_);
+            displaySecondaryDelim();
+            incompleteAssignments = true;
         }
     }
 
-    if (incompleteAssignments > 0) {
-        for (const auto& [id, assignment] : assignments) {
-            if (!assignment.getCompleted()) {
-                displaySecondaryDelim();
-                assignment.printAssignmentInfo(out_);
-                displaySecondaryDelim();
-            }
-        }
-    } else {
+    if (!incompleteAssignments) {
         displaySecondaryDelim();
-        out_ << "No assignments to display." << "\n";
+        out_ << "No incomplete assignments to display." << "\n";
         displaySecondaryDelim();
     }
 }
