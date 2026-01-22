@@ -3939,7 +3939,6 @@ TEST(CliViewTest, AddAssignmentCompletedEmpty) {
         "Homework\n"
         "2025-1-30\n"
         "\n"
-        "0.0\n"
         // exit
         "X\n"
     );
@@ -4004,7 +4003,7 @@ TEST(CliViewTest, AddAssignmentCompletedInvalid) {
     ASSERT_TRUE(userOut.find("must be a valid boolean") != std::string::npos);
 }
 
-TEST(CliViewTest, AddAssignmentCompletedFalseWithGrade) {
+TEST(CliViewTest, AddAssignmentCompletedFalse) {
     std::istringstream input(
         // add term
         "A\n"
@@ -4033,7 +4032,6 @@ TEST(CliViewTest, AddAssignmentCompletedFalseWithGrade) {
         "Homework\n"
         "2025-1-30\n"
         "no\n"
-        "90.05\n"
         // exit
         "X\n"
     );

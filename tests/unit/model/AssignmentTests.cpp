@@ -127,7 +127,7 @@ TEST_F(AssignmentTest, FiveParamInitialization) {
     ASSERT_EQ(assignment2.getCategory(), "Homework");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
     ASSERT_TRUE(assignment2.getCompleted());
-    ASSERT_EQ(assignment2.getGrade(), 90.50f);
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 90.50f);
 }
 
 // initializations with description defined
@@ -166,7 +166,7 @@ TEST_F(AssignmentTest, SixParamDescInitialization) {
     ASSERT_EQ(assignment2.getDescription(), "Focus on lexical analysis.");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
     ASSERT_TRUE(assignment2.getCompleted());
-    ASSERT_EQ(assignment2.getGrade(), 90.50f);
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 90.50f);
 }
 
 // ====================================
@@ -337,7 +337,7 @@ TEST_F(AssignmentTest, FiveParamInitializationCompletedFalseWithGrade) {
     ASSERT_EQ(assignment2.getCategory(), "Homework");
     ASSERT_EQ(assignment2.getDueDate(), std::chrono::year_month_day{2025y/10/31});
     ASSERT_FALSE(assignment2.getCompleted());
-    ASSERT_EQ(assignment2.getGrade(), 0.0f);
+    ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
 }
 
 // invalid initializations with description defined

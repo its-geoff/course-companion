@@ -43,6 +43,8 @@ Assignment::Assignment(std::string title, std::string description, std::string c
     completed_ = completed;
     if (completed_) {
         grade_ = utils::floatRound(grade, 2);   // round to 2 decimal places for consistency
+    } else {
+        grade_ = 0.0f;  // explicit declaration of default
     }
 }
 
