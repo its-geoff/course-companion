@@ -95,15 +95,8 @@ namespace {
         bool dueDateRequested{false};
         bool dueDateUpdated{false};
 
-        bool completedRequested{false};
-        bool completedUpdated{false};
-
-        bool gradeRequested{false};
-        bool gradeUpdated{false};
-
         bool anyRequested() const {
-            return titleRequested || descriptionRequested || dueDateRequested
-                || completedRequested || gradeRequested;
+            return titleRequested || descriptionRequested || dueDateRequested;
         }
     };
 }
@@ -190,7 +183,7 @@ void CliView::displayCourseMenu() const {
     }
 }
 
-// prints a menu of choices for the user to select an Assignment
+// prints a menu of choices for the user to view or edit an Assignment
 void CliView::displayAssignmentMenu() const {
     displayDelim();
     out_ << "Term: " << selectedTerm_->get().getTitle() << "\n";
@@ -203,13 +196,26 @@ void CliView::displayAssignmentMenu() const {
     if (selectedCourse_->get().getAssignmentList().size() > 0) {
         out_ << "[A] Add assignment" << "\n";
         out_ << "[E] Edit assignment" << "\n";
-        out_ << "[S] Select assignment" << "\n";
         out_ << "[R] Remove assignment" << "\n";
+        out_ << "[G] Add grade" << "\n";
+        out_ << "[M] Remove grade" << "\n";
+        out_ << "[V] View assignments" << "\n";
         out_ << "[X] Exit to course menu" << "\n";
     } else {
         out_ << "[A] Add assignment" << "\n";
         out_ << "[X] Exit to course menu" << "\n";
     }
+}
+
+// prints a menu of choices for the user to view a group of Assignments
+void CliView::displayViewAssignmentMenu() const {
+    displayDelim();
+    out_ << "                                       View Assignment Menu                                        " << "\n";
+    out_ << "                         What group of assignments would you like to view?                         " << "\n";
+    out_ << "[A] All assignments" << "\n";
+    out_ << "[C] Completed assignments" << "\n";
+    out_ << "[I] Incomplete assignments" << "\n";
+    out_ << "[X] Exit to assignment menu" << "\n";
 }
 
 // displays information about all terms from TermController
@@ -238,9 +244,57 @@ void CliView::displayCourseListInfo() const {
 void CliView::displayAssignmentListInfo() const {
     const std::unordered_map<std::string, Assignment>& assignments = selectedCourse_->get().getAssignmentList();
 
-    for (const auto& [id, assignment] : assignments) {
+    if (assignments.size() > 0) {
+        for (const auto& [id, assignment] : assignments) {
+            displaySecondaryDelim();
+            assignment.printAssignmentInfo(out_);
+            displaySecondaryDelim();
+        }
+    } else {
         displaySecondaryDelim();
-        assignment.printAssignmentInfo(out_);
+        out_ << "No assignments to display." << "\n";
+        displaySecondaryDelim();
+    }
+}
+
+// displays information about completed assignments from the selected course
+void CliView::displayCompletedAssignmentInfo() const {
+    const std::unordered_map<std::string, Assignment>& assignments = selectedCourse_->get().getAssignmentList();
+    bool completedAssignments{false};
+
+    for (const auto& [id, assignment] : assignments) {
+        if (assignment.getCompleted()) {
+            displaySecondaryDelim();
+            assignment.printAssignmentInfo(out_);
+            displaySecondaryDelim();
+            completedAssignments = true;
+        }
+    }
+    
+    if (!completedAssignments) {
+        displaySecondaryDelim();
+        out_ << "No completed assignments to display." << "\n";
+        displaySecondaryDelim();
+    }
+}
+
+// displays information about incomplete assignments from the selected course
+void CliView::displayIncompleteAssignmentInfo() const {
+    const std::unordered_map<std::string, Assignment>& assignments = selectedCourse_->get().getAssignmentList();
+    bool incompleteAssignments{false};
+
+    for (const auto& [id, assignment] : assignments) {
+        if (!assignment.getCompleted()) {
+            displaySecondaryDelim();
+            assignment.printAssignmentInfo(out_);
+            displaySecondaryDelim();
+            incompleteAssignments = true;
+        }
+    }
+
+    if (!incompleteAssignments) {
+        displaySecondaryDelim();
+        out_ << "No incomplete assignments to display." << "\n";
         displaySecondaryDelim();
     }
 }
@@ -895,6 +949,7 @@ void CliView::promptAddAssignment() {
         }
     }
 
+    // TO-DO: couple grade and completed by only setting grade if completed is true
     float grade{};
     while (invalidGrade) {
         grade = getGradeInput("Grade", 0.0f);
@@ -933,7 +988,7 @@ void CliView::promptEditAssignment() {
     std::string id = selectedAssignment_->get().getId();
 
     // get fields that need to be updated and normalize input
-    out_ << "Fields available: title, description, category, due date, completed, grade" << "\n";
+    out_ << "Fields available: title, description, category, due date" << "\n";
     std::string toUpdate = getStringInput("Fields to update (comma separated)", " ");
     toUpdate = utils::stringLower(toUpdate);
     editFields = splitStringByComma(toUpdate);
@@ -992,26 +1047,6 @@ void CliView::promptEditAssignment() {
             } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update due date." << "\n";
             }
-        } else if (field == "completed") {
-            resultFlags.completedRequested = true;
-
-            try {
-                bool newCompleted = getBoolInput("Is this assignment completed? (yes/no)", false);
-                assignmentController.editCompleted(id, newCompleted);
-                resultFlags.completedUpdated = true;
-            } catch (const std::exception& e) {
-                out_ << "Invalid boolean. Cannot update completed flag." << "\n";
-            }
-        } else if (field == "grade") {
-            resultFlags.gradeRequested = true;
-            float newGrade = getGradeInput("New grade", 0.0f);
-
-            if (newGrade < 0.0f || newGrade > 150.0f) {
-                out_ << "Grade must be from 0 to 150. Cannot update grade." << "\n";
-            } else {
-                assignmentController.editGrade(id, newGrade);
-                resultFlags.gradeUpdated = true;
-            }
         }
     }
 
@@ -1049,50 +1084,16 @@ void CliView::promptEditAssignment() {
                 out_ << "Due Date: (unchanged)" << "\n";
             }
         }
-
-        if (resultFlags.completedRequested) {
-            if (resultFlags.completedUpdated) {
-                out_ << "Completed? " << utils::boolToString(selectedAssignment_->get().getCompleted()) << "\n";
-            } else {
-                out_ << "Completed? (unchanged)" << "\n";
-            }
-        }
-
-        if (resultFlags.gradeRequested) {
-            if (resultFlags.gradeUpdated) {
-                out_ << "Grade: " << selectedAssignment_->get().getGrade() << "\n";
-            } else {
-                out_ << "Grade: (unchanged)" << "\n";
-            }
-        }
     }
 
     // reset selectedAssignment to allow the selection of a new one
     selectedAssignment_.reset();
 }
 
-// prompt the user or the title to select an assignment from the list
-void CliView::promptSelectAssignment() {
-    AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
-
-    out_ << "Here is a list of all assignments:" << "\n";
-    displayAssignmentListInfo();
-
-    out_ << "Enter the following information for the assignment you'd like to select: " << "\n";
-    std::string title = getStringInput("Title", " ");
-
-    try {
-        selectedAssignment_ = assignmentController.findAssignment(title);
-        out_ << "Assignment '" << title << "' was selected." << "\n";
-    } catch (const std::exception& e) {
-        out_ << "Assignment not found. No selection made." << "\n";
-        selectedAssignment_.reset();
-    }
-}
-
 // prompt the user for the title to remove an assignment from the list
 void CliView::promptRemoveAssignment() {
     bool invalidBool{true};
+    AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
 
     out_ << "Enter the following information for the assignment you'd like to remove: " << "\n";
     std::string title = getStringInput("Title", " ");
@@ -1110,13 +1111,94 @@ void CliView::promptRemoveAssignment() {
 
     if (confirm) {
         try {
-            controller_.getCourseController().getAssignmentController().removeAssignment(title);
+            assignmentController.removeAssignment(title);
             out_ << "Assignment '" << title << "' was removed." << "\n";
         } catch (const std::exception& e) {
             out_ << "Assignment not found. Operation cancelled." << "\n";
         }
     } else {
         out_ << "Operation cancelled. Assignment '" << title << "' was not removed." << "\n";
+    }
+}
+
+// prompt the user for the assignment and grade they would like to add
+void CliView::promptAddAssignmentGrade() {
+    AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
+
+    out_ << "Enter the following information for the assignment grade you'd like to add: " << "\n";
+    
+    std::string title = getStringInput("Title", " ");
+    try {
+        assignmentController.findAssignment(title);
+    } catch (const std::exception& e) {
+        out_ << "Assignment not found. Operation cancelled." << "\n";
+        return;
+    }
+
+    try {
+        float grade = getGradeInput("Grade", -1.0f);
+        assignmentController.addGrade(title, grade);
+        out_ << "Grade successfully added." << "\n";
+    } catch (const std::out_of_range& e) {
+        out_ << "Invalid grade. Grade must be in range 0 to 150." << "\n";
+    }
+}
+
+void CliView::promptRemoveAssignmentGrade() {
+    bool invalidBool{true};
+    AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
+
+    out_ << "Enter the following information for the assignment grade you'd like to remove: " << "\n";
+    std::string title = getStringInput("Title", " ");
+
+    // confirmation before removal
+    bool confirm{false};
+    while (invalidBool) {
+        try {
+            confirm = getBoolInput("Are you sure you want to remove the grade from this assignment? (yes/no)", false);
+            invalidBool = false;
+        } catch (const std::exception& e) {
+            out_ << "Invalid response. Please try again." << "\n";
+        }
+    }
+
+    if (confirm) {
+        try {
+            assignmentController.removeGrade(title);
+            out_ << "The grade of assignment '" << title << "' was removed." << "\n";
+        } catch (const std::exception& e) {
+            out_ << "Assignment not found. Operation cancelled." << "\n";
+        }
+    } else {
+        out_ << "Operation cancelled. The grade of assignment '" << title << "' was not removed." << "\n";
+    }
+}
+
+// prompt the user for the group of assignments they'd like to view
+void CliView::promptViewAssignment() {
+    char userInput{};
+    AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
+
+    displayViewAssignmentMenu();
+
+    userInput = getCharInput("Response", 'X');
+    userInput = std::toupper(userInput);
+
+    switch (userInput) {
+        case 'A':
+            displayAssignmentListInfo();
+            break;
+        case 'C':
+            displayCompletedAssignmentInfo();
+            break;
+        case 'I':
+            displayIncompleteAssignmentInfo();
+            break;
+        case 'X':
+            break;
+        default:
+            displayInvalidSelection();
+            break;
     }
 }
 
@@ -1461,15 +1543,6 @@ void CliView::run() {
                     }
 
                     break;
-                case 'S':
-                    // select assignment
-                    if (selectedCourse_->get().getAssignmentList().size() > 0) {
-                        promptSelectAssignment();
-                    } else {
-                        displayInvalidSelection();
-                    }
-
-                    break;
                 case 'R':
                     // remove assignment
                     if (selectedCourse_->get().getAssignmentList().size() > 0) {
@@ -1478,6 +1551,32 @@ void CliView::run() {
                         displayInvalidSelection();
                     }
 
+                    break;
+                case 'G':
+                    // add grade
+                    if (selectedCourse_->get().getAssignmentList().size() > 0) {
+                        promptAddAssignmentGrade();
+                    } else {
+                        displayInvalidSelection();
+                    }
+
+                    break;
+                case 'M':
+                    // remove grade
+                    if (selectedCourse_->get().getAssignmentList().size() > 0) {
+                        promptRemoveAssignmentGrade();
+                    } else {
+                        displayInvalidSelection();
+                    }
+
+                    break;
+                case 'V':
+                    // view assignment
+                    if (selectedCourse_->get().getAssignmentList().size() > 0) {
+                        promptViewAssignment();
+                    } else {
+                        displayInvalidSelection();
+                    }
                     break;
                 case 'X':
                     // exit

@@ -26,7 +26,6 @@
 class AssignmentController {
     private:
         Course& course_;
-        Assignment* activeAssignment_ = nullptr;
         std::unordered_map<std::string, std::string> titleToId_{};  // title -> id, titles in lowercase for easier comparison
 
     public:
@@ -47,12 +46,12 @@ class AssignmentController {
         void editDescription(const std::string& id, const std::string& newDescription);
         void editCategory(const std::string& id, const std::string& newCategory);
         void editDueDate(const std::string& id, const std::chrono::year_month_day& newDueDate);
-        void editCompleted(const std::string& id, bool newCompleted);
-        void editGrade(const std::string& id, float newGrade);
+        void addGrade(const std::string& title, float grade);   // percentage-based overload
+        void addGrade(const std::string& title, float pointsEarned, float totalPoints);     // point-based overload
+        void removeGrade(const std::string& title);
         void removeAssignment(const std::string& title);
         const Assignment& findAssignment(const std::string& title) const;   // non-mutable version
         Assignment &findAssignment(const std::string& title);   // mutable version
-        void selectAssignment(const std::string& title);
 };
 
 #endif
