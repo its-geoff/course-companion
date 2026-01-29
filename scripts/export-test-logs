@@ -1,7 +1,14 @@
 #!/bin/bash
+set -euo pipefail
 
 OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
-
-rm -rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
-cp Testing/Temporary/LastTest_*.log "$OUTPUT_DIR/"
+
+TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+
+shopt -s nullglob
+for file in Testing/Temporary/LastTest_*.log; do
+    base="LastTest"
+    cp "$file" "$OUTPUT_DIR/${base}_${TIMESTAMP}.log"
+done
+shopt -u nullglob

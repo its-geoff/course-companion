@@ -96,7 +96,7 @@ namespace {
         bool dueDateUpdated{false};
 
         bool anyRequested() const {
-            return titleRequested || descriptionRequested || dueDateRequested;
+            return titleRequested || descriptionRequested || categoryRequested || dueDateRequested;
         }
     };
 }
@@ -441,8 +441,11 @@ void CliView::promptEditTerm() {
                     utils::validateDateOrder(newStartDate, selectedTerm_->get().getEndDate());
                 }
 
-                controller_.editStartDate(id, newStartDate);
-                resultFlags.startDateUpdated = true;
+                // only update if start date is different
+                if (newStartDate != selectedTerm_->get().getStartDate()) {
+                    resultFlags.startDateUpdated = true;
+                    controller_.editStartDate(id, newStartDate);
+                }
             } catch (const std::invalid_argument& e) {
                 out_ << "Invalid date. Cannot update start date." << "\n";
             } catch (const std::logic_error& e) {
@@ -457,8 +460,11 @@ void CliView::promptEditTerm() {
                 // check date order
                 utils::validateDateOrder(selectedTerm_->get().getStartDate(), newEndDate);
 
-                controller_.editEndDate(id, newEndDate);
-                resultFlags.endDateUpdated = true;
+                // only update if end date is different
+                if (newEndDate != selectedTerm_->get().getEndDate()) {
+                    resultFlags.endDateUpdated = true;
+                    controller_.editEndDate(id, newEndDate);
+                }
             } catch (const std::invalid_argument e) {
                 out_ << "Invalid date. Cannot update end date." << "\n";
             } catch (const std::logic_error& e) {
@@ -469,8 +475,12 @@ void CliView::promptEditTerm() {
 
             try {
                 bool newActive = getBoolInput("Is this a current term? (yes/no)", true);
-                controller_.editActive(id, newActive);
-                resultFlags.activeUpdated = true;
+                
+                // only update if active flag is different
+                if (newActive != selectedTerm_->get().getActive()) {
+                    resultFlags.activeUpdated = true;
+                    controller_.editActive(id, newActive);
+                }
             } catch (const std::exception& e) {
                 out_ << "Invalid boolean. Cannot update active flag." << "\n";
             }
@@ -727,8 +737,11 @@ void CliView::promptEditCourse() {
                     utils::validateDateOrder(newStartDate, selectedCourse_->get().getEndDate());
                 }
 
-                courseController.editStartDate(id, newStartDate);
-                resultFlags.startDateUpdated = true;
+                // only update if start date is different
+                if (newStartDate != selectedCourse_->get().getStartDate()) {
+                    resultFlags.startDateUpdated = true;
+                    courseController.editStartDate(id, newStartDate);
+                }
             } catch (const std::invalid_argument& e) {
                 out_ << "Invalid date. Cannot update start date." << "\n";
             } catch (const std::logic_error& e) {
@@ -743,8 +756,11 @@ void CliView::promptEditCourse() {
                 // check date order
                 utils::validateDateOrder(selectedCourse_->get().getStartDate(), newEndDate);
 
-                courseController.editEndDate(id, newEndDate);
-                resultFlags.endDateUpdated = true;
+                // only update if end date is different
+                if (newEndDate != selectedCourse_->get().getEndDate()) {
+                    resultFlags.endDateUpdated = true;
+                    courseController.editEndDate(id, newEndDate);
+                }
             } catch (const std::invalid_argument e) {
                 out_ << "Invalid date. Cannot update end date." << "\n";
             } catch (const std::logic_error& e) {
@@ -758,16 +774,23 @@ void CliView::promptEditCourse() {
             if (newNumCredits < 0) {
                 out_ << "Number of credits must be greater than or equal to 0. Cannot update number of credits." << "\n";
             } else {
-                courseController.editNumCredits(id, newNumCredits);
-                resultFlags.numCreditsUpdated = true;
+                // only update if number of credits is different
+                if (newNumCredits != selectedCourse_->get().getNumCredits()) {
+                    resultFlags.numCreditsUpdated = true;
+                    courseController.editNumCredits(id, newNumCredits);
+                }
             }
         } else if (field == "active") {
             resultFlags.activeRequested = true;
 
             try {
                 bool newActive = getBoolInput("Is this a current course? (yes/no)", true);
-                courseController.editActive(id, newActive);
-                resultFlags.activeUpdated = true;
+                
+                // only update if active flag is different
+                if (newActive != selectedCourse_->get().getActive()) {
+                    resultFlags.activeUpdated = true;
+                    courseController.editActive(id, newActive);
+                }                
             } catch (const std::exception& e) {
                 out_ << "Invalid boolean. Cannot update active flag." << "\n";
             }
@@ -1024,8 +1047,8 @@ void CliView::promptEditAssignment() {
             std::string newDescription = getStringInput("New description", " ");
             assignmentController.editDescription(id, newDescription);
 
-            // only set descriptionUpdated if old and new description are not both whitespace
-            if (!(utils::isOnlyWhitespace(oldDescription)) || !(utils::isOnlyWhitespace(newDescription))) {
+            // only set descriptionUpdated if old and new description are not both whitespace or if old and new description don't match
+            if (!(utils::isOnlyWhitespace(oldDescription)) || !(utils::isOnlyWhitespace(newDescription)) || !(oldDescription == newDescription)) {
                 resultFlags.descriptionUpdated = true;
             }
         } else if (field == "category") {
@@ -1033,8 +1056,12 @@ void CliView::promptEditAssignment() {
 
             try {
                 std::string newCategory = getStringInput("New category", " ");
-                assignmentController.editCategory(id, newCategory);
-                resultFlags.categoryUpdated = true;
+                
+                // only update if category is different
+                if (newCategory != selectedAssignment_->get().getCategory()) {
+                    resultFlags.categoryUpdated = true;
+                    assignmentController.editCategory(id, newCategory);
+                }
             } catch (const std::invalid_argument& e) {
                 out_ << "Invalid category. Category must be non-empty. Cannot update category." << "\n";
             } catch (const std::out_of_range& e) {
@@ -1046,8 +1073,12 @@ void CliView::promptEditAssignment() {
             try {
                 std::chrono::year_month_day newDueDate = getDateInput("New due date (YYYY-MM-DD)", {});
                 utils::validateDate(newDueDate);
-                assignmentController.editDueDate(id, newDueDate);
-                resultFlags.dueDateUpdated = true;
+                
+                // only update if due date is different
+                if (newDueDate != selectedAssignment_->get().getDueDate()) {
+                    resultFlags.dueDateUpdated = true;
+                    assignmentController.editDueDate(id, newDueDate);
+                }
             } catch (const std::exception& e) {
                 out_ << "Invalid date. Cannot update due date." << "\n";
             }
