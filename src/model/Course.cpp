@@ -18,44 +18,44 @@ using namespace std::chrono_literals;
 
 // default grade weights if unset; must add up to 1.0
 const std::unordered_map<std::string, float> Course::gradeWeightsDefault_ = {
-    {"Homework", 0.25},
-    {"Midterm", 0.35},
-    {"Final Exam", 0.4}
+    {"Homework", 0.25f},
+    {"Midterm", 0.35f},
+    {"Final Exam", 0.4f}
 };
 
 // associates each percentage range to a letter grade
 const std::map<float, std::string> Course::gradeScaleDefault_ = {
-    {97.0, "A+"},
-    {93.0, "A"},
-    {90.0, "A-"},
-    {87.0, "B+"},
-    {83.0, "B"},
-    {80.0, "B-"},
-    {77.0, "C+"},
-    {73.0, "C"},
-    {70.0, "C-"},
-    {67.0, "D+"},
-    {63.0, "D"},
-    {60.0, "D-"},
-    {0.0, "F"}
+    {97.0f, "A+"},
+    {93.0f, "A"},
+    {90.0f, "A-"},
+    {87.0f, "B+"},
+    {83.0f, "B"},
+    {80.0f, "B-"},
+    {77.0f, "C+"},
+    {73.0f, "C"},
+    {70.0f, "C-"},
+    {67.0f, "D+"},
+    {63.0f, "D"},
+    {60.0f, "D-"},
+    {0.0f, "F"}
 };
 
 // associates each letter grade with a GPA value
 const std::unordered_map<std::string, float> Course::gpaScale_ = {
-    {"A+", 4.0},
-    {"A", 4.0},
-    {"A-", 3.7},
-    {"B+", 3.3},
-    {"B", 3.0},
-    {"B-", 2.7},
-    {"C+", 2.3},
-    {"C", 2.0},
-    {"C-", 1.7},
-    {"D+", 1.3},
-    {"D", 1.0},
-    {"D-", 0.7},
-    {"F", 0.0},
-    {"N/A", 0.0}
+    {"A+", 4.0f},
+    {"A", 4.0f},
+    {"A-", 3.7f},
+    {"B+", 3.3f},
+    {"B", 3.0f},
+    {"B-", 2.7f},
+    {"C+", 2.3f},
+    {"C", 2.0f},
+    {"C-", 1.7f},
+    {"D+", 1.3f},
+    {"D", 1.0f},
+    {"D-", 0.7f},
+    {"F", 0.0f},
+    {"N/A", 0.0f}
 };
 
 // throws an exception if the grade weights do not add up to 1.0

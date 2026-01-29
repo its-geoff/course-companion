@@ -208,6 +208,11 @@ TEST_F(AssignmentControllerTest, AddAssignmentAlreadyExists) {
     ASSERT_THROW(controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f), std::logic_error);
 }
 
+TEST_F(AssignmentControllerTest, AddAssignmentInvalidCategory) {
+    // out of range error since category is not in grade weights
+    ASSERT_THROW(controller.addAssignment("Homework 1", "", "Homwork", std::chrono::year_month_day{2026y/1/12}, true, 90.0f), std::out_of_range);
+}
+
 TEST_F(AssignmentControllerTest, EditTitleAlreadyExists) {
     controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
     std::string id = controller.getAssignmentId("Homework 1");
