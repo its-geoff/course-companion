@@ -7,10 +7,6 @@
 
 using namespace std::chrono_literals;
 
-// ====================================
-// SMOKE TESTS
-// ====================================
-
 TEST(CourseAssignmentIntegrationTest, AddAssignmentToCourse) {
     Course course1{"CMPE 152", "", {}, {}};
     Assignment assignment1{"Homework 1", "", "Homework", {}, false, 0.0f};
@@ -99,6 +95,19 @@ TEST(CourseAssignmentIntegrationTest, FinalGradeAcrossMultipleCategories) {
     ASSERT_FLOAT_EQ(course1.getGradePct(), 77.35f);
 }
 
+TEST(CourseAssignmentIntegrationTest, EmptyCategoryRedistributesWeight) {
+    Course course1{"CMPE 152", "", {}, {}};
+    Assignment assignment1{"Homework 1", "", "Homework", {}, true, 70.0f};
+    const std::unordered_map<std::string, float> weights = {{"Homework", 0.5f}, {"Exams", 0.5f}};
+
+    course1.addAssignment(assignment1);
+    course1.setGradeWeights(weights);
+    course1.setGradePct();
+
+    // check that grade is the same as assignment grade and doesn't use empty category
+    ASSERT_FLOAT_EQ(course1.getGradePct(), assignment1.getGrade());
+}
+
 TEST(CourseAssignmentIntegrationTest, AssignmentDueDatePastCourseEndDate) {
     Course course1{"CMPE 152", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}};
     Assignment assignment1{"Homework 1", "", "Homework", std::chrono::year_month_day{2026y/6/1}, false, 0.0f};
@@ -124,23 +133,6 @@ TEST(CourseAssignmentIntegrationTest, AssignmentNotMutatedByCourse) {
     ASSERT_EQ(assignment1.getDueDate(), std::chrono::year_month_day{2025y/12/22});
     ASSERT_EQ(assignment1.getCompleted(), true);
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 100.0f);
-}
-
-// ====================================
-// EDGE CASES
-// ====================================
-
-TEST(CourseAssignmentIntegrationTest, EmptyCategoryRedistributesWeight) {
-    Course course1{"CMPE 152", "", {}, {}};
-    Assignment assignment1{"Homework 1", "", "Homework", {}, true, 70.0f};
-    const std::unordered_map<std::string, float> weights = {{"Homework", 0.5f}, {"Exams", 0.5f}};
-
-    course1.addAssignment(assignment1);
-    course1.setGradeWeights(weights);
-    course1.setGradePct();
-
-    // check that grade is the same as assignment grade and doesn't use empty category
-    ASSERT_FLOAT_EQ(course1.getGradePct(), assignment1.getGrade());
 }
 
 TEST(CourseAssignmentIntegrationTest, CourseWithNoAssignmentsReturnsGrade) {
