@@ -1048,7 +1048,7 @@ void CliView::promptEditAssignment() {
             assignmentController.editDescription(id, newDescription);
 
             // only set descriptionUpdated if old and new description don't match and if old and new description are not both whitespace
-            if (oldDescription != newDescription && !(utils::isOnlyWhitespace(oldDescription) && utils::isOnlyWhitespace(newDescription))) { {
+            if (oldDescription != newDescription && !(utils::isOnlyWhitespace(oldDescription) && utils::isOnlyWhitespace(newDescription))) {
                 resultFlags.descriptionUpdated = true;
             }
         } else if (field == "category") {
