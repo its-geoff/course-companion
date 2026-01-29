@@ -81,6 +81,20 @@ endif()
 
 if(BUILD_TESTING)
     enable_testing()
+
+    # fetch GoogleTest
+    include(FetchContent)
+    FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+    set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
+    set(TEST_LOG_DIR "${CMAKE_BINARY_DIR}/../../../tests/output_logs")
+    FetchContent_MakeAvailable(googletest)
+
+    # add each test type
     add_subdirectory(tests/unit)
     add_subdirectory(tests/integration)
 endif()
