@@ -5663,7 +5663,7 @@ TEST(CliViewTest, EditAssignmentNewDueDateUnchanged) {
     const std::unordered_map<std::string, Assignment>& listOfAssignments = assignmentController.getAssignmentList();
     ASSERT_EQ(listOfAssignments.size(), 1);
 
-    // check for intro and invalid input message
+    // check for intro and unchanged message
     const std::string userOut = output.str();
     ASSERT_TRUE(userOut.find("Welcome to Course Companion") != std::string::npos);
     ASSERT_TRUE(userOut.find("assignment you'd like to edit") != std::string::npos);

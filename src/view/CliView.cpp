@@ -790,7 +790,7 @@ void CliView::promptEditCourse() {
                 if (newActive != selectedCourse_->get().getActive()) {
                     resultFlags.activeUpdated = true;
                     courseController.editActive(id, newActive);
-                }                
+                }
             } catch (const std::exception& e) {
                 out_ << "Invalid boolean. Cannot update active flag." << "\n";
             }
@@ -1047,8 +1047,8 @@ void CliView::promptEditAssignment() {
             std::string newDescription = getStringInput("New description", " ");
             assignmentController.editDescription(id, newDescription);
 
-            // only set descriptionUpdated if old and new description are not both whitespace or if old and new description don't match
-            if (!(utils::isOnlyWhitespace(oldDescription)) || !(utils::isOnlyWhitespace(newDescription)) || !(oldDescription == newDescription)) {
+            // only set descriptionUpdated if old and new description don't match and if old and new description are not both whitespace
+            if (oldDescription != newDescription && !(utils::isOnlyWhitespace(oldDescription) && utils::isOnlyWhitespace(newDescription))) { {
                 resultFlags.descriptionUpdated = true;
             }
         } else if (field == "category") {
