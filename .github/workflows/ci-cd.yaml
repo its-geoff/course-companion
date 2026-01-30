@@ -1,0 +1,95 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ opened, synchronize ]
+
+  push:
+    branches: [ main ]
+
+    tags:
+      - 'v*'   # release tags like v0.1.0, v1.2.3
+
+  schedule:
+    - cron: '0 2 * * 0'
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+
+      - name: Configure CMake
+        run: cmake -S . -B build/build_main -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build/build_main
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure CMake (Test)
+        run: cmake -S . -B build/build_test -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build tests
+        run: cmake --build build/build_test
+
+      - name: Run tests
+        run: ctest --test-dir build/build_test --output-on-failure
+
+
+  build:
+    needs: [ security-scan, test ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure CMake (Main)
+        run: cmake -S . -B build/build_main -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build main binaries
+        run: cmake --build build/build_main
+
+      - name: Upload production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_main
+          path: build/build_main/
+
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download production artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build_main
+          path: build/build_main
+
+      - name: Create GitHub Release
+        uses: elgohr/Github-Release-Action@v5
+        with:
+          title: Release ${{ github.ref_name }}
+          tag: ${{ github.ref_name }}
