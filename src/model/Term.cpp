@@ -42,7 +42,7 @@ float Term::calculateOvrGpa() {
         totalGpa += course.getGpaVal() * course.getNumCredits();
     }
 
-    return totalGpa / static_cast<float>(credits);
+    return utils::floatRound(totalGpa / static_cast<float>(credits), 2);
 }
 
 Term::Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day 

@@ -132,10 +132,11 @@ TEST(CourseAssignmentIntegrationTest, AssignmentNotMutatedByCourse) {
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 100.0f);
 }
 
-TEST(CourseAssignmentIntegrationTest, CourseWithNoAssignmentsReturnsGrade) {
+TEST(CourseAssignmentIntegrationTest, EmptyCourseReturnsGrade) {
     Course course1{"CMPE 152", "", {}, {}};
 
     course1.setGradePct();
 
+    ASSERT_EQ(course1.getAssignmentList().size(), 0);
     ASSERT_FLOAT_EQ(course1.getGradePct(), 0.0f);
 }
