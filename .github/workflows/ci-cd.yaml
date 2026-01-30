@@ -17,6 +17,9 @@ on:
 jobs:
   security-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - uses: actions/checkout@v4
 
@@ -46,7 +49,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libuuid-dev
 
       - name: Configure CMake (Test)
-        run: cmake -S . -B build/build_test -DCMAKE_BUILD_TYPE=Debug
+        run: cmake -S . -B build/build_test -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
 
       - name: Build tests
         run: cmake --build build/build_test
@@ -85,9 +88,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y libuuid-dev
 
       - name: Download production artifacts
         uses: actions/download-artifact@v4
