@@ -25,6 +25,9 @@ jobs:
         with:
           languages: cpp
 
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libuuid-dev
+
       - name: Configure CMake
         run: cmake -S . -B build/build_main -DCMAKE_BUILD_TYPE=Release
 
