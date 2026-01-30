@@ -76,6 +76,7 @@ foreach(test_target
     TermControllerTests 
     UtilsTests
     )
+    
     set_target_properties(${test_target} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )
