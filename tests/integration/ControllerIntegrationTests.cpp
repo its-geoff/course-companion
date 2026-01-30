@@ -11,7 +11,7 @@ class ControllerIntegrationTests : public testing::Test {
         TermController termController;
 
         void SetUp() override {
-            termController.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+            termController.addTerm("Fall 2025", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/23}, false);
             termController.selectTerm("Fall 2025");
         }
 };
@@ -110,10 +110,6 @@ TEST_F(ControllerIntegrationTests, FullHierarchyCreation) {
 }
 
 TEST_F(ControllerIntegrationTests, DeleteTermRemovesAllChildren) {
-    TermController termController;
-    termController.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
-    termController.selectTerm("Fall 2025");
-    
     CourseController& courseController = termController.getCourseController();
     courseController.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
     courseController.selectCourse("ENGR 195A");
@@ -137,12 +133,10 @@ TEST_F(ControllerIntegrationTests, DeleteTermRemovesAllChildren) {
 // ====================================
 
 // TO-DO: add after settings with grade weight changes
-// TEST_f(ControllerIntegrationTests, AssignmentWeightChangesGrade) {
-//     TermController termController;
-//     termController.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
-    
+// TEST_F(ControllerIntegrationTests, AssignmentWeightChangesGrade) {
 //     CourseController& courseController = termController.getCourseController();
 //     courseController.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+//     courseController.selectCourse("ENGR 195A");
 
 //     AssignmentController& assignmentController = courseController.getAssignmentController();
 //     assignmentController.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
