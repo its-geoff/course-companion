@@ -15,7 +15,22 @@ on:
 
 
 jobs:
+  debug-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Print PR info
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "PR head repo: ${{ github.event.pull_request.head.repo.full_name || 'N/A' }}"
+          echo "PR head branch: ${{ github.event.pull_request.head.ref || 'N/A' }}"
+          echo "PR base branch: ${{ github.event.pull_request.base.ref || 'N/A' }}"
+
   security-scan:
+    if: github.event.pull_request == null || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -45,7 +60,6 @@ jobs:
 
       - uses: github/codeql-action/analyze@v4
 
-
   test:
     runs-on: ubuntu-latest
     steps:
@@ -68,7 +82,6 @@ jobs:
 
       - name: Run tests
         run: ctest --test-dir build/build_test --output-on-failure
-
 
   build:
     needs: [ security-scan, test ]
@@ -96,7 +109,6 @@ jobs:
         with:
           name: build_main
           path: build/build_main/
-
 
   release:
     if: github.ref_type == 'tag' && github.ref_name != ''
