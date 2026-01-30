@@ -2,24 +2,23 @@ name: CI/CD Pipeline
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
     types: [ opened, synchronize ]
 
   push:
-    branches: [ main ]
-
+    branches: [ main, develop ]
     tags:
       - 'v*'   # release tags like v0.1.0, v1.2.3
 
   schedule:
-    - cron: '0 2 * * 0'
+    - cron: '0 8 * * *'
+
 
 jobs:
   security-scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -32,15 +31,13 @@ jobs:
       - name: Build
         run: cmake --build build/build_main
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/analyze@v3
 
 
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Configure CMake (Test)
         run: cmake -S . -B build/build_test -DCMAKE_BUILD_TYPE=Debug
@@ -56,8 +53,7 @@ jobs:
     needs: [ security-scan, test ]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Configure CMake (Main)
         run: cmake -S . -B build/build_main -DCMAKE_BUILD_TYPE=Release
@@ -65,7 +61,7 @@ jobs:
       - name: Build main binaries
         run: cmake --build build/build_main
 
-      - name: Upload production artifacts
+      - name: Upload production/dev artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build_main
@@ -73,14 +69,13 @@ jobs:
 
 
   release:
-    if: startsWith(github.ref, 'refs/tags/')
+    if: github.ref_type == 'tag' && github.ref_name != ''
     needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Download production artifacts
         uses: actions/download-artifact@v4
