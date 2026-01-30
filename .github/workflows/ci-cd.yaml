@@ -23,6 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache APT packages
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/CMakeLists.txt') }}
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
@@ -45,6 +51,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache APT packages
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/CMakeLists.txt') }}
+
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y uuid-dev build-essential
 
@@ -63,6 +75,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Cache APT packages
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/CMakeLists.txt') }}
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y uuid-dev build-essential
