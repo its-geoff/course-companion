@@ -42,6 +42,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libuuid-dev
+
       - name: Configure CMake (Test)
         run: cmake -S . -B build/build_test -DCMAKE_BUILD_TYPE=Debug
 
@@ -57,6 +60,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libuuid-dev
 
       - name: Configure CMake (Main)
         run: cmake -S . -B build/build_main -DCMAKE_BUILD_TYPE=Release
@@ -79,6 +85,9 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libuuid-dev
 
       - name: Download production artifacts
         uses: actions/download-artifact@v4
