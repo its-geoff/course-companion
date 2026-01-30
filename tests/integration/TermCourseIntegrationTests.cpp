@@ -83,7 +83,7 @@ TEST(TermCourseIntegrationTest, CoursesWithNoGrades) {
 TEST(TermCourseIntegrationTest, RemoveNonexistentCourse) {
     Term term{"Spring 2025", {}, {}};
 
-    ASSERT_THROW(term.removeCourse("CMPE 152"), std::out_of_range);
+    ASSERT_THROW(term.removeCourse("nonexistent-course-id"), std::out_of_range);
     ASSERT_TRUE(term.getCourseList().empty());
 }
 
