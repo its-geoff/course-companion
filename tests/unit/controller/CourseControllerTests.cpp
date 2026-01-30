@@ -170,6 +170,13 @@ TEST_F(CourseControllerTest, FindCourseNonConst) {
     ASSERT_TRUE(selectedCourse.getActive());
 }
 
+TEST_F(CourseControllerTest, SelectCourse) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+    controller.addCourse("CMPE 142", "Operating Systems", {}, {}, 3, true);
+
+    ASSERT_NO_THROW(controller.selectCourse("ENGR 195A"));
+}
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -268,4 +275,12 @@ TEST_F(CourseControllerTest, FindCourseNonConstNotFound) {
 
     // out of range error since course cannot be found
     ASSERT_THROW(controller.findCourse("CMPE 152"), std::out_of_range);
+}
+
+TEST_F(CourseControllerTest, SelectCourseNotFound) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+    controller.addCourse("CMPE 142", "Operating Systems", {}, {}, 3, true);
+
+    // out of range error since course cannot be found
+    ASSERT_THROW(controller.selectCourse("CMPE 152"), std::out_of_range);
 }

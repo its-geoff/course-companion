@@ -21,13 +21,16 @@ TEST(TermCourseIntegrationTest, GradeCalculationAcrossTerm) {
     Course course3{"ENGR 195A", "", {}, {}, 1};
 
     course1.setGradePct(84.0f);
+    course1.setGpaVal();
     course2.setGradePct(90.0f);
+    course2.setGpaVal();
     course3.setGradePct(88.8f);
+    course3.setGpaVal();
     term1.addCourse(course1);
     term1.addCourse(course2);
     term1.addCourse(course3);
 
-    ASSERT_FLOAT_EQ(term1.getOvrGpa(), 3.33f);
+    ASSERT_FLOAT_EQ(term1.getOvrGpa(), 3.34f);
 }
 
 TEST(TermCourseIntegrationTest, RemoveCourseFromTerm) {
@@ -57,6 +60,8 @@ TEST(TermCourseIntegrationTest, CourseUpdatesShownInTerm) {
     ASSERT_FLOAT_EQ(term1.getOvrGpa(), 0.0f);
 
     course1.setGradePct(82.0f);
+    course1.setGpaVal();
+    term1.addCourse(course1);
 
     // check edited values
     ASSERT_FLOAT_EQ(course1.getGradePct(), 82.0f);
@@ -78,8 +83,7 @@ TEST(TermCourseIntegrationTest, CoursesWithNoGrades) {
 TEST(TermCourseIntegrationTest, RemoveNonexistentCourse) {
     Term term{"Spring 2025", {}, {}};
 
-    // handle error without throwing
-    ASSERT_NO_THROW(term.removeCourse("CMPE 152"));
+    ASSERT_THROW(term.removeCourse("CMPE 152"), std::out_of_range);
     ASSERT_TRUE(term.getCourseList().empty());
 }
 
@@ -88,12 +92,13 @@ TEST(TermCourseIntegrationTest, MultipleCourseUpdates) {
     Course course1{"CMPE 152", "", {}, {}};
     Course course2{"CMPE 142", "", {}, {}};
 
+    course1.setGradePct(80.0f);
+    course1.setGpaVal();
+    course2.setGradePct(90.0f);
+    course2.setGpaVal();
     term.addCourse(course1);
     term.addCourse(course2);
-
-    course1.setGradePct(80.0f);
-    course2.setGradePct(90.0f);
-    ASSERT_FLOAT_EQ(term.getOvrGpa(), 2.7f);
+    ASSERT_FLOAT_EQ(term.getOvrGpa(), 3.2f);
 
     term.removeCourse(course1.getId());
     // GPA with only course2
