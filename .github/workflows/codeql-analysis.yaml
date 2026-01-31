@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 jobs:
-  analyze:
+  security-scan:
     runs-on: ubuntu-latest
     permissions:
       actions: read
