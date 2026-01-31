@@ -43,7 +43,6 @@ jobs:
           EOF
           )" \
               --label automated \
-              --label release \
               --json number \
               -q .number)
             echo "Created PR #$PR_NUMBER"
