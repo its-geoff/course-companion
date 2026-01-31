@@ -7,8 +7,15 @@ on:
 
 jobs:
   promote:
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: Set promotion date
+        run: |
+          echo "PROMOTION_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
       - name: Create or find promotion PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,6 +58,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr merge $PR_NUMBER \
-            --repo ${{ github.repository }} \
+            --repo "${{ github.repository }}" \
             --merge \
             --auto
