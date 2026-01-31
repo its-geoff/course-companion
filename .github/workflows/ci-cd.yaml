@@ -39,7 +39,7 @@ jobs:
         run: ctest --test-dir build/build_test --output-on-failure
 
   build:
-    needs: [ security-scan, test ]
+    needs: [ test ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
