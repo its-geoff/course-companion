@@ -1,0 +1,57 @@
+name: Promote 'develop' to 'main'
+
+on:
+  schedule:
+    # weekly promotion: Sunday at 09:00 UTC
+    - cron: '0 9 * * 0'
+
+  workflow_dispatch: # allow manual promotion if needed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Set promotion date
+        run: |
+          echo "PROMOTION_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Create pull request from develop to main
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          base: main
+          branch: automation/promote-develop-to-main
+          update-existing: true
+          delete-branch: false
+          title: "${{ env.PROMOTION_DATE }}: weekly promotion to main"
+          body: |
+            This PR promotes the latest staged changes from 'develop' into 'main'.
+
+            - Generated automatically by GitHub Actions
+            - CI/CD and CodeQL checks must pass before merge
+            - Safe, auditable production promotion
+          commit-message: "${{ env.PROMOTION_DATE }}: weekly promotion to main"
+          labels: |
+            automated
+            release
+          draft: false
+      - name: Enable auto-merge
+        if: steps.cpr.outputs.pull-request-number != ''   # checks if pull request exists
+        run: |
+          gh pr merge \
+            --repo ${{ github.repository }} \
+            --head automation/promote-develop-to-main \
+            --merge \
+            --auto
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
