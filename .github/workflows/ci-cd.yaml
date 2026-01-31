@@ -1,0 +1,133 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    types: [ opened, synchronize ]
+
+  push:
+    branches: [ main, develop ]
+    tags:
+      - 'v*'   # release tags like v0.1.0, v1.2.3
+
+  schedule:
+    - cron: '0 8 * * 0'
+
+
+jobs:
+  debug-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Print PR info
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "PR head repo: ${{ github.event.pull_request.head.repo.full_name || 'N/A' }}"
+          echo "PR head branch: ${{ github.event.pull_request.head.ref || 'N/A' }}"
+          echo "PR base branch: ${{ github.event.pull_request.base.ref || 'N/A' }}"
+
+  security-scan:
+    if: github.event.pull_request == null || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache APT packages
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/CMakeLists.txt') }}
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: cpp
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y uuid-dev build-essential
+
+      - name: Configure CMake
+        run: cmake -S . -B build/build_main -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build/build_main
+
+      - uses: github/codeql-action/analyze@v4
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache APT packages
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/CMakeLists.txt') }}
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y uuid-dev build-essential
+
+      - name: Configure CMake (Test)
+        run: cmake -S . -B build/build_test -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+
+      - name: Build tests
+        run: cmake --build build/build_test
+
+      - name: Run tests
+        run: ctest --test-dir build/build_test --output-on-failure
+
+  build:
+    needs: [ security-scan, test ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache APT packages
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/CMakeLists.txt') }}
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y uuid-dev build-essential
+
+      - name: Configure CMake (Main)
+        run: cmake -S . -B build/build_main -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build main binaries
+        run: cmake --build build/build_main
+
+      - name: Upload production/dev artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_main
+          path: build/build_main/
+
+  release:
+    if: github.ref_type == 'tag' && github.ref_name != ''
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download production artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build_main
+          path: build/build_main
+
+      - name: Create GitHub Release
+        uses: elgohr/Github-Release-Action@v5
+        with:
+          title: Release ${{ github.ref_name }}
+          tag: ${{ github.ref_name }}
