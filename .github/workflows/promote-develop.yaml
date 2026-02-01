@@ -1,4 +1,4 @@
-name: Promote develop to main
+name: Promote develop Branch
 
 on:
   schedule:
