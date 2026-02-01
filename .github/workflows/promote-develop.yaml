@@ -23,7 +23,7 @@ jobs:
 
       - name: Create or find promotion PR
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.FINE_GRAINED_TOKEN }}
         run: |
           PR_NUMBER=$(gh pr list \
             --repo "${{ github.repository }}" \
@@ -55,7 +55,7 @@ jobs:
 
       - name: Enable auto-merge
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.FINE_GRAINED_TOKEN }}
         run: |
           if [ -z "$PR_NUMBER" ]; then
             echo "Error: PR_NUMBER not set"
