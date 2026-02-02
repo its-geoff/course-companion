@@ -13,8 +13,9 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     uuid-dev \
-    conan \
     && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --break-system-packages conan
 
 WORKDIR /app
 COPY CMakeLists.txt conanfile.* ./
