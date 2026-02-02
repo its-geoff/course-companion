@@ -103,3 +103,9 @@ jobs:
             ```
             
             For additional tags and images, see: https://ghcr.io/${{ github.repository }}
+  # placeholder until GitHub cache clears
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Security scanning handled separately
+        run: echo "CodeQL security scanning is performed in codeql-analysis.yaml"
