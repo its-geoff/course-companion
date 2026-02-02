@@ -103,11 +103,3 @@ jobs:
             ```
             
             For additional tags and images, see: https://ghcr.io/${{ github.repository }}
-  security-scan:
-    name: security-scan
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      contents: read
-    steps:
-      - run: echo "Temporary placeholder to reconcile CodeQL baseline"
