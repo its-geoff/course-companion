@@ -4,17 +4,16 @@ on:
   pull_request:
     branches: [ main, develop ]
     types: [ opened, synchronize ]
-  workflow_dispatch:  # allow manual triggering
 
   push:
     branches: [ main, develop ]
     tags:
       - 'v*'
+
+  workflow_dispatch:  # allow manual triggering
   
   schedule:
     - cron: '0 8 * * *'
-
-  workflow_dispatch:
 
 jobs:
   test:
