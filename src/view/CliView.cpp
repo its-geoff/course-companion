@@ -465,7 +465,7 @@ void CliView::promptEditTerm() {
                     resultFlags.endDateUpdated = true;
                     controller_.editEndDate(id, newEndDate);
                 }
-            } catch (const std::invalid_argument e) {
+            } catch (const std::invalid_argument& e) {
                 out_ << "Invalid date. Cannot update end date." << "\n";
             } catch (const std::logic_error& e) {
                 out_ << "End date cannot be before start date. Cannot update end date." << "\n";
@@ -761,7 +761,7 @@ void CliView::promptEditCourse() {
                     resultFlags.endDateUpdated = true;
                     courseController.editEndDate(id, newEndDate);
                 }
-            } catch (const std::invalid_argument e) {
+            } catch (const std::invalid_argument& e) {
                 out_ << "Invalid date. Cannot update end date." << "\n";
             } catch (const std::logic_error& e) {
                 out_ << "End date cannot be before start date. Cannot update end date." << "\n";

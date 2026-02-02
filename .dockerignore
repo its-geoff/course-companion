@@ -1,0 +1,10 @@
+build/
+tests/output_logs/
+.git/
+*.o
+*.a
+*.profraw
+*.profdata
+.DS_Store
+.vscode/
+.idea/
