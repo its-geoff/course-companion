@@ -46,7 +46,7 @@ jobs:
       contains(github.event.pull_request.changed_files, 'src/') ||
       contains(github.event.pull_request.changed_files, 'include/') ||
       contains(github.event.pull_request.changed_files, 'CMakeLists.txt')
-    needs: [test]
+    needs: [ test ]
     runs-on: ubuntu-latest
     permissions:
       contents: read
