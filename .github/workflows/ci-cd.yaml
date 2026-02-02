@@ -4,17 +4,22 @@ on:
   pull_request:
     branches: [ main, develop ]
     types: [ opened, synchronize ]
-  workflow_dispatch:
+
   push:
     branches: [ main, develop ]
     tags:
       - 'v*'
+  
   schedule:
     - cron: '0 8 * * *'
+
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
