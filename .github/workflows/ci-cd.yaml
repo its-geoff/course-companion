@@ -111,4 +111,4 @@ jobs:
       security-events: write
       contents: read
     steps:
-      - run: echo "Temporary placeholder to reconcile CodeQL baseline"
+      - run: echo "Temporary placeholder to reconcile CodeQL missing"
