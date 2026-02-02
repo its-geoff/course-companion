@@ -1212,7 +1212,6 @@ void CliView::promptRemoveAssignmentGrade() {
 // prompt the user for the group of assignments they'd like to view
 void CliView::promptViewAssignment() {
     char userInput{};
-    AssignmentController& assignmentController = controller_.getCourseController().getAssignmentController();
 
     displayViewAssignmentMenu();
 
