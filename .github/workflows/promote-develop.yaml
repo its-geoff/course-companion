@@ -56,10 +56,10 @@ jobs:
       - name: Wait for status checks
         uses: lewagon/wait-on-check-action@v1.3.4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: refs/heads/develop
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
-          running-workflow-name: 'promote'
+          running-workflow-name: 'Promote develop Branch'
           allowed-conclusions: success,skipped
 
       - name: Enable auto-merge
