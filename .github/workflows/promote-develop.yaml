@@ -53,6 +53,15 @@ jobs:
 
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
 
+      - name: Wait for status checks
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+          running-workflow-name: 'promote'
+          allowed-conclusions: success,skipped
+
       - name: Enable auto-merge
         env:
           GH_TOKEN: ${{ secrets.FINE_GRAINED_TOKEN }}
