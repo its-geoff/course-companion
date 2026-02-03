@@ -81,7 +81,7 @@ jobs:
 
   release:
     if: github.ref_type == 'tag' && github.ref_name != ''
-    needs: [docker]
+    needs: [ docker ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
