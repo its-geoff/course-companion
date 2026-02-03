@@ -20,7 +20,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y uuid-dev build-essential
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y uuid-dev build-essential
+          sudo apt-get install -y libmysqlcppconn-dev
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4

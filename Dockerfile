@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     uuid-dev \
+    libmysqlcppconn-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --break-system-packages conan
@@ -65,6 +66,7 @@ FROM ubuntu:24.04 AS production
 RUN apt-get update && apt-get install -y \
     libstdc++6 \
     uuid \
+    libmysqlcppconn-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=main /app/build/build_main/bin/CourseCompanion /app/
