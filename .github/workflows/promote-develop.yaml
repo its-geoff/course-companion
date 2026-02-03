@@ -53,13 +53,22 @@ jobs:
 
                   echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
 
+            - name: Debug - List all checks
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  echo "=== All checks on this ref ==="
+                  gh api \
+                    /repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha || github.sha }}/check-runs \
+                    --jq '.check_runs[] | "\(.name) - \(.status) - \(.conclusion // "in_progress")"'
+
             - name: Wait for status checks
               uses: lewagon/wait-on-check-action@v1.3.4
               with:
                   ref: ${{ github.event.pull_request.head.sha || github.sha }}
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
                   wait-interval: 10
-                  running-workflow-name: "Promote develop Branch"
+                  running-workflow-name: "promote"
                   allowed-conclusions: success,skipped
 
             - name: Enable auto-merge
