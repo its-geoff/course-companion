@@ -277,9 +277,13 @@ Distributed under the Apache License 2.0. See `LICENSE` for more information.
 ---
  
 ## Contact
- 
+
+Questions or feedback? Reach out via GitHub or open an issue on the repo.
+
+Geoffrey Agustin, [its-geoff](https://github.com/its-geoff)
+
 Project Link: [https://github.com/its-geoff/course-companion](https://github.com/its-geoff/course-companion)
- 
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
  
 ---
