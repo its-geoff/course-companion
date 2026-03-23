@@ -34,6 +34,7 @@ add_library(CourseCompanion_lib
     src/controller/AssignmentController.cpp
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
+    src/db/DatabaseConnection.cpp
     src/utils/utils.cpp
 )
 
