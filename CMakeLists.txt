@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.20)
 # Project metadata
 # ------------------------
 project(CourseCompanion
-    VERSION 0.2.5
+    VERSION 0.3.0
     DESCRIPTION "Homework tracker that allows students to track homework assignments, estimate grades, and organize class schedules."
     LANGUAGES CXX
 )
@@ -17,6 +17,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(ENABLE_COVERAGE "Enable code test coverage" OFF)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
 
 # ------------------------
 # Include directories
@@ -35,14 +39,23 @@ add_library(CourseCompanion_lib
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
     src/db/DatabaseConnection.cpp
+    src/db/TermRepository.cpp
     src/utils/utils.cpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
-target_link_libraries(CourseCompanion_lib 
-    PRIVATE 
-    $<$<PLATFORM_ID:Linux>:uuid>    # only link on Linux
-    mysqlcppconn)     
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})  # allows find_package to locate Conan-generated configs
+set(MYSQL_CONCPP_STATIC ON)
+find_package(mysql-concpp REQUIRED)
+target_include_directories(CourseCompanion_lib PRIVATE
+    ${mysql-connector-cpp_INCLUDE_DIRS_RELEASE}
+)
+
+target_link_libraries(CourseCompanion_lib
+    PRIVATE
+    $<$<PLATFORM_ID:Linux>:uuid>
+    mysql::concpp-xdevapi-static
+)
 
 # -------------------------------
 # Helper function for coverage
