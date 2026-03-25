@@ -15,13 +15,15 @@
 #include <optional>         // for AssignmentController
 #include "model/Term.hpp"   // for Term reference
 #include "controller/AssignmentController.hpp"  // reference to AssignmentController
+#include "db/DatabaseConnection.hpp"            // for DatabaseConnection reference
+#include "db/CourseRepository.hpp"              // for CourseRepository
 #include "model/Course.hpp"
 
 /**
  * @class CourseController
  * @brief Controls the interaction between the Course class and the views.
  * 
- * Manages the program’s workflow by coordinating interactions between the user interface and the Course class. 
+ * Manages the program's workflow by coordinating interactions between the user interface and the Course class. 
  * It stores the current application state and processes user input. This class completes delegated operations 
  * from the views and provides output to the user through the main function.
  */
@@ -31,9 +33,11 @@ class CourseController {
         Course* activeCourse_ = nullptr;
         std::unordered_map<std::string, std::string> titleToId_{};  // title -> id, titles in lowercase for easier comparison
         std::optional<AssignmentController> assignmentController_{};    // controller for currently selected course
+        DatabaseConnection& db_;                                        // shared database connection
+        CourseRepository courseRepo_;                                   // repository for course persistence
 
     public:
-        CourseController(Term& term);
+        CourseController(Term& term, DatabaseConnection& db);
         // prevent copies and require references
         CourseController(const CourseController&) = delete;
         CourseController& operator=(const CourseController&) = delete;
@@ -45,6 +49,7 @@ class CourseController {
         std::string getCourseId(const std::string& title) const;
         AssignmentController& getAssignmentController();
 
+        void loadFromDb();  // loads all courses for the current term from the database on startup
         void addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate, 
             const std::chrono::year_month_day& endDate, int numCredits, bool active);
         void editTitle(const std::string& id, const std::string& newTitle);
@@ -55,7 +60,7 @@ class CourseController {
         void editActive(const std::string& id, bool newActive);
         void removeCourse(const std::string& title);
         const Course& findCourse(const std::string& title) const;   // non-mutable version
-        Course &findCourse(const std::string& title);   // mutable version
+        Course& findCourse(const std::string& title);               // mutable version
         void selectCourse(const std::string& title);
 };
 

@@ -35,7 +35,7 @@ class TermRepository : public IDatabase<Term> {
     public:
         TermRepository(DatabaseConnection& db);
 
-        // non-copyable — holds a reference to a shared session
+        // non-copyable; holds a reference to a shared session
         TermRepository(const TermRepository&) = delete;
         TermRepository& operator=(const TermRepository&) = delete;
 

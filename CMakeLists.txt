@@ -40,6 +40,7 @@ add_library(CourseCompanion_lib
     src/controller/TermController.cpp
     src/db/DatabaseConnection.cpp
     src/db/TermRepository.cpp
+    src/db/CourseRepository.cpp
     src/utils/utils.cpp
 )
 
