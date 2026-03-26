@@ -42,7 +42,7 @@ class CourseController {
         CourseController(const CourseController&) = delete;
         CourseController& operator=(const CourseController&) = delete;
         // allows objects to move for instantiation; cannot move references after construction
-        CourseController(CourseController&&) = default;
+        CourseController(CourseController&&) = delete;
         CourseController& operator=(CourseController&&) = delete;
 
         const std::unordered_map<std::string, Course>& getCourseList() const;

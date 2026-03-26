@@ -19,7 +19,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(ENABLE_COVERAGE "Enable code test coverage" OFF)
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
+    set(CMAKE_BUILD_TYPE Release)
 endif()
 
 # ------------------------
@@ -39,6 +39,7 @@ add_library(CourseCompanion_lib
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
     src/db/DatabaseConnection.cpp
+    src/db/AssignmentRepository.cpp
     src/db/TermRepository.cpp
     src/db/CourseRepository.cpp
     src/utils/utils.cpp
@@ -90,8 +91,15 @@ endfunction()
 # ------------------------
 if(NOT BUILD_TESTING)
     add_executable(CourseCompanion src/main.cpp)
-    target_link_libraries(CourseCompanion PRIVATE CourseCompanion_lib)
-    
+    target_include_directories(CourseCompanion PRIVATE
+        ${mysql-connector-cpp_INCLUDE_DIRS_RELEASE}
+    )
+    target_link_libraries(CourseCompanion PRIVATE
+        CourseCompanion_lib
+        $<$<PLATFORM_ID:Linux>:uuid>
+        mysql::concpp-xdevapi-static
+    )
+
     set_target_properties(CourseCompanion PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )

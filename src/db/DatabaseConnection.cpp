@@ -19,8 +19,8 @@ DatabaseConnection::DatabaseConnection(const std::string& host, unsigned int por
                mysqlx::SessionOption::PWD,  password),
       schema_(session_.getSchema(schema))
 {
-    // create the database if it does not exist, then re-bind schema
     session_.sql("CREATE DATABASE IF NOT EXISTS `" + schema + "`").execute();
+    session_.sql("USE `" + schema + "`").execute();
     schema_ = session_.getSchema(schema);
 
     initializeSchema();

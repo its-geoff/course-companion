@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source ~/course-companion/.env
+
+~/course-companion/build/build_main/bin/CourseCompanion

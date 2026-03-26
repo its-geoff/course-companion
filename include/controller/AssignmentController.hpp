@@ -38,7 +38,7 @@ class AssignmentController {
         AssignmentController(const AssignmentController&) = delete;
         AssignmentController& operator=(const AssignmentController&) = delete;
         // allows objects to move for instantiation; cannot move references after construction
-        AssignmentController(AssignmentController&&) = default;
+        AssignmentController(AssignmentController&&) = delete;
         AssignmentController& operator=(AssignmentController&&) = delete;
 
         const std::unordered_map<std::string, Assignment>& getAssignmentList() const;
