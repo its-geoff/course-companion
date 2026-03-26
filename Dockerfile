@@ -29,7 +29,7 @@ RUN conan profile detect --force
 FROM builder AS test
 
 RUN mkdir -p build/build_test && \
-    conan install . --build=missing --output-folder=build/build_test -g CMakeDeps -g CMakeToolchain -s build_type=Debug
+    conan install . --build=missing --output-folder=build/build_test
 
 RUN cmake -S . -B build/build_test \
     -G Ninja \
@@ -47,7 +47,7 @@ CMD ["ctest", "--test-dir", "/app/build/build_test", "--output-on-failure"]
 FROM builder AS main
 
 RUN mkdir -p build/build_main && \
-    conan install . --build=missing --output-folder=build/build_main -g CMakeDeps -g CMakeToolchain -s build_type=Release
+    conan install . --build=missing --output-folder=build/build_main
 
 RUN cmake -S . -B build/build_main \
     -G Ninja \
@@ -57,7 +57,7 @@ RUN cmake -S . -B build/build_main \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_TESTING=OFF
 
-RUN cmake --build build/build_main --target CourseCompanion --parallel $(nproc)
+RUN cmake --build build/build_main --parallel $(nproc)
 
 # release production build
 FROM ubuntu:24.04 AS production
