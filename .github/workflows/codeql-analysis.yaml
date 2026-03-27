@@ -14,16 +14,13 @@ jobs:
     permissions:
       actions: read
       contents: read
-      security-events: write # required to upload SARIF
+      security-events: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y uuid-dev build-essential
-          sudo apt-get install -y libmysqlcppconn-dev
+        run: sudo apt-get update && sudo apt-get install -y uuid-dev build-essential
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -37,12 +34,6 @@ jobs:
           cd build/build_main
           cmake ../../ -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
           cmake --build . -- -j$(nproc)
-
-      - name: Cache CMake build
-        uses: actions/cache@v3
-        with:
-          path: build/build_main
-          key: ${{ runner.os }}-cmake-${{ hashFiles('**/CMakeLists.txt') }}
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

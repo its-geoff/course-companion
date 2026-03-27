@@ -49,14 +49,21 @@ target_include_directories(CourseCompanion_lib PUBLIC include)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})  # allows find_package to locate Conan-generated configs
 set(MYSQL_CONCPP_STATIC ON)
 find_package(mysql-concpp REQUIRED)
-target_include_directories(CourseCompanion_lib PRIVATE
-    ${mysql-connector-cpp_INCLUDE_DIRS_RELEASE}
+
+# mysql::concpp-xdevapi-static is a thin INTERFACE target that delegates to mysql::concpp;
+# INTERFACE_INCLUDE_DIRECTORIES lives on mysql::concpp, so we read from there directly
+get_target_property(_mysql_inc mysql::concpp INTERFACE_INCLUDE_DIRECTORIES)
+message(STATUS "mysql include dirs: ${_mysql_inc}")
+
+target_include_directories(CourseCompanion_lib PUBLIC
+    ${_mysql_inc}
 )
 
 target_link_libraries(CourseCompanion_lib
+    PUBLIC
+        mysql::concpp-xdevapi-static    # PUBLIC so test targets inherit includes transitively
     PRIVATE
-    $<$<PLATFORM_ID:Linux>:uuid>
-    mysql::concpp-xdevapi-static
+        $<$<PLATFORM_ID:Linux>:uuid>
 )
 
 # -------------------------------
@@ -91,13 +98,8 @@ endfunction()
 # ------------------------
 if(NOT BUILD_TESTING)
     add_executable(CourseCompanion src/main.cpp)
-    target_include_directories(CourseCompanion PRIVATE
-        ${mysql-connector-cpp_INCLUDE_DIRS_RELEASE}
-    )
     target_link_libraries(CourseCompanion PRIVATE
-        CourseCompanion_lib
-        $<$<PLATFORM_ID:Linux>:uuid>
-        mysql::concpp-xdevapi-static
+        CourseCompanion_lib     # mysql includes and uuid are transitive via CourseCompanion_lib
     )
 
     set_target_properties(CourseCompanion PROPERTIES

@@ -23,7 +23,8 @@ COPY src/ src/
 COPY include/ include/
 COPY tests/ tests/
 
-RUN conan profile detect --force
+RUN conan profile detect --force && \
+    sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=gnu20/' /root/.conan2/profiles/default
 
 # test build
 FROM builder AS test
