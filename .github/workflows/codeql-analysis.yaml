@@ -28,7 +28,7 @@ jobs:
       - name: Install Conan dependencies
         run: |
           mkdir -p build/build_main
-          conan install . --build=missing -of build/build_main
+          conan install . --build=missing -of build/build_main -s build_type=Debug
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
