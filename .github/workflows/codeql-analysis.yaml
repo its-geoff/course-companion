@@ -26,7 +26,7 @@ jobs:
           wget https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb
           sudo DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config_0.8.33-1_all.deb
 
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B7B3B788A8D3785C
+          wget -qO- https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/mysql-2023.gpg > /dev/null
           sudo apt-get update && sudo apt-get install -y libmysqlcppconn-dev
 
       - name: Initialize CodeQL
