@@ -21,12 +21,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update && sudo apt-get install -y uuid-dev build-essential wget
+          sudo apt-get update && sudo apt-get install -y uuid-dev build-essential pip
+          pip install conan --break-system-packages
+          conan profile detect --force
 
-          wget https://dev.mysql.com/get/Downloads/Connector-C++/libmysqlcppconn9_8.0.40-1ubuntu24.04_amd64.deb
-          wget https://dev.mysql.com/get/Downloads/Connector-C++/libmysqlcppconn-dev_8.0.40-1ubuntu24.04_amd64.deb
-          sudo dpkg -i libmysqlcppconn9_8.0.40-1ubuntu24.04_amd64.deb
-          sudo dpkg -i libmysqlcppconn-dev_8.0.40-1ubuntu24.04_amd64.deb
+      - name: Install Conan dependencies
+        run: |
+          mkdir -p build/build_main
+          conan install . --build=missing -of build/build_main
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -36,9 +38,8 @@ jobs:
 
       - name: Build code
         run: |
-          mkdir -p build/build_main
           cd build/build_main
-          cmake ../../ -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          cmake ../../ -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
           cmake --build . -- -j$(nproc)
 
       - name: Perform CodeQL Analysis
