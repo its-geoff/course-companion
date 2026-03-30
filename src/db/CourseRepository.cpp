@@ -28,7 +28,8 @@ Course CourseRepository::rowToCourse(const mysqlx::Row& row) const {
     // description is optional; use empty string if null
     std::string description = row[3].isNull() ? "" : row[3].get<std::string>();
 
-    return Course{row[2].get<std::string>(), description, startDate, endDate, row[6].get<int>(), row[7].get<bool>()};
+    return Course::fromRow(row[0].get<std::string>(), row[2].get<std::string>(), description, startDate, 
+        endDate, row[6].get<int>(), row[7].get<bool>());
 }
 
 // inserts a new Course row into the courses table

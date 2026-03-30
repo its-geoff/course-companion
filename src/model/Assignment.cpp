@@ -128,6 +128,14 @@ void Assignment::printAssignmentInfo(std::ostream &os) const {
     os << "Grade: " << grade_ << "\n";
 }
 
+// constructs an Assignment from a persisted record, using the existing ID instead of generating a new one
+Assignment Assignment::fromRow(std::string id, std::string title, std::string description,
+    std::string category, std::chrono::year_month_day dueDate, bool completed, float grade) {
+    Assignment a{title, description, category, dueDate, completed, grade};
+    a.id_ = std::move(id);
+    return a;
+}
+
 // equality comparison based on unique identifier (UUID)
 bool Assignment::operator==(const Assignment &other) const {
     return id_ == other.id_;

@@ -26,7 +26,8 @@ Assignment AssignmentRepository::rowToAssignment(const mysqlx::Row& row) const {
     // description is optional; use empty string if null
     std::string description = row[3].isNull() ? "" : row[3].get<std::string>();
 
-    return Assignment{row[2].get<std::string>(), description, row[4].get<std::string>(), dueDate, row[6].get<bool>(), row[7].get<float>()};
+    return Assignment::fromRow(row[0].get<std::string>(), row[2].get<std::string>(), description, 
+        row[4].get<std::string>(), dueDate, row[6].get<bool>(), row[7].get<float>());
 }
 
 // inserts a new Assignment row into the assignments table

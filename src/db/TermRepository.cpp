@@ -25,7 +25,8 @@ Term TermRepository::rowToTerm(const mysqlx::Row& row) const {
     std::chrono::year_month_day startDate = utils::parseDate(startStr);
     std::chrono::year_month_day endDate = utils::parseDate(endStr);
 
-    return Term{row[1].get<std::string>(), startDate, endDate, row[4].get<bool>()};
+    return Term::fromRow(row[0].get<std::string>(), row[1].get<std::string>(), startDate, 
+        endDate, row[4].get<bool>());
 }
 
 // inserts a new Term row into the terms table

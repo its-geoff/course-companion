@@ -173,3 +173,11 @@ Course& Term::findCourse(const std::string& id) {
 bool Term::operator==(const Term &other) const {
     return id_ == other.id_;
 }
+
+// constructs a Term from a persisted record, using the existing ID instead of generating a new one
+Term Term::fromRow(std::string id, std::string title, std::chrono::year_month_day startDate,
+    std::chrono::year_month_day endDate, bool active) {
+    Term t{title, startDate, endDate, active};
+    t.id_ = std::move(id);
+    return t;
+}
