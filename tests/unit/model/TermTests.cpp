@@ -248,20 +248,19 @@ TEST_F(TermTest, FromRowPreservesId) {
     ASSERT_EQ(term.getId(), id);
 }
 
-TEST_F(TermTest, FromRowVsConstructorDifferentIds) {
-    // a fromRow term and a freshly constructed term with the same params must not be equal
-    std::string id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
-    Term fromRowTerm = Term::fromRow(id, "Fall 2025",
+TEST_F(TermTest, FromRowDoesNotEqualNewTerm) {
+    // a fromRow Term and a freshly constructed Term with the same parameters should not be equal
+    Term fromRowTerm = Term::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Fall 2025",
         std::chrono::year_month_day{2025y/8/12},
         std::chrono::year_month_day{2025y/12/5},
         false);
 
-    Term freshTerm{"Fall 2025",
+    Term newTerm{"Fall 2025",
         std::chrono::year_month_day{2025y/8/12},
         std::chrono::year_month_day{2025y/12/5},
         false};
 
-    ASSERT_NE(fromRowTerm.getId(), freshTerm.getId());
+    ASSERT_NE(fromRowTerm, newTerm);
 }
 
 // ====================================
@@ -316,7 +315,7 @@ TEST_F(TermTest, EndDateSetterInvalid) {
 // INITIALIZATION EDGE CASES
 // ====================================
 
-TEST_F(TermTest, ThreeParamInitializationNoTitle) {
+TEST_F(TermTest, ThreeParamInitializationEmptyTitle) {
     // throw invalid argument since title is empty
     ASSERT_THROW((Term{"", std::chrono::year_month_day{2025y/1/18}, std::chrono::year_month_day{2025y/5/28}}), std::invalid_argument);
 }
@@ -424,6 +423,7 @@ TEST_F(TermTest, OverloadedEqualsSameParamsDifferentId) {
 }
 
 TEST_F(TermTest, FromRowEmptyTitle) {
+    // throw invalid argument since title is empty
     ASSERT_THROW(Term::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "",
         std::chrono::year_month_day{2025y/8/12},
         std::chrono::year_month_day{2025y/12/5},
@@ -431,6 +431,7 @@ TEST_F(TermTest, FromRowEmptyTitle) {
 }
 
 TEST_F(TermTest, FromRowWhitespaceTitle) {
+    // throw invalid argument since title is whitespace
     ASSERT_THROW(Term::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "   ",
         std::chrono::year_month_day{2025y/8/12},
         std::chrono::year_month_day{2025y/12/5},
@@ -438,6 +439,7 @@ TEST_F(TermTest, FromRowWhitespaceTitle) {
 }
 
 TEST_F(TermTest, FromRowInvalidStartDate) {
+    // throw invalid argument since start date does not exist
     ASSERT_THROW(Term::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Fall 2025",
         std::chrono::year_month_day{2025y/2/30},
         std::chrono::year_month_day{2025y/12/5},
@@ -445,13 +447,15 @@ TEST_F(TermTest, FromRowInvalidStartDate) {
 }
 
 TEST_F(TermTest, FromRowInvalidEndDate) {
+    // throw invalid argument since end date does not exist
     ASSERT_THROW(Term::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Fall 2025",
         std::chrono::year_month_day{2025y/8/12},
         std::chrono::year_month_day{2025y/13/1},
         false), std::invalid_argument);
 }
 
-TEST_F(TermTest, FromRowEndBeforeStart) {
+TEST_F(TermTest, FromRowEndDateBeforeStartDate) {
+    // throw logic error since end date is before start date
     ASSERT_THROW(Term::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Fall 2025",
         std::chrono::year_month_day{2025y/12/5},
         std::chrono::year_month_day{2025y/8/12},
@@ -468,6 +472,7 @@ TEST_F(TermTest, FromRowSameDayStartAndEnd) {
 }
 
 TEST_F(TermTest, FromRowEmptyDatesThrow) {
+    // throw invalid argument since dates are empty
     ASSERT_THROW(Term::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Term",
         std::chrono::year_month_day{},
         std::chrono::year_month_day{},
