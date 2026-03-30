@@ -11,6 +11,7 @@
 
 #include <stdexcept>    // for exceptions
 #include <sstream>      // for date string formatting
+#include "utils/utils.hpp"  // for reused custom functions
 
 TermRepository::TermRepository(DatabaseConnection& db) : db_{db} {}
 
@@ -21,12 +22,8 @@ Term TermRepository::rowToTerm(const mysqlx::Row& row) const {
     std::string endStr      = row[3].get<std::string>();
 
     // parse date strings from YYYY-MM-DD format into year_month_day
-    int sy, sm, sd, ey, em, ed;
-    sscanf(startStr.c_str(), "%d-%d-%d", &sy, &sm, &sd);
-    sscanf(endStr.c_str(), "%d-%d-%d", &ey, &em, &ed);
-
-    std::chrono::year_month_day startDate = std::chrono::year{sy}/std::chrono::month{static_cast<unsigned>(sm)}/std::chrono::day{static_cast<unsigned>(sd)};
-    std::chrono::year_month_day endDate = std::chrono::year{ey}/std::chrono::month{static_cast<unsigned>(em)}/std::chrono::day{static_cast<unsigned>(ed)};
+    std::chrono::year_month_day startDate = utils::parseDate(startStr);
+    std::chrono::year_month_day endDate = utils::parseDate(endStr);
 
     return Term{row[1].get<std::string>(), startDate, endDate, row[4].get<bool>()};
 }

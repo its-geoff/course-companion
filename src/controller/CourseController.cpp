@@ -33,6 +33,10 @@ AssignmentController& CourseController::getAssignmentController() {
 }
 
 void CourseController::loadFromDb() {
+    if (!courseRepo_) {
+        throw std::logic_error("Database connection is not configured for CourseController.");
+    }
+
     std::vector<Course> courses = courseRepo_->findByParentId(term_.getId());
 
     for (Course& course : courses) {
@@ -51,7 +55,7 @@ void CourseController::addCourse(const std::string& title, const std::string& de
         throw std::runtime_error("An unexpected error occurred when adding the course.");
     }
 
-    auto [_, inserted] = titleToId_.emplace(utils::stringLower(course.getTitle()), course.getId());
+    auto inserted = titleToId_.emplace(utils::stringLower(course.getTitle()), course.getId()).second;
 
     if (!inserted) {
         term_.removeCourse(course.getId());
@@ -59,7 +63,13 @@ void CourseController::addCourse(const std::string& title, const std::string& de
     }
 
     if (courseRepo_) {
-        courseRepo_->insert(course);
+        try {
+            courseRepo_->insert(course);
+        } catch (const std::exception& e) {
+            titleToId_.erase(utils::stringLower(course.getTitle()));
+            term_.removeCourse(course.getId());
+            throw std::runtime_error("Failed to save course.");
+        }
     }
 }
 
@@ -158,7 +168,7 @@ void CourseController::selectCourse(const std::string& title) {
         } else {
             assignmentController_.emplace(*activeCourse_);
         }
-    } catch (const std::exception& e) {
+    } catch (const std::out_of_range& e) {
         throw std::out_of_range("Course not found.");
     }
 }

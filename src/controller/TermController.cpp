@@ -28,10 +28,14 @@ CourseController& TermController::getCourseController() {
 }
 
 void TermController::loadFromDb() {
+    if (!termRepo_) {
+        throw std::logic_error("No database repository configured.");
+    }
+
     std::vector<Term> terms = termRepo_->findAll();
 
     for (Term& term : terms) {
-        auto [termIt, termInserted] = termList_.emplace(term.getId(), std::move(term));
+        auto termIt = termList_.emplace(term.getId(), std::move(term)).first;
         titleToId_.emplace(utils::stringLower(termIt->second.getTitle()), termIt->first);
     }
 }
@@ -40,8 +44,8 @@ void TermController::addTerm(const std::string& title, const std::chrono::year_m
     const std::chrono::year_month_day& endDate, bool active) {
     Term term{title, startDate, endDate, active};
 
-    auto [termIt, termInserted] = termList_.emplace(term.getId(), std::move(term));
-    auto [titleIt, titleInserted] = titleToId_.emplace(utils::stringLower(termIt->second.getTitle()), termIt->first);
+    auto termIt = termList_.emplace(term.getId(), std::move(term)).first;
+    auto titleInserted = titleToId_.emplace(utils::stringLower(termIt->second.getTitle()), termIt->first).second;
 
     if (!titleInserted) {
         termList_.erase(termIt);
@@ -57,7 +61,7 @@ void TermController::editTitle(const std::string& id, const std::string& newTitl
     Term& term = termList_.at(id);
     std::string oldTitle = term.getTitle();
 
-    auto [_, inserted] = titleToId_.emplace(utils::stringLower(newTitle), id);
+    auto inserted = titleToId_.emplace(utils::stringLower(newTitle), id).second;
 
     if (!inserted) {
         throw std::logic_error("A term with this title already exists.");
@@ -128,7 +132,7 @@ void TermController::selectTerm(const std::string& title) {
         } else {
             courseController_.emplace(*activeTerm_);
         }
-    } catch (const std::exception& e) {
+    } catch (const std::out_of_range& e) {
         throw std::out_of_range("Term not found.");
     }
 }

@@ -25,6 +25,10 @@ std::string AssignmentController::getAssignmentId(const std::string& title) cons
 }
 
 void AssignmentController::loadFromDb() {
+    if (!assignmentRepo_) {
+        throw std::logic_error("AssignmentController::loadFromDb() requires a database-backed repository.");
+    }
+
     std::vector<Assignment> assignments = assignmentRepo_->findByParentId(course_.getId());
 
     for (Assignment& assignment : assignments) {
@@ -47,7 +51,7 @@ void AssignmentController::addAssignment(const std::string& title, const std::st
         throw std::runtime_error("An unexpected error occurred when adding the assignment.");
     }
 
-    auto [_, inserted] = titleToId_.emplace(utils::stringLower(assignment.getTitle()), assignment.getId());
+    auto inserted = titleToId_.emplace(utils::stringLower(assignment.getTitle()), assignment.getId()).second;
 
     if (!inserted) {
         course_.removeAssignment(assignment.getId());
@@ -55,7 +59,14 @@ void AssignmentController::addAssignment(const std::string& title, const std::st
     }
 
     if (assignmentRepo_) {
-        assignmentRepo_->insert(assignment);
+        try {
+            assignmentRepo_->insert(assignment);
+        } catch (const std::exception& e) {
+            // roll back previous state if saving fails
+            titleToId_.erase(utils::stringLower(assignment.getTitle()));
+            course_.removeAssignment(assignment.getId());
+            throw std::runtime_error("Failed to save assignment.");
+        }
     }
 }
 
@@ -63,7 +74,7 @@ void AssignmentController::editTitle(const std::string& id, const std::string& n
     Assignment& assignment = course_.findAssignment(id);
     std::string oldTitle = assignment.getTitle();
 
-    auto [_, inserted] = titleToId_.emplace(utils::stringLower(newTitle), id);
+    auto inserted = titleToId_.emplace(utils::stringLower(newTitle), id).second;
 
     if (!inserted) {
         throw std::logic_error("An assignment with this title already exists.");

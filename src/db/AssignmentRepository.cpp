@@ -11,6 +11,7 @@
 
 #include <stdexcept>    // for exceptions
 #include <sstream>      // for date string formatting
+#include "utils/utils.hpp"  // for reused custom functions
 
 AssignmentRepository::AssignmentRepository(DatabaseConnection& db, const std::string& courseId) : db_{db}, courseId_{courseId} {}
 
@@ -20,10 +21,7 @@ Assignment AssignmentRepository::rowToAssignment(const mysqlx::Row& row) const {
     std::string dueDateStr = row[5].get<std::string>();
 
     // parse date string from YYYY-MM-DD format into year_month_day
-    int y, m, d;
-    sscanf(dueDateStr.c_str(), "%d-%d-%d", &y, &m, &d);
-
-    std::chrono::year_month_day dueDate = std::chrono::year{y}/std::chrono::month{static_cast<unsigned>(m)}/std::chrono::day{static_cast<unsigned>(d)};
+    std::chrono::year_month_day dueDate = utils::parseDate(dueDateStr);
 
     // description is optional; use empty string if null
     std::string description = row[3].isNull() ? "" : row[3].get<std::string>();
