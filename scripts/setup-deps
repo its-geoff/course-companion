@@ -10,7 +10,7 @@ OS_NAME=$(uname)
 option_given=0
 
 if [[ "$OS_NAME" == "Darwin" ]]; then
-    while getopts ":td" opt; do
+    while getopts ":t" opt; do
         option_given=1
 
         case $opt in

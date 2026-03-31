@@ -2,7 +2,7 @@
 set -e  # Exit on any error
 
 usage() {
-    echo "Usage: $0 [-td] [-c]"
+    echo "Usage: $0 [-t] [-c]"
     echo "  -t: Build test files"
     echo "  -c: Enable code coverage"
     exit 1

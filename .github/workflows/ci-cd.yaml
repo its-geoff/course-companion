@@ -43,7 +43,7 @@ jobs:
           DB_USER: root
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           TEST_DB_SCHEMA: course_companion_test
-        run: docker run --rm -e DB_HOST -e DB_PORT -e DB_USER -e DB_PASSWORD -e DB_SCHEMA course-companion:test
+        run: docker run --rm -e DB_HOST -e DB_PORT -e DB_USER -e DB_PASSWORD -e TEST_DB_SCHEMA course-companion:test
 
   docker:
     needs: [ test ]

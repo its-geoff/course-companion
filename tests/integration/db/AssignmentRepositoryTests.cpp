@@ -64,7 +64,9 @@ class AssignmentRepositoryTest : public testing::Test {
         }
 
         void TearDown() override {
-            db_->getSession().rollback();
+            if (db_) {
+                db_->getSession().rollback();
+            }
         }
 };
 
@@ -77,7 +79,6 @@ TEST_F(AssignmentRepositoryTest, InsertAndFindById) {
     repo_->insert(assignment);
 
     auto result = repo_->findById(assignment.getId());
-    std::cout << "TEST 2" << std::endl;
 
     ASSERT_TRUE(result.has_value());
     ASSERT_EQ(result->getId(),          assignment.getId());
