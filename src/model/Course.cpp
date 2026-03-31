@@ -416,6 +416,23 @@ Assignment& Course::findAssignment(const std::string& id) {
     return const_cast<Assignment&>(selfConst.findAssignment(id));
 }
 
+// constructs a Course from a persisted record, using the existing ID instead of generating a new one
+Course Course::fromRow(std::string id, std::string title, std::string description,
+    std::chrono::year_month_day startDate, std::chrono::year_month_day endDate,
+    int numCredits, bool active) {
+    if (startDate == std::chrono::year_month_day{}) {
+        throw std::invalid_argument("Start date must not be empty.");
+    }
+    
+    if (endDate == std::chrono::year_month_day{}) {
+        throw std::invalid_argument("End date must not be empty.");
+    }
+
+    Course c{title, description, startDate, endDate, numCredits, active};
+    c.id_ = std::move(id);
+    return c;
+}
+
 // equality comparison based on unique identifier (UUID)
 bool Course::operator==(const Course &other) const {
     return id_ == other.id_;

@@ -9,7 +9,7 @@
  * Controllers depend on IDatabase<T> rather than concrete repository types, keeping them decoupled
  * from the database layer.
  *
- * Because this is a template, the full definition must live in the header — no .cpp file is needed.
+ * Because this is a template, the full definition must live in the header; no .cpp file is needed.
  */
 
 #include <string>       // for string variables

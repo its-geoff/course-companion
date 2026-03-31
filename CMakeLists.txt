@@ -19,7 +19,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(ENABLE_COVERAGE "Enable code test coverage" OFF)
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
+    set(CMAKE_BUILD_TYPE Release)
 endif()
 
 # ------------------------
@@ -39,7 +39,9 @@ add_library(CourseCompanion_lib
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
     src/db/DatabaseConnection.cpp
+    src/db/AssignmentRepository.cpp
     src/db/TermRepository.cpp
+    src/db/CourseRepository.cpp
     src/utils/utils.cpp
 )
 
@@ -47,14 +49,21 @@ target_include_directories(CourseCompanion_lib PUBLIC include)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})  # allows find_package to locate Conan-generated configs
 set(MYSQL_CONCPP_STATIC ON)
 find_package(mysql-concpp REQUIRED)
-target_include_directories(CourseCompanion_lib PRIVATE
-    ${mysql-connector-cpp_INCLUDE_DIRS_RELEASE}
+
+# mysql::concpp-xdevapi-static is a thin INTERFACE target that delegates to mysql::concpp;
+# INTERFACE_INCLUDE_DIRECTORIES lives on mysql::concpp, so we read from there directly
+get_target_property(_mysql_inc mysql::concpp INTERFACE_INCLUDE_DIRECTORIES)
+message(STATUS "mysql include dirs: ${_mysql_inc}")
+
+target_include_directories(CourseCompanion_lib PUBLIC
+    ${_mysql_inc}
 )
 
 target_link_libraries(CourseCompanion_lib
+    PUBLIC
+        mysql::concpp-xdevapi-static    # PUBLIC so test targets inherit includes transitively
     PRIVATE
-    $<$<PLATFORM_ID:Linux>:uuid>
-    mysql::concpp-xdevapi-static
+        $<$<PLATFORM_ID:Linux>:uuid>
 )
 
 # -------------------------------
@@ -89,8 +98,10 @@ endfunction()
 # ------------------------
 if(NOT BUILD_TESTING)
     add_executable(CourseCompanion src/main.cpp)
-    target_link_libraries(CourseCompanion PRIVATE CourseCompanion_lib)
-    
+    target_link_libraries(CourseCompanion PRIVATE
+        CourseCompanion_lib     # mysql includes and uuid are transitive via CourseCompanion_lib
+    )
+
     set_target_properties(CourseCompanion PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )

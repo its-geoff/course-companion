@@ -7,6 +7,8 @@ usage() {
     exit 1
 }
 
+source ~/course-companion/.env
+
 option_given=0
 
 while getopts ":mt" opt; do
@@ -14,7 +16,7 @@ while getopts ":mt" opt; do
 
     case $opt in
         m)
-            cmake --build . --target CourseCompanion_lib
+            cmake --build . --target CourseCompanion
             ;;
         t)
             # update when new tests are added

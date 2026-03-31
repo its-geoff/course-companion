@@ -4,33 +4,29 @@
  * @file TermRepository.cpp
  * @brief Implementation of TermRepository, which handles database operations for Term objects.
  *
- * Translates between Term objects and rows in the terms table using MySQL Connector/C++.
+ * Translates between Term objects and rows in the terms table using MySQL Connector/C++ X DevAPI.
  *
  * Provides implementations only; see TermRepository.hpp for definitions.
  */
 
 #include <stdexcept>    // for exceptions
-#include <sstream>      // for date string parsing
+#include <sstream>      // for date string formatting
+#include "utils/utils.hpp"  // for reused custom functions
 
 TermRepository::TermRepository(DatabaseConnection& db) : db_{db} {}
 
 // converts a database row into a Term object
+// column order: id(0), title(1), start_date(2), end_date(3), active(4)
 Term TermRepository::rowToTerm(const mysqlx::Row& row) const {
-    std::string id          = row[0].get<std::string>();
-    std::string title       = row[1].get<std::string>();
     std::string startStr    = row[2].get<std::string>();
     std::string endStr      = row[3].get<std::string>();
-    bool active             = row[4].get<bool>();
 
     // parse date strings from YYYY-MM-DD format into year_month_day
-    int sy, sm, sd, ey, em, ed;
-    sscanf(startStr.c_str(), "%d-%d-%d", &sy, &sm, &sd);
-    sscanf(endStr.c_str(), "%d-%d-%d", &ey, &em, &ed);
+    std::chrono::year_month_day startDate = utils::parseDate(startStr);
+    std::chrono::year_month_day endDate = utils::parseDate(endStr);
 
-    std::chrono::year_month_day startDate = std::chrono::year{sy}/std::chrono::month{static_cast<unsigned>(sm)}/std::chrono::day{static_cast<unsigned>(sd)};
-    std::chrono::year_month_day endDate = std::chrono::year{ey}/std::chrono::month{static_cast<unsigned>(em)}/std::chrono::day{static_cast<unsigned>(ed)};
-
-    return Term{title, startDate, endDate, active};
+    return Term::fromRow(row[0].get<std::string>(), row[1].get<std::string>(), startDate, 
+        endDate, row[4].get<bool>());
 }
 
 // inserts a new Term row into the terms table
@@ -92,7 +88,7 @@ std::vector<Term> TermRepository::findAll() {
     return terms;
 }
 
-// not applicable for Term — terms have no parent
+// not applicable for Term; terms have no parent
 std::vector<Term> TermRepository::findByParentId(const std::string& parentId) {
     throw std::logic_error("TermRepository does not support findByParentId.");
 }

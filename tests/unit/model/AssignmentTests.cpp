@@ -197,6 +197,53 @@ TEST_F(AssignmentTest, OverloadedEquals) {
     ASSERT_TRUE(assignment1 == assignment4);
 }
 
+TEST_F(AssignmentTest, FromRowAllFields) {
+    std::string id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+    Assignment assignment = Assignment::fromRow(id, "Homework 3", "Focus on variables and strings.",
+        "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f);
+
+    ASSERT_EQ(assignment.getId(), id);
+    ASSERT_EQ(assignment.getTitle(), "Homework 3");
+    ASSERT_EQ(assignment.getDescription(), "Focus on variables and strings.");
+    ASSERT_EQ(assignment.getCategory(), "Homework");
+    ASSERT_EQ(assignment.getDueDate(), std::chrono::year_month_day{2025y/11/20});
+    ASSERT_TRUE(assignment.getCompleted());
+    ASSERT_FLOAT_EQ(assignment.getGrade(), 95.18f);
+}
+
+TEST_F(AssignmentTest, FromRowPreservesId) {
+    std::string id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+    Assignment assignment = Assignment::fromRow(id, "Homework 3", "",
+        "Homework", std::chrono::year_month_day{2025y/11/20}, false, 0.0f);
+
+    ASSERT_EQ(assignment.getId(), id);
+}
+
+TEST_F(AssignmentTest, FromRowCompletedFalse) {
+    Assignment assignment = Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+        "Homework 3", "", "Homework", std::chrono::year_month_day{2025y/11/20}, false, 0.0f);
+
+    ASSERT_FALSE(assignment.getCompleted());
+}
+
+TEST_F(AssignmentTest, FromRowEmptyDescription) {
+    Assignment assignment = Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+        "Homework 3", "", "Homework", std::chrono::year_month_day{2025y/11/20}, false, 0.0f);
+
+    ASSERT_EQ(assignment.getDescription(), "");
+}
+
+TEST_F(AssignmentTest, FromRowDoesNotEqualNewAssignment) {
+    // a fromRow Assignment and a freshly constructed Assignment with the same parameters should not be equal
+    Assignment fromRowAssignment = Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+        "Homework 3", "Focus on variables and strings.",
+        "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f);
+    Assignment newAssignment{"Homework 3", "Focus on variables and strings.",
+        "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
+
+    ASSERT_NE(fromRowAssignment, newAssignment);
+}
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -305,7 +352,7 @@ TEST_F(AssignmentTest, GradeSetterPointsZeroTotal) {
 // ====================================
 
 // invalid initializations without description defined
-TEST_F(AssignmentTest, TwoParamInitializationInvalidTitle) {
+TEST_F(AssignmentTest, TwoParamInitializationEmptyTitle) {
     // throw invalid argument since title is empty
     ASSERT_THROW((Assignment{"", "", "Homework", {}}), std::invalid_argument);
 }
@@ -341,7 +388,7 @@ TEST_F(AssignmentTest, FiveParamInitializationCompletedFalseWithGrade) {
 }
 
 // invalid initializations with description defined
-TEST_F(AssignmentTest, ThreeParamDescInitializationInvalidTitle) {
+TEST_F(AssignmentTest, ThreeParamDescInitializationEmptyTitle) {
     // throw invalid argument since title is empty
     ASSERT_THROW((Assignment{"", "Focus on lexical analysis.", "Homework", {}}), std::invalid_argument);
 }
@@ -440,4 +487,61 @@ TEST_F(AssignmentTest, OverloadedEqualsSameParamsDifferentId) {
     Assignment assignment3{"Homework 1", "Focus on variables and strings.", "Homework", std::chrono::year_month_day{2025y/11/20}, true, 95.18f};
 
     ASSERT_FALSE(assignment2 == assignment3);
+}
+
+TEST_F(AssignmentTest, FromRowEmptyTitle) {
+    // throw invalid argument since title is empty
+    ASSERT_THROW(Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "", "",
+        "Homework", std::chrono::year_month_day{2025y/11/20}, false, 0.0f),
+        std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FromRowWhitespaceTitle) {
+    // throw invalid argument since title is whitespace
+    ASSERT_THROW(Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "   ", "",
+        "Homework", std::chrono::year_month_day{2025y/11/20}, false, 0.0f),
+        std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FromRowEmptyCategory) {
+    // throw invalid argument since category is invalid
+    ASSERT_THROW(Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Homework 3", "",
+        "", std::chrono::year_month_day{2025y/11/20}, false, 0.0f),
+        std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FromRowEmptyDueDate) {
+    // throw invalid argument since due date is empty
+    ASSERT_THROW(Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Homework 3", "",
+        "Homework", std::chrono::year_month_day{}, false, 0.0f),
+        std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FromRowInvalidDueDate) {
+    // throw invalid argument since due date does not exist
+    ASSERT_THROW(Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Homework 3", "",
+        "Homework", std::chrono::year_month_day{2025y/2/30}, false, 0.0f),
+        std::invalid_argument);
+}
+
+TEST_F(AssignmentTest, FromRowGradeTooLow) {
+    // throw out of range since input is not in range 0 to 150
+    ASSERT_THROW(Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Homework 3", "",
+        "Homework", std::chrono::year_month_day{2025y/11/20}, true, -1.0f),
+        std::out_of_range);
+}
+
+TEST_F(AssignmentTest, FromRowGradeTooHigh) {
+    // throw out of range since input is not in range 0 to 150
+    ASSERT_THROW(Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Homework 3", "",
+        "Homework", std::chrono::year_month_day{2025y/11/20}, true, 200.0f),
+        std::out_of_range);
+}
+
+TEST_F(AssignmentTest, FromRowZeroGradeWhenNotCompleted) {
+    // constructor zeroes grade when completed is false, so fromRow should do the same
+    Assignment assignment = Assignment::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+        "Homework 3", "", "Homework", std::chrono::year_month_day{2025y/11/20}, false, 90.0f);
+
+    ASSERT_FLOAT_EQ(assignment.getGrade(), 0.0f);
 }

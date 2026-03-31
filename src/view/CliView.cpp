@@ -101,17 +101,6 @@ namespace {
     };
 }
 
-// takes date as string input and converts to year_month_day format
-std::chrono::year_month_day CliView::parseDate(const std::string &input) const {
-    int y, m, d;
-
-    if (sscanf(input.c_str(), "%d-%d-%d", &y, &m, &d) == 3) {
-        return std::chrono::year{y}/std::chrono::month{static_cast<unsigned>(m)}/std::chrono::day{static_cast<unsigned>(d)};
-    }
-
-    throw std::invalid_argument("Invalid date format. Expected YYYY-MM-DD.");
-}
-
 // splits a string in list format into a vector with multiple elements
 std::vector<std::string> CliView::splitStringByComma(const std::string& str) {
     std::vector<std::string> words;
@@ -1282,7 +1271,7 @@ std::chrono::year_month_day CliView::getDateInput(const std::string &label, cons
     }
 
     try {
-        return parseDate(input);
+        return utils::parseDate(input);
     } catch (const std::exception& e) {
         throw std::invalid_argument("Invalid date format. Expected YYYY-MM-DD.");
     }
