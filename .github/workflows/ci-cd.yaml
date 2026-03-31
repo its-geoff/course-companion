@@ -39,14 +39,15 @@ jobs:
 
       - name: Install system dependencies
         run: |
-          sudo apt-get update && sudo apt-get install -y uuid-dev build-essential libgl-dev pip
+          sudo apt-get update && sudo apt-get install -y uuid-dev build-essential libgl-dev python3-pip
           pip install conan --break-system-packages
           conan profile detect --force
 
       - name: Install Conan dependencies
         run: |
           mkdir -p build/build_test
-          conan install . --lockfile=conan.lock --build=missing -of build/build_test -s build_type=Debug
+          conan install . --lockfile=conan.lock --build=missing -of build/build_test -s build_type=Debug -c \
+            tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: Configure CMake (Test)
         run: cmake -S . -B build/build_test -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON

@@ -28,7 +28,8 @@ jobs:
       - name: Install Conan dependencies
         run: |
           mkdir -p build/build_test
-          conan install . --lockfile=conan.lock --build=missing -of build/build_test -s build_type=Debug
+          conan install . --lockfile=conan.lock --build=missing -of build/build_test -s build_type=Debug -c \
+            tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
