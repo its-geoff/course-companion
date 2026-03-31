@@ -1270,11 +1270,7 @@ std::chrono::year_month_day CliView::getDateInput(const std::string &label, cons
         return defaultVal;
     }
 
-    try {
-        return utils::parseDate(input);
-    } catch (const std::exception& e) {
-        throw std::invalid_argument("Invalid date format. Expected YYYY-MM-DD.");
-    }
+    return utils::parseDate(input);
 }
 
 // ask the user for a float input, using the default value in the case of an invalid input

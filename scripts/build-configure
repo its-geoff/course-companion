@@ -13,22 +13,27 @@ usage() {
 # ---------------------------
 BUILD_TESTS=0
 ENABLE_COVERAGE=0
+BUILD_DIR="build_main"
 
 while getopts ":tc" opt; do
     case $opt in
-        t) BUILD_TESTS=1 ;;
-        c) ENABLE_COVERAGE=1 ;;
-        \?) usage ;;
+        t) 
+            BUILD_TESTS=1
+            BUILD_DIR="build_test"
+            ;;
+        c) 
+            ENABLE_COVERAGE=1
+            ;;
+        \?) 
+            usage
+            ;;
     esac
 done
 
 # ---------------------------
 # Set directories
 # ---------------------------
-BUILD_DIR="build_main"
-if [[ $BUILD_TESTS -eq 1 ]]; then
-    BUILD_DIR="build_test"
-fi
+
 mkdir -p "$BUILD_DIR"
 COVERAGE_DIR="$(pwd)/coverage"
 

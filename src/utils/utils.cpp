@@ -24,7 +24,7 @@ namespace utils {
     } 
 
     // takes date as string input and converts to year_month_day format
-    std::chrono::year_month_day parseDate(const std::string &input) {
+    std::chrono::year_month_day parseDate(const std::string& input) {
         int y, m, d;
 
         if (sscanf(input.c_str(), "%d-%d-%d", &y, &m, &d) == 3) {

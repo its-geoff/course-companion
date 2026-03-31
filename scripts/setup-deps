@@ -29,7 +29,7 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
         conan install .. --build=missing -of build_main -g CMakeDeps -g CMakeToolchain -s build_type=Release
     fi
 elif [[ "$OS_NAME" == "Linux" ]]; then
-    while getopts ":t" opt; do
+    while getopts ":td" opt; do
         option_given=1
 
         case $opt in

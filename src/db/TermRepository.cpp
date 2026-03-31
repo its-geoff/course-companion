@@ -61,7 +61,7 @@ void TermRepository::remove(const std::string& id) {
 // returns a Term matched by id, or empty if not found
 std::optional<Term> TermRepository::findById(const std::string& id) {
     auto result = db_.getSession().sql(
-        "SELECT id, title, start_date, end_date, active FROM terms WHERE id = ?"
+        "SELECT id, title, DATE_FORMAT(start_date, '%Y-%m-%d'), DATE_FORMAT(end_date, '%Y-%m-%d'), active FROM terms WHERE id = ?"
     ).bind(id).execute();
 
     auto row = result.fetchOne();
@@ -76,7 +76,7 @@ std::optional<Term> TermRepository::findById(const std::string& id) {
 // returns all Term rows from the terms table
 std::vector<Term> TermRepository::findAll() {
     auto result = db_.getSession().sql(
-        "SELECT id, title, start_date, end_date, active FROM terms"
+        "SELECT id, title, DATE_FORMAT(start_date, '%Y-%m-%d'), DATE_FORMAT(end_date, '%Y-%m-%d'), active FROM terms"
     ).execute();
 
     std::vector<Term> terms;

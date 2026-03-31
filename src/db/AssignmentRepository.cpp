@@ -60,7 +60,7 @@ void AssignmentRepository::remove(const std::string& id) {
 // returns an Assignment matched by id, or empty if not found
 std::optional<Assignment> AssignmentRepository::findById(const std::string& id) {
     auto result = db_.getSession().sql(
-        "SELECT id, course_id, title, description, category, due_date, completed, grade FROM assignments WHERE id = ?"
+        "SELECT id, course_id, title, description, category, DATE_FORMAT(due_date, '%Y-%m-%d'), completed, grade FROM assignments WHERE id = ?"
     ).bind(id).execute();
 
     auto row = result.fetchOne();
@@ -75,7 +75,7 @@ std::optional<Assignment> AssignmentRepository::findById(const std::string& id) 
 // returns all Assignment rows from the assignments table
 std::vector<Assignment> AssignmentRepository::findAll() {
     auto result = db_.getSession().sql(
-        "SELECT id, course_id, title, description, category, due_date, completed, grade FROM assignments"
+        "SELECT id, course_id, title, description, category, DATE_FORMAT(due_date, '%Y-%m-%d'), completed, grade FROM assignments "
     ).execute();
 
     std::vector<Assignment> assignments;
@@ -90,7 +90,8 @@ std::vector<Assignment> AssignmentRepository::findAll() {
 // returns all Assignment rows belonging to the given course id
 std::vector<Assignment> AssignmentRepository::findByParentId(const std::string& courseId) {
     auto result = db_.getSession().sql(
-        "SELECT id, course_id, title, description, category, due_date, completed, grade FROM assignments WHERE course_id = ?"
+        "SELECT id, course_id, title, description, category, DATE_FORMAT(due_date, '%Y-%m-%d'), \
+        completed, grade FROM assignments WHERE course_id = ?"
     ).bind(courseId).execute();
 
     std::vector<Assignment> assignments;
