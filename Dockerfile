@@ -3,6 +3,8 @@
 FROM ubuntu:24.04 AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV QT_VERSION=6.10.1
+ENV QT_DIR=/opt/qt/${QT_VERSION}/gcc_64
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -13,7 +15,13 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     uuid-dev \
+    libgl-dev \
+    libglib2.0-dev \
     && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --break-system-packages conan aqtinstall
+
+RUN aqt install-qt linux desktop ${QT_VERSION} -O /opt/qt
 
 RUN pip3 install --break-system-packages conan
 
@@ -38,7 +46,8 @@ RUN cmake -S . -B build/build_test \
     -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
     -DCMAKE_TOOLCHAIN_FILE=/app/build/build_test/conan_toolchain.cmake \
     -DCMAKE_BUILD_TYPE=Debug \
-    -DBUILD_TESTING=ON
+    -DBUILD_TESTING=ON \
+    -DCMAKE_PREFIX_PATH=${QT_DIR}
 
 RUN cmake --build build/build_test --parallel $(nproc)
 
@@ -56,17 +65,30 @@ RUN cmake -S . -B build/build_main \
     -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
     -DCMAKE_TOOLCHAIN_FILE=/app/build/build_main/conan_toolchain.cmake \
     -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_PREFIX_PATH=${QT_DIR}
 
 RUN cmake --build build/build_main --target CourseCompanion --parallel $(nproc)
 
 # release production build
 FROM ubuntu:24.04 AS production
 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV QT_VERSION=6.10.1
+
 RUN apt-get update && apt-get install -y \
     libstdc++6 \
     uuid \
+    libgl1 \
+    libglib2.0-0 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --break-system-packages aqtinstall && \
+    aqt install-qt linux desktop ${QT_VERSION} -O /opt/qt --archives qtbase && \
+    pip3 uninstall -y aqtinstall
+
+ENV LD_LIBRARY_PATH=/opt/qt/${QT_VERSION}/gcc_64/lib:${LD_LIBRARY_PATH}
 
 COPY --from=main /app/build/build_main/bin/CourseCompanion /app/
 
