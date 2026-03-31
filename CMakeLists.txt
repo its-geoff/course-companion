@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.20)
 # Project metadata
 # ------------------------
 project(CourseCompanion
-    VERSION 0.2.5
+    VERSION 0.3.0
     DESCRIPTION "Homework tracker that allows students to track homework assignments, estimate grades, and organize class schedules."
     LANGUAGES CXX
 )
@@ -17,6 +17,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(ENABLE_COVERAGE "Enable code test coverage" OFF)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 # ------------------------
 # Include directories
@@ -34,14 +38,33 @@ add_library(CourseCompanion_lib
     src/controller/AssignmentController.cpp
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
+    src/db/DatabaseConnection.cpp
+    src/db/AssignmentRepository.cpp
+    src/db/TermRepository.cpp
+    src/db/CourseRepository.cpp
     src/utils/utils.cpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
-target_link_libraries(CourseCompanion_lib 
-    PRIVATE 
-    $<$<PLATFORM_ID:Linux>:uuid>    # only link on Linux
-    mysqlcppconn)     
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})  # allows find_package to locate Conan-generated configs
+set(MYSQL_CONCPP_STATIC ON)
+find_package(mysql-concpp REQUIRED)
+
+# mysql::concpp-xdevapi-static is a thin INTERFACE target that delegates to mysql::concpp;
+# INTERFACE_INCLUDE_DIRECTORIES lives on mysql::concpp, so we read from there directly
+get_target_property(_mysql_inc mysql::concpp INTERFACE_INCLUDE_DIRECTORIES)
+message(STATUS "mysql include dirs: ${_mysql_inc}")
+
+target_include_directories(CourseCompanion_lib PUBLIC
+    ${_mysql_inc}
+)
+
+target_link_libraries(CourseCompanion_lib
+    PUBLIC
+        mysql::concpp-xdevapi-static    # PUBLIC so test targets inherit includes transitively
+    PRIVATE
+        $<$<PLATFORM_ID:Linux>:uuid>
+)
 
 # -------------------------------
 # Helper function for coverage
@@ -75,8 +98,10 @@ endfunction()
 # ------------------------
 if(NOT BUILD_TESTING)
     add_executable(CourseCompanion src/main.cpp)
-    target_link_libraries(CourseCompanion PRIVATE CourseCompanion_lib)
-    
+    target_link_libraries(CourseCompanion PRIVATE
+        CourseCompanion_lib     # mysql includes and uuid are transitive via CourseCompanion_lib
+    )
+
     set_target_properties(CourseCompanion PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )

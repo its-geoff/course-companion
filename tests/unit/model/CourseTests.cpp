@@ -353,6 +353,65 @@ TEST_F(CourseTest, OverloadedEquals) {
     ASSERT_TRUE(course1 == course4);
 }
 
+TEST_F(CourseTest, FromRowAllFields) {
+    std::string id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+    Course course = Course::fromRow(id, "CMPE 142", "Operating Systems",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        3, false);
+
+    ASSERT_EQ(course.getId(), id);
+    ASSERT_EQ(course.getTitle(), "CMPE 142");
+    ASSERT_EQ(course.getDescription(), "Operating Systems");
+    ASSERT_EQ(course.getStartDate(), std::chrono::year_month_day{2025y/8/12});
+    ASSERT_EQ(course.getEndDate(), std::chrono::year_month_day{2025y/12/5});
+    ASSERT_EQ(course.getNumCredits(), 3);
+    ASSERT_FALSE(course.getActive());
+}
+
+TEST_F(CourseTest, FromRowPreservesId) {
+    std::string id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+    Course course = Course::fromRow(id, "CMPE 142", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        3, false);
+
+    ASSERT_EQ(course.getId(), id);
+}
+
+TEST_F(CourseTest, FromRowActiveTrue) {
+    Course course = Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        3, true);
+
+    ASSERT_TRUE(course.getActive());
+}
+
+TEST_F(CourseTest, FromRowEmptyDescription) {
+    Course course = Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        3, false);
+
+    ASSERT_EQ(course.getDescription(), "");
+}
+
+TEST_F(CourseTest, FromRowDoesNotEqualNewCourse) {
+    // a fromRow Course and a freshly constructed Course with the same parameters should not be equal
+    Course fromRowCourse = Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+        "CMPE 142", "Operating Systems",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        3, false);
+    Course newCourse{"CMPE 142", "Operating Systems",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        3, false};
+
+    ASSERT_NE(fromRowCourse, newCourse);
+}
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -619,7 +678,7 @@ TEST_F(CourseTest, GradeScaleSetterUpperBound) {
 // INITIALIZATION EDGE CASES
 // ====================================
 
-TEST_F(CourseTest, ThreeParamInitializationNoTitle) {
+TEST_F(CourseTest, ThreeParamInitializationEmptyTitle) {
     // throw invalid argument since title is empty
     ASSERT_THROW((Course{"", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
 }
@@ -652,7 +711,7 @@ TEST_F(CourseTest, FourParamInitializationInvalidNumCredits) {
     ASSERT_THROW((Course{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, -4}), std::out_of_range);
 }
 
-TEST_F(CourseTest, FourParamDescInitializationNoTitle) {
+TEST_F(CourseTest, FourParamDescInitializationEmptyTitle) {
     // throw invalid argument since title is empty
     ASSERT_THROW((Course{"", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}}), std::invalid_argument);
 }
@@ -854,4 +913,86 @@ TEST_F(CourseTest, OverloadedEqualsSameParamsDifferentId) {
     Course course3{"CMPE 142", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/12}, std::chrono::year_month_day{2025y/12/5}, 3, false};
 
     ASSERT_FALSE(course2 == course3);
+}
+
+TEST_F(CourseTest, FromRowEmptyTitle) {
+    // throw invalid argument since title is empty
+    ASSERT_THROW(Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        3, false), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FromRowWhitespaceTitle) {
+    // throw invalid argument since title is whitespace
+    ASSERT_THROW(Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "   ", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        3, false), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FromRowEmptyStartDate) {
+    // throw invalid argument since start date is empty
+    ASSERT_THROW(Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{},
+        std::chrono::year_month_day{2025y/12/5},
+        3, false), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FromRowEmptyEndDate) {
+    // throw invalid argument since end date is empty
+    ASSERT_THROW(Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{},
+        3, false), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FromRowInvalidStartDate) {
+    // throw invalid argument since start date does not exist
+    ASSERT_THROW(Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{2025y/2/30},
+        std::chrono::year_month_day{2025y/12/5},
+        3, false), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FromRowInvalidEndDate) {
+    // throw invalid argument since end date does not exist
+    ASSERT_THROW(Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/4/31},
+        3, false), std::invalid_argument);
+}
+
+TEST_F(CourseTest, FromRowEndDateBeforeStartDate) {
+    // throw logic error since end date is before start date
+    ASSERT_THROW(Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{2025y/12/5},
+        std::chrono::year_month_day{2025y/8/12},
+        3, false), std::logic_error);
+}
+
+TEST_F(CourseTest, FromRowInvalidNumCredits) {
+    // throw out of range since number of credits is less than 0
+    ASSERT_THROW(Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        -1, false), std::out_of_range);
+}
+
+TEST_F(CourseTest, FromRowZeroCreditsValid) {
+    Course course = Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/12/5},
+        0, false);
+
+    ASSERT_EQ(course.getNumCredits(), 0);
+}
+
+TEST_F(CourseTest, FromRowSameDayStartAndEnd) {
+    Course course = Course::fromRow("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "CMPE 142", "",
+        std::chrono::year_month_day{2025y/8/12},
+        std::chrono::year_month_day{2025y/8/12},
+        3, false);
+
+    ASSERT_EQ(course.getStartDate(), course.getEndDate());
 }

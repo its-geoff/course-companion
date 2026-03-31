@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     uuid-dev \
-    libmysqlcppconn-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --break-system-packages conan
@@ -24,13 +23,14 @@ COPY src/ src/
 COPY include/ include/
 COPY tests/ tests/
 
-RUN conan profile detect --force
+RUN conan profile detect --force && \
+    sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=gnu20/' /root/.conan2/profiles/default
 
 # test build
 FROM builder AS test
 
 RUN mkdir -p build/build_test && \
-    conan install . --build=missing --output-folder=build/build_test
+    conan install . --build=missing --output-folder=build/build_test -g CMakeDeps -g CMakeToolchain -s build_type=Debug
 
 RUN cmake -S . -B build/build_test \
     -G Ninja \
@@ -48,7 +48,7 @@ CMD ["ctest", "--test-dir", "/app/build/build_test", "--output-on-failure"]
 FROM builder AS main
 
 RUN mkdir -p build/build_main && \
-    conan install . --build=missing --output-folder=build/build_main
+    conan install . --build=missing --output-folder=build/build_main -g CMakeDeps -g CMakeToolchain -s build_type=Release
 
 RUN cmake -S . -B build/build_main \
     -G Ninja \
@@ -58,7 +58,7 @@ RUN cmake -S . -B build/build_main \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_TESTING=OFF
 
-RUN cmake --build build/build_main --parallel $(nproc)
+RUN cmake --build build/build_main --target CourseCompanion --parallel $(nproc)
 
 # release production build
 FROM ubuntu:24.04 AS production
@@ -66,7 +66,6 @@ FROM ubuntu:24.04 AS production
 RUN apt-get update && apt-get install -y \
     libstdc++6 \
     uuid \
-    libmysqlcppconn-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=main /app/build/build_main/bin/CourseCompanion /app/

@@ -1,17 +1,13 @@
 #include "controller/AssignmentController.hpp"
 
-/**
- * @file AssignmentController.cpp
- * @brief Implementation of a controller that manages interaction between the views and Assignment.
- * 
- * This controller implements functions that integrate the classes together and allow for code 
- * reusability within the main function.
- */
+#include <exception>
+#include "utils/utils.hpp"
 
-#include <exception>            // for exceptions
-#include "utils/utils.hpp"      // for stringLower
+AssignmentController::AssignmentController(Course& course)
+    : course_{course}, db_{nullptr}, assignmentRepo_{nullptr} {}
 
-AssignmentController::AssignmentController(Course& course) : course_{course} {}
+AssignmentController::AssignmentController(Course& course, DatabaseConnection& db)
+    : course_{course}, db_{&db}, assignmentRepo_{std::make_unique<AssignmentRepository>(db, course.getId())} {}
 
 const std::unordered_map<std::string, Assignment>& AssignmentController::getAssignmentList() const {
     return course_.getAssignmentList();
@@ -28,12 +24,23 @@ std::string AssignmentController::getAssignmentId(const std::string& title) cons
     return it->second;
 }
 
-// uses info from view to create an Assignment object then adds it to the list of Assignments in Course
+void AssignmentController::loadFromDb() {
+    if (!assignmentRepo_) {
+        throw std::logic_error("AssignmentController::loadFromDb() requires a database-backed repository.");
+    }
+
+    std::vector<Assignment> assignments = assignmentRepo_->findByParentId(course_.getId());
+
+    for (Assignment& assignment : assignments) {
+        titleToId_.emplace(utils::stringLower(assignment.getTitle()), assignment.getId());
+        course_.addAssignment(assignment);
+    }
+}
+
 void AssignmentController::addAssignment(const std::string& title, const std::string& description, const std::string& category,
     const std::chrono::year_month_day& dueDate, bool completed, float grade) {
     Assignment assignment{title, description, category, dueDate, completed, grade};
 
-    // validate category before adding to assignment list
     if (!course_.getGradeWeights().contains(category)) {
         throw std::out_of_range("Invalid category. Category must be in grade weights.");
     }
@@ -44,61 +51,79 @@ void AssignmentController::addAssignment(const std::string& title, const std::st
         throw std::runtime_error("An unexpected error occurred when adding the assignment.");
     }
 
-    // make title lowercase in titleToId for easier comparison
-    auto [_, inserted] = titleToId_.emplace(utils::stringLower(assignment.getTitle()), assignment.getId());
+    auto inserted = titleToId_.emplace(utils::stringLower(assignment.getTitle()), assignment.getId()).second;
 
     if (!inserted) {
-        course_.removeAssignment(assignment.getId());   // erase Assignment object if there's an error
+        course_.removeAssignment(assignment.getId());
         throw std::logic_error("Assignment with the same title already exists.");
+    }
+
+    if (assignmentRepo_) {
+        try {
+            assignmentRepo_->insert(assignment);
+        } catch (const std::exception& e) {
+            // roll back previous state if saving fails
+            titleToId_.erase(utils::stringLower(assignment.getTitle()));
+            course_.removeAssignment(assignment.getId());
+            throw std::runtime_error("Failed to save assignment.");
+        }
     }
 }
 
-// edits the title of the Assignment with the given ID
 void AssignmentController::editTitle(const std::string& id, const std::string& newTitle) {
     Assignment& assignment = course_.findAssignment(id);
     std::string oldTitle = assignment.getTitle();
 
-    auto [_, inserted] = titleToId_.emplace(utils::stringLower(newTitle), id);
+    auto inserted = titleToId_.emplace(utils::stringLower(newTitle), id).second;
 
     if (!inserted) {
         throw std::logic_error("An assignment with this title already exists.");
     }
 
-    // change the title -> id mapping for the new title
     titleToId_.erase(utils::stringLower(oldTitle));
-
-    // set title after insertion to title -> id mapping
     assignment.setTitle(newTitle);
+
+    if (assignmentRepo_) {
+        assignmentRepo_->update(assignment);
+    }
 }
 
-// edits the description of the Assignment with the given ID
 void AssignmentController::editDescription(const std::string& id, const std::string& newDescription) {
     Assignment& assignment = course_.findAssignment(id);
     assignment.setDescription(newDescription);
+
+    if (assignmentRepo_) {
+        assignmentRepo_->update(assignment);
+    }
 }
 
-// edits the category of the Assignment with the given ID
 void AssignmentController::editCategory(const std::string& id, const std::string& newCategory) {
     Assignment& assignment = course_.findAssignment(id);
-    
+
     if (utils::isOnlyWhitespace(newCategory)) {
         throw std::invalid_argument("Category must be non-empty.");
     }
 
-    // validate category before editing
     if (!course_.getGradeWeights().contains(newCategory)) {
         throw std::out_of_range("Invalid category. Category must be in grade weights.");
     }
+
     assignment.setCategory(newCategory);
+
+    if (assignmentRepo_) {
+        assignmentRepo_->update(assignment);
+    }
 }
 
-// edits the due date of the Assignment with the given ID
 void AssignmentController::editDueDate(const std::string& id, const std::chrono::year_month_day& newDueDate) {
     Assignment& assignment = course_.findAssignment(id);
     assignment.setDueDate(newDueDate);
+
+    if (assignmentRepo_) {
+        assignmentRepo_->update(assignment);
+    }
 }
 
-// adds a grade to an incomplete assignment and sets it to completed; percentage-based overload
 void AssignmentController::addGrade(const std::string& title, float grade) {
     std::string id = getAssignmentId(title);
     Assignment& selectedAssignment = course_.findAssignment(id);
@@ -106,41 +131,49 @@ void AssignmentController::addGrade(const std::string& title, float grade) {
     grade = utils::floatRound(grade, 2);
     selectedAssignment.setGrade(grade);
     selectedAssignment.setCompleted(true);
+
+    if (assignmentRepo_) {
+        assignmentRepo_->update(selectedAssignment);
+    }
 }
 
-// adds a grade to an incomplete assignment and sets it to completed; point-based overload
 void AssignmentController::addGrade(const std::string& title, float pointsEarned, float totalPoints) {
     if (utils::floatEqual(totalPoints, 0.0f)) {
         throw std::invalid_argument("Division by zero not allowed.");
-    } 
-    
+    }
+
     float calculatedGrade = (pointsEarned / totalPoints) * 100.0f;
     addGrade(title, calculatedGrade);
 }
 
-// removes a grade from a completed assignment, resetting the grade and completion status
 void AssignmentController::removeGrade(const std::string& title) {
     std::string id = getAssignmentId(title);
     Assignment& selectedAssignment = course_.findAssignment(id);
 
     selectedAssignment.setGrade(0.0f);
     selectedAssignment.setCompleted(false);
+
+    if (assignmentRepo_) {
+        assignmentRepo_->update(selectedAssignment);
+    }
 }
 
-// searches title -> id and erases the named Assignment from the list
 void AssignmentController::removeAssignment(const std::string& title) {
     std::string id = getAssignmentId(title);
+
+    if (assignmentRepo_) {
+        assignmentRepo_->remove(id);
+    }
+
     course_.removeAssignment(id);
     titleToId_.erase(utils::stringLower(title));
 }
 
-// finds an Assignment in assignmentList based on title; non-mutable (read-only)
 const Assignment& AssignmentController::findAssignment(const std::string& title) const {
     std::string id = getAssignmentId(title);
     return course_.findAssignment(id);
 }
 
-// finds an Assignment in assignmentList based on title; mutable (read and write access)
 Assignment& AssignmentController::findAssignment(const std::string& title) {
     std::string id = getAssignmentId(title);
     return course_.findAssignment(id);

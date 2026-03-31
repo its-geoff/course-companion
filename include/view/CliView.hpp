@@ -42,7 +42,6 @@ class CliView {
             exit
         };
 
-        std::chrono::year_month_day parseDate(const std::string &input) const;
         std::vector<std::string> splitStringByComma(const std::string &str);
 
         void displayDelim() const;

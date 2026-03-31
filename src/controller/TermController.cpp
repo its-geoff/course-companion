@@ -1,14 +1,8 @@
 #include "controller/TermController.hpp"
+#include "utils/utils.hpp"
 
-/**
- * @file TermController.cpp
- * @brief Implementation of a controller that manages interaction between the views and Term. 
- * 
- * This controller implements functions that integrate the classes together and allow for code 
- * reusability within the main function.
- */
-
-#include "utils/utils.hpp"      // for stringLower
+TermController::TermController(DatabaseConnection& db)
+    : db_{&db}, termRepo_{std::make_unique<TermRepository>(db)} {}
 
 const std::unordered_map<std::string, Term>& TermController::getTermList() const {
     return termList_;
@@ -33,83 +27,112 @@ CourseController& TermController::getCourseController() {
     return *courseController_;
 }
 
-// uses info from view to create a Term object then add it to the list of terms
-void TermController::addTerm(const std::string& title, const std::chrono::year_month_day& startDate, 
-    const std::chrono::year_month_day& endDate, bool active) {
-    Term term{title, startDate, endDate, active};
+void TermController::loadFromDb() {
+    if (!termRepo_) {
+        throw std::logic_error("No database repository configured.");
+    }
 
-    auto [termIt, termInserted] = termList_.emplace(term.getId(), std::move(term));
-    // make title lowercase in titleToId for easier comparison
-    auto [titleIt, titleInserted] = titleToId_.emplace(utils::stringLower(termIt->second.getTitle()), termIt->first);
+    std::vector<Term> terms = termRepo_->findAll();
 
-    if (!titleInserted) {
-        termList_.erase(termIt);   // erase Term object if there's an error
-        throw std::logic_error("Term with the same title already exists.");
+    for (Term& term : terms) {
+        auto termIt = termList_.emplace(term.getId(), std::move(term)).first;
+        titleToId_.emplace(utils::stringLower(termIt->second.getTitle()), termIt->first);
     }
 }
 
-// edits the title of the Term with the given ID
+void TermController::addTerm(const std::string& title, const std::chrono::year_month_day& startDate,
+    const std::chrono::year_month_day& endDate, bool active) {
+    Term term{title, startDate, endDate, active};
+
+    auto termIt = termList_.emplace(term.getId(), std::move(term)).first;
+    auto titleInserted = titleToId_.emplace(utils::stringLower(termIt->second.getTitle()), termIt->first).second;
+
+    if (!titleInserted) {
+        termList_.erase(termIt);
+        throw std::logic_error("Term with the same title already exists.");
+    }
+
+    if (termRepo_) {
+        termRepo_->insert(termIt->second);
+    }
+}
+
 void TermController::editTitle(const std::string& id, const std::string& newTitle) {
     Term& term = termList_.at(id);
     std::string oldTitle = term.getTitle();
 
-    auto [_, inserted] = titleToId_.emplace(utils::stringLower(newTitle), id);
+    auto inserted = titleToId_.emplace(utils::stringLower(newTitle), id).second;
 
     if (!inserted) {
         throw std::logic_error("A term with this title already exists.");
     }
 
-    // change the title -> id mapping for the new title
     titleToId_.erase(utils::stringLower(oldTitle));
-
-    // set title after insertion to title -> id mapping
     term.setTitle(newTitle);
+
+    if (termRepo_) {
+        termRepo_->update(term);
+    }
 }
 
-// edits the start date of the Term with the given ID
 void TermController::editStartDate(const std::string& id, const std::chrono::year_month_day& newStartDate) {
     Term& term = termList_.at(id);
     term.setStartDate(newStartDate);
+
+    if (termRepo_) {
+        termRepo_->update(term);
+    }
 }
 
-// edits the end date of the Term with the given ID
 void TermController::editEndDate(const std::string& id, const std::chrono::year_month_day& newEndDate) {
     Term& term = termList_.at(id);
     term.setEndDate(newEndDate);
+
+    if (termRepo_) {
+        termRepo_->update(term);
+    }
 }
 
-// edits the active bool of the term with the given ID
 void TermController::editActive(const std::string& id, bool newActive) {
     Term& term = termList_.at(id);
     term.setActive(newActive);
+
+    if (termRepo_) {
+        termRepo_->update(term);
+    }
 }
 
-// searches title -> id and erases the named Term from the list
 void TermController::removeTerm(const std::string& title) {
     std::string id = getTermId(title);
+
+    if (termRepo_) {
+        termRepo_->remove(id);
+    }
+
     termList_.erase(id);
     titleToId_.erase(utils::stringLower(title));
 }
 
-// find a Term in termList based on title; non-mutable (read-only)
 const Term& TermController::findTerm(const std::string& title) const {
     std::string id = getTermId(title);
     return termList_.at(id);
 }
 
-// find a Term in termList based on title; mutable (read and write access)
 Term& TermController::findTerm(const std::string& title) {
     std::string id = getTermId(title);
     return termList_.at(id);
 }
 
-// selects a term and makes it "active", creating a CourseController for that term
 void TermController::selectTerm(const std::string& title) {
     try {
         Term& termRef = findTerm(title);
         activeTerm_ = &termRef;
-        courseController_.emplace(*activeTerm_);
-    } catch (const std::exception& e) {
+        if (db_) {
+            courseController_.emplace(*activeTerm_, *db_);
+        } else {
+            courseController_.emplace(*activeTerm_);
+        }
+    } catch (const std::out_of_range& e) {
         throw std::out_of_range("Term not found.");
     }
 }

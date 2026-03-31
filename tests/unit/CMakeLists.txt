@@ -56,6 +56,30 @@ target_link_libraries(TermControllerTests PRIVATE CourseCompanion_lib GTest::gte
 add_test(NAME TermControllerTests COMMAND TermControllerTests)
 enable_coverage(TermControllerTests)
 
+# --------------------------------
+# AssignmentRepositoryTests executable
+# --------------------------------
+add_executable(AssignmentRepositoryTests db/AssignmentRepositoryTests.cpp)
+target_link_libraries(AssignmentRepositoryTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME AssignmentRepositoryTests COMMAND AssignmentRepositoryTests)
+enable_coverage(AssignmentRepositoryTests)
+
+# --------------------------------
+# CourseRepositoryTests executable
+# --------------------------------
+add_executable(CourseRepositoryTests db/CourseRepositoryTests.cpp)
+target_link_libraries(CourseRepositoryTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME CourseRepositoryTests COMMAND CourseRepositoryTests)
+enable_coverage(CourseRepositoryTests)
+
+# --------------------------------
+# TermRepositoryTests executable
+# --------------------------------
+add_executable(TermRepositoryTests db/TermRepositoryTests.cpp)
+target_link_libraries(TermRepositoryTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_test(NAME TermRepositoryTests COMMAND TermRepositoryTests)
+enable_coverage(TermRepositoryTests)
+
 # ---------------------------
 # UtilsTests executable
 # ---------------------------
@@ -74,6 +98,9 @@ foreach(test_target
     CliViewTests 
     CourseControllerTests 
     TermControllerTests 
+    AssignmentRepositoryTests 
+    CourseRepositoryTests 
+    TermRepositoryTests 
     UtilsTests
     )
     
