@@ -1,6 +1,7 @@
 [requires]
 gtest/1.14.0
 mysql-connector-cpp/9.2.0
+qt/6.10.1
 
 [generators]
 CMakeToolchain
