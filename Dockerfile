@@ -17,6 +17,11 @@ RUN apt-get update && apt-get install -y \
     uuid-dev \
     libgl-dev \
     libglib2.0-dev \
+    libdbus-1-dev \
+    libxkbcommon-dev \
+    libegl-dev \
+    libfontconfig1-dev \
+    libfreetype-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --break-system-packages conan aqtinstall
@@ -78,6 +83,11 @@ RUN apt-get update && apt-get install -y \
     libuuid1 \
     libgl1 \
     libglib2.0-0 \
+    libdbus-1-3 \
+    libxkbcommon0 \
+    libegl1 \
+    libfontconfig1 \
+    libfreetype6 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=main /opt/qt/6.10.1/gcc_64/lib /opt/qt/6.10.1/gcc_64/lib
