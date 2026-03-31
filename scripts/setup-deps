@@ -1,9 +1,8 @@
 #!/bin/bash
 
 usage() {
-    echo "Usage: setup-deps [-td]"
+    echo "Usage: setup-deps [-t]"
     echo "  -t: Output to build_test"
-    echo "  -d: Output to build_test_db"
     exit 1
 }
 
@@ -17,9 +16,6 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
         case $opt in
             t)
                 conan install .. --build=missing -of build_test -g CMakeDeps -g CMakeToolchain -s build_type=Release
-                ;;
-            d)
-                conan install .. --build=missing -of build_test_db -g CMakeDeps -g CMakeToolchain -s build_type=Release
                 ;;
             \?)
                 echo "Invalid option: -$opt" >&2
@@ -39,9 +35,6 @@ elif [[ "$OS_NAME" == "Linux" ]]; then
         case $opt in
             t)
                 conan install ~/course-companion --build=missing -of build_test -g CMakeDeps -g CMakeToolchain -s build_type=Release
-                ;;
-            d)
-                conan install ~/course-companion --build=missing -of build_test_db -g CMakeDeps -g CMakeToolchain -s build_type=Release
                 ;;
             \?)
                 echo "Invalid option: -$opt" >&2

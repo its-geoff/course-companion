@@ -4,7 +4,6 @@ set -e  # Exit on any error
 usage() {
     echo "Usage: $0 [-td] [-c]"
     echo "  -t: Build test files"
-    echo "  -d: Build test db files"
     echo "  -c: Enable code coverage"
     exit 1
 }
@@ -16,15 +15,11 @@ BUILD_TESTS=0
 ENABLE_COVERAGE=0
 BUILD_DIR="build_main"
 
-while getopts ":tdc" opt; do
+while getopts ":tc" opt; do
     case $opt in
         t) 
             BUILD_TESTS=1
             BUILD_DIR="build_test"
-            ;;
-        d)
-            BUILD_TESTS=1
-            BUILD_DIR="build_test_db"
             ;;
         c) 
             ENABLE_COVERAGE=1

@@ -1,22 +1,18 @@
 #!/bin/bash
 
 usage() {
-    echo "Usage: clear-build [-td]"
+    echo "Usage: clear-build [-t]"
     echo "  -t: Clear build_test files"
-    echo "  -t: Clear build_test_db files"
     exit 1
 }
 
 option_given=0
 
-while getopts ":td" opt; do
+while getopts ":t" opt; do
     option_given=1
 
     case $opt in
         t)
-            rm -rf build_test/*
-            ;;
-        d)
             rm -rf build_test/*
             ;;
         \?)

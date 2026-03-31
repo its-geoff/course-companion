@@ -29,13 +29,24 @@ class CourseRepositoryTest : public testing::Test {
         const std::chrono::year_month_day validEnd{2025y/12/5};
 
         void SetUp() override {
+            const char* host     = std::getenv("DB_HOST");
+            const char* port_str = std::getenv("DB_PORT");
+            const char* user     = std::getenv("DB_USER");
+            const char* password = std::getenv("DB_PASSWORD");
+            const char* schema   = std::getenv("TEST_DB_SCHEMA");
+
+            if (!host || !port_str || !user || !password || !schema) {
+                GTEST_SKIP() << "Database environment variables not set.";
+            }
+
             db_ = std::make_unique<DatabaseConnection>(
-                std::getenv("DB_HOST"),
-                static_cast<unsigned int>(std::stoi(std::getenv("DB_PORT"))),
-                std::getenv("DB_USER"),
-                std::getenv("DB_PASSWORD"),
-                std::getenv("TEST_DB_SCHEMA")
+                host,
+                static_cast<unsigned int>(std::stoi(port_str)),
+                user,
+                password,
+                schema
             );
+
             termRepo_ = std::make_unique<TermRepository>(*db_);
             repo_     = std::make_unique<CourseRepository>(*db_, parentTerm_.getId());
 

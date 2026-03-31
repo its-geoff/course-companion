@@ -42,12 +42,16 @@ class AssignmentRepositoryTest : public testing::Test {
             const char* password = std::getenv("DB_PASSWORD");
             const char* schema   = std::getenv("TEST_DB_SCHEMA");
 
+            if (!host || !port_str || !user || !password || !schema) {
+                GTEST_SKIP() << "Database environment variables not set.";
+            }
+
             db_ = std::make_unique<DatabaseConnection>(
-                std::getenv("DB_HOST"),
-                static_cast<unsigned int>(std::stoi(std::getenv("DB_PORT"))),
-                std::getenv("DB_USER"),
-                std::getenv("DB_PASSWORD"),
-                std::getenv("TEST_DB_SCHEMA")
+                host,
+                static_cast<unsigned int>(std::stoi(port_str)),
+                user,
+                password,
+                schema
             );
 
             termRepo_   = std::make_unique<TermRepository>(*db_);
