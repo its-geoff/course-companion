@@ -20,30 +20,48 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: course_companion_test
+        ports:
+          - 3306:3306
+          - 33060:33060
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y uuid-dev build-essential pip
+          pip install conan --break-system-packages
+          conan profile detect --force
 
-      - name: Build test image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          target: test
-          load: true
-          tags: course-companion:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Install Conan dependencies
+        run: |
+          mkdir -p build/build_test
+          conan install . --build=missing -of build/build_test -s build_type=Debug
 
-      - name: Run tests in container
+      - name: Configure CMake (Test)
+        run: cmake -S . -B build/build_test -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+
+      - name: Build tests
+        run: cmake --build build/build_test
+
+      - name: Run tests
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: 33060
           DB_USER: root
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           TEST_DB_SCHEMA: course_companion_test
-        run: docker run --rm -e DB_HOST -e DB_PORT -e DB_USER -e DB_PASSWORD -e TEST_DB_SCHEMA course-companion:test
+        run: ctest --test-dir build/build_test --output-on-failure
 
   docker:
     needs: [ test ]
