@@ -21,9 +21,7 @@ Assignment AssignmentRepository::rowToAssignment(const mysqlx::Row& row) const {
     std::string dueDateStr = row[5].get<std::string>();
 
     // parse date string from YYYY-MM-DD format into year_month_day
-    std::cout << dueDateStr << std::endl;
     std::chrono::year_month_day dueDate = utils::parseDate(dueDateStr);
-    // std::cout << dueDate << std::endl;
 
     // description is optional; use empty string if null
     std::string description = row[3].isNull() ? "" : row[3].get<std::string>();
