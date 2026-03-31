@@ -10,7 +10,7 @@
                 "CMAKE_C_COMPILER": "/usr/bin/clang",
                 "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/build_main/conan_toolchain.cmake",
-                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_BUILD_TYPE": "Release",
                 "BUILD_TESTING": "OFF"
             }
         },
@@ -23,7 +23,7 @@
                 "CMAKE_C_COMPILER": "/usr/bin/clang",
                 "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/build_test/conan_toolchain.cmake",
-                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_BUILD_TYPE": "Release",
                 "BUILD_TESTING": "ON",
                 "ENABLE_COVERAGE": "ON"
             }

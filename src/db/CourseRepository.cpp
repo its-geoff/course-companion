@@ -64,7 +64,8 @@ void CourseRepository::remove(const std::string& id) {
 // returns a Course matched by id, or empty if not found
 std::optional<Course> CourseRepository::findById(const std::string& id) {
     auto result = db_.getSession().sql(
-        "SELECT id, term_id, title, description, start_date, end_date, num_credits, active FROM courses WHERE id = ?"
+        "SELECT id, term_id, title, description, DATE_FORMAT(start_date, '%Y-%m-%d'), \
+        DATE_FORMAT(end_date, '%Y-%m-%d'), num_credits, active FROM courses WHERE id = ?"
     ).bind(id).execute();
 
     auto row = result.fetchOne();
@@ -79,7 +80,8 @@ std::optional<Course> CourseRepository::findById(const std::string& id) {
 // returns all Course rows from the courses table
 std::vector<Course> CourseRepository::findAll() {
     auto result = db_.getSession().sql(
-        "SELECT id, term_id, title, description, start_date, end_date, num_credits, active FROM courses"
+        "SELECT id, term_id, title, description, DATE_FORMAT(start_date, '%Y-%m-%d'), \
+        DATE_FORMAT(end_date, '%Y-%m-%d'), num_credits, active FROM courses"
     ).execute();
 
     std::vector<Course> courses;
@@ -94,7 +96,8 @@ std::vector<Course> CourseRepository::findAll() {
 // returns all Course rows belonging to the given term id
 std::vector<Course> CourseRepository::findByParentId(const std::string& termId) {
     auto result = db_.getSession().sql(
-        "SELECT id, term_id, title, description, start_date, end_date, num_credits, active FROM courses WHERE term_id = ?"
+        "SELECT id, term_id, title, description, DATE_FORMAT(start_date, '%Y-%m-%d'), \
+        DATE_FORMAT(end_date, '%Y-%m-%d'), num_credits, active FROM courses WHERE term_id = ?"
     ).bind(termId).execute();
 
     std::vector<Course> courses;

@@ -23,7 +23,12 @@ int main() {
     DatabaseConnection db(host, static_cast<unsigned int>(std::stoi(port_str)), user, password, schema);
 
     TermController controller(db);
-    controller.loadFromDb();
+    try {
+        controller.loadFromDb();
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to load data from database: " << e.what() << "\n";
+        return 1;
+    }
 
     CliView view(controller);
     view.run();
