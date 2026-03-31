@@ -95,6 +95,9 @@ class Course {
         void removeAssignment(const std::string& id);
         const Assignment& findAssignment(const std::string& id) const;    // non-mutable version
         Assignment& findAssignment(const std::string& id);    // mutable version
+        static Course fromRow(std::string id, std::string title, std::string description,
+            std::chrono::year_month_day startDate, std::chrono::year_month_day endDate,
+            int numCredits, bool active);
 
         bool operator==(const Course &other) const;
 };

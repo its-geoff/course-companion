@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage() {
-    echo "Usage: clear-build [-mt]"
+    echo "Usage: clear-build [-t]"
     echo "  -t: Clear build_test files"
     exit 1
 }

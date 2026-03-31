@@ -16,6 +16,7 @@
 
 namespace utils {
     std::chrono::year_month_day getTodayDate();
+    std::chrono::year_month_day parseDate(const std::string &input);
     bool isOnlyWhitespace(const std::string str);
     std::string generateUuid();
     void validateReqString(std::string str, std::string label);

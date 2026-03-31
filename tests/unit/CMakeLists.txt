@@ -67,13 +67,13 @@ enable_coverage(UtilsTests)
 # ---------------------------
 # Set output directory
 # ---------------------------
-foreach(test_target 
-    AssignmentTests 
-    CourseTests 
-    TermTests 
-    CliViewTests 
-    CourseControllerTests 
-    TermControllerTests 
+foreach(test_target
+    AssignmentTests
+    CourseTests
+    TermTests
+    CliViewTests
+    CourseControllerTests
+    TermControllerTests
     UtilsTests
     )
     

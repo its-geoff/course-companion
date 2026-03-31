@@ -23,6 +23,17 @@ namespace utils {
         return std::chrono::year_month_day{floor<std::chrono::days>(std::chrono::system_clock::now())};
     } 
 
+    // takes date as string input and converts to year_month_day format
+    std::chrono::year_month_day parseDate(const std::string& input) {
+        int y, m, d;
+
+        if (sscanf(input.c_str(), "%d-%d-%d", &y, &m, &d) == 3) {
+            return std::chrono::year{y}/std::chrono::month{static_cast<unsigned>(m)}/std::chrono::day{static_cast<unsigned>(d)};
+        }
+
+        throw std::invalid_argument("Invalid date format. Expected YYYY-MM-DD.");
+    }
+
     // checks if a string is only whitespace
     bool isOnlyWhitespace(const std::string str) {
         return std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); });

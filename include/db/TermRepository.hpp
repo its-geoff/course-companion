@@ -5,8 +5,8 @@
  * @file TermRepository.hpp
  * @brief Definition of TermRepository, which handles database operations for Term objects.
  *
- * Implements IDatabase<Term> with MySQL-backed CRUD operations. TermController depends on
- * IDatabase<Term> rather than this class directly, keeping the controller decoupled from SQL.
+ * Implements IDatabase<Term> with MySQL-backed CRUD operations that can be used by
+ * controllers and other components needing persistence for Term objects.
  *
  * Provides declarations only; see TermRepository.cpp for implementations.
  */
@@ -35,7 +35,7 @@ class TermRepository : public IDatabase<Term> {
     public:
         TermRepository(DatabaseConnection& db);
 
-        // non-copyable — holds a reference to a shared session
+        // non-copyable; holds a reference to a shared session
         TermRepository(const TermRepository&) = delete;
         TermRepository& operator=(const TermRepository&) = delete;
 

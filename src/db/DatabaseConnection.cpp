@@ -10,7 +10,7 @@
  * Provides implementations only; see DatabaseConnection.hpp for definitions.
  */
 
-// connects to MySQL and initializes the schema
+// connects to MySQL, creates the database if needed, and initializes the schema
 DatabaseConnection::DatabaseConnection(const std::string& host, unsigned int port, const std::string& user,
     const std::string& password, const std::string& schema)
     : session_(mysqlx::SessionOption::HOST, host,
@@ -19,8 +19,8 @@ DatabaseConnection::DatabaseConnection(const std::string& host, unsigned int por
                mysqlx::SessionOption::PWD,  password),
       schema_(session_.getSchema(schema))
 {
-    // create the database if it does not exist, then bind schema_
     session_.sql("CREATE DATABASE IF NOT EXISTS `" + schema + "`").execute();
+    session_.sql("USE `" + schema + "`").execute();
     schema_ = session_.getSchema(schema);
 
     initializeSchema();
@@ -35,7 +35,7 @@ mysqlx::Session& DatabaseConnection::getSession() {
 }
 
 // runs CREATE TABLE IF NOT EXISTS for terms, courses, and assignments
-// computed fields (gradePct, letterGrade, gpaVal, totalCredits, ovrGpa) are excluded
+// computed fields (gradePct, letterGrade, gpaVal, totalCredits, ovrGpa) are excluded; derived by the model layer
 void DatabaseConnection::initializeSchema() {
     session_.sql(R"(
         CREATE TABLE IF NOT EXISTS terms (
