@@ -4,7 +4,7 @@ FROM ubuntu:24.04 AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV QT_VERSION=6.10.1
-ENV QT_DIR=/opt/qt/${QT_VERSION}/gcc_64
+ENV QT_DIR=/opt/qt/6.10.1/gcc_64
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -22,8 +22,6 @@ RUN apt-get update && apt-get install -y \
 RUN pip3 install --break-system-packages conan aqtinstall
 
 RUN aqt install-qt linux desktop ${QT_VERSION} -O /opt/qt
-
-RUN pip3 install --break-system-packages conan
 
 WORKDIR /app
 COPY CMakeLists.txt conanfile.* ./
@@ -74,22 +72,18 @@ RUN cmake --build build/build_main --target CourseCompanion --parallel $(nproc)
 FROM ubuntu:24.04 AS production
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV QT_VERSION=6.10.1
 
 RUN apt-get update && apt-get install -y \
     libstdc++6 \
-    uuid \
+    libuuid1 \
     libgl1 \
     libglib2.0-0 \
-    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --break-system-packages aqtinstall && \
-    aqt install-qt linux desktop ${QT_VERSION} -O /opt/qt --archives qtbase && \
-    pip3 uninstall -y aqtinstall
-
-ENV LD_LIBRARY_PATH=/opt/qt/${QT_VERSION}/gcc_64/lib:${LD_LIBRARY_PATH}
-
+COPY --from=main /opt/qt/6.10.1/gcc_64/lib /opt/qt/6.10.1/gcc_64/lib
+COPY --from=main /opt/qt/6.10.1/gcc_64/plugins /opt/qt/6.10.1/gcc_64/plugins
 COPY --from=main /app/build/build_main/bin/CourseCompanion /app/
+
+ENV LD_LIBRARY_PATH=/opt/qt/6.10.1/gcc_64/lib
 
 CMD ["/app/CourseCompanion"]
