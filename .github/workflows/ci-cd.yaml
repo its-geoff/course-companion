@@ -37,9 +37,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install -y uuid-dev build-essential pip
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y uuid-dev build-essential libgl-dev pip
           pip install conan --break-system-packages
           conan profile detect --force
 
