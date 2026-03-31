@@ -46,7 +46,7 @@ jobs:
       - name: Install Conan dependencies
         run: |
           mkdir -p build/build_test
-          conan install . --build=missing -of build/build_test -s build_type=Debug
+          conan install . --lockfile=conan.lock --build=missing -of build/build_test -s build_type=Debug
 
       - name: Configure CMake (Test)
         run: cmake -S . -B build/build_test -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON

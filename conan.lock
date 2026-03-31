@@ -1,0 +1,20 @@
+{
+    "version": "0.5",
+    "requires": [
+        "zstd/1.5.7#b68ca8e3de04ba5957761751d1d661f4%1760955092.069",
+        "zlib/1.3.1#cac0f6daea041b0ccf42934163defb20%1765284699.337",
+        "rapidjson/1.1.0#9f5e39d1f4a6b67d48c6a343c4592f32%1705070241.006",
+        "protobuf/3.21.12#f4b3baecdc1169c9db2a96e395ca5462%1772206664.866",
+        "openssl/3.6.1#2e0be4a996c7ca91feb31b7fe65117b9%1769599203.736",
+        "mysql-connector-cpp/9.2.0#43d14c2b655e75ac98d37e5d5fe52c99%1767615654.187",
+        "lz4/1.9.4#4ed63aa8e019d795cd3b8c0d2dd66cda%1743433190.812",
+        "gtest/1.14.0#f8f0757a574a8dd747d16af62d6eb1b7%1743410807.169"
+    ],
+    "build_requires": [
+        "zlib/1.3.1#cac0f6daea041b0ccf42934163defb20%1765284699.337",
+        "protobuf/3.21.12#f4b3baecdc1169c9db2a96e395ca5462%1772206664.866",
+        "cmake/3.31.11#f325c933f618a1fcebc1e1c0babfd1ba%1769622857.944"
+    ],
+    "python_requires": [],
+    "config_requires": []
+}
