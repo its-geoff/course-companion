@@ -1,6 +1,7 @@
 .env
 .vscode
 .zshrc
+CMakeLists.txt.user
 CMakeUserPresets.json
 build/
 tests/output_logs/

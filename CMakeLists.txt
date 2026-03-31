@@ -4,10 +4,14 @@ cmake_minimum_required(VERSION 3.20)
 # Project metadata
 # ------------------------
 project(CourseCompanion
-    VERSION 0.3.0
+    VERSION 0.4.0
     DESCRIPTION "Homework tracker that allows students to track homework assignments, estimate grades, and organize class schedules."
     LANGUAGES CXX
 )
+
+set(CMAKE_AUTOMOC ON)    # handles Q_OBJECT macro processing
+set(CMAKE_AUTOUIC ON)    # handles .ui files if you use Qt Designer
+set(CMAKE_AUTORCC ON)    # handles .qrc resource files
 
 # ------------------------
 # C++ standard
@@ -27,6 +31,7 @@ endif()
 # ------------------------
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
+
 # ------------------------------------------
 # Library containing app logic for testing
 # ------------------------------------------
@@ -34,7 +39,7 @@ add_library(CourseCompanion_lib
     src/model/Assignment.cpp
     src/model/Course.cpp
     src/model/Term.cpp
-    src/view/CliView.cpp
+    src/view/cli/CliView.cpp
     src/controller/AssignmentController.cpp
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
@@ -48,6 +53,7 @@ add_library(CourseCompanion_lib
 target_include_directories(CourseCompanion_lib PUBLIC include)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})  # allows find_package to locate Conan-generated configs
 set(MYSQL_CONCPP_STATIC ON)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(mysql-concpp REQUIRED)
 
 # mysql::concpp-xdevapi-static is a thin INTERFACE target that delegates to mysql::concpp;
@@ -61,9 +67,10 @@ target_include_directories(CourseCompanion_lib PUBLIC
 
 target_link_libraries(CourseCompanion_lib
     PUBLIC
-        mysql::concpp-xdevapi-static    # PUBLIC so test targets inherit includes transitively
+        mysql::concpp-xdevapi-static
     PRIVATE
         $<$<PLATFORM_ID:Linux>:uuid>
+        Qt6::Widgets
 )
 
 # -------------------------------
@@ -99,11 +106,14 @@ endfunction()
 if(NOT BUILD_TESTING)
     add_executable(CourseCompanion src/main.cpp)
     target_link_libraries(CourseCompanion PRIVATE
-        CourseCompanion_lib     # mysql includes and uuid are transitive via CourseCompanion_lib
+        CourseCompanion_lib
     )
 
     set_target_properties(CourseCompanion PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+        AUTOMOC ON
+        WIN32_EXECUTABLE ON
+        MACOSX_BUNDLE ON
     )
 endif()
 
