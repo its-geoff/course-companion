@@ -27,7 +27,7 @@ enable_coverage(TermTests)
 # ---------------------------
 # CliViewTests executable
 # ---------------------------
-add_executable(CliViewTests view/CliViewTests.cpp)
+add_executable(CliViewTests view/cli/CliViewTests.cpp)
 target_link_libraries(CliViewTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME CliViewTests COMMAND CliViewTests)
 enable_coverage(CliViewTests)

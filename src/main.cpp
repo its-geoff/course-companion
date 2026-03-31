@@ -5,7 +5,7 @@
 #include "model/Course.hpp"
 #include "model/Term.hpp"
 #include "controller/TermController.hpp"
-#include "view/CliView.hpp"
+#include "view/cli/CliView.hpp"
 #include "db/DatabaseConnection.hpp"
 
 int main() {

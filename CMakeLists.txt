@@ -40,6 +40,7 @@ add_library(CourseCompanion_lib
     src/model/Course.cpp
     src/model/Term.cpp
     src/view/cli/CliView.cpp
+    src/view/qt/MainWindow.cpp
     src/controller/AssignmentController.cpp
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
