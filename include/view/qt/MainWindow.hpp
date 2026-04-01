@@ -21,8 +21,8 @@
  * @class MainWindow
  * @brief Represents the main window for the Qt GUI.
  * 
- * Takes input from the user and prints output to the command line. Does not contain app logic. Interacts with the 
- * Controller to provide input to model functions and displays output after receiving return values.
+ * Takes input from the user and displays output within the GUI. Does not contain app logic. Interacts with the
+ * Controller to provide input to model functions and presents results to the user after receiving return values.
  */
 class MainWindow : public QMainWindow {
     Q_OBJECT

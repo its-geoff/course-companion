@@ -103,9 +103,9 @@ if(NOT BUILD_TESTING)
     )
 
     set_target_properties(CourseCompanion_gui PROPERTIES
-        set(CMAKE_AUTOMOC ON)
-        set(CMAKE_AUTOUIC ON)
-        set(CMAKE_AUTORCC ON)
+        AUTOMOC ON
+        AUTOUIC ON
+        AUTORCC ON
     )
 
     target_link_libraries(CourseCompanion_gui
