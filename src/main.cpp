@@ -1,3 +1,21 @@
+// GUI main function
+#ifdef USE_GUI
+
+#include <QApplication>
+#include "view/qt/MainWindow.hpp"
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    MainWindow window;
+    window.show();
+
+    return app.exec();
+}
+
+// CLI main function
+#else
+
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -5,7 +23,7 @@
 #include "model/Course.hpp"
 #include "model/Term.hpp"
 #include "controller/TermController.hpp"
-#include "view/CliView.hpp"
+#include "view/cli/CliView.hpp"
 #include "db/DatabaseConnection.hpp"
 
 int main() {
@@ -35,3 +53,5 @@ int main() {
 
     return 0;
 }
+
+#endif

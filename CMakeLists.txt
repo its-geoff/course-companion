@@ -9,10 +9,6 @@ project(CourseCompanion
     LANGUAGES CXX
 )
 
-set(CMAKE_AUTOMOC ON)    # handles Q_OBJECT macro processing
-set(CMAKE_AUTOUIC ON)    # handles .ui files if you use Qt Designer
-set(CMAKE_AUTORCC ON)    # handles .qrc resource files
-
 # ------------------------
 # C++ standard
 # ------------------------
@@ -31,15 +27,14 @@ endif()
 # ------------------------
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-
 # ------------------------------------------
-# Library containing app logic for testing
+# Core library (no Qt, no CLI view)
+# Used by both GUI, CLI, and tests
 # ------------------------------------------
 add_library(CourseCompanion_lib
     src/model/Assignment.cpp
     src/model/Course.cpp
     src/model/Term.cpp
-    src/view/cli/CliView.cpp
     src/controller/AssignmentController.cpp
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
@@ -51,13 +46,10 @@ add_library(CourseCompanion_lib
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})  # allows find_package to locate Conan-generated configs
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 set(MYSQL_CONCPP_STATIC ON)
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(mysql-concpp REQUIRED)
 
-# mysql::concpp-xdevapi-static is a thin INTERFACE target that delegates to mysql::concpp;
-# INTERFACE_INCLUDE_DIRECTORIES lives on mysql::concpp, so we read from there directly
 get_target_property(_mysql_inc mysql::concpp INTERFACE_INCLUDE_DIRECTORIES)
 message(STATUS "mysql include dirs: ${_mysql_inc}")
 
@@ -70,7 +62,6 @@ target_link_libraries(CourseCompanion_lib
         mysql::concpp-xdevapi-static
     PRIVATE
         $<$<PLATFORM_ID:Linux>:uuid>
-        Qt6::Widgets
 )
 
 # -------------------------------
@@ -101,13 +92,31 @@ function(enable_coverage target)
 endfunction()
 
 # ------------------------
-# Main executable
+# Main executable (GUI)
 # ------------------------
 if(NOT BUILD_TESTING)
-    add_executable(CourseCompanion src/main.cpp)
-    target_link_libraries(CourseCompanion PRIVATE
-        CourseCompanion_lib
+    find_package(Qt6 REQUIRED COMPONENTS Widgets)
+
+    add_library(CourseCompanion_gui
+        include/view/qt/MainWindow.hpp
+        src/view/qt/MainWindow.cpp
     )
+
+    set_target_properties(CourseCompanion_gui PROPERTIES
+        AUTOMOC ON
+        AUTOUIC ON
+        AUTORCC ON
+    )
+
+    target_link_libraries(CourseCompanion_gui
+        PUBLIC
+            CourseCompanion_lib
+            Qt6::Widgets
+    )
+
+    add_executable(CourseCompanion src/main.cpp)
+    target_compile_definitions(CourseCompanion PRIVATE USE_GUI)
+    target_link_libraries(CourseCompanion PRIVATE CourseCompanion_gui)
 
     set_target_properties(CourseCompanion PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
@@ -117,10 +126,20 @@ if(NOT BUILD_TESTING)
     )
 endif()
 
+# ------------------------
+# Test build (CLI)
+# ------------------------
 if(BUILD_TESTING)
     enable_testing()
 
-    # fetch GoogleTest
+    add_library(CourseCompanion_cli
+        src/view/cli/CliView.cpp
+    )
+
+    target_link_libraries(CourseCompanion_cli
+        PUBLIC CourseCompanion_lib
+    )
+
     include(FetchContent)
     FetchContent_Declare(
         googletest
@@ -132,7 +151,6 @@ if(BUILD_TESTING)
     set(TEST_LOG_DIR "${CMAKE_BINARY_DIR}/../../../tests/output_logs")
     FetchContent_MakeAvailable(googletest)
 
-    # add each test type
     add_subdirectory(tests/unit)
     add_subdirectory(tests/integration)
 endif()
