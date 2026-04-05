@@ -21,7 +21,7 @@
 
 /**
  * @class CliView
- * @brief Represents a view for the command line interface CLI).
+ * @brief Represents a view for the command line interface (CLI).
  * 
  * Takes input from the user and prints output to the command line. Does not contain app logic. Interacts with the 
  * Controller to provide input to model functions and displays output after receiving return values.
@@ -42,7 +42,6 @@ class CliView {
             exit
         };
 
-        std::chrono::year_month_day parseDate(const std::string &input) const;
         std::vector<std::string> splitStringByComma(const std::string &str);
 
         void displayDelim() const;

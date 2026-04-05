@@ -15,7 +15,7 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
 
         case $opt in
             t)
-                conan install .. --build=missing -of build_test
+                conan install .. --build=missing -of build_test -g CMakeDeps -g CMakeToolchain -s build_type=Release
                 ;;
             \?)
                 echo "Invalid option: -$opt" >&2
@@ -26,15 +26,15 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
 
     if [ $option_given -eq 0 ]; then
         # create toolchain file for build
-        conan install .. --build=missing -of build_main
+        conan install .. --build=missing -of build_main -g CMakeDeps -g CMakeToolchain -s build_type=Release
     fi
 elif [[ "$OS_NAME" == "Linux" ]]; then
-    while getopts ":t" opt; do
+    while getopts ":td" opt; do
         option_given=1
 
         case $opt in
             t)
-                conan install ~/course-companion --build=missing -of build_test
+                conan install ~/course-companion --build=missing -of build_test -g CMakeDeps -g CMakeToolchain -s build_type=Release
                 ;;
             \?)
                 echo "Invalid option: -$opt" >&2
@@ -45,7 +45,7 @@ elif [[ "$OS_NAME" == "Linux" ]]; then
 
     if [ $option_given -eq 0 ]; then
         # create toolchain file for build
-        conan install ~/course-companion --build=missing -of build_main
+        conan install ~/course-companion --build=missing -of build_main -g CMakeDeps -g CMakeToolchain -s build_type=Release
     fi
 else
     echo "Unknown OS: $OS_NAME"

@@ -55,6 +55,8 @@ class Assignment {
         void setGrade(float pointsEarned, float totalPoints);   // overload for point-based grading
 
         void printAssignmentInfo(std::ostream &os = std::cout) const;
+        static Assignment fromRow(std::string id, std::string title, std::string description,
+            std::string category, std::chrono::year_month_day dueDate, bool completed, float grade);
 
         bool operator==(const Assignment &other) const;
 };

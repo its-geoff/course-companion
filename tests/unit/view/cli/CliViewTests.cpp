@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>      // diverts output from terminal to separate stream
 #include <regex>        // regular expression matching for UUIDs
-#include "view/CliView.hpp"
+#include "view/cli/CliView.hpp"
 #include "controller/TermController.hpp"    // define controller
 #include "utils/utils.hpp"
 

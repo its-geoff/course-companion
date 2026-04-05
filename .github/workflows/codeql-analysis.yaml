@@ -14,16 +14,37 @@ jobs:
     permissions:
       actions: read
       contents: read
-      security-events: write # required to upload SARIF
+      security-events: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.10.1'
+          host: 'linux'
+          target: 'desktop'
+          cache: true
+
+      - name: Install system dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y uuid-dev build-essential
-          sudo apt-get install -y libmysqlcppconn-dev
+          sudo apt-get update && sudo apt-get install -y uuid-dev build-essential python3-pip
+          pip install conan --break-system-packages
+          conan profile detect --force
+
+      - name: Cache Conan packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.conan2
+          key: ${{ runner.os }}-conan-${{ hashFiles('conan.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-conan-
+
+      - name: Install Conan dependencies
+        run: |
+          mkdir -p build/build_main
+          conan install . --lockfile=conan.lock --build=missing -of build/build_main -s build_type=Debug
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -33,16 +54,12 @@ jobs:
 
       - name: Build code
         run: |
-          mkdir -p build/build_main
-          cd build/build_main
-          cmake ../../ -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-          cmake --build . -- -j$(nproc)
-
-      - name: Cache CMake build
-        uses: actions/cache@v3
-        with:
-          path: build/build_main
-          key: ${{ runner.os }}-cmake-${{ hashFiles('**/CMakeLists.txt') }}
+          cmake -S . -B build/build_main \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_TOOLCHAIN_FILE=build/build_main/conan_toolchain.cmake \
+            -DCMAKE_PREFIX_PATH="${Qt6_DIR}"
+          cmake --build build/build_main -- -j$(nproc)
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

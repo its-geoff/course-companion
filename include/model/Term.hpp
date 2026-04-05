@@ -61,6 +61,8 @@ class Term {
         void removeCourse(const std::string& id);
         const Course& findCourse(const std::string& id) const;    // non-mutable version
         Course& findCourse(const std::string& id);    // mutable version
+        static Term fromRow(std::string id, std::string title, std::chrono::year_month_day startDate,
+            std::chrono::year_month_day endDate, bool active);
 
         bool operator==(const Term &other) const;
 };

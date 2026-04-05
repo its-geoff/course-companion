@@ -27,8 +27,8 @@ enable_coverage(TermTests)
 # ---------------------------
 # CliViewTests executable
 # ---------------------------
-add_executable(CliViewTests view/CliViewTests.cpp)
-target_link_libraries(CliViewTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+add_executable(CliViewTests view/cli/CliViewTests.cpp)
+target_link_libraries(CliViewTests PRIVATE CourseCompanion_cli GTest::gtest_main)
 add_test(NAME CliViewTests COMMAND CliViewTests)
 enable_coverage(CliViewTests)
 
@@ -67,13 +67,13 @@ enable_coverage(UtilsTests)
 # ---------------------------
 # Set output directory
 # ---------------------------
-foreach(test_target 
-    AssignmentTests 
-    CourseTests 
-    TermTests 
-    CliViewTests 
-    CourseControllerTests 
-    TermControllerTests 
+foreach(test_target
+    AssignmentTests
+    CourseTests
+    TermTests
+    CliViewTests
+    CourseControllerTests
+    TermControllerTests
     UtilsTests
     )
     

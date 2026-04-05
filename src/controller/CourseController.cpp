@@ -1,23 +1,19 @@
 #include "controller/CourseController.hpp"
 
-/**
- * @file CourseController.cpp
- * @brief Implementation of a controller that manages interaction between the views and Course.
- * 
- * This controller implements functions that integrate the classes together and allow for code 
- * reusability within the main function.
- */
+#include <exception>
+#include "utils/utils.hpp"
 
-#include <exception>            // for exceptions
-#include "utils/utils.hpp"      // for stringLower
+CourseController::CourseController(Term& term)
+    : term_{term}, db_{nullptr}, courseRepo_{nullptr} {}
 
-CourseController::CourseController(Term& term) : term_{term} {}
+CourseController::CourseController(Term& term, DatabaseConnection& db)
+    : term_{term}, db_{&db}, courseRepo_{std::make_unique<CourseRepository>(db, term.getId())} {}
 
 const std::unordered_map<std::string, Course>& CourseController::getCourseList() const {
     return term_.getCourseList();
 }
 
-std::string CourseController::getCourseId(const std::string &title) const {
+std::string CourseController::getCourseId(const std::string& title) const {
     std::string titleLower = utils::stringLower(title);
     auto it = titleToId_.find(titleLower);
 
@@ -36,7 +32,19 @@ AssignmentController& CourseController::getAssignmentController() {
     return *assignmentController_;
 }
 
-// uses info from view to create a Course object then adds it to the list of Courses in Term
+void CourseController::loadFromDb() {
+    if (!courseRepo_) {
+        throw std::logic_error("Database connection is not configured for CourseController.");
+    }
+
+    std::vector<Course> courses = courseRepo_->findByParentId(term_.getId());
+
+    for (Course& course : courses) {
+        titleToId_.emplace(utils::stringLower(course.getTitle()), course.getId());
+        term_.addCourse(course);
+    }
+}
+
 void CourseController::addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate,
     const std::chrono::year_month_day& endDate, int numCredits, bool active) {
     Course course{title, description, startDate, endDate, numCredits, active};
@@ -47,16 +55,24 @@ void CourseController::addCourse(const std::string& title, const std::string& de
         throw std::runtime_error("An unexpected error occurred when adding the course.");
     }
 
-    // make title lowercase in titleToId for easier comparison
-    auto [_, inserted] = titleToId_.emplace(utils::stringLower(course.getTitle()), course.getId());
+    auto inserted = titleToId_.emplace(utils::stringLower(course.getTitle()), course.getId()).second;
 
     if (!inserted) {
-        term_.removeCourse(course.getId());     // erase Course object if there's an error
+        term_.removeCourse(course.getId());
         throw std::logic_error("Course with the same title already exists.");
+    }
+
+    if (courseRepo_) {
+        try {
+            courseRepo_->insert(course);
+        } catch (const std::exception& e) {
+            titleToId_.erase(utils::stringLower(course.getTitle()));
+            term_.removeCourse(course.getId());
+            throw std::runtime_error("Failed to save course.");
+        }
     }
 }
 
-// edits the title of the Course with the given ID
 void CourseController::editTitle(const std::string& id, const std::string& newTitle) {
     Course& course = term_.findCourse(id);
     std::string oldTitle = course.getTitle();
@@ -67,71 +83,92 @@ void CourseController::editTitle(const std::string& id, const std::string& newTi
         throw std::logic_error("A course with this title already exists.");
     }
 
-    // change the title -> id mapping for the new title
     titleToId_.erase(utils::stringLower(oldTitle));
-
-    // set title after insertion to title -> id mapping
     course.setTitle(newTitle);
+
+    if (courseRepo_) {
+        courseRepo_->update(course);
+    }
 }
 
-// edits the description of the Course with the given ID
 void CourseController::editDescription(const std::string& id, const std::string& newDescription) {
     Course& course = term_.findCourse(id);
     course.setDescription(newDescription);
+
+    if (courseRepo_) {
+        courseRepo_->update(course);
+    }
 }
 
-// edits the start date of the Course with the given ID
 void CourseController::editStartDate(const std::string& id, const std::chrono::year_month_day& newStartDate) {
     Course& course = term_.findCourse(id);
     course.setStartDate(newStartDate);
+
+    if (courseRepo_) {
+        courseRepo_->update(course);
+    }
 }
 
-// edits the end date of the Course with the given ID
 void CourseController::editEndDate(const std::string& id, const std::chrono::year_month_day& newEndDate) {
     Course& course = term_.findCourse(id);
     course.setEndDate(newEndDate);
+
+    if (courseRepo_) {
+        courseRepo_->update(course);
+    }
 }
 
-// edits the number of credits of the Course with the given ID
 void CourseController::editNumCredits(const std::string& id, int newNumCredits) {
     Course& course = term_.findCourse(id);
     course.setNumCredits(newNumCredits);
+
+    if (courseRepo_) {
+        courseRepo_->update(course);
+    }
 }
 
-// edits the active flag of the Course with the given ID
 void CourseController::editActive(const std::string& id, bool newActive) {
     Course& course = term_.findCourse(id);
     course.setActive(newActive);
+
+    if (courseRepo_) {
+        courseRepo_->update(course);
+    }
 }
 
-// searches title -> id and erases the named Course from the list
 void CourseController::removeCourse(const std::string& title) {
     std::string id = getCourseId(title);
+
+    if (courseRepo_) {
+        courseRepo_->remove(id);
+    }
+
     term_.removeCourse(id);
     titleToId_.erase(utils::stringLower(title));
 }
 
-// find a Course in courseList based on title; non-mutable (read-only)
 const Course& CourseController::findCourse(const std::string& title) const {
     std::string id = getCourseId(title);
     return term_.findCourse(id);
 }
 
-// find a Course in courseList based on title; mutable (read and write access)
 Course& CourseController::findCourse(const std::string& title) {
     std::string id = getCourseId(title);
     return term_.findCourse(id);
 }
 
-// selects a Course and makes it "active", creating an AssignmentController for that course
 void CourseController::selectCourse(const std::string& title) {
     std::string id = getCourseId(title);
-    
+
     try {
         Course& courseRef = term_.findCourse(id);
         activeCourse_ = &courseRef;
-        assignmentController_.emplace(*activeCourse_);
-    } catch (const std::exception& e) {
+        if (db_) {
+            assignmentController_.emplace(*activeCourse_, *db_);
+        } else {
+            assignmentController_.emplace(*activeCourse_);
+        }
+    } catch (const std::out_of_range& e) {
         throw std::out_of_range("Course not found.");
     }
 }

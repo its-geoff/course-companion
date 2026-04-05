@@ -1,16 +1,57 @@
-#include <iostream>     // for I/O streams
-#include <chrono>       // for date and time variables
+// GUI main function
+#ifdef USE_GUI
+
+#include <QApplication>
+#include "view/qt/MainWindow.hpp"
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    MainWindow window;
+    window.show();
+
+    return app.exec();
+}
+
+// CLI main function
+#else
+
+#include <iostream>
+#include <chrono>
+#include <cstdlib>
 #include "model/Assignment.hpp"
 #include "model/Course.hpp"
 #include "model/Term.hpp"
 #include "controller/TermController.hpp"
-#include "view/CliView.hpp"
+#include "view/cli/CliView.hpp"
+#include "db/DatabaseConnection.hpp"
 
 int main() {
-    TermController controller;
-    CliView view(controller);
+    const char* host     = std::getenv("DB_HOST");
+    const char* port_str = std::getenv("DB_PORT");
+    const char* user     = std::getenv("DB_USER");
+    const char* password = std::getenv("DB_PASSWORD");
+    const char* schema   = std::getenv("DB_SCHEMA");
 
+    if (!host || !port_str || !user || !password || !schema) {
+        std::cerr << "Missing required database environment variables.\n";
+        return 1;
+    }
+
+    DatabaseConnection db(host, static_cast<unsigned int>(std::stoi(port_str)), user, password, schema);
+
+    TermController controller(db);
+    try {
+        controller.loadFromDb();
+    } catch (const std::exception& e) {
+        std::cerr << "Failed to load data from database: " << e.what() << "\n";
+        return 1;
+    }
+
+    CliView view(controller);
     view.run();
 
     return 0;
 }
+
+#endif
