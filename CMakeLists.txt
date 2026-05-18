@@ -96,16 +96,21 @@ endfunction()
 # ------------------------
 if(NOT BUILD_TESTING)
     find_package(Qt6 REQUIRED COMPONENTS Widgets)
+    set(CMAKE_AUTOMOC ON)
 
-    add_library(CourseCompanion_gui
-        include/view/qt/MainWindow.hpp
+    add_library(CourseCompanion_gui OBJECT
         src/view/qt/MainWindow.cpp
+        src/view/qt/TermView.cpp
     )
 
+    target_include_directories(CourseCompanion_gui PUBLIC include)
+
     set_target_properties(CourseCompanion_gui PROPERTIES
-        AUTOMOC ON
-        AUTOUIC ON
-        AUTORCC ON
+        AUTOMOC_MOC_OPTIONS ""
+    )
+    target_sources(CourseCompanion_gui PRIVATE
+        include/view/qt/MainWindow.hpp
+        include/view/qt/TermView.hpp
     )
 
     target_link_libraries(CourseCompanion_gui
@@ -115,12 +120,12 @@ if(NOT BUILD_TESTING)
     )
 
     add_executable(CourseCompanion src/main.cpp)
+    target_include_directories(CourseCompanion PRIVATE include)
     target_compile_definitions(CourseCompanion PRIVATE USE_GUI)
     target_link_libraries(CourseCompanion PRIVATE CourseCompanion_gui)
 
     set_target_properties(CourseCompanion PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-        AUTOMOC ON
         WIN32_EXECUTABLE ON
         MACOSX_BUNDLE ON
     )

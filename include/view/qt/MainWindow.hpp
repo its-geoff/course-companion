@@ -12,10 +12,12 @@
  */
 
 #include <QMainWindow>
-#include <QPushButton>
-#include <QLabel>
-#include <QVBoxLayout>
 #include <QWidget>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QStackedWidget>
 
 /**
  * @class MainWindow
@@ -28,19 +30,15 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
     public:
-        explicit MainWindow(QWidget *parent = nullptr);
-        ~MainWindow() = default;
-
-    private slots:
-        void onButtonClicked();
+        explicit MainWindow(QWidget* parent = nullptr);
 
     private:
         void setupUi();
 
-        QWidget*     centralWidget_;
-        QVBoxLayout* layout_;
-        QLabel*      label_;
-        QPushButton* button_;
+        QWidget*        centralWidget_;
+        QHBoxLayout*    layout_;       // was QVBoxLayout*, now QHBoxLayout*
+        QWidget*        sidebar_;      // new
+        QStackedWidget* stack_;        // new — replaces mainArea_
 };
 
 #endif // MAINWINDOW_HPP
