@@ -8,6 +8,7 @@
 #include <QProgressBar>
 #include <QScrollArea>
 #include <QFrame>
+#include <QString>
 
 class TermView : public QWidget {
     Q_OBJECT

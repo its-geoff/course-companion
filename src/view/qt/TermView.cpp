@@ -8,9 +8,8 @@ TermView::TermView(QWidget* parent) : QWidget(parent) {
     setupHeader();
     setupProgress();
     setupCourseList();
+    mainLayout_->addStretch();  // push the footer to the bottom
     setupFooter();
-
-    mainLayout_->addStretch();  // pushes footer to bottom later
 }
 
 void TermView::setupHeader() {
@@ -28,12 +27,12 @@ void TermView::setupHeader() {
     termTitle_ = new QLabel("Fall 2024", titleRow);
     termTitle_->setStyleSheet("font-size: 22px; font-weight: 500;");
 
-    auto* termTypeLabel_ = new QLabel("Term", titleRow);
-    termTypeLabel_->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
-    termTypeLabel_->setAlignment(Qt::AlignBottom);  // align to baseline of title
+    auto* termTypeLabel = new QLabel("Term", titleRow);
+    termTypeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
+    termTypeLabel->setAlignment(Qt::AlignBottom);  // align to baseline of title
 
     titleLayout->addWidget(termTitle_);
-    titleLayout->addWidget(termTypeLabel_);
+    titleLayout->addWidget(termTypeLabel);
     titleLayout->addStretch();  // push both labels to the left
 
     dateRangeLabel_ = new QLabel("Aug 26 – Dec 20, 2024", header);
@@ -56,8 +55,8 @@ void TermView::setupProgress() {
     auto* labelLayout = new QHBoxLayout(labelRow);
     labelLayout->setContentsMargins(0, 0, 0, 0);
 
-    auto* sectionTitle = new QLabel("Term progress", labelRow);
-    sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase;");
+    auto* sectionTitle = new QLabel("TERM PROGRESS", labelRow);
+    sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999;");
 
     progressLabel_ = new QLabel("Week 11 of 16", labelRow);
     progressLabel_->setStyleSheet("font-size: 12px; color: #666;");

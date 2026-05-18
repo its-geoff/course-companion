@@ -36,8 +36,15 @@ void MainWindow::setupUi() {
     auto* coursePage     = new QWidget();
     auto* assignmentPage = new QWidget();
 
-    new QLabel("Course View", coursePage);
-    new QLabel("Assignment View", assignmentPage);
+    auto* courseLayout = new QVBoxLayout(coursePage);
+    courseLayout->setContentsMargins(16, 16, 16, 16);
+    courseLayout->addWidget(new QLabel("Course View", coursePage));
+    courseLayout->addStretch();
+
+    auto* assignmentLayout = new QVBoxLayout(assignmentPage);
+    assignmentLayout->setContentsMargins(16, 16, 16, 16);
+    assignmentLayout->addWidget(new QLabel("Assignment View", assignmentPage));
+    assignmentLayout->addStretch();
 
     stack_->addWidget(termPage);
     stack_->addWidget(coursePage);
