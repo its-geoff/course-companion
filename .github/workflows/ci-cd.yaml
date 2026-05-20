@@ -124,6 +124,37 @@ jobs:
           TEST_DB_SCHEMA: course_companion_test
         run: uv run pytest
 
+  test-server:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Format check (black)
+        run: uv run black --check .
+
+      - name: Import sort check (isort)
+        run: uv run isort --check .
+
+      - name: Docstring format check (docformatter)
+        run: uv run docformatter --check --recursive .
+
+      - name: Lint (flake8)
+        run: uv run flake8 .
+
+      - name: Run tests
+        run: uv run pytest
+
   docker:
     needs: [ test-client, test-server ]
     runs-on: ubuntu-latest
