@@ -1,6 +1,7 @@
 .env
 .vscode
 .zshrc
+.pytest_cache
 CMakeLists.txt.user
 CMakeUserPresets.json
 build/
