@@ -12,9 +12,6 @@ OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/test
 mkdir -p "$OUTPUT_DIR"
 
 ENABLE_COVERAGE=0
-BUILD_DIR="build_main"
-
-ENABLE_COVERAGE=0
 VERBOSE=0
 
 while getopts ":Vc" opt; do
