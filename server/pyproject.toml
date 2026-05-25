@@ -20,3 +20,26 @@ dev = [
     "isort>=8.0.1",
     "pytest>=9.0.3",
 ]
+
+[tool.setuptools.packages.find]
+where = ["app"]
+
+[tool.uv]
+package = true
+
+[tool.isort]
+profile = "black"
+line_length = 79
+skip = [".venv", ".git", "__pycache__"]
+
+[tool.black]
+line-length = 79
+target-version = ["py313"]
+
+[tool.pyright]
+ignore = ["**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["app"]
+addopts = "--cov=src --cov-report=xml:../docs/evaluation/coverage-report/coverage.xml --cov-report=html:../docs/evaluation/coverage-report/html --cov-report=term-missing"
