@@ -49,7 +49,9 @@ def handle_integrity_error(error: pymysql.IntegrityError):
 
         raise HTTPException(status_code=400, detail="Invalid related record")
 
-    raise HTTPException(status_code=400, detail="Database constraint violation")
+    raise HTTPException(
+        status_code=400, detail="Database constraint violation"
+    )
 
 
 @router.get("/", response_model=list[CourseResponse])

@@ -34,7 +34,8 @@ def handle_integrity_error(error: pymysql.IntegrityError):
         if "title" in error_message:
             raise HTTPException(
                 status_code=409,
-                detail="An assignment with this title already exists in this course",
+                detail="An assignment with this title already exists in "
+                "this course",
             )
 
         if "PRIMARY" in error_message or "id" in error_message:
@@ -49,7 +50,9 @@ def handle_integrity_error(error: pymysql.IntegrityError):
 
         raise HTTPException(status_code=400, detail="Invalid related record")
 
-    raise HTTPException(status_code=400, detail="Database constraint violation")
+    raise HTTPException(
+        status_code=400, detail="Database constraint violation"
+    )
 
 
 @router.get("/", response_model=list[AssignmentResponse])
