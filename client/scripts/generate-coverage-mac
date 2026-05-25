@@ -50,6 +50,13 @@ for bin in "$TEST_BIN_DIR"/*; do
         > "$LCOV_DIR/$bin_name.info"
 done
 
+lcov -a "../coverage/lcov/AssignmentControllerTests.info" -a "../coverage/lcov/AssignmentTests.info" \
+    -a "../coverage/lcov/CliViewTests.info" -a "../coverage/lcov/ControllerIntegrationTests.info" \
+    -a "../coverage/lcov/CourseAssignmentIntegrationTests.info" -a "../coverage/lcov/CourseControllerTests.info" \
+    -a "../coverage/lcov/CourseTests.info" -a "../coverage/lcov/TermControllerTests.info" \
+    -a "../coverage/lcov/TermCourseIntegrationTests.info" -a "../coverage/lcov/TermTests.info" \
+    -a "../coverage/lcov/UtilsTests.info" -o lcov.info
+
 if [[ $HTML_REPORT -eq 1 ]]; then
     mkdir -p "$HTML_DIR"
     echo "Generating HTML report in $HTML_DIR"
