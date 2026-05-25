@@ -19,6 +19,7 @@ dev = [
     "flake8>=7.3.0",
     "isort>=8.0.1",
     "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -42,4 +43,3 @@ ignore = ["**/*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["app"]
-addopts = "--cov=src --cov-report=xml:../docs/evaluation/coverage-report/coverage.xml --cov-report=html:../docs/evaluation/coverage-report/html --cov-report=term-missing"

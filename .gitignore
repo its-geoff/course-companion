@@ -3,6 +3,7 @@
 .zshrc
 .pytest_cache
 .python-version
+.coverage
 __pycache__
 CMakeLists.txt.user
 CMakeUserPresets.json

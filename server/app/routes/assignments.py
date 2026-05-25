@@ -26,6 +26,32 @@ class AssignmentResponse(AssignmentCreate):
     pass
 
 
+def handle_integrity_error(error: pymysql.IntegrityError):
+    error_code = error.args[0]
+    error_message = str(error)
+
+    if error_code == 1062:
+        if "title" in error_message:
+            raise HTTPException(
+                status_code=409,
+                detail="An assignment with this title already exists in this course",
+            )
+
+        if "PRIMARY" in error_message or "id" in error_message:
+            raise HTTPException(
+                status_code=409,
+                detail="An assignment with this ID already exists",
+            )
+
+    if error_code == 1452:
+        if "course_id" in error_message:
+            raise HTTPException(status_code=400, detail="Invalid course_id")
+
+        raise HTTPException(status_code=400, detail="Invalid related record")
+
+    raise HTTPException(status_code=400, detail="Database constraint violation")
+
+
 @router.get("/", response_model=list[AssignmentResponse])
 def get_assignments(db: Connection = Depends(get_db)):
     with db.cursor() as cursor:
@@ -58,8 +84,10 @@ def get_assignment(assignment_id: str, db: Connection = Depends(get_db)):
             (assignment_id,),
         )
         assignment = cursor.fetchone()
+
     if not assignment:
         raise HTTPException(status_code=404, detail="Assignment not found")
+
     return assignment
 
 
@@ -84,13 +112,12 @@ def create_assignment(
                     assignment.grade,
                 ),
             )
+
         db.commit()
-    except pymysql.IntegrityError:
-        raise HTTPException(
-            status_code=409,
-            detail="An assignment with this title already exists in "
-            "this course",
-        )
+
+    except pymysql.IntegrityError as error:
+        handle_integrity_error(error)
+
     return assignment
 
 
@@ -100,6 +127,8 @@ def update_assignment(
     assignment: AssignmentCreate,
     db: Connection = Depends(get_db),
 ):
+    rowcount = 0
+
     try:
         with db.cursor() as cursor:
             cursor.execute(
@@ -116,24 +145,30 @@ def update_assignment(
                     assignment_id,
                 ),
             )
+            rowcount = cursor.rowcount
+
         db.commit()
-    except pymysql.IntegrityError:
-        raise HTTPException(
-            status_code=409,
-            detail="An assignment with this title already exists in "
-            "this course",
-        )
-    if cursor.rowcount == 0:
+
+    except pymysql.IntegrityError as error:
+        handle_integrity_error(error)
+
+    if rowcount == 0:
         raise HTTPException(status_code=404, detail="Assignment not found")
+
     return assignment
 
 
 @router.delete("/{assignment_id}", status_code=204)
 def delete_assignment(assignment_id: str, db: Connection = Depends(get_db)):
+    rowcount = 0
+
     with db.cursor() as cursor:
         cursor.execute(
             "DELETE FROM assignments WHERE id = %s", (assignment_id,)
         )
+        rowcount = cursor.rowcount
+
     db.commit()
-    if cursor.rowcount == 0:
+
+    if rowcount == 0:
         raise HTTPException(status_code=404, detail="Assignment not found")

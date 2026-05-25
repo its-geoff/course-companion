@@ -22,6 +22,29 @@ class TermResponse(TermCreate):
     pass
 
 
+def handle_integrity_error(error: pymysql.IntegrityError):
+    error_code = error.args[0]
+    error_message = str(error)
+
+    if error_code == 1062:
+        if "title" in error_message:
+            raise HTTPException(
+                status_code=409,
+                detail="A term with this title already exists",
+            )
+
+        if "PRIMARY" in error_message or "id" in error_message:
+            raise HTTPException(
+                status_code=409,
+                detail="A term with this ID already exists",
+            )
+
+    raise HTTPException(
+        status_code=400,
+        detail="Database constraint violation",
+    )
+
+
 @router.get("/", response_model=list[TermResponse])
 def get_terms(db: Connection = Depends(get_db)):
     with db.cursor() as cursor:
@@ -40,8 +63,10 @@ def get_term(term_id: str, db: Connection = Depends(get_db)):
             (term_id,),
         )
         term = cursor.fetchone()
+
     if not term:
         raise HTTPException(status_code=404, detail="Term not found")
+
     return term
 
 
@@ -60,11 +85,12 @@ def create_term(term: TermCreate, db: Connection = Depends(get_db)):
                     term.active,
                 ),
             )
+
         db.commit()
-    except pymysql.IntegrityError:
-        raise HTTPException(
-            status_code=409, detail="A term with this title already exists"
-        )
+
+    except pymysql.IntegrityError as error:
+        handle_integrity_error(error)
+
     return term
 
 
@@ -72,6 +98,8 @@ def create_term(term: TermCreate, db: Connection = Depends(get_db)):
 def update_term(
     term_id: str, term: TermCreate, db: Connection = Depends(get_db)
 ):
+    rowcount = 0
+
     try:
         with db.cursor() as cursor:
             cursor.execute(
@@ -85,20 +113,29 @@ def update_term(
                     term_id,
                 ),
             )
+
+            rowcount = cursor.rowcount
+
         db.commit()
-    except pymysql.IntegrityError:
-        raise HTTPException(
-            status_code=409, detail="A term with this title already exists"
-        )
-    if cursor.rowcount == 0:
+
+    except pymysql.IntegrityError as error:
+        handle_integrity_error(error)
+
+    if rowcount == 0:
         raise HTTPException(status_code=404, detail="Term not found")
+
     return term
 
 
 @router.delete("/{term_id}", status_code=204)
 def delete_term(term_id: str, db: Connection = Depends(get_db)):
+    rowcount = 0
+
     with db.cursor() as cursor:
         cursor.execute("DELETE FROM terms WHERE id = %s", (term_id,))
+        rowcount = cursor.rowcount
+
     db.commit()
-    if cursor.rowcount == 0:
+
+    if rowcount == 0:
         raise HTTPException(status_code=404, detail="Term not found")

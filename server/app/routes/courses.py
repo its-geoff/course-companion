@@ -26,6 +26,32 @@ class CourseResponse(CourseCreate):
     pass
 
 
+def handle_integrity_error(error: pymysql.IntegrityError):
+    error_code = error.args[0]
+    error_message = str(error)
+
+    if error_code == 1062:
+        if "title" in error_message:
+            raise HTTPException(
+                status_code=409,
+                detail="A course with this title already exists in this term",
+            )
+
+        if "PRIMARY" in error_message or "id" in error_message:
+            raise HTTPException(
+                status_code=409,
+                detail="A course with this ID already exists",
+            )
+
+    if error_code == 1452:
+        if "term_id" in error_message:
+            raise HTTPException(status_code=400, detail="Invalid term_id")
+
+        raise HTTPException(status_code=400, detail="Invalid related record")
+
+    raise HTTPException(status_code=400, detail="Database constraint violation")
+
+
 @router.get("/", response_model=list[CourseResponse])
 def get_courses(db: Connection = Depends(get_db)):
     with db.cursor() as cursor:
@@ -56,8 +82,10 @@ def get_course(course_id: str, db: Connection = Depends(get_db)):
             (course_id,),
         )
         course = cursor.fetchone()
+
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
+
     return course
 
 
@@ -80,12 +108,12 @@ def create_course(course: CourseCreate, db: Connection = Depends(get_db)):
                     course.active,
                 ),
             )
+
         db.commit()
-    except pymysql.IntegrityError:
-        raise HTTPException(
-            status_code=409,
-            detail="A course with this title already exists in this term",
-        )
+
+    except pymysql.IntegrityError as error:
+        handle_integrity_error(error)
+
     return course
 
 
@@ -93,6 +121,8 @@ def create_course(course: CourseCreate, db: Connection = Depends(get_db)):
 def update_course(
     course_id: str, course: CourseCreate, db: Connection = Depends(get_db)
 ):
+    rowcount = 0
+
     try:
         with db.cursor() as cursor:
             cursor.execute(
@@ -109,21 +139,28 @@ def update_course(
                     course_id,
                 ),
             )
+            rowcount = cursor.rowcount
+
         db.commit()
-    except pymysql.IntegrityError:
-        raise HTTPException(
-            status_code=409,
-            detail="A course with this title already exists in this term",
-        )
-    if cursor.rowcount == 0:
+
+    except pymysql.IntegrityError as error:
+        handle_integrity_error(error)
+
+    if rowcount == 0:
         raise HTTPException(status_code=404, detail="Course not found")
+
     return course
 
 
 @router.delete("/{course_id}", status_code=204)
 def delete_course(course_id: str, db: Connection = Depends(get_db)):
+    rowcount = 0
+
     with db.cursor() as cursor:
         cursor.execute("DELETE FROM courses WHERE id = %s", (course_id,))
+        rowcount = cursor.rowcount
+
     db.commit()
-    if cursor.rowcount == 0:
+
+    if rowcount == 0:
         raise HTTPException(status_code=404, detail="Course not found")

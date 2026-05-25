@@ -17,17 +17,28 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 @pytest.fixture(scope="session")
 def db_connection() -> Generator[Connection[DictCursor], None, None]:
+    db_user = os.getenv("DB_USER")
+    db_password = os.getenv("DB_PASSWORD")
+    db_name = os.getenv("DB_NAME") or os.getenv("TEST_DB_SCHEMA")
+
+    if not db_user:
+        raise ValueError("DB_USER not set")
+
+    if not db_password:
+        raise ValueError("DB_PASSWORD not set")
+
+    if not db_name:
+        raise ValueError("DB_NAME or TEST_DB_SCHEMA not set")
+
     conn = pymysql.connect(
         host=os.getenv("DB_HOST") or "localhost",
         port=int(os.getenv("DB_PORT") or 3306),
-        user=os.getenv("DB_USER")
-        or (_ for _ in ()).throw(ValueError("DB_USER not set")),
-        password=os.getenv("DB_PASSWORD")
-        or (_ for _ in ()).throw(ValueError("DB_PASSWORD not set")),
-        database=os.getenv("DB_NAME")
-        or (_ for _ in ()).throw(ValueError("DB_NAME not set")),
+        user=db_user,
+        password=db_password,
+        database=db_name,
         cursorclass=pymysql.cursors.DictCursor,
     )
+
     yield conn
     conn.close()
 

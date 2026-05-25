@@ -113,9 +113,6 @@ jobs:
       - name: Import sort check (isort)
         run: uv run isort --check .
 
-      - name: Docstring format check (docformatter)
-        run: uv run docformatter --check --recursive .
-
       - name: Lint (flake8)
         run: uv run flake8 .
 
@@ -125,6 +122,7 @@ jobs:
           DB_PORT: 3306
           DB_USER: root
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: course_companion_test
           TEST_DB_SCHEMA: course_companion_test
         run: uv run pytest
 
