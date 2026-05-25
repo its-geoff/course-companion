@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e  # exit on first error
+
+echo "Formatting code..."
+uv run --quiet black .
+uv run --quiet isort .
+
+echo "Linting..."
+uv run --quiet flake8 .
+
+echo "All checks passed."

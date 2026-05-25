@@ -42,6 +42,7 @@ jobs:
             ${{ runner.os }}-conan-
 
       - name: Install Conan dependencies
+        working-directory: client
         run: |
           mkdir -p build/build_main
           conan install . --lockfile=conan.lock --build=missing -of build/build_main -s build_type=Debug
@@ -53,6 +54,7 @@ jobs:
           queries: security-and-quality
 
       - name: Build code
+        working-directory: client
         run: |
           cmake -S . -B build/build_main \
             -DCMAKE_BUILD_TYPE=Debug \
