@@ -8,7 +8,11 @@ usage() {
     exit 1
 }
 
-source ~/course-companion/.env
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENV_FILE="${ENV_FILE:-"$SCRIPT_DIR/../../.env"}"
+if [[ -f "$ENV_FILE" ]]; then
+    source "$ENV_FILE"
+fi
 
 OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
 mkdir -p "$OUTPUT_DIR"
