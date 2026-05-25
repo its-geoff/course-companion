@@ -1,4 +1,3 @@
-from collections.abc import Generator
 import os
 from collections.abc import Generator
 
