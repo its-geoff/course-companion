@@ -8,9 +8,7 @@ usage() {
     exit 1
 }
 
-# ---------------------------
 # Parse options
-# ---------------------------
 BUILD_TESTS=0
 ENABLE_COVERAGE=0
 BUILD_DIR="build_main"
@@ -30,16 +28,11 @@ while getopts ":tc" opt; do
     esac
 done
 
-# ---------------------------
 # Set directories
-# ---------------------------
-
 mkdir -p "$BUILD_DIR"
 COVERAGE_DIR="$(pwd)/coverage"
 
-# ---------------------------
 # Set compiler for macOS
-# ---------------------------
 OS_NAME=$(uname)
 if [[ "$OS_NAME" == "Darwin" ]]; then
     # Force AppleClang for coverage to avoid linker/hash issues
@@ -54,17 +47,13 @@ if [[ "$OS_NAME" == "Darwin" ]]; then
     fi
 fi
 
-# ---------------------------
 # Run Conan install
-# ---------------------------
 echo "Installing dependencies..."
 conan install .. --build=missing -of "$BUILD_DIR"
 
 CMAKE_TOOLCHAIN_FILE="$(pwd)/$BUILD_DIR/conan_toolchain.cmake"
 
-# ---------------------------
 # Configure CMake
-# ---------------------------
 CMAKE_ARGS="-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE"
 if [[ $BUILD_TESTS -eq 1 ]]; then
     CMAKE_ARGS="$CMAKE_ARGS -DBUILD_TESTING=ON"

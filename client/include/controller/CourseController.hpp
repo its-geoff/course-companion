@@ -5,12 +5,9 @@
 #include <chrono>
 #include <unordered_map>
 #include <optional>
-#include <memory>
 #include "model/Term.hpp"
-#include "controller/AssignmentController.hpp"
-#include "db/DatabaseConnection.hpp"
-#include "db/CourseRepository.hpp"
 #include "model/Course.hpp"
+#include "controller/AssignmentController.hpp"
 
 class CourseController {
     private:
@@ -18,12 +15,9 @@ class CourseController {
         Course* activeCourse_ = nullptr;
         std::unordered_map<std::string, std::string> titleToId_{};
         std::optional<AssignmentController> assignmentController_{};
-        DatabaseConnection* db_ = nullptr;
-        std::unique_ptr<CourseRepository> courseRepo_;
 
     public:
-        CourseController(Term& term);                       // no-db constructor for unit tests
-        CourseController(Term& term, DatabaseConnection& db);
+        explicit CourseController(Term& term);
         CourseController(const CourseController&) = delete;
         CourseController& operator=(const CourseController&) = delete;
         CourseController(CourseController&&) = delete;
@@ -33,7 +27,6 @@ class CourseController {
         std::string getCourseId(const std::string& title) const;
         AssignmentController& getAssignmentController();
 
-        void loadFromDb();
         void addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate,
             const std::chrono::year_month_day& endDate, int numCredits, bool active);
         void editTitle(const std::string& id, const std::string& newTitle);
@@ -48,4 +41,4 @@ class CourseController {
         void selectCourse(const std::string& title);
 };
 
-#endif
+#endif  // COURSECONTROLLER_HPP

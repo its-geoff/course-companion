@@ -4,22 +4,16 @@
 #include <string>
 #include <chrono>
 #include <unordered_map>
-#include <memory>
 #include "model/Course.hpp"
 #include "model/Assignment.hpp"
-#include "db/DatabaseConnection.hpp"
-#include "db/AssignmentRepository.hpp"
 
 class AssignmentController {
     private:
         Course& course_;
         std::unordered_map<std::string, std::string> titleToId_{};
-        DatabaseConnection* db_ = nullptr;
-        std::unique_ptr<AssignmentRepository> assignmentRepo_;
 
     public:
-        AssignmentController(Course& course);               // no-db constructor for unit tests
-        AssignmentController(Course& course, DatabaseConnection& db);
+        explicit AssignmentController(Course& course);
         AssignmentController(const AssignmentController&) = delete;
         AssignmentController& operator=(const AssignmentController&) = delete;
         AssignmentController(AssignmentController&&) = delete;
@@ -28,7 +22,6 @@ class AssignmentController {
         const std::unordered_map<std::string, Assignment>& getAssignmentList() const;
         std::string getAssignmentId(const std::string& title) const;
 
-        void loadFromDb();
         void addAssignment(const std::string& title, const std::string& description, const std::string& category,
             const std::chrono::year_month_day& dueDate, bool completed, float grade);
         void editTitle(const std::string& id, const std::string& newTitle);
@@ -43,4 +36,4 @@ class AssignmentController {
         Assignment& findAssignment(const std::string& title);
 };
 
-#endif
+#endif  // ASSIGNMENTCONTROLLER_HPP

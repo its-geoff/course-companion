@@ -3,11 +3,7 @@
 #include <exception>
 #include "utils/utils.hpp"
 
-AssignmentController::AssignmentController(Course& course)
-    : course_{course}, db_{nullptr}, assignmentRepo_{nullptr} {}
-
-AssignmentController::AssignmentController(Course& course, DatabaseConnection& db)
-    : course_{course}, db_{&db}, assignmentRepo_{std::make_unique<AssignmentRepository>(db, course.getId())} {}
+AssignmentController::AssignmentController(Course& course) : course_{course} {}
 
 const std::unordered_map<std::string, Assignment>& AssignmentController::getAssignmentList() const {
     return course_.getAssignmentList();
@@ -22,19 +18,6 @@ std::string AssignmentController::getAssignmentId(const std::string& title) cons
     }
 
     return it->second;
-}
-
-void AssignmentController::loadFromDb() {
-    if (!assignmentRepo_) {
-        throw std::logic_error("AssignmentController::loadFromDb() requires a database-backed repository.");
-    }
-
-    std::vector<Assignment> assignments = assignmentRepo_->findByParentId(course_.getId());
-
-    for (Assignment& assignment : assignments) {
-        titleToId_.emplace(utils::stringLower(assignment.getTitle()), assignment.getId());
-        course_.addAssignment(assignment);
-    }
 }
 
 void AssignmentController::addAssignment(const std::string& title, const std::string& description, const std::string& category,
@@ -57,17 +40,6 @@ void AssignmentController::addAssignment(const std::string& title, const std::st
         course_.removeAssignment(assignment.getId());
         throw std::logic_error("Assignment with the same title already exists.");
     }
-
-    if (assignmentRepo_) {
-        try {
-            assignmentRepo_->insert(assignment);
-        } catch (const std::exception& e) {
-            // roll back previous state if saving fails
-            titleToId_.erase(utils::stringLower(assignment.getTitle()));
-            course_.removeAssignment(assignment.getId());
-            throw std::runtime_error("Failed to save assignment.");
-        }
-    }
 }
 
 void AssignmentController::editTitle(const std::string& id, const std::string& newTitle) {
@@ -82,19 +54,11 @@ void AssignmentController::editTitle(const std::string& id, const std::string& n
 
     titleToId_.erase(utils::stringLower(oldTitle));
     assignment.setTitle(newTitle);
-
-    if (assignmentRepo_) {
-        assignmentRepo_->update(assignment);
-    }
 }
 
 void AssignmentController::editDescription(const std::string& id, const std::string& newDescription) {
     Assignment& assignment = course_.findAssignment(id);
     assignment.setDescription(newDescription);
-
-    if (assignmentRepo_) {
-        assignmentRepo_->update(assignment);
-    }
 }
 
 void AssignmentController::editCategory(const std::string& id, const std::string& newCategory) {
@@ -109,19 +73,11 @@ void AssignmentController::editCategory(const std::string& id, const std::string
     }
 
     assignment.setCategory(newCategory);
-
-    if (assignmentRepo_) {
-        assignmentRepo_->update(assignment);
-    }
 }
 
 void AssignmentController::editDueDate(const std::string& id, const std::chrono::year_month_day& newDueDate) {
     Assignment& assignment = course_.findAssignment(id);
     assignment.setDueDate(newDueDate);
-
-    if (assignmentRepo_) {
-        assignmentRepo_->update(assignment);
-    }
 }
 
 void AssignmentController::addGrade(const std::string& title, float grade) {
@@ -131,10 +87,6 @@ void AssignmentController::addGrade(const std::string& title, float grade) {
     grade = utils::floatRound(grade, 2);
     selectedAssignment.setGrade(grade);
     selectedAssignment.setCompleted(true);
-
-    if (assignmentRepo_) {
-        assignmentRepo_->update(selectedAssignment);
-    }
 }
 
 void AssignmentController::addGrade(const std::string& title, float pointsEarned, float totalPoints) {
@@ -152,19 +104,10 @@ void AssignmentController::removeGrade(const std::string& title) {
 
     selectedAssignment.setGrade(0.0f);
     selectedAssignment.setCompleted(false);
-
-    if (assignmentRepo_) {
-        assignmentRepo_->update(selectedAssignment);
-    }
 }
 
 void AssignmentController::removeAssignment(const std::string& title) {
     std::string id = getAssignmentId(title);
-
-    if (assignmentRepo_) {
-        assignmentRepo_->remove(id);
-    }
-
     course_.removeAssignment(id);
     titleToId_.erase(utils::stringLower(title));
 }

@@ -1,17 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 
-# ------------------------
-# Project metadata
-# ------------------------
 project(CourseCompanion
     VERSION 0.4.0
     DESCRIPTION "Homework tracker that allows students to track homework assignments, estimate grades, and organize class schedules."
     LANGUAGES CXX
 )
 
-# ------------------------
-# C++ standard
-# ------------------------
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -22,15 +16,8 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# ------------------------
-# Include directories
-# ------------------------
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# ------------------------------------------
-# Core library (no Qt, no CLI view)
-# Used by both GUI, CLI, and tests
-# ------------------------------------------
 add_library(CourseCompanion_lib
     src/model/Assignment.cpp
     src/model/Course.cpp
@@ -38,35 +25,15 @@ add_library(CourseCompanion_lib
     src/controller/AssignmentController.cpp
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
-    src/db/DatabaseConnection.cpp
-    src/db/AssignmentRepository.cpp
-    src/db/TermRepository.cpp
-    src/db/CourseRepository.cpp
     src/utils/utils.cpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
-set(MYSQL_CONCPP_STATIC ON)
-find_package(mysql-concpp REQUIRED)
-
-get_target_property(_mysql_inc mysql::concpp INTERFACE_INCLUDE_DIRECTORIES)
-message(STATUS "mysql include dirs: ${_mysql_inc}")
-
-target_include_directories(CourseCompanion_lib PUBLIC
-    ${_mysql_inc}
-)
-
 target_link_libraries(CourseCompanion_lib
-    PUBLIC
-        mysql::concpp-xdevapi-static
     PRIVATE
         $<$<PLATFORM_ID:Linux>:uuid>
 )
 
-# -------------------------------
-# Helper function for coverage
-# -------------------------------
 function(enable_coverage target)
     if(NOT ENABLE_COVERAGE)
         return()
@@ -91,9 +58,6 @@ function(enable_coverage target)
     endif()
 endfunction()
 
-# ------------------------
-# Main executable (GUI)
-# ------------------------
 if(NOT BUILD_TESTING)
     find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
@@ -126,9 +90,6 @@ if(NOT BUILD_TESTING)
     )
 endif()
 
-# ------------------------
-# Test build (CLI)
-# ------------------------
 if(BUILD_TESTING)
     enable_testing()
 

@@ -7,8 +7,6 @@ usage() {
     exit 1
 }
 
-source ~/course-companion/.env
-
 option_given=0
 
 while getopts ":mt" opt; do
@@ -19,8 +17,10 @@ while getopts ":mt" opt; do
             cmake --build . --target CourseCompanion
             ;;
         t)
-            # update when new tests are added
-            cmake --build . --target AssignmentTests CourseTests UtilsTests
+            cmake --build . --target AssignmentTests CourseTests TermTests CliViewTests \
+                AssignmentControllerTests CourseControllerTests TermControllerTests \
+                UtilsTests CourseAssignmentIntegrationTests TermCourseIntegrationTests \
+                ControllerIntegrationTests
             ;;
         \?)
             echo "Invalid option: -$opt" >&2

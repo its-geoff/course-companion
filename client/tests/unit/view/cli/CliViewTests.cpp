@@ -961,14 +961,14 @@ TEST(CliViewTest, ViewAssignmentsIncomplete) {
 
 TEST(CliViewTest, DefaultOstreamCout) {
     TermController controller;
-
-    std::ostringstream captured;
+    std::istringstream input("x\n");
     // redirect output buffer
-    auto *oldBuf = std::cout.rdbuf(captured.rdbuf());
-    
+    std::ostringstream captured;
+    auto* oldBuf = std::cout.rdbuf(captured.rdbuf());
+
     // create scope for view
     {
-        CliView view(controller);
+        CliView view(controller, input, std::cout);
         view.run();
     }
 
@@ -980,22 +980,14 @@ TEST(CliViewTest, DefaultOstreamCout) {
 
 TEST(CliViewTest, DefaultIstreamCin) {
     TermController controller;
-
-    std::istringstream fakeInput("x\n");
-    // redirect input buffer
-    auto *oldCinBuf = std::cin.rdbuf(fakeInput.rdbuf());
-
-    std::ostringstream fakeOutput;
-    auto* oldCoutBuf = std::cout.rdbuf(fakeOutput.rdbuf());
+    std::istringstream input("x\n");
+    std::ostringstream output;
 
     // create scope for view
     {
-        CliView view(controller);
+        CliView view(controller, input, output);
         view.run();
     }
-
-    std::cin.rdbuf(oldCinBuf);  // restore old buffer
-    std::cout.rdbuf(oldCoutBuf);
 
     // check that input didn't hang
     SUCCEED();
