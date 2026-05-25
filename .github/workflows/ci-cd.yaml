@@ -72,11 +72,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD || 'test_password' }}
     services:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD || 'test_password' }}
+          MYSQL_ROOT_PASSWORD: ${{ env.DB_PASSWORD }}
           MYSQL_DATABASE: course_companion_test
         ports:
           - 3306:3306
@@ -102,7 +104,7 @@ jobs:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
           DB_USER: root
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD || 'test_password' }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
           TEST_DB_SCHEMA: course_companion_test
         run: uv run python scripts/init-db.py
 
@@ -120,7 +122,7 @@ jobs:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
           DB_USER: root
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD || 'test_password' }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
           TEST_DB_SCHEMA: course_companion_test
         run: uv run pytest
 
