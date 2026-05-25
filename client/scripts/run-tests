@@ -1,10 +1,10 @@
 #!/bin/bash
-set -e  # Exit on any error
+set -euo pipefail
 
 usage() {
-    echo "Usage: $0 [-t] [-c]"
-    echo "  -t: Build test files"
-    echo "  -c: Enable code coverage"
+    echo "Usage: run-tests [-V] [-c]"
+    echo "  -V: verbose test output"
+    echo "  -c: enable coverage (generate .profraw files)"
     exit 1
 }
 
@@ -14,16 +14,19 @@ mkdir -p "$OUTPUT_DIR"
 ENABLE_COVERAGE=0
 BUILD_DIR="build_main"
 
-while getopts ":tc" opt; do
+ENABLE_COVERAGE=0
+VERBOSE=0
+
+while getopts ":Vc" opt; do
     case $opt in
-        t) 
-            BUILD_TESTS=1
-            BUILD_DIR="build_test"
+        V)
+            VERBOSE=1
             ;;
-        c) 
+        c)
             ENABLE_COVERAGE=1
             ;;
-        \?) 
+        \?)
+            echo "Invalid option: -$opt" >&2
             usage
             ;;
     esac
@@ -33,7 +36,8 @@ PARENT_DIR="$(pwd)/.."
 COVERAGE_DIR="$PARENT_DIR/coverage"
 
 if [[ $ENABLE_COVERAGE -eq 1 ]]; then
-    CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON"
+    export LLVM_PROFILE_FILE="$COVERAGE_DIR/profraw/%p.profraw"
+    echo "Coverage enabled. LLVM_PROFILE_FILE set to $LLVM_PROFILE_FILE"
 fi
 
 if [[ $VERBOSE -eq 1 ]]; then
