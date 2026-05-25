@@ -38,7 +38,7 @@ jobs:
           conan profile detect --force
 
       - name: Cache Conan packages
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ~/.conan2
           key: ${{ runner.os }}-conan-${{ hashFiles('client/conan.lock') }}
@@ -148,7 +148,7 @@ jobs:
 
       - name: Extract metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
@@ -156,7 +156,7 @@ jobs:
             type=semver,pattern={{version}}
 
       - name: Build and push client image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: ./client
           push: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')) }}
