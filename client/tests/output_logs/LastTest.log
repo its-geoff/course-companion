@@ -1,0 +1,1307 @@
+Start testing: May 24 22:31 PDT
+----------------------------------------------------------
+1/11 Testing: AssignmentTests
+1/11 Test: AssignmentTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/AssignmentTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
+"AssignmentTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 71 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 71 tests from AssignmentTest
+[ RUN      ] AssignmentTest.IdGetter
+[       OK ] AssignmentTest.IdGetter (0 ms)
+[ RUN      ] AssignmentTest.TitleGetter
+[       OK ] AssignmentTest.TitleGetter (0 ms)
+[ RUN      ] AssignmentTest.DescriptionGetter
+[       OK ] AssignmentTest.DescriptionGetter (0 ms)
+[ RUN      ] AssignmentTest.CategoryGetter
+[       OK ] AssignmentTest.CategoryGetter (0 ms)
+[ RUN      ] AssignmentTest.DueDateGetter
+[       OK ] AssignmentTest.DueDateGetter (0 ms)
+[ RUN      ] AssignmentTest.CompletedGetter
+[       OK ] AssignmentTest.CompletedGetter (0 ms)
+[ RUN      ] AssignmentTest.GradeGetter
+[       OK ] AssignmentTest.GradeGetter (0 ms)
+[ RUN      ] AssignmentTest.TitleSetter
+[       OK ] AssignmentTest.TitleSetter (0 ms)
+[ RUN      ] AssignmentTest.DescriptionSetter
+[       OK ] AssignmentTest.DescriptionSetter (0 ms)
+[ RUN      ] AssignmentTest.CategorySetter
+[       OK ] AssignmentTest.CategorySetter (0 ms)
+[ RUN      ] AssignmentTest.DueDateSetter
+[       OK ] AssignmentTest.DueDateSetter (0 ms)
+[ RUN      ] AssignmentTest.CompletedSetter
+[       OK ] AssignmentTest.CompletedSetter (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPercentage
+[       OK ] AssignmentTest.GradeSetterPercentage (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPoints
+[       OK ] AssignmentTest.GradeSetterPoints (0 ms)
+[ RUN      ] AssignmentTest.TwoParamInitialization
+[       OK ] AssignmentTest.TwoParamInitialization (0 ms)
+[ RUN      ] AssignmentTest.ThreeParamInitialization
+[       OK ] AssignmentTest.ThreeParamInitialization (0 ms)
+[ RUN      ] AssignmentTest.FourParamInitialization
+[       OK ] AssignmentTest.FourParamInitialization (0 ms)
+[ RUN      ] AssignmentTest.FiveParamInitialization
+[       OK ] AssignmentTest.FiveParamInitialization (0 ms)
+[ RUN      ] AssignmentTest.ThreeParamDescInitialization
+[       OK ] AssignmentTest.ThreeParamDescInitialization (0 ms)
+[ RUN      ] AssignmentTest.FourParamDescInitialization
+[       OK ] AssignmentTest.FourParamDescInitialization (0 ms)
+[ RUN      ] AssignmentTest.FiveParamDescInitialization
+[       OK ] AssignmentTest.FiveParamDescInitialization (0 ms)
+[ RUN      ] AssignmentTest.SixParamDescInitialization
+[       OK ] AssignmentTest.SixParamDescInitialization (0 ms)
+[ RUN      ] AssignmentTest.PrintAssignmentInfo
+[       OK ] AssignmentTest.PrintAssignmentInfo (0 ms)
+[ RUN      ] AssignmentTest.OverloadedEquals
+[       OK ] AssignmentTest.OverloadedEquals (0 ms)
+[ RUN      ] AssignmentTest.FromRowAllFields
+[       OK ] AssignmentTest.FromRowAllFields (0 ms)
+[ RUN      ] AssignmentTest.FromRowPreservesId
+[       OK ] AssignmentTest.FromRowPreservesId (0 ms)
+[ RUN      ] AssignmentTest.FromRowCompletedFalse
+[       OK ] AssignmentTest.FromRowCompletedFalse (0 ms)
+[ RUN      ] AssignmentTest.FromRowEmptyDescription
+[       OK ] AssignmentTest.FromRowEmptyDescription (0 ms)
+[ RUN      ] AssignmentTest.FromRowDoesNotEqualNewAssignment
+[       OK ] AssignmentTest.FromRowDoesNotEqualNewAssignment (0 ms)
+[ RUN      ] AssignmentTest.DescriptionGetterEmpty
+[       OK ] AssignmentTest.DescriptionGetterEmpty (0 ms)
+[ RUN      ] AssignmentTest.DueDateGetterEmpty
+[       OK ] AssignmentTest.DueDateGetterEmpty (0 ms)
+[ RUN      ] AssignmentTest.CompletedGetterEmpty
+[       OK ] AssignmentTest.CompletedGetterEmpty (0 ms)
+[ RUN      ] AssignmentTest.GradeGetterEmpty
+[       OK ] AssignmentTest.GradeGetterEmpty (0 ms)
+[ RUN      ] AssignmentTest.TitleSetterInvalid
+[       OK ] AssignmentTest.TitleSetterInvalid (0 ms)
+[ RUN      ] AssignmentTest.TitleSetterWhitespaceInvalid
+[       OK ] AssignmentTest.TitleSetterWhitespaceInvalid (0 ms)
+[ RUN      ] AssignmentTest.DueDateSetterInvalid
+[       OK ] AssignmentTest.DueDateSetterInvalid (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPercentageInvalidLow
+[       OK ] AssignmentTest.GradeSetterPercentageInvalidLow (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPercentageInvalidHigh
+[       OK ] AssignmentTest.GradeSetterPercentageInvalidHigh (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPercentageBoundaryLow
+[       OK ] AssignmentTest.GradeSetterPercentageBoundaryLow (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPercentageBoundaryHigh
+[       OK ] AssignmentTest.GradeSetterPercentageBoundaryHigh (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPointsInvalidLow
+[       OK ] AssignmentTest.GradeSetterPointsInvalidLow (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPointsInvalidHigh
+[       OK ] AssignmentTest.GradeSetterPointsInvalidHigh (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPointsBoundaryLow
+[       OK ] AssignmentTest.GradeSetterPointsBoundaryLow (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPointsBoundaryHigh
+[       OK ] AssignmentTest.GradeSetterPointsBoundaryHigh (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPointsNegativeTotal
+[       OK ] AssignmentTest.GradeSetterPointsNegativeTotal (0 ms)
+[ RUN      ] AssignmentTest.GradeSetterPointsZeroTotal
+[       OK ] AssignmentTest.GradeSetterPointsZeroTotal (0 ms)
+[ RUN      ] AssignmentTest.TwoParamInitializationEmptyTitle
+[       OK ] AssignmentTest.TwoParamInitializationEmptyTitle (0 ms)
+[ RUN      ] AssignmentTest.TwoParamInitialiationInvalidCategory
+[       OK ] AssignmentTest.TwoParamInitialiationInvalidCategory (0 ms)
+[ RUN      ] AssignmentTest.ThreeParamInitializationInvalidDate
+[       OK ] AssignmentTest.ThreeParamInitializationInvalidDate (0 ms)
+[ RUN      ] AssignmentTest.FiveParamInitializationInvalidGradeLow
+[       OK ] AssignmentTest.FiveParamInitializationInvalidGradeLow (0 ms)
+[ RUN      ] AssignmentTest.FiveParamInitializationInvalidGradeHigh
+[       OK ] AssignmentTest.FiveParamInitializationInvalidGradeHigh (0 ms)
+[ RUN      ] AssignmentTest.FiveParamInitializationCompletedFalseWithGrade
+[       OK ] AssignmentTest.FiveParamInitializationCompletedFalseWithGrade (0 ms)
+[ RUN      ] AssignmentTest.ThreeParamDescInitializationEmptyTitle
+[       OK ] AssignmentTest.ThreeParamDescInitializationEmptyTitle (0 ms)
+[ RUN      ] AssignmentTest.ThreeParamDescInitializationInvalidCategory
+[       OK ] AssignmentTest.ThreeParamDescInitializationInvalidCategory (0 ms)
+[ RUN      ] AssignmentTest.FourParamDescInitializationInvalidDate
+[       OK ] AssignmentTest.FourParamDescInitializationInvalidDate (0 ms)
+[ RUN      ] AssignmentTest.SixParamDescInitializationInvalidGradeLow
+[       OK ] AssignmentTest.SixParamDescInitializationInvalidGradeLow (0 ms)
+[ RUN      ] AssignmentTest.SixParamDescInitializationInvalidGradeHigh
+[       OK ] AssignmentTest.SixParamDescInitializationInvalidGradeHigh (0 ms)
+[ RUN      ] AssignmentTest.SixParamDescInitializationCompletedFalseWithGrade
+[       OK ] AssignmentTest.SixParamDescInitializationCompletedFalseWithGrade (0 ms)
+[ RUN      ] AssignmentTest.PrintAssignmentInfoPartial
+[       OK ] AssignmentTest.PrintAssignmentInfoPartial (0 ms)
+[ RUN      ] AssignmentTest.PrintAssignmentInfoDescPartial
+[       OK ] AssignmentTest.PrintAssignmentInfoDescPartial (0 ms)
+[ RUN      ] AssignmentTest.PrintAssignmentInfoInteger
+[       OK ] AssignmentTest.PrintAssignmentInfoInteger (0 ms)
+[ RUN      ] AssignmentTest.OverloadedEqualsSameTitleDifferentParams
+[       OK ] AssignmentTest.OverloadedEqualsSameTitleDifferentParams (0 ms)
+[ RUN      ] AssignmentTest.OverloadedEqualsSameParamsDifferentId
+[       OK ] AssignmentTest.OverloadedEqualsSameParamsDifferentId (0 ms)
+[ RUN      ] AssignmentTest.FromRowEmptyTitle
+[       OK ] AssignmentTest.FromRowEmptyTitle (0 ms)
+[ RUN      ] AssignmentTest.FromRowWhitespaceTitle
+[       OK ] AssignmentTest.FromRowWhitespaceTitle (0 ms)
+[ RUN      ] AssignmentTest.FromRowEmptyCategory
+[       OK ] AssignmentTest.FromRowEmptyCategory (0 ms)
+[ RUN      ] AssignmentTest.FromRowEmptyDueDate
+[       OK ] AssignmentTest.FromRowEmptyDueDate (0 ms)
+[ RUN      ] AssignmentTest.FromRowInvalidDueDate
+[       OK ] AssignmentTest.FromRowInvalidDueDate (0 ms)
+[ RUN      ] AssignmentTest.FromRowGradeTooLow
+[       OK ] AssignmentTest.FromRowGradeTooLow (0 ms)
+[ RUN      ] AssignmentTest.FromRowGradeTooHigh
+[       OK ] AssignmentTest.FromRowGradeTooHigh (0 ms)
+[ RUN      ] AssignmentTest.FromRowZeroGradeWhenNotCompleted
+[       OK ] AssignmentTest.FromRowZeroGradeWhenNotCompleted (0 ms)
+[----------] 71 tests from AssignmentTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 71 tests from 1 test suite ran. (1 ms total)
+[  PASSED  ] 71 tests.
+<end of output>
+Test time =   0.25 sec
+----------------------------------------------------------
+Test Passed.
+"AssignmentTests" end time: May 24 22:31 PDT
+"AssignmentTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/11 Testing: CourseTests
+2/11 Test: CourseTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/CourseTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
+"CourseTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 109 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 109 tests from CourseTest
+[ RUN      ] CourseTest.IdGetter
+[       OK ] CourseTest.IdGetter (0 ms)
+[ RUN      ] CourseTest.TitleGetter
+[       OK ] CourseTest.TitleGetter (0 ms)
+[ RUN      ] CourseTest.DescriptionGetter
+[       OK ] CourseTest.DescriptionGetter (0 ms)
+[ RUN      ] CourseTest.StartDateGetter
+[       OK ] CourseTest.StartDateGetter (0 ms)
+[ RUN      ] CourseTest.EndDateGetter
+[       OK ] CourseTest.EndDateGetter (0 ms)
+[ RUN      ] CourseTest.AssignmentListGetter
+[       OK ] CourseTest.AssignmentListGetter (0 ms)
+[ RUN      ] CourseTest.AssignmentListGetterCheckSize
+[       OK ] CourseTest.AssignmentListGetterCheckSize (0 ms)
+[ RUN      ] CourseTest.GradeWeightsGetter
+[       OK ] CourseTest.GradeWeightsGetter (0 ms)
+[ RUN      ] CourseTest.NumCreditsGetter
+[       OK ] CourseTest.NumCreditsGetter (0 ms)
+[ RUN      ] CourseTest.GradePctGetter
+[       OK ] CourseTest.GradePctGetter (0 ms)
+[ RUN      ] CourseTest.LetterGradeGetter
+[       OK ] CourseTest.LetterGradeGetter (0 ms)
+[ RUN      ] CourseTest.GpaValGetter
+[       OK ] CourseTest.GpaValGetter (0 ms)
+[ RUN      ] CourseTest.ActiveGetter
+[       OK ] CourseTest.ActiveGetter (0 ms)
+[ RUN      ] CourseTest.GradeScaleGetter
+[       OK ] CourseTest.GradeScaleGetter (0 ms)
+[ RUN      ] CourseTest.TitleSetter
+[       OK ] CourseTest.TitleSetter (0 ms)
+[ RUN      ] CourseTest.DescriptionSetter
+[       OK ] CourseTest.DescriptionSetter (0 ms)
+[ RUN      ] CourseTest.StartDateSetter
+[       OK ] CourseTest.StartDateSetter (0 ms)
+[ RUN      ] CourseTest.EndDateSetter
+[       OK ] CourseTest.EndDateSetter (0 ms)
+[ RUN      ] CourseTest.NumCreditsSetter
+[       OK ] CourseTest.NumCreditsSetter (0 ms)
+[ RUN      ] CourseTest.GradeWeightsSetter
+[       OK ] CourseTest.GradeWeightsSetter (0 ms)
+[ RUN      ] CourseTest.GradePctSetterAutomatic
+[       OK ] CourseTest.GradePctSetterAutomatic (0 ms)
+[ RUN      ] CourseTest.GradePctSetterManual
+[       OK ] CourseTest.GradePctSetterManual (0 ms)
+[ RUN      ] CourseTest.LetterGradeSetter
+[       OK ] CourseTest.LetterGradeSetter (0 ms)
+[ RUN      ] CourseTest.GpaValSetter
+[       OK ] CourseTest.GpaValSetter (0 ms)
+[ RUN      ] CourseTest.ActiveSetter
+[       OK ] CourseTest.ActiveSetter (0 ms)
+[ RUN      ] CourseTest.GradeScaleSetter
+[       OK ] CourseTest.GradeScaleSetter (0 ms)
+[ RUN      ] CourseTest.ThreeParamInitialization
+[       OK ] CourseTest.ThreeParamInitialization (0 ms)
+[ RUN      ] CourseTest.FourParamInitialization
+[       OK ] CourseTest.FourParamInitialization (0 ms)
+[ RUN      ] CourseTest.FiveParamInitialization
+[       OK ] CourseTest.FiveParamInitialization (0 ms)
+[ RUN      ] CourseTest.FourParamDescInitialization
+[       OK ] CourseTest.FourParamDescInitialization (0 ms)
+[ RUN      ] CourseTest.FiveParamDescInitialization
+[       OK ] CourseTest.FiveParamDescInitialization (0 ms)
+[ RUN      ] CourseTest.SixParamDescInitialization
+[       OK ] CourseTest.SixParamDescInitialization (0 ms)
+[ RUN      ] CourseTest.PrintCourseInfo
+[       OK ] CourseTest.PrintCourseInfo (0 ms)
+[ RUN      ] CourseTest.AddAssignment
+[       OK ] CourseTest.AddAssignment (0 ms)
+[ RUN      ] CourseTest.RemoveAssignment
+[       OK ] CourseTest.RemoveAssignment (0 ms)
+[ RUN      ] CourseTest.FindAssignmentConst
+[       OK ] CourseTest.FindAssignmentConst (0 ms)
+[ RUN      ] CourseTest.FindAssignmentNonConst
+[       OK ] CourseTest.FindAssignmentNonConst (0 ms)
+[ RUN      ] CourseTest.OverloadedEquals
+[       OK ] CourseTest.OverloadedEquals (0 ms)
+[ RUN      ] CourseTest.FromRowAllFields
+[       OK ] CourseTest.FromRowAllFields (0 ms)
+[ RUN      ] CourseTest.FromRowPreservesId
+[       OK ] CourseTest.FromRowPreservesId (0 ms)
+[ RUN      ] CourseTest.FromRowActiveTrue
+[       OK ] CourseTest.FromRowActiveTrue (0 ms)
+[ RUN      ] CourseTest.FromRowEmptyDescription
+[       OK ] CourseTest.FromRowEmptyDescription (0 ms)
+[ RUN      ] CourseTest.FromRowDoesNotEqualNewCourse
+[       OK ] CourseTest.FromRowDoesNotEqualNewCourse (0 ms)
+[ RUN      ] CourseTest.DescriptionGetterEmpty
+[       OK ] CourseTest.DescriptionGetterEmpty (0 ms)
+[ RUN      ] CourseTest.NumCreditsGetterEmpty
+[       OK ] CourseTest.NumCreditsGetterEmpty (0 ms)
+[ RUN      ] CourseTest.ActiveGetterEmpty
+[       OK ] CourseTest.ActiveGetterEmpty (0 ms)
+[ RUN      ] CourseTest.TitleSetterInvalid
+[       OK ] CourseTest.TitleSetterInvalid (0 ms)
+[ RUN      ] CourseTest.TitleSetterWhitespaceInvalid
+[       OK ] CourseTest.TitleSetterWhitespaceInvalid (0 ms)
+[ RUN      ] CourseTest.DescriptionSetterEmpty
+[       OK ] CourseTest.DescriptionSetterEmpty (0 ms)
+[ RUN      ] CourseTest.DescriptionSetterWhitespace
+[       OK ] CourseTest.DescriptionSetterWhitespace (0 ms)
+[ RUN      ] CourseTest.StartDateSetterInvalid
+[       OK ] CourseTest.StartDateSetterInvalid (0 ms)
+[ RUN      ] CourseTest.EndDateSetterInvalid
+[       OK ] CourseTest.EndDateSetterInvalid (0 ms)
+[ RUN      ] CourseTest.GradeWeightsSetterInvalid
+[       OK ] CourseTest.GradeWeightsSetterInvalid (0 ms)
+[ RUN      ] CourseTest.NumCreditsSetterInvalid
+[       OK ] CourseTest.NumCreditsSetterInvalid (0 ms)
+[ RUN      ] CourseTest.NumCreditsSetterZero
+[       OK ] CourseTest.NumCreditsSetterZero (0 ms)
+[ RUN      ] CourseTest.GradePctSetterAutomaticNoCompleteAssignments
+[       OK ] CourseTest.GradePctSetterAutomaticNoCompleteAssignments (0 ms)
+[ RUN      ] CourseTest.GradePctSetterAutomaticDifferentCategories
+[       OK ] CourseTest.GradePctSetterAutomaticDifferentCategories (0 ms)
+[ RUN      ] CourseTest.GradePctSetterAutomaticAllCategories
+[       OK ] CourseTest.GradePctSetterAutomaticAllCategories (0 ms)
+[ RUN      ] CourseTest.GradePctSetterAutomaticMultipleAssignmentsSameCategory
+[       OK ] CourseTest.GradePctSetterAutomaticMultipleAssignmentsSameCategory (0 ms)
+[ RUN      ] CourseTest.GradePctSetterAutomaticUnevenCategorySplit
+[       OK ] CourseTest.GradePctSetterAutomaticUnevenCategorySplit (0 ms)
+[ RUN      ] CourseTest.GradePctSetterAutomaticCategoriesNonexistent
+[       OK ] CourseTest.GradePctSetterAutomaticCategoriesNonexistent (0 ms)
+[ RUN      ] CourseTest.GradePctSetterManualInvalidLow
+[       OK ] CourseTest.GradePctSetterManualInvalidLow (0 ms)
+[ RUN      ] CourseTest.GradePctSetterManualInvalidHigh
+[       OK ] CourseTest.GradePctSetterManualInvalidHigh (0 ms)
+[ RUN      ] CourseTest.GradePctSetterManualBoundaryLow
+[       OK ] CourseTest.GradePctSetterManualBoundaryLow (0 ms)
+[ RUN      ] CourseTest.GradePctSetterManualBoundaryHigh
+[       OK ] CourseTest.GradePctSetterManualBoundaryHigh (0 ms)
+[ RUN      ] CourseTest.LetterGradeSetterRangeHigh
+[       OK ] CourseTest.LetterGradeSetterRangeHigh (0 ms)
+[ RUN      ] CourseTest.LetterGradeSetterLowF
+[       OK ] CourseTest.LetterGradeSetterLowF (0 ms)
+[ RUN      ] CourseTest.LetterGradeSetterBoundaryHigh
+[       OK ] CourseTest.LetterGradeSetterBoundaryHigh (0 ms)
+[ RUN      ] CourseTest.LetterGradeSetterBoundaryLow
+[       OK ] CourseTest.LetterGradeSetterBoundaryLow (0 ms)
+[ RUN      ] CourseTest.LetterGradeSetterNoCompleteAssignments
+[       OK ] CourseTest.LetterGradeSetterNoCompleteAssignments (0 ms)
+[ RUN      ] CourseTest.LetterGradeSetterCompletedZeroGrade
+[       OK ] CourseTest.LetterGradeSetterCompletedZeroGrade (0 ms)
+[ RUN      ] CourseTest.GpaValSetterNoGrade
+[       OK ] CourseTest.GpaValSetterNoGrade (0 ms)
+[ RUN      ] CourseTest.GpaValSetterLowF
+[       OK ] CourseTest.GpaValSetterLowF (0 ms)
+[ RUN      ] CourseTest.GpaValSetterOverHundred
+[       OK ] CourseTest.GpaValSetterOverHundred (0 ms)
+[ RUN      ] CourseTest.GradeScaleSetterEmpty
+[       OK ] CourseTest.GradeScaleSetterEmpty (0 ms)
+[ RUN      ] CourseTest.GradeScaleSetterMissingZero
+[       OK ] CourseTest.GradeScaleSetterMissingZero (0 ms)
+[ RUN      ] CourseTest.GradeScaleSetterInvalidHigh
+[       OK ] CourseTest.GradeScaleSetterInvalidHigh (0 ms)
+[ RUN      ] CourseTest.GradeScaleSetterUpperBound
+[       OK ] CourseTest.GradeScaleSetterUpperBound (0 ms)
+[ RUN      ] CourseTest.ThreeParamInitializationEmptyTitle
+[       OK ] CourseTest.ThreeParamInitializationEmptyTitle (0 ms)
+[ RUN      ] CourseTest.ThreeParamInitializationInvalidStartDate
+[       OK ] CourseTest.ThreeParamInitializationInvalidStartDate (0 ms)
+[ RUN      ] CourseTest.ThreeParamInitializationInvalidEndDate
+[       OK ] CourseTest.ThreeParamInitializationInvalidEndDate (0 ms)
+[ RUN      ] CourseTest.ThreeParamInitializationDefaultDates
+[       OK ] CourseTest.ThreeParamInitializationDefaultDates (0 ms)
+[ RUN      ] CourseTest.FourParamInitializationInvalidNumCredits
+[       OK ] CourseTest.FourParamInitializationInvalidNumCredits (0 ms)
+[ RUN      ] CourseTest.FourParamDescInitializationEmptyTitle
+[       OK ] CourseTest.FourParamDescInitializationEmptyTitle (0 ms)
+[ RUN      ] CourseTest.FourParamDescInitializationInvalidStartDate
+[       OK ] CourseTest.FourParamDescInitializationInvalidStartDate (0 ms)
+[ RUN      ] CourseTest.FourParamDescInitializationInvalidEndDate
+[       OK ] CourseTest.FourParamDescInitializationInvalidEndDate (0 ms)
+[ RUN      ] CourseTest.FourParamDescInitializationDefaultDates
+[       OK ] CourseTest.FourParamDescInitializationDefaultDates (0 ms)
+[ RUN      ] CourseTest.FiveParamDescInitializationInvalidNumCredits
+[       OK ] CourseTest.FiveParamDescInitializationInvalidNumCredits (0 ms)
+[ RUN      ] CourseTest.PrintCourseInfoPartial
+[       OK ] CourseTest.PrintCourseInfoPartial (0 ms)
+[ RUN      ] CourseTest.PrintCourseInfoDescPartial
+[       OK ] CourseTest.PrintCourseInfoDescPartial (0 ms)
+[ RUN      ] CourseTest.PrintCourseInfoCompletedAssignments
+[       OK ] CourseTest.PrintCourseInfoCompletedAssignments (0 ms)
+[ RUN      ] CourseTest.PrintCourseInfoMixedAssignments
+[       OK ] CourseTest.PrintCourseInfoMixedAssignments (0 ms)
+[ RUN      ] CourseTest.PrintCourseInfoIncompleteAssignments
+[       OK ] CourseTest.PrintCourseInfoIncompleteAssignments (0 ms)
+[ RUN      ] CourseTest.AddAssignmentAlreadyExists
+[       OK ] CourseTest.AddAssignmentAlreadyExists (0 ms)
+[ RUN      ] CourseTest.RemoveAssignmentNotFound
+[       OK ] CourseTest.RemoveAssignmentNotFound (0 ms)
+[ RUN      ] CourseTest.FindAssignmentConstNotFound
+[       OK ] CourseTest.FindAssignmentConstNotFound (0 ms)
+[ RUN      ] CourseTest.FindAssignmentNonConstNotFound
+[       OK ] CourseTest.FindAssignmentNonConstNotFound (0 ms)
+[ RUN      ] CourseTest.OverloadedEqualsSameTitleDifferentParams
+[       OK ] CourseTest.OverloadedEqualsSameTitleDifferentParams (0 ms)
+[ RUN      ] CourseTest.OverloadedEqualsSameParamsDifferentId
+[       OK ] CourseTest.OverloadedEqualsSameParamsDifferentId (0 ms)
+[ RUN      ] CourseTest.FromRowEmptyTitle
+[       OK ] CourseTest.FromRowEmptyTitle (0 ms)
+[ RUN      ] CourseTest.FromRowWhitespaceTitle
+[       OK ] CourseTest.FromRowWhitespaceTitle (0 ms)
+[ RUN      ] CourseTest.FromRowEmptyStartDate
+[       OK ] CourseTest.FromRowEmptyStartDate (0 ms)
+[ RUN      ] CourseTest.FromRowEmptyEndDate
+[       OK ] CourseTest.FromRowEmptyEndDate (0 ms)
+[ RUN      ] CourseTest.FromRowInvalidStartDate
+[       OK ] CourseTest.FromRowInvalidStartDate (0 ms)
+[ RUN      ] CourseTest.FromRowInvalidEndDate
+[       OK ] CourseTest.FromRowInvalidEndDate (0 ms)
+[ RUN      ] CourseTest.FromRowEndDateBeforeStartDate
+[       OK ] CourseTest.FromRowEndDateBeforeStartDate (0 ms)
+[ RUN      ] CourseTest.FromRowInvalidNumCredits
+[       OK ] CourseTest.FromRowInvalidNumCredits (0 ms)
+[ RUN      ] CourseTest.FromRowZeroCreditsValid
+[       OK ] CourseTest.FromRowZeroCreditsValid (0 ms)
+[ RUN      ] CourseTest.FromRowSameDayStartAndEnd
+[       OK ] CourseTest.FromRowSameDayStartAndEnd (0 ms)
+[----------] 109 tests from CourseTest (4 ms total)
+
+[----------] Global test environment tear-down
+[==========] 109 tests from 1 test suite ran. (4 ms total)
+[  PASSED  ] 109 tests.
+<end of output>
+Test time =   0.28 sec
+----------------------------------------------------------
+Test Passed.
+"CourseTests" end time: May 24 22:31 PDT
+"CourseTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/11 Testing: TermTests
+3/11 Test: TermTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/TermTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
+"TermTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 50 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 50 tests from TermTest
+[ RUN      ] TermTest.IdGetter
+[       OK ] TermTest.IdGetter (0 ms)
+[ RUN      ] TermTest.TitleGetter
+[       OK ] TermTest.TitleGetter (0 ms)
+[ RUN      ] TermTest.StartDateGetter
+[       OK ] TermTest.StartDateGetter (0 ms)
+[ RUN      ] TermTest.EndDateGetter
+[       OK ] TermTest.EndDateGetter (0 ms)
+[ RUN      ] TermTest.CourseListGetter
+[       OK ] TermTest.CourseListGetter (0 ms)
+[ RUN      ] TermTest.CourseListGetterCheckSize
+[       OK ] TermTest.CourseListGetterCheckSize (0 ms)
+[ RUN      ] TermTest.TotalCreditsGetter
+[       OK ] TermTest.TotalCreditsGetter (0 ms)
+[ RUN      ] TermTest.OvrGpaGetter
+[       OK ] TermTest.OvrGpaGetter (0 ms)
+[ RUN      ] TermTest.ActiveGetter
+[       OK ] TermTest.ActiveGetter (0 ms)
+[ RUN      ] TermTest.TitleSetter
+[       OK ] TermTest.TitleSetter (0 ms)
+[ RUN      ] TermTest.StartDateSetter
+[       OK ] TermTest.StartDateSetter (0 ms)
+[ RUN      ] TermTest.EndDateSetter
+[       OK ] TermTest.EndDateSetter (0 ms)
+[ RUN      ] TermTest.ActiveSetter
+[       OK ] TermTest.ActiveSetter (0 ms)
+[ RUN      ] TermTest.ThreeParamInitialization
+[       OK ] TermTest.ThreeParamInitialization (0 ms)
+[ RUN      ] TermTest.FourParamInitialization
+[       OK ] TermTest.FourParamInitialization (0 ms)
+[ RUN      ] TermTest.PrintTermInfo
+[       OK ] TermTest.PrintTermInfo (0 ms)
+[ RUN      ] TermTest.AddCourse
+[       OK ] TermTest.AddCourse (0 ms)
+[ RUN      ] TermTest.RemoveCourse
+[       OK ] TermTest.RemoveCourse (0 ms)
+[ RUN      ] TermTest.FindCourseConst
+[       OK ] TermTest.FindCourseConst (0 ms)
+[ RUN      ] TermTest.FindCourseNonConst
+[       OK ] TermTest.FindCourseNonConst (0 ms)
+[ RUN      ] TermTest.OverloadedEquals
+[       OK ] TermTest.OverloadedEquals (0 ms)
+[ RUN      ] TermTest.FromRowBasic
+[       OK ] TermTest.FromRowBasic (0 ms)
+[ RUN      ] TermTest.FromRowActiveTrue
+[       OK ] TermTest.FromRowActiveTrue (0 ms)
+[ RUN      ] TermTest.FromRowPreservesId
+[       OK ] TermTest.FromRowPreservesId (0 ms)
+[ RUN      ] TermTest.FromRowDoesNotEqualNewTerm
+[       OK ] TermTest.FromRowDoesNotEqualNewTerm (0 ms)
+[ RUN      ] TermTest.OvrGpaGetterNoCourses
+[       OK ] TermTest.OvrGpaGetterNoCourses (0 ms)
+[ RUN      ] TermTest.OvrGpaGetterZeroCredits
+[       OK ] TermTest.OvrGpaGetterZeroCredits (0 ms)
+[ RUN      ] TermTest.ActiveGetterEmpty
+[       OK ] TermTest.ActiveGetterEmpty (0 ms)
+[ RUN      ] TermTest.TitleSetterInvalid
+[       OK ] TermTest.TitleSetterInvalid (0 ms)
+[ RUN      ] TermTest.TitleSetterWhitespaceInvalid
+[       OK ] TermTest.TitleSetterWhitespaceInvalid (0 ms)
+[ RUN      ] TermTest.StartDateSetterInvalid
+[       OK ] TermTest.StartDateSetterInvalid (0 ms)
+[ RUN      ] TermTest.EndDateSetterInvalid
+[       OK ] TermTest.EndDateSetterInvalid (0 ms)
+[ RUN      ] TermTest.ThreeParamInitializationEmptyTitle
+[       OK ] TermTest.ThreeParamInitializationEmptyTitle (0 ms)
+[ RUN      ] TermTest.ThreeParamInitializationInvalidStartDate
+[       OK ] TermTest.ThreeParamInitializationInvalidStartDate (0 ms)
+[ RUN      ] TermTest.ThreeParamInitializationInvalidEndDate
+[       OK ] TermTest.ThreeParamInitializationInvalidEndDate (0 ms)
+[ RUN      ] TermTest.ThreeParamInitializationDefaultDates
+[       OK ] TermTest.ThreeParamInitializationDefaultDates (0 ms)
+[ RUN      ] TermTest.PrintTermInfoPartial
+[       OK ] TermTest.PrintTermInfoPartial (0 ms)
+[ RUN      ] TermTest.AddCourseAlreadyExists
+[       OK ] TermTest.AddCourseAlreadyExists (0 ms)
+[ RUN      ] TermTest.RemoveCourseNotFound
+[       OK ] TermTest.RemoveCourseNotFound (0 ms)
+[ RUN      ] TermTest.FindCourseConstNotFound
+[       OK ] TermTest.FindCourseConstNotFound (0 ms)
+[ RUN      ] TermTest.FindCourseNonConstNotFound
+[       OK ] TermTest.FindCourseNonConstNotFound (0 ms)
+[ RUN      ] TermTest.OverloadedEqualsSameTitleDifferentParams
+[       OK ] TermTest.OverloadedEqualsSameTitleDifferentParams (0 ms)
+[ RUN      ] TermTest.OverloadedEqualsSameParamsDifferentId
+[       OK ] TermTest.OverloadedEqualsSameParamsDifferentId (0 ms)
+[ RUN      ] TermTest.FromRowEmptyTitle
+[       OK ] TermTest.FromRowEmptyTitle (0 ms)
+[ RUN      ] TermTest.FromRowWhitespaceTitle
+[       OK ] TermTest.FromRowWhitespaceTitle (0 ms)
+[ RUN      ] TermTest.FromRowInvalidStartDate
+[       OK ] TermTest.FromRowInvalidStartDate (0 ms)
+[ RUN      ] TermTest.FromRowInvalidEndDate
+[       OK ] TermTest.FromRowInvalidEndDate (0 ms)
+[ RUN      ] TermTest.FromRowEndDateBeforeStartDate
+[       OK ] TermTest.FromRowEndDateBeforeStartDate (0 ms)
+[ RUN      ] TermTest.FromRowSameDayStartAndEnd
+[       OK ] TermTest.FromRowSameDayStartAndEnd (0 ms)
+[ RUN      ] TermTest.FromRowEmptyDatesThrow
+[       OK ] TermTest.FromRowEmptyDatesThrow (0 ms)
+[----------] 50 tests from TermTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 50 tests from 1 test suite ran. (1 ms total)
+[  PASSED  ] 50 tests.
+<end of output>
+Test time =   0.25 sec
+----------------------------------------------------------
+Test Passed.
+"TermTests" end time: May 24 22:31 PDT
+"TermTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/11 Testing: CliViewTests
+4/11 Test: CliViewTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/CliViewTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
+"CliViewTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 156 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 156 tests from CliViewTest
+[ RUN      ] CliViewTest.FullConstructorInitialization
+[       OK ] CliViewTest.FullConstructorInitialization (0 ms)
+[ RUN      ] CliViewTest.UserExitsImmediately
+[       OK ] CliViewTest.UserExitsImmediately (0 ms)
+[ RUN      ] CliViewTest.AddTerm
+[       OK ] CliViewTest.AddTerm (0 ms)
+[ RUN      ] CliViewTest.EditTerm
+[       OK ] CliViewTest.EditTerm (0 ms)
+[ RUN      ] CliViewTest.SelectTerm
+[       OK ] CliViewTest.SelectTerm (0 ms)
+[ RUN      ] CliViewTest.RemoveTerm
+[       OK ] CliViewTest.RemoveTerm (0 ms)
+[ RUN      ] CliViewTest.AddCourse
+[       OK ] CliViewTest.AddCourse (0 ms)
+[ RUN      ] CliViewTest.EditCourse
+[       OK ] CliViewTest.EditCourse (0 ms)
+[ RUN      ] CliViewTest.SelectCourse
+[       OK ] CliViewTest.SelectCourse (0 ms)
+[ RUN      ] CliViewTest.RemoveCourse
+[       OK ] CliViewTest.RemoveCourse (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPct
+[       OK ] CliViewTest.AddAssignmentPct (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPoints
+[       OK ] CliViewTest.AddAssignmentPoints (0 ms)
+[ RUN      ] CliViewTest.RemoveAssignment
+[       OK ] CliViewTest.RemoveAssignment (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePct
+[       OK ] CliViewTest.AddAssignmentGradePct (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePoints
+[       OK ] CliViewTest.AddAssignmentGradePoints (0 ms)
+[ RUN      ] CliViewTest.RemoveAssignmentGrade
+[       OK ] CliViewTest.RemoveAssignmentGrade (0 ms)
+[ RUN      ] CliViewTest.ViewAssignmentsAll
+[       OK ] CliViewTest.ViewAssignmentsAll (0 ms)
+[ RUN      ] CliViewTest.ViewAssignmentsCompleted
+[       OK ] CliViewTest.ViewAssignmentsCompleted (0 ms)
+[ RUN      ] CliViewTest.ViewAssignmentsIncomplete
+[       OK ] CliViewTest.ViewAssignmentsIncomplete (0 ms)
+[ RUN      ] CliViewTest.DefaultOstreamCout
+[       OK ] CliViewTest.DefaultOstreamCout (0 ms)
+[ RUN      ] CliViewTest.DefaultIstreamCin
+[       OK ] CliViewTest.DefaultIstreamCin (0 ms)
+[ RUN      ] CliViewTest.EmptyInput
+[       OK ] CliViewTest.EmptyInput (0 ms)
+[ RUN      ] CliViewTest.InvalidInput
+[       OK ] CliViewTest.InvalidInput (0 ms)
+[ RUN      ] CliViewTest.LowercaseInput
+[       OK ] CliViewTest.LowercaseInput (0 ms)
+[ RUN      ] CliViewTest.LongInput
+[       OK ] CliViewTest.LongInput (0 ms)
+[ RUN      ] CliViewTest.TermMenuInvalidSelection
+[       OK ] CliViewTest.TermMenuInvalidSelection (0 ms)
+[ RUN      ] CliViewTest.CourseMenuInvalidSelection
+[       OK ] CliViewTest.CourseMenuInvalidSelection (0 ms)
+[ RUN      ] CliViewTest.AssignmentMenuInvalidSelection
+[       OK ] CliViewTest.AssignmentMenuInvalidSelection (0 ms)
+[ RUN      ] CliViewTest.AddTermTitleEmpty
+[       OK ] CliViewTest.AddTermTitleEmpty (0 ms)
+[ RUN      ] CliViewTest.AddTermStartDateEmpty
+[       OK ] CliViewTest.AddTermStartDateEmpty (0 ms)
+[ RUN      ] CliViewTest.AddTermStartDateWrongFormat
+[       OK ] CliViewTest.AddTermStartDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.AddTermStartDateNonexistent
+[       OK ] CliViewTest.AddTermStartDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.AddTermEndDateEmpty
+[       OK ] CliViewTest.AddTermEndDateEmpty (0 ms)
+[ RUN      ] CliViewTest.AddTermEndDateWrongFormat
+[       OK ] CliViewTest.AddTermEndDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.AddTermEndDateNonexistent
+[       OK ] CliViewTest.AddTermEndDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.AddTermEndDateBeforeStartDate
+[       OK ] CliViewTest.AddTermEndDateBeforeStartDate (0 ms)
+[ RUN      ] CliViewTest.AddTermActiveEmpty
+[       OK ] CliViewTest.AddTermActiveEmpty (0 ms)
+[ RUN      ] CliViewTest.AddTermActiveInvalid
+[       OK ] CliViewTest.AddTermActiveInvalid (0 ms)
+[ RUN      ] CliViewTest.AddTermAlreadyExists
+[       OK ] CliViewTest.AddTermAlreadyExists (0 ms)
+[ RUN      ] CliViewTest.AddTermAllDefaults
+[       OK ] CliViewTest.AddTermAllDefaults (0 ms)
+[ RUN      ] CliViewTest.EditTermNotFound
+[       OK ] CliViewTest.EditTermNotFound (0 ms)
+[ RUN      ] CliViewTest.EditTermNoEditFields
+[       OK ] CliViewTest.EditTermNoEditFields (0 ms)
+[ RUN      ] CliViewTest.EditTermNewTitleEmpty
+[       OK ] CliViewTest.EditTermNewTitleEmpty (0 ms)
+[ RUN      ] CliViewTest.EditTermNewTitleAlreadyExists
+[       OK ] CliViewTest.EditTermNewTitleAlreadyExists (0 ms)
+[ RUN      ] CliViewTest.EditTermNewStartDateEmpty
+[       OK ] CliViewTest.EditTermNewStartDateEmpty (0 ms)
+[ RUN      ] CliViewTest.EditTermNewStartDateWrongFormat
+[       OK ] CliViewTest.EditTermNewStartDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.EditTermNewStartDateNonexistent
+[       OK ] CliViewTest.EditTermNewStartDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.EditTermNewStartDateAfterEndDate
+[       OK ] CliViewTest.EditTermNewStartDateAfterEndDate (0 ms)
+[ RUN      ] CliViewTest.EditTermNewStartDateUnchanged
+[       OK ] CliViewTest.EditTermNewStartDateUnchanged (0 ms)
+[ RUN      ] CliViewTest.EditTermNewEndDateEmpty
+[       OK ] CliViewTest.EditTermNewEndDateEmpty (0 ms)
+[ RUN      ] CliViewTest.EditTermNewEndDateWrongFormat
+[       OK ] CliViewTest.EditTermNewEndDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.EditTermNewEndDateNonexistent
+[       OK ] CliViewTest.EditTermNewEndDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.EditTermNewEndDateBeforeStartDate
+[       OK ] CliViewTest.EditTermNewEndDateBeforeStartDate (0 ms)
+[ RUN      ] CliViewTest.EditTermNewEndDateUnchanged
+[       OK ] CliViewTest.EditTermNewEndDateUnchanged (0 ms)
+[ RUN      ] CliViewTest.EditTermNewStartDateEndDateCombo
+[       OK ] CliViewTest.EditTermNewStartDateEndDateCombo (0 ms)
+[ RUN      ] CliViewTest.EditTermNewStartDateEndDateComboUnchanged
+[       OK ] CliViewTest.EditTermNewStartDateEndDateComboUnchanged (0 ms)
+[ RUN      ] CliViewTest.EditTermNewActiveEmpty
+[       OK ] CliViewTest.EditTermNewActiveEmpty (0 ms)
+[ RUN      ] CliViewTest.EditTermNewActiveInvalid
+[       OK ] CliViewTest.EditTermNewActiveInvalid (0 ms)
+[ RUN      ] CliViewTest.EditTermNewActiveUnchanged
+[       OK ] CliViewTest.EditTermNewActiveUnchanged (0 ms)
+[ RUN      ] CliViewTest.SelectTermNotFound
+[       OK ] CliViewTest.SelectTermNotFound (0 ms)
+[ RUN      ] CliViewTest.RemoveTermNotFound
+[       OK ] CliViewTest.RemoveTermNotFound (0 ms)
+[ RUN      ] CliViewTest.RemoveTermInvalidBool
+[       OK ] CliViewTest.RemoveTermInvalidBool (0 ms)
+[ RUN      ] CliViewTest.RemoveTermNotConfirmed
+[       OK ] CliViewTest.RemoveTermNotConfirmed (0 ms)
+[ RUN      ] CliViewTest.AddCourseTitleEmpty
+[       OK ] CliViewTest.AddCourseTitleEmpty (0 ms)
+[ RUN      ] CliViewTest.AddCourseStartDateEmpty
+[       OK ] CliViewTest.AddCourseStartDateEmpty (0 ms)
+[ RUN      ] CliViewTest.AddCourseStartDateWrongFormat
+[       OK ] CliViewTest.AddCourseStartDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.AddCourseStartDateNonexistent
+[       OK ] CliViewTest.AddCourseStartDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.AddCourseEndDateEmpty
+[       OK ] CliViewTest.AddCourseEndDateEmpty (0 ms)
+[ RUN      ] CliViewTest.AddCourseEndDateWrongFormat
+[       OK ] CliViewTest.AddCourseEndDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.AddCourseEndDateNonexistent
+[       OK ] CliViewTest.AddCourseEndDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.AddCourseEndDateBeforeStartDate
+[       OK ] CliViewTest.AddCourseEndDateBeforeStartDate (0 ms)
+[ RUN      ] CliViewTest.AddCourseNumCreditsEmpty
+[       OK ] CliViewTest.AddCourseNumCreditsEmpty (0 ms)
+[ RUN      ] CliViewTest.AddCourseNumCreditsLessThanZero
+[       OK ] CliViewTest.AddCourseNumCreditsLessThanZero (0 ms)
+[ RUN      ] CliViewTest.AddCourseActiveEmpty
+[       OK ] CliViewTest.AddCourseActiveEmpty (0 ms)
+[ RUN      ] CliViewTest.AddCourseActiveInvalid
+[       OK ] CliViewTest.AddCourseActiveInvalid (0 ms)
+[ RUN      ] CliViewTest.AddCourseAlreadyExists
+[       OK ] CliViewTest.AddCourseAlreadyExists (0 ms)
+[ RUN      ] CliViewTest.AddCourseAllDefaults
+[       OK ] CliViewTest.AddCourseAllDefaults (0 ms)
+[ RUN      ] CliViewTest.EditCourseNotFound
+[       OK ] CliViewTest.EditCourseNotFound (0 ms)
+[ RUN      ] CliViewTest.EditCourseNoEditFields
+[       OK ] CliViewTest.EditCourseNoEditFields (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewTitleEmpty
+[       OK ] CliViewTest.EditCourseNewTitleEmpty (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewTitleAlreadyExists
+[       OK ] CliViewTest.EditCourseNewTitleAlreadyExists (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewStartDateEmpty
+[       OK ] CliViewTest.EditCourseNewStartDateEmpty (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewStartDateWrongFormat
+[       OK ] CliViewTest.EditCourseNewStartDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewStartDateNonexistent
+[       OK ] CliViewTest.EditCourseNewStartDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewStartDateAfterEndDate
+[       OK ] CliViewTest.EditCourseNewStartDateAfterEndDate (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewStartDateUnchanged
+[       OK ] CliViewTest.EditCourseNewStartDateUnchanged (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewEndDateEmpty
+[       OK ] CliViewTest.EditCourseNewEndDateEmpty (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewEndDateWrongFormat
+[       OK ] CliViewTest.EditCourseNewEndDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewEndDateNonexistent
+[       OK ] CliViewTest.EditCourseNewEndDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewEndDateBeforeStartDate
+[       OK ] CliViewTest.EditCourseNewEndDateBeforeStartDate (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewEndDateUnchanged
+[       OK ] CliViewTest.EditCourseNewEndDateUnchanged (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewStartDateEndDateCombo
+[       OK ] CliViewTest.EditCourseNewStartDateEndDateCombo (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewStartDateEndDateComboUnchanged
+[       OK ] CliViewTest.EditCourseNewStartDateEndDateComboUnchanged (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewNumCreditsEmpty
+[       OK ] CliViewTest.EditCourseNewNumCreditsEmpty (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewNumCreditsLessThanZero
+[       OK ] CliViewTest.EditCourseNewNumCreditsLessThanZero (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewNumCreditsUnchanged
+[       OK ] CliViewTest.EditCourseNewNumCreditsUnchanged (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewActiveEmpty
+[       OK ] CliViewTest.EditCourseNewActiveEmpty (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewActiveInvalid
+[       OK ] CliViewTest.EditCourseNewActiveInvalid (0 ms)
+[ RUN      ] CliViewTest.EditCourseNewActiveUnchanged
+[       OK ] CliViewTest.EditCourseNewActiveUnchanged (0 ms)
+[ RUN      ] CliViewTest.SelectCourseNotFound
+[       OK ] CliViewTest.SelectCourseNotFound (0 ms)
+[ RUN      ] CliViewTest.RemoveCourseNotFound
+[       OK ] CliViewTest.RemoveCourseNotFound (0 ms)
+[ RUN      ] CliViewTest.RemoveCourseInvalidBool
+[       OK ] CliViewTest.RemoveCourseInvalidBool (0 ms)
+[ RUN      ] CliViewTest.RemoveCourseNotConfirmed
+[       OK ] CliViewTest.RemoveCourseNotConfirmed (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentTitleEmpty
+[       OK ] CliViewTest.AddAssignmentTitleEmpty (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentCategoryEmpty
+[       OK ] CliViewTest.AddAssignmentCategoryEmpty (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentCategoryInvalid
+[       OK ] CliViewTest.AddAssignmentCategoryInvalid (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentDueDateEmpty
+[       OK ] CliViewTest.AddAssignmentDueDateEmpty (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentDueDateWrongFormat
+[       OK ] CliViewTest.AddAssignmentDueDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentDueDateNonexistent
+[       OK ] CliViewTest.AddAssignmentDueDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentCompletedEmpty
+[       OK ] CliViewTest.AddAssignmentCompletedEmpty (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentCompletedInvalid
+[       OK ] CliViewTest.AddAssignmentCompletedInvalid (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentCompletedFalse
+[       OK ] CliViewTest.AddAssignmentCompletedFalse (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPctInvalidLow
+[       OK ] CliViewTest.AddAssignmentPctInvalidLow (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPctInvalidHigh
+[       OK ] CliViewTest.AddAssignmentPctInvalidHigh (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPctBoundaryLow
+[       OK ] CliViewTest.AddAssignmentPctBoundaryLow (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPctBoundaryHigh
+[       OK ] CliViewTest.AddAssignmentPctBoundaryHigh (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPointsInvalidLow
+[       OK ] CliViewTest.AddAssignmentPointsInvalidLow (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPointsInvalidHigh
+[       OK ] CliViewTest.AddAssignmentPointsInvalidHigh (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPointsBoundaryLow
+[       OK ] CliViewTest.AddAssignmentPointsBoundaryLow (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPointsBoundaryHigh
+[       OK ] CliViewTest.AddAssignmentPointsBoundaryHigh (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPointsMissingDividend
+[       OK ] CliViewTest.AddAssignmentPointsMissingDividend (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPointsNegativeDivisor
+[       OK ] CliViewTest.AddAssignmentPointsNegativeDivisor (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentPointsDivideByZero
+[       OK ] CliViewTest.AddAssignmentPointsDivideByZero (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentAlreadyExists
+[       OK ] CliViewTest.AddAssignmentAlreadyExists (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentAllDefaults
+[       OK ] CliViewTest.AddAssignmentAllDefaults (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNotFound
+[       OK ] CliViewTest.EditAssignmentNotFound (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNoEditFields
+[       OK ] CliViewTest.EditAssignmentNoEditFields (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNewTitleEmpty
+[       OK ] CliViewTest.EditAssignmentNewTitleEmpty (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNewTitleAlreadyExists
+[       OK ] CliViewTest.EditAssignmentNewTitleAlreadyExists (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNewCategoryEmpty
+[       OK ] CliViewTest.EditAssignmentNewCategoryEmpty (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNewCategoryInvalid
+[       OK ] CliViewTest.EditAssignmentNewCategoryInvalid (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNewCategoryUnchanged
+[       OK ] CliViewTest.EditAssignmentNewCategoryUnchanged (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNewDueDateEmpty
+[       OK ] CliViewTest.EditAssignmentNewDueDateEmpty (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNewDueDateWrongFormat
+[       OK ] CliViewTest.EditAssignmentNewDueDateWrongFormat (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNewDueDateNonexistent
+[       OK ] CliViewTest.EditAssignmentNewDueDateNonexistent (0 ms)
+[ RUN      ] CliViewTest.EditAssignmentNewDueDateUnchanged
+[       OK ] CliViewTest.EditAssignmentNewDueDateUnchanged (0 ms)
+[ RUN      ] CliViewTest.RemoveAssignmentNotFound
+[       OK ] CliViewTest.RemoveAssignmentNotFound (0 ms)
+[ RUN      ] CliViewTest.RemoveAssignmentInvalidBool
+[       OK ] CliViewTest.RemoveAssignmentInvalidBool (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePctInvalidLow
+[       OK ] CliViewTest.AddAssignmentGradePctInvalidLow (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePctInvalidHigh
+[       OK ] CliViewTest.AddAssignmentGradePctInvalidHigh (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePctBoundaryLow
+[       OK ] CliViewTest.AddAssignmentGradePctBoundaryLow (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePctBoundaryHigh
+[       OK ] CliViewTest.AddAssignmentGradePctBoundaryHigh (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePointsInvalidLow
+[       OK ] CliViewTest.AddAssignmentGradePointsInvalidLow (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePointsInvalidHigh
+[       OK ] CliViewTest.AddAssignmentGradePointsInvalidHigh (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePointsBoundaryLow
+[       OK ] CliViewTest.AddAssignmentGradePointsBoundaryLow (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePointsBoundaryHigh
+[       OK ] CliViewTest.AddAssignmentGradePointsBoundaryHigh (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePointsMissingDividend
+[       OK ] CliViewTest.AddAssignmentGradePointsMissingDividend (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePointsNegativeDivisor
+[       OK ] CliViewTest.AddAssignmentGradePointsNegativeDivisor (0 ms)
+[ RUN      ] CliViewTest.AddAssignmentGradePointsDivideByZero
+[       OK ] CliViewTest.AddAssignmentGradePointsDivideByZero (0 ms)
+[ RUN      ] CliViewTest.RemoveAssignmentGradeNotFound
+[       OK ] CliViewTest.RemoveAssignmentGradeNotFound (0 ms)
+[ RUN      ] CliViewTest.RemoveAssignmentGradeInvalidBool
+[       OK ] CliViewTest.RemoveAssignmentGradeInvalidBool (0 ms)
+[ RUN      ] CliViewTest.RemoveAssignmentGradeNotConfirmed
+[       OK ] CliViewTest.RemoveAssignmentGradeNotConfirmed (0 ms)
+[ RUN      ] CliViewTest.ViewAssignmentsAllEmpty
+[       OK ] CliViewTest.ViewAssignmentsAllEmpty (0 ms)
+[ RUN      ] CliViewTest.ViewAssignmentsCompletedEmpty
+[       OK ] CliViewTest.ViewAssignmentsCompletedEmpty (0 ms)
+[ RUN      ] CliViewTest.ViewAssignmentsIncompleteEmpty
+[       OK ] CliViewTest.ViewAssignmentsIncompleteEmpty (0 ms)
+[ RUN      ] CliViewTest.ViewAssignmentsInvalidSelection
+[       OK ] CliViewTest.ViewAssignmentsInvalidSelection (0 ms)
+[----------] 156 tests from CliViewTest (7 ms total)
+
+[----------] Global test environment tear-down
+[==========] 156 tests from 1 test suite ran. (7 ms total)
+[  PASSED  ] 156 tests.
+<end of output>
+Test time =   0.27 sec
+----------------------------------------------------------
+Test Passed.
+"CliViewTests" end time: May 24 22:31 PDT
+"CliViewTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/11 Testing: AssignmentControllerTests
+5/11 Test: AssignmentControllerTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/AssignmentControllerTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
+"AssignmentControllerTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 37 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 37 tests from AssignmentControllerTest
+[ RUN      ] AssignmentControllerTest.AssignmentListGetter
+[       OK ] AssignmentControllerTest.AssignmentListGetter (0 ms)
+[ RUN      ] AssignmentControllerTest.AssignmentIdGetter
+[       OK ] AssignmentControllerTest.AssignmentIdGetter (0 ms)
+[ RUN      ] AssignmentControllerTest.AddAssignment
+[       OK ] AssignmentControllerTest.AddAssignment (0 ms)
+[ RUN      ] AssignmentControllerTest.EditTitle
+[       OK ] AssignmentControllerTest.EditTitle (0 ms)
+[ RUN      ] AssignmentControllerTest.EditDescription
+[       OK ] AssignmentControllerTest.EditDescription (0 ms)
+[ RUN      ] AssignmentControllerTest.EditCategory
+[       OK ] AssignmentControllerTest.EditCategory (0 ms)
+[ RUN      ] AssignmentControllerTest.EditDueDate
+[       OK ] AssignmentControllerTest.EditDueDate (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentage
+[       OK ] AssignmentControllerTest.AddGradePercentage (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePoints
+[       OK ] AssignmentControllerTest.AddGradePoints (0 ms)
+[ RUN      ] AssignmentControllerTest.RemoveGrade
+[       OK ] AssignmentControllerTest.RemoveGrade (0 ms)
+[ RUN      ] AssignmentControllerTest.RemoveAssignment
+[       OK ] AssignmentControllerTest.RemoveAssignment (0 ms)
+[ RUN      ] AssignmentControllerTest.FindAssignmentConst
+[       OK ] AssignmentControllerTest.FindAssignmentConst (0 ms)
+[ RUN      ] AssignmentControllerTest.FindAssignmentNonConst
+[       OK ] AssignmentControllerTest.FindAssignmentNonConst (0 ms)
+[ RUN      ] AssignmentControllerTest.AssignmentListGetterEmpty
+[       OK ] AssignmentControllerTest.AssignmentListGetterEmpty (0 ms)
+[ RUN      ] AssignmentControllerTest.AssignmentIdGetterNotFound
+[       OK ] AssignmentControllerTest.AssignmentIdGetterNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.AddAssignmentAlreadyExists
+[       OK ] AssignmentControllerTest.AddAssignmentAlreadyExists (0 ms)
+[ RUN      ] AssignmentControllerTest.AddAssignmentInvalidCategory
+[       OK ] AssignmentControllerTest.AddAssignmentInvalidCategory (0 ms)
+[ RUN      ] AssignmentControllerTest.EditTitleAlreadyExists
+[       OK ] AssignmentControllerTest.EditTitleAlreadyExists (0 ms)
+[ RUN      ] AssignmentControllerTest.EditTitleAlreadyExistsDifferentCase
+[       OK ] AssignmentControllerTest.EditTitleAlreadyExistsDifferentCase (0 ms)
+[ RUN      ] AssignmentControllerTest.EditTitleEmpty
+[       OK ] AssignmentControllerTest.EditTitleEmpty (0 ms)
+[ RUN      ] AssignmentControllerTest.EditCategoryEmpty
+[       OK ] AssignmentControllerTest.EditCategoryEmpty (0 ms)
+[ RUN      ] AssignmentControllerTest.EditDueDateInvalid
+[       OK ] AssignmentControllerTest.EditDueDateInvalid (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradeAssignmentNotFound
+[       OK ] AssignmentControllerTest.AddGradeAssignmentNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentageOutOfRangeLow
+[       OK ] AssignmentControllerTest.AddGradePercentageOutOfRangeLow (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentageOutOfRangeHigh
+[       OK ] AssignmentControllerTest.AddGradePercentageOutOfRangeHigh (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentageBoundaryLow
+[       OK ] AssignmentControllerTest.AddGradePercentageBoundaryLow (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentageBoundaryHigh
+[       OK ] AssignmentControllerTest.AddGradePercentageBoundaryHigh (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsOutOfRangeLow
+[       OK ] AssignmentControllerTest.AddGradePointsOutOfRangeLow (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsOutOfRangeHigh
+[       OK ] AssignmentControllerTest.AddGradePointsOutOfRangeHigh (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsBoundaryLow
+[       OK ] AssignmentControllerTest.AddGradePointsBoundaryLow (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsBoundaryHigh
+[       OK ] AssignmentControllerTest.AddGradePointsBoundaryHigh (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsNegativeDivisor
+[       OK ] AssignmentControllerTest.AddGradePointsNegativeDivisor (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsDivisionByZero
+[       OK ] AssignmentControllerTest.AddGradePointsDivisionByZero (0 ms)
+[ RUN      ] AssignmentControllerTest.RemoveGradeAssignmentNotFound
+[       OK ] AssignmentControllerTest.RemoveGradeAssignmentNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.RemoveAssignmentNotFound
+[       OK ] AssignmentControllerTest.RemoveAssignmentNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.FindAssignmentConstNotFound
+[       OK ] AssignmentControllerTest.FindAssignmentConstNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.FindAssignmentNonConstNotFound
+[       OK ] AssignmentControllerTest.FindAssignmentNonConstNotFound (0 ms)
+[----------] 37 tests from AssignmentControllerTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 37 tests from 1 test suite ran. (1 ms total)
+[  PASSED  ] 37 tests.
+<end of output>
+Test time =   0.25 sec
+----------------------------------------------------------
+Test Passed.
+"AssignmentControllerTests" end time: May 24 22:31 PDT
+"AssignmentControllerTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/11 Testing: CourseControllerTests
+6/11 Test: CourseControllerTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/CourseControllerTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
+"CourseControllerTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 26 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 26 tests from CourseControllerTest
+[ RUN      ] CourseControllerTest.CourseListGetter
+[       OK ] CourseControllerTest.CourseListGetter (0 ms)
+[ RUN      ] CourseControllerTest.CourseIdGetter
+[       OK ] CourseControllerTest.CourseIdGetter (0 ms)
+[ RUN      ] CourseControllerTest.AddCourse
+[       OK ] CourseControllerTest.AddCourse (0 ms)
+[ RUN      ] CourseControllerTest.EditTitle
+[       OK ] CourseControllerTest.EditTitle (0 ms)
+[ RUN      ] CourseControllerTest.EditDescription
+[       OK ] CourseControllerTest.EditDescription (0 ms)
+[ RUN      ] CourseControllerTest.EditStartDate
+[       OK ] CourseControllerTest.EditStartDate (0 ms)
+[ RUN      ] CourseControllerTest.EditEndDate
+[       OK ] CourseControllerTest.EditEndDate (0 ms)
+[ RUN      ] CourseControllerTest.EditNumCredits
+[       OK ] CourseControllerTest.EditNumCredits (0 ms)
+[ RUN      ] CourseControllerTest.EditActive
+[       OK ] CourseControllerTest.EditActive (0 ms)
+[ RUN      ] CourseControllerTest.RemoveCourse
+[       OK ] CourseControllerTest.RemoveCourse (0 ms)
+[ RUN      ] CourseControllerTest.FindCourseConst
+[       OK ] CourseControllerTest.FindCourseConst (0 ms)
+[ RUN      ] CourseControllerTest.FindCourseNonConst
+[       OK ] CourseControllerTest.FindCourseNonConst (0 ms)
+[ RUN      ] CourseControllerTest.SelectCourse
+[       OK ] CourseControllerTest.SelectCourse (0 ms)
+[ RUN      ] CourseControllerTest.CourseListGetterEmpty
+[       OK ] CourseControllerTest.CourseListGetterEmpty (0 ms)
+[ RUN      ] CourseControllerTest.CourseIdGetterNotFound
+[       OK ] CourseControllerTest.CourseIdGetterNotFound (0 ms)
+[ RUN      ] CourseControllerTest.AddCourseAlreadyExists
+[       OK ] CourseControllerTest.AddCourseAlreadyExists (0 ms)
+[ RUN      ] CourseControllerTest.EditTitleAlreadyExists
+[       OK ] CourseControllerTest.EditTitleAlreadyExists (0 ms)
+[ RUN      ] CourseControllerTest.EditTitleAlreadyExistsDifferentCase
+[       OK ] CourseControllerTest.EditTitleAlreadyExistsDifferentCase (0 ms)
+[ RUN      ] CourseControllerTest.EditTitleEmpty
+[       OK ] CourseControllerTest.EditTitleEmpty (0 ms)
+[ RUN      ] CourseControllerTest.EditStartDateInvalid
+[       OK ] CourseControllerTest.EditStartDateInvalid (0 ms)
+[ RUN      ] CourseControllerTest.EditEndDateInvalid
+[       OK ] CourseControllerTest.EditEndDateInvalid (0 ms)
+[ RUN      ] CourseControllerTest.EditNumCreditsLessThanZero
+[       OK ] CourseControllerTest.EditNumCreditsLessThanZero (0 ms)
+[ RUN      ] CourseControllerTest.RemoveCourseNotFound
+[       OK ] CourseControllerTest.RemoveCourseNotFound (0 ms)
+[ RUN      ] CourseControllerTest.FindCourseConstNotFound
+[       OK ] CourseControllerTest.FindCourseConstNotFound (0 ms)
+[ RUN      ] CourseControllerTest.FindCourseNonConstNotFound
+[       OK ] CourseControllerTest.FindCourseNonConstNotFound (0 ms)
+[ RUN      ] CourseControllerTest.SelectCourseNotFound
+[       OK ] CourseControllerTest.SelectCourseNotFound (0 ms)
+[----------] 26 tests from CourseControllerTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 26 tests from 1 test suite ran. (1 ms total)
+[  PASSED  ] 26 tests.
+<end of output>
+Test time =   0.34 sec
+----------------------------------------------------------
+Test Passed.
+"CourseControllerTests" end time: May 24 22:31 PDT
+"CourseControllerTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/11 Testing: TermControllerTests
+7/11 Test: TermControllerTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/TermControllerTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
+"TermControllerTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 21 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 21 tests from TermControllerTest
+[ RUN      ] TermControllerTest.TermListGetter
+[       OK ] TermControllerTest.TermListGetter (0 ms)
+[ RUN      ] TermControllerTest.TermIdGetter
+[       OK ] TermControllerTest.TermIdGetter (0 ms)
+[ RUN      ] TermControllerTest.AddTerm
+[       OK ] TermControllerTest.AddTerm (0 ms)
+[ RUN      ] TermControllerTest.EditTitle
+[       OK ] TermControllerTest.EditTitle (0 ms)
+[ RUN      ] TermControllerTest.EditStartDate
+[       OK ] TermControllerTest.EditStartDate (0 ms)
+[ RUN      ] TermControllerTest.EditEndDate
+[       OK ] TermControllerTest.EditEndDate (0 ms)
+[ RUN      ] TermControllerTest.EditActive
+[       OK ] TermControllerTest.EditActive (0 ms)
+[ RUN      ] TermControllerTest.RemoveTerm
+[       OK ] TermControllerTest.RemoveTerm (0 ms)
+[ RUN      ] TermControllerTest.FindTermConst
+[       OK ] TermControllerTest.FindTermConst (0 ms)
+[ RUN      ] TermControllerTest.FindTermNonConst
+[       OK ] TermControllerTest.FindTermNonConst (0 ms)
+[ RUN      ] TermControllerTest.TermListGetterEmpty
+[       OK ] TermControllerTest.TermListGetterEmpty (0 ms)
+[ RUN      ] TermControllerTest.TermIdGetterNotFound
+[       OK ] TermControllerTest.TermIdGetterNotFound (0 ms)
+[ RUN      ] TermControllerTest.AddTermAlreadyExists
+[       OK ] TermControllerTest.AddTermAlreadyExists (0 ms)
+[ RUN      ] TermControllerTest.EditTitleAlreadyExists
+[       OK ] TermControllerTest.EditTitleAlreadyExists (0 ms)
+[ RUN      ] TermControllerTest.EditTitleAlreadyExistsDifferentCase
+[       OK ] TermControllerTest.EditTitleAlreadyExistsDifferentCase (0 ms)
+[ RUN      ] TermControllerTest.EditTitleEmpty
+[       OK ] TermControllerTest.EditTitleEmpty (0 ms)
+[ RUN      ] TermControllerTest.EditStartDateInvalid
+[       OK ] TermControllerTest.EditStartDateInvalid (0 ms)
+[ RUN      ] TermControllerTest.EditEndDateInvalid
+[       OK ] TermControllerTest.EditEndDateInvalid (0 ms)
+[ RUN      ] TermControllerTest.RemoveTermNotFound
+[       OK ] TermControllerTest.RemoveTermNotFound (0 ms)
+[ RUN      ] TermControllerTest.FindTermConstNotFound
+[       OK ] TermControllerTest.FindTermConstNotFound (0 ms)
+[ RUN      ] TermControllerTest.FindTermNonConstNotFound
+[       OK ] TermControllerTest.FindTermNonConstNotFound (0 ms)
+[----------] 21 tests from TermControllerTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 21 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 21 tests.
+<end of output>
+Test time =   0.25 sec
+----------------------------------------------------------
+Test Passed.
+"TermControllerTests" end time: May 24 22:31 PDT
+"TermControllerTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/11 Testing: UtilsTests
+8/11 Test: UtilsTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/UtilsTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
+"UtilsTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 26 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 26 tests from UtilsTest
+[ RUN      ] UtilsTest.GenerateUuidNotEmpty
+[       OK ] UtilsTest.GenerateUuidNotEmpty (0 ms)
+[ RUN      ] UtilsTest.GenerateUuidFormat
+[       OK ] UtilsTest.GenerateUuidFormat (0 ms)
+[ RUN      ] UtilsTest.GenerateUuidLength
+[       OK ] UtilsTest.GenerateUuidLength (0 ms)
+[ RUN      ] UtilsTest.ValidateDateOrder
+[       OK ] UtilsTest.ValidateDateOrder (0 ms)
+[ RUN      ] UtilsTest.BoolToString
+[       OK ] UtilsTest.BoolToString (0 ms)
+[ RUN      ] UtilsTest.FloatEqual
+[       OK ] UtilsTest.FloatEqual (0 ms)
+[ RUN      ] UtilsTest.FloatRound
+[       OK ] UtilsTest.FloatRound (0 ms)
+[ RUN      ] UtilsTest.DefaultStartDate
+[       OK ] UtilsTest.DefaultStartDate (0 ms)
+[ RUN      ] UtilsTest.DefaultEndDate
+[       OK ] UtilsTest.DefaultEndDate (0 ms)
+[ RUN      ] UtilsTest.DefaultEndDateUserInput
+[       OK ] UtilsTest.DefaultEndDateUserInput (0 ms)
+[ RUN      ] UtilsTest.StringLower
+[       OK ] UtilsTest.StringLower (0 ms)
+[ RUN      ] UtilsTest.StringTrim
+[       OK ] UtilsTest.StringTrim (0 ms)
+[ RUN      ] UtilsTest.PrintMap
+[       OK ] UtilsTest.PrintMap (0 ms)
+[ RUN      ] UtilsTest.UuidUniqueness
+[       OK ] UtilsTest.UuidUniqueness (0 ms)
+[ RUN      ] UtilsTest.ValidateDateOrderSameDay
+[       OK ] UtilsTest.ValidateDateOrderSameDay (0 ms)
+[ RUN      ] UtilsTest.FloatEqualVerySmall
+[       OK ] UtilsTest.FloatEqualVerySmall (0 ms)
+[ RUN      ] UtilsTest.FloatEqualVeryLarge
+[       OK ] UtilsTest.FloatEqualVeryLarge (0 ms)
+[ RUN      ] UtilsTest.FloatEqualNanValue
+[       OK ] UtilsTest.FloatEqualNanValue (0 ms)
+[ RUN      ] UtilsTest.FloatRoundAlreadyRounded
+[       OK ] UtilsTest.FloatRoundAlreadyRounded (0 ms)
+[ RUN      ] UtilsTest.DefaultEndDateUserInputNegative
+[       OK ] UtilsTest.DefaultEndDateUserInputNegative (0 ms)
+[ RUN      ] UtilsTest.DefaultEndDateUserInputZero
+[       OK ] UtilsTest.DefaultEndDateUserInputZero (0 ms)
+[ RUN      ] UtilsTest.DefaultEndDateUserInputMinimum
+[       OK ] UtilsTest.DefaultEndDateUserInputMinimum (0 ms)
+[ RUN      ] UtilsTest.StringLowerMixedCase
+[       OK ] UtilsTest.StringLowerMixedCase (0 ms)
+[ RUN      ] UtilsTest.StringTrimLeadingWhitespace
+[       OK ] UtilsTest.StringTrimLeadingWhitespace (0 ms)
+[ RUN      ] UtilsTest.StringTrimTrailingWhitespace
+[       OK ] UtilsTest.StringTrimTrailingWhitespace (0 ms)
+[ RUN      ] UtilsTest.StringTrimNoWhitespace
+[       OK ] UtilsTest.StringTrimNoWhitespace (0 ms)
+[----------] 26 tests from UtilsTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 26 tests from 1 test suite ran. (1 ms total)
+[  PASSED  ] 26 tests.
+<end of output>
+Test time =   0.21 sec
+----------------------------------------------------------
+Test Passed.
+"UtilsTests" end time: May 24 22:31 PDT
+"UtilsTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/11 Testing: CourseAssignmentIntegrationTests
+9/11 Test: CourseAssignmentIntegrationTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/CourseAssignmentIntegrationTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/integration
+"CourseAssignmentIntegrationTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 10 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 10 tests from CourseAssignmentIntegrationTest
+[ RUN      ] CourseAssignmentIntegrationTest.AddAssignmentToCourse
+[       OK ] CourseAssignmentIntegrationTest.AddAssignmentToCourse (0 ms)
+[ RUN      ] CourseAssignmentIntegrationTest.AddMultipleAssignmentsToCourse
+[       OK ] CourseAssignmentIntegrationTest.AddMultipleAssignmentsToCourse (0 ms)
+[ RUN      ] CourseAssignmentIntegrationTest.AssignmentStoredWithCorrectFields
+[       OK ] CourseAssignmentIntegrationTest.AssignmentStoredWithCorrectFields (0 ms)
+[ RUN      ] CourseAssignmentIntegrationTest.AssignmentCategoryRecognizedByCourse
+[       OK ] CourseAssignmentIntegrationTest.AssignmentCategoryRecognizedByCourse (0 ms)
+[ RUN      ] CourseAssignmentIntegrationTest.FinalGradeAcrossMultipleAssignments
+[       OK ] CourseAssignmentIntegrationTest.FinalGradeAcrossMultipleAssignments (0 ms)
+[ RUN      ] CourseAssignmentIntegrationTest.FinalGradeAcrossMultipleCategories
+[       OK ] CourseAssignmentIntegrationTest.FinalGradeAcrossMultipleCategories (0 ms)
+[ RUN      ] CourseAssignmentIntegrationTest.EmptyCategoryRedistributesWeight
+[       OK ] CourseAssignmentIntegrationTest.EmptyCategoryRedistributesWeight (0 ms)
+[ RUN      ] CourseAssignmentIntegrationTest.AssignmentDueDatePastCourseEndDate
+[       OK ] CourseAssignmentIntegrationTest.AssignmentDueDatePastCourseEndDate (0 ms)
+[ RUN      ] CourseAssignmentIntegrationTest.AssignmentNotMutatedByCourse
+[       OK ] CourseAssignmentIntegrationTest.AssignmentNotMutatedByCourse (0 ms)
+[ RUN      ] CourseAssignmentIntegrationTest.EmptyCourseReturnsGrade
+[       OK ] CourseAssignmentIntegrationTest.EmptyCourseReturnsGrade (0 ms)
+[----------] 10 tests from CourseAssignmentIntegrationTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 10 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 10 tests.
+<end of output>
+Test time =   0.19 sec
+----------------------------------------------------------
+Test Passed.
+"CourseAssignmentIntegrationTests" end time: May 24 22:31 PDT
+"CourseAssignmentIntegrationTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/11 Testing: TermCourseIntegrationTests
+10/11 Test: TermCourseIntegrationTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/TermCourseIntegrationTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/integration
+"TermCourseIntegrationTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 8 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 8 tests from TermCourseIntegrationTest
+[ RUN      ] TermCourseIntegrationTest.AddCourseToTerm
+[       OK ] TermCourseIntegrationTest.AddCourseToTerm (0 ms)
+[ RUN      ] TermCourseIntegrationTest.GradeCalculationAcrossTerm
+[       OK ] TermCourseIntegrationTest.GradeCalculationAcrossTerm (0 ms)
+[ RUN      ] TermCourseIntegrationTest.RemoveCourseFromTerm
+[       OK ] TermCourseIntegrationTest.RemoveCourseFromTerm (0 ms)
+[ RUN      ] TermCourseIntegrationTest.EmptyTermReturnsGpa
+[       OK ] TermCourseIntegrationTest.EmptyTermReturnsGpa (0 ms)
+[ RUN      ] TermCourseIntegrationTest.CourseUpdatesShownInTerm
+[       OK ] TermCourseIntegrationTest.CourseUpdatesShownInTerm (0 ms)
+[ RUN      ] TermCourseIntegrationTest.CoursesWithNoGrades
+[       OK ] TermCourseIntegrationTest.CoursesWithNoGrades (0 ms)
+[ RUN      ] TermCourseIntegrationTest.RemoveNonexistentCourse
+[       OK ] TermCourseIntegrationTest.RemoveNonexistentCourse (0 ms)
+[ RUN      ] TermCourseIntegrationTest.MultipleCourseUpdates
+[       OK ] TermCourseIntegrationTest.MultipleCourseUpdates (0 ms)
+[----------] 8 tests from TermCourseIntegrationTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 8 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 8 tests.
+<end of output>
+Test time =   0.19 sec
+----------------------------------------------------------
+Test Passed.
+"TermCourseIntegrationTests" end time: May 24 22:31 PDT
+"TermCourseIntegrationTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/11 Testing: ControllerIntegrationTests
+11/11 Test: ControllerIntegrationTests
+Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/ControllerIntegrationTests"
+Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/integration
+"ControllerIntegrationTests" start time: May 24 22:31 PDT
+Output:
+----------------------------------------------------------
+Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 6 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 6 tests from ControllerIntegrationTests
+[ RUN      ] ControllerIntegrationTests.CreateCourseUnderTerm
+[       OK ] ControllerIntegrationTests.CreateCourseUnderTerm (0 ms)
+[ RUN      ] ControllerIntegrationTests.RemovingTermRemovesCourses
+[       OK ] ControllerIntegrationTests.RemovingTermRemovesCourses (0 ms)
+[ RUN      ] ControllerIntegrationTests.CreateAssignmentUnderCourse
+[       OK ] ControllerIntegrationTests.CreateAssignmentUnderCourse (0 ms)
+[ RUN      ] ControllerIntegrationTests.RemovingCourseRemovesAssignments
+[       OK ] ControllerIntegrationTests.RemovingCourseRemovesAssignments (0 ms)
+[ RUN      ] ControllerIntegrationTests.FullHierarchyCreation
+[       OK ] ControllerIntegrationTests.FullHierarchyCreation (0 ms)
+[ RUN      ] ControllerIntegrationTests.DeleteTermRemovesAllChildren
+[       OK ] ControllerIntegrationTests.DeleteTermRemovesAllChildren (0 ms)
+[----------] 6 tests from ControllerIntegrationTests (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 6 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 6 tests.
+<end of output>
+Test time =   0.19 sec
+----------------------------------------------------------
+Test Passed.
+"ControllerIntegrationTests" end time: May 24 22:31 PDT
+"ControllerIntegrationTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: May 24 22:31 PDT

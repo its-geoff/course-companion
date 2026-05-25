@@ -1,0 +1,3 @@
+#!/bin/bash
+
+~/course-companion/client/build/build_main/bin/CourseCompanion
