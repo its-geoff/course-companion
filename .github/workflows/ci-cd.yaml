@@ -20,20 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_DATABASE: course_companion_test
-        ports:
-          - 3306:3306
-          - 33060:33060
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
     steps:
       - uses: actions/checkout@v4
 
@@ -55,16 +41,18 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.conan2
-          key: ${{ runner.os }}-conan-${{ hashFiles('conan.lock') }}
+          key: ${{ runner.os }}-conan-${{ hashFiles('client/conan.lock') }}
           restore-keys: |
             ${{ runner.os }}-conan-
 
       - name: Install Conan dependencies
+        working-directory: client
         run: |
           mkdir -p build/build_test
           conan install . --lockfile=conan.lock --build=missing -of build/build_test -s build_type=Debug
 
       - name: Configure CMake (Test)
+        working-directory: client
         run: |
           cmake -S . -B build/build_test \
             -DCMAKE_BUILD_TYPE=Debug \
@@ -73,21 +61,30 @@ jobs:
             -DCMAKE_PREFIX_PATH="${Qt6_DIR}"
 
       - name: Build tests
+        working-directory: client
         run: cmake --build build/build_test
 
       - name: Run tests
-        env:
-          DB_HOST: 127.0.0.1
-          DB_PORT: 33060
-          DB_USER: root
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          TEST_DB_SCHEMA: course_companion_test
+        working-directory: client
         run: ctest --test-dir build/build_test --output-on-failure
 
   test-server:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: course_companion_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     defaults:
       run:
         working-directory: server
@@ -99,6 +96,16 @@ jobs:
 
       - name: Install dependencies
         run: uv sync
+
+      - name: Initialize test database
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: course_companion
+          TEST_DB_SCHEMA: course_companion_test
+        run: uv run python scripts/init-db.py
 
       - name: Format check (black)
         run: uv run black --check .
@@ -113,6 +120,12 @@ jobs:
         run: uv run flake8 .
 
       - name: Run tests
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          TEST_DB_SCHEMA: course_companion_test
         run: uv run pytest
 
   docker:
@@ -144,11 +157,10 @@ jobs:
             type=ref,event=branch
             type=semver,pattern={{version}}
 
-      - name: Build and push production image
+      - name: Build and push server image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          target: production
+          context: ./server
           push: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
