@@ -54,6 +54,7 @@ jobs:
           queries: security-and-quality
 
       - name: Build code
+        working-directory: client
         run: |
           cmake -S . -B build/build_main \
             -DCMAKE_BUILD_TYPE=Debug \
