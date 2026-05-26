@@ -5,8 +5,9 @@
 .python-version
 .coverage
 __pycache__
+build
+tests/output_logs
+server.egg-info
+output_logs
 CMakeLists.txt.user
 CMakeUserPresets.json
-build/
-tests/output_logs/
-server.egg-info/
