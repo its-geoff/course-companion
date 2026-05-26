@@ -1,5 +1,13 @@
 #include "view/qt/TermView.hpp"
 
+/**
+ * @file TermView.cpp
+ * @brief Implementation of the TermView class, which serves as a secondary page for the Qt GUI.
+ * 
+ * This class displays information received from the TermController. The term name is shown,
+ * along with class grades, timelines, and the overall GPA from the term.
+ */
+
 TermView::TermView(QWidget* parent) : QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
     mainLayout_->setContentsMargins(24, 24, 24, 24);

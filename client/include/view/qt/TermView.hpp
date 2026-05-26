@@ -1,6 +1,17 @@
 #ifndef TERMVIEW_HPP
 #define TERMVIEW_HPP
 
+/**
+ * @file TermView.hpp
+ * @brief Definition of the TermView class, which serves as a secondary page for the Qt GUI.
+ * 
+ * This class shows user information from the Term perspective. It displays the current term,
+ * a summary of classes, and the user's overall GPA. The class sends information to the TermController and 
+ * outputs results from the TermController.
+ * 
+ * Provides declarations only; see TermView.cpp for implementations.
+ */
+
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
