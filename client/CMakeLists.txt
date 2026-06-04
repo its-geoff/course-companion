@@ -65,6 +65,7 @@ if(NOT BUILD_TESTING)
     add_library(CourseCompanion_gui OBJECT
         src/view/qt/MainWindow.cpp
         src/view/qt/TermView.cpp
+        src/view/qt/CourseView.cpp
     )
 
     target_include_directories(CourseCompanion_gui PUBLIC include)
@@ -75,6 +76,7 @@ if(NOT BUILD_TESTING)
     target_sources(CourseCompanion_gui PRIVATE
         include/view/qt/MainWindow.hpp
         include/view/qt/TermView.hpp
+        include/view/qt/CourseView.hpp
     )
 
     target_link_libraries(CourseCompanion_gui

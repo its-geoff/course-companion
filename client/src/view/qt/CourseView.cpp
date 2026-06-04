@@ -1,27 +1,26 @@
-#include "view/qt/TermView.hpp"
+#include "view/qt/CourseView.hpp"
 
 /**
- * @file TermView.cpp
- * @brief Implementation of the TermView class, which serves as a secondary page for the Qt GUI.
- * 
- * This class displays information received from the TermController. The term name is shown,
- * along with course grades, timelines, and the overall GPA from the term.
+ * @file CourseView.cpp
+ * @brief Implementation of the CourseView class, which serves as a secondary page for the Qt GUI.
+ *
+ * Displays information received from the CourseController: course name, date range,
+ * assignment completion progress, a scrollable assignment list, and a grade summary footer.
  */
 
-TermView::TermView(QWidget* parent) : QWidget(parent) {
+CourseView::CourseView(QWidget* parent) : QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
     mainLayout_->setContentsMargins(24, 24, 24, 24);
     mainLayout_->setSpacing(20);
 
     setupHeader();
-    setupProgress();
-    setupCourseList();
-    mainLayout_->addStretch();  // push the footer to the bottom
+    setupAssignmentProgress();
+    setupAssignmentList();
+    mainLayout_->addStretch();
     setupFooter();
 }
 
-void TermView::setupHeader() {
-    // container widget for the header section
+void CourseView::setupHeader() {
     auto* header       = new QWidget(this);
     auto* headerLayout = new QVBoxLayout(header);
     headerLayout->setContentsMargins(0, 0, 0, 0);
@@ -32,18 +31,18 @@ void TermView::setupHeader() {
     titleLayout->setContentsMargins(0, 0, 0, 0);
     titleLayout->setSpacing(8);
 
-    termTitle_ = new QLabel("Fall 2024", titleRow);
-    termTitle_->setStyleSheet("font-size: 22px; font-weight: 500;");
+    courseTitle_ = new QLabel("Data Structures", titleRow);
+    courseTitle_->setStyleSheet("font-size: 22px; font-weight: 500;");
 
-    auto* termTypeLabel = new QLabel("Term", titleRow);
-    termTypeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
-    termTypeLabel->setAlignment(Qt::AlignBottom);  // align to baseline of title
+    auto* courseTypeLabel = new QLabel("Course", titleRow);
+    courseTypeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
+    courseTypeLabel->setAlignment(Qt::AlignBottom);
 
-    titleLayout->addWidget(termTitle_);
-    titleLayout->addWidget(termTypeLabel);
-    titleLayout->addStretch();  // push both labels to the left
+    titleLayout->addWidget(courseTitle_);
+    titleLayout->addWidget(courseTypeLabel);
+    titleLayout->addStretch();
 
-    dateRangeLabel_ = new QLabel("Aug 26 – Dec 20, 2024", header);
+    dateRangeLabel_ = new QLabel("Aug 26 - Dec 20, 2024", header);
     dateRangeLabel_->setStyleSheet("font-size: 13px; color: #666;");
 
     headerLayout->addWidget(titleRow);
@@ -52,8 +51,7 @@ void TermView::setupHeader() {
     mainLayout_->addWidget(header);
 }
 
-
-void TermView::setupProgress() {
+void CourseView::setupAssignmentProgress() {
     auto* section       = new QWidget(this);
     auto* sectionLayout = new QVBoxLayout(section);
     sectionLayout->setContentsMargins(0, 0, 0, 0);
@@ -63,10 +61,10 @@ void TermView::setupProgress() {
     auto* labelLayout = new QHBoxLayout(labelRow);
     labelLayout->setContentsMargins(0, 0, 0, 0);
 
-    auto* sectionTitle = new QLabel("TERM PROGRESS", labelRow);
+    auto* sectionTitle = new QLabel("ASSIGNMENT PROGRESS", labelRow);
     sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999;");
 
-    progressLabel_ = new QLabel("Week 11 of 16", labelRow);
+    progressLabel_ = new QLabel("9 of 14 completed", labelRow);
     progressLabel_->setStyleSheet("font-size: 12px; color: #666;");
 
     labelLayout->addWidget(sectionTitle);
@@ -75,8 +73,8 @@ void TermView::setupProgress() {
 
     progressBar_ = new QProgressBar(section);
     progressBar_->setMinimum(0);
-    progressBar_->setMaximum(16);
-    progressBar_->setValue(11);
+    progressBar_->setMaximum(14);
+    progressBar_->setValue(9);
     progressBar_->setTextVisible(false);
     progressBar_->setFixedHeight(6);
     progressBar_->setStyleSheet(
@@ -97,35 +95,32 @@ void TermView::setupProgress() {
     mainLayout_->addWidget(section);
 }
 
-
-void TermView::setupCourseList() {
+void CourseView::setupAssignmentList() {
     auto* section       = new QWidget(this);
     auto* sectionLayout = new QVBoxLayout(section);
     sectionLayout->setContentsMargins(0, 0, 0, 0);
     sectionLayout->setSpacing(8);
 
-    auto* sectionTitle = new QLabel("Courses", section);
-    sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase;");
+    auto* sectionTitle = new QLabel("ASSIGNMENTS", section);
+    sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999;");
     sectionLayout->addWidget(sectionTitle);
 
-    // the widget that holds the course rows
     auto* scrollContent    = new QWidget();
-    courseListLayout_ = new QVBoxLayout(scrollContent);
-    courseListLayout_->setContentsMargins(0, 0, 0, 0);
-    courseListLayout_->setSpacing(1);  // tight gap between rows
+    assignmentListLayout_  = new QVBoxLayout(scrollContent);
+    assignmentListLayout_->setContentsMargins(0, 0, 0, 0);
+    assignmentListLayout_->setSpacing(1);
 
-    // placeholder course rows
-    addCourseRow("Data Structures",  "CS 201 · 3 credits",  "93.4%", "A",  "4.0");
-    addCourseRow("Linear Algebra",   "MATH 215 · 4 credits","88.1%", "B+", "3.3");
-    addCourseRow("Tech Writing",     "ENG 310 · 3 credits", "91.7%", "A−", "3.7");
-    addCourseRow("Ethics in CS",     "CS 401 · 3 credits",  "83.2%", "B",  "3.0");
+    addAssignmentRow("Homework 1",  "Homework · due Sep 5",  "95.0%", "A",  "4.0");
+    addAssignmentRow("Homework 2",  "Homework · due Sep 12", "88.5%", "B+", "3.3");
+    addAssignmentRow("Midterm",     "Midterm · due Oct 10",  "91.0%", "A-", "3.7");
+    addAssignmentRow("Homework 3",  "Homework · due Oct 24", "78.0%", "C+", "2.3");
+    addAssignmentRow("Final Exam",  "Final Exam · due Dec 15","93.4%","A",  "4.0");
 
-    courseListLayout_->addStretch();
+    assignmentListLayout_->addStretch();
 
-    // wrap in a scroll area
     auto* scrollArea = new QScrollArea(section);
     scrollArea->setWidget(scrollContent);
-    scrollArea->setWidgetResizable(true);   // lets content resize to fill width
+    scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scrollArea->setMaximumHeight(300);
@@ -134,10 +129,9 @@ void TermView::setupCourseList() {
     mainLayout_->addWidget(section);
 }
 
-
-void TermView::addCourseRow(const QString& name, const QString& sub,
-                             const QString& pct, const QString& letter,
-                             const QString& gpa) {
+void CourseView::addAssignmentRow(const QString& name, const QString& sub,
+                                  const QString& pct, const QString& letter,
+                                  const QString& gpa) {
     auto* row       = new QFrame();
     auto* rowLayout = new QHBoxLayout(row);
     rowLayout->setContentsMargins(14, 10, 14, 10);
@@ -170,7 +164,7 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     gradeColLayout->setSpacing(2);
     gradeColLayout->setAlignment(Qt::AlignRight);
 
-    auto* pctLabel    = new QLabel(pct, gradeCol);
+    auto* pctLabel = new QLabel(pct, gradeCol);
     pctLabel->setStyleSheet("font-size: 14px; font-weight: 500;");
     pctLabel->setAlignment(Qt::AlignRight);
 
@@ -186,11 +180,11 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     gpaColLayout->setContentsMargins(0, 0, 0, 0);
     gpaColLayout->setSpacing(2);
 
-    auto* gpaVal   = new QLabel(gpa, gpaCol);
+    auto* gpaVal = new QLabel(gpa, gpaCol);
     gpaVal->setStyleSheet("font-size: 14px; font-weight: 500;");
     gpaVal->setAlignment(Qt::AlignRight);
 
-    auto* gpaLbl   = new QLabel("GPA pts", gpaCol);
+    auto* gpaLbl = new QLabel("GPA pts", gpaCol);
     gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
     gpaLbl->setAlignment(Qt::AlignRight);
 
@@ -199,22 +193,19 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
 
     rowLayout->addWidget(dot, 0, Qt::AlignVCenter);
     rowLayout->addSpacing(10);
-    rowLayout->addWidget(textCol, 1);  // stretch factor 1 = takes remaining space
+    rowLayout->addWidget(textCol, 1);
     rowLayout->addWidget(gradeCol);
     rowLayout->addSpacing(16);
     rowLayout->addWidget(gpaCol);
 
-    courseListLayout_->addWidget(row);
+    assignmentListLayout_->addWidget(row);
 }
 
-
-void TermView::setupFooter() {
+void CourseView::setupFooter() {
     auto* footer       = new QFrame(this);
     auto* footerLayout = new QHBoxLayout(footer);
     footerLayout->setContentsMargins(0, 16, 0, 0);
-    footer->setStyleSheet(
-        "QFrame { border-top: 1px solid #eee; }"
-    );
+    footer->setStyleSheet("QFrame { border-top: 1px solid #eee; }");
 
     auto* avgSection = new QWidget(footer);
     auto* avgLayout  = new QVBoxLayout(avgSection);
@@ -224,7 +215,7 @@ void TermView::setupFooter() {
     auto* avgLbl = new QLabel("Avg grade", avgSection);
     avgLbl->setStyleSheet("font-size: 11px; color: #999;");
 
-    avgGradeLabel_ = new QLabel("89.1%", avgSection);
+    avgGradeLabel_ = new QLabel("91.4%", avgSection);
     avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
 
     avgLayout->addWidget(avgLbl);
@@ -235,10 +226,10 @@ void TermView::setupFooter() {
     gpaLayout->setContentsMargins(0, 0, 0, 0);
     gpaLayout->setSpacing(2);
 
-    auto* gpaLbl = new QLabel("Term GPA", gpaSection);
+    auto* gpaLbl = new QLabel("Course GPA", gpaSection);
     gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
 
-    gpaLabel_ = new QLabel("3.52", gpaSection);
+    gpaLabel_ = new QLabel("3.74", gpaSection);
     gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
 
     gpaLayout->addWidget(gpaLbl);
