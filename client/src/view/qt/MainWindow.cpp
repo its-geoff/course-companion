@@ -1,6 +1,14 @@
 #include "view/qt/MainWindow.hpp"
 #include "view/qt/TermView.hpp"
 
+/**
+ * @file MainWindow.cpp
+ * @brief Implementation of the MainWindow class, which serves as the main page for the Qt GUI.
+ * 
+ * This class presents output to the user through a Qt GUI. It does not contain any 
+ * app logic. The class calls instances of other windows as the main driver behind the GUI.
+ */
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
     setupUi();
