@@ -9,6 +9,8 @@
  * a summary of classes, and the user's overall GPA. The class sends information to the TermController and 
  * outputs results from the TermController.
  * 
+ * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
+ * 
  * Provides declarations only; see TermView.cpp for implementations.
  */
 

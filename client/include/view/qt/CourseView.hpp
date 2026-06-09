@@ -7,6 +7,8 @@
  *
  * Displays course metadata, assignment completion progress, a list of all assignments,
  * and a footer summary with average grade and GPA.
+ * 
+ * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  *
  * Provides declarations only; see CourseView.cpp for implementations.
  */

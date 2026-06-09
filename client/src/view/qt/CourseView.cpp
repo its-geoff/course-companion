@@ -6,6 +6,8 @@
  *
  * Displays information received from the CourseController: course name, date range,
  * assignment completion progress, a scrollable assignment list, and a grade summary footer.
+ * 
+ * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
 
 CourseView::CourseView(QWidget* parent) : QWidget(parent) {

@@ -6,6 +6,8 @@
  * 
  * This class displays information received from the TermController. The term name is shown,
  * along with course grades, timelines, and the overall GPA from the term.
+ *
+ * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
 
 TermView::TermView(QWidget* parent) : QWidget(parent) {
