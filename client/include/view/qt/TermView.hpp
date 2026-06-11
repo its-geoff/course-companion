@@ -14,6 +14,7 @@
  * Provides declarations only; see TermView.cpp for implementations.
  */
 
+#include <QPushButton>
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -29,6 +30,9 @@ class TermView : public QWidget {
     public:
         explicit TermView(QWidget* parent = nullptr);
 
+    private slots:
+        void onAddTerm();
+
     private:
         void setupHeader();
         void setupProgress();
@@ -41,8 +45,9 @@ class TermView : public QWidget {
         QVBoxLayout* mainLayout_;
 
         // header
-        QLabel* termTitle_;
-        QLabel* dateRangeLabel_;
+        QLabel*      termTitle_;
+        QLabel*      dateRangeLabel_;
+        QPushButton* addTermButton_;
 
         // progress
         QProgressBar* progressBar_;

@@ -3,12 +3,18 @@
 /**
  * @file TermView.cpp
  * @brief Implementation of the TermView class, which serves as a secondary page for the Qt GUI.
- * 
+ *
  * This class displays information received from the TermController. The term name is shown,
  * along with course grades, timelines, and the overall GPA from the term.
  *
  * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
+
+#include "view/qt/FormDialog.hpp"
+
+#include <QDate>
+#include <QDebug>
+#include <QPushButton>
 
 TermView::TermView(QWidget* parent) : QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
@@ -41,11 +47,26 @@ void TermView::setupHeader() {
     termTypeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
     termTypeLabel->setAlignment(Qt::AlignBottom);  // align to baseline of title
 
+    addTermButton_ = new QPushButton("+ Add Term", titleRow);
+    addTermButton_->setStyleSheet(
+        "QPushButton {"
+        "  font-size: 12px;"
+        "  color: #378ADD;"
+        "  background: transparent;"
+        "  border: 1px solid #378ADD;"
+        "  border-radius: 4px;"
+        "  padding: 3px 10px;"
+        "}"
+        "QPushButton:hover { background: #eef4fb; }"
+    );
+    connect(addTermButton_, &QPushButton::clicked, this, &TermView::onAddTerm);
+
     titleLayout->addWidget(termTitle_);
     titleLayout->addWidget(termTypeLabel);
     titleLayout->addStretch();  // push both labels to the left
+    titleLayout->addWidget(addTermButton_);
 
-    dateRangeLabel_ = new QLabel("Aug 26 – Dec 20, 2024", header);
+    dateRangeLabel_ = new QLabel("Aug 26 - Dec 20, 2024", header);
     dateRangeLabel_->setStyleSheet("font-size: 13px; color: #666;");
 
     headerLayout->addWidget(titleRow);
@@ -119,7 +140,7 @@ void TermView::setupCourseList() {
     // placeholder course rows
     addCourseRow("Data Structures",  "CS 201 · 3 credits",  "93.4%", "A",  "4.0");
     addCourseRow("Linear Algebra",   "MATH 215 · 4 credits","88.1%", "B+", "3.3");
-    addCourseRow("Tech Writing",     "ENG 310 · 3 credits", "91.7%", "A−", "3.7");
+    addCourseRow("Tech Writing",     "ENG 310 · 3 credits", "91.7%", "A-", "3.7");
     addCourseRow("Ethics in CS",     "CS 401 · 3 credits",  "83.2%", "B",  "3.0");
 
     courseListLayout_->addStretch();
@@ -251,4 +272,24 @@ void TermView::setupFooter() {
     footerLayout->addWidget(gpaSection);
 
     mainLayout_->addWidget(footer);
+}
+
+void TermView::onAddTerm() {
+    std::vector<FieldDef> fields = {
+        { "title",     "Title",        FieldDef::Type::Text, QString{}             },
+        { "startDate", "Start Date",   FieldDef::Type::Date, QDate::currentDate()  },
+        { "endDate",   "End Date",     FieldDef::Type::Date, QDate::currentDate().addMonths(4) },
+        { "active",    "Current term", FieldDef::Type::Bool, true                  },
+    };
+
+    FormDialog dlg("Add Term", fields, this);
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+
+    // TODO: wire to TermController::addTerm once controller is connected
+    qDebug() << "Add Term:"
+             << dlg.textValue("title")
+             << dlg.dateValue("startDate").toString("yyyy-MM-dd")
+             << dlg.dateValue("endDate").toString("yyyy-MM-dd")
+             << dlg.boolValue("active");
 }
