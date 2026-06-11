@@ -20,6 +20,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMap>
 #include <QSpinBox>
 #include <QString>
 #include <QVariant>

@@ -111,7 +111,7 @@ bool FormDialog::validateRequired() {
 
 void FormDialog::onAccepted() {
     if (!validateRequired()) {
-        QMessageBox::warning(this, "Required field", "Title cannot be empty.");
+        QMessageBox::warning(this, "Missing required fields", "Please fill in all required fields before continuing.");
         return;
     }
     accept();
