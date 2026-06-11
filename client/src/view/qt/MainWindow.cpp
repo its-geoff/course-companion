@@ -1,5 +1,6 @@
 #include "view/qt/MainWindow.hpp"
 #include "view/qt/TermView.hpp"
+#include "view/qt/CourseView.hpp"
 
 /**
  * @file MainWindow.cpp
@@ -41,13 +42,8 @@ void MainWindow::setupUi() {
 
     // stacked views
     auto* termPage       = new TermView();
-    auto* coursePage     = new QWidget();
+    auto* coursePage     = new CourseView();
     auto* assignmentPage = new QWidget();
-
-    auto* courseLayout = new QVBoxLayout(coursePage);
-    courseLayout->setContentsMargins(16, 16, 16, 16);
-    courseLayout->addWidget(new QLabel("Course View", coursePage));
-    courseLayout->addStretch();
 
     auto* assignmentLayout = new QVBoxLayout(assignmentPage);
     assignmentLayout->setContentsMargins(16, 16, 16, 16);
