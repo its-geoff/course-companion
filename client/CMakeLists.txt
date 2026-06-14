@@ -66,6 +66,7 @@ if(NOT BUILD_TESTING)
         src/view/qt/MainWindow.cpp
         src/view/qt/TermView.cpp
         src/view/qt/CourseView.cpp
+        src/view/qt/FormDialog.cpp
     )
 
     target_include_directories(CourseCompanion_gui PUBLIC include)
@@ -77,6 +78,7 @@ if(NOT BUILD_TESTING)
         include/view/qt/MainWindow.hpp
         include/view/qt/TermView.hpp
         include/view/qt/CourseView.hpp
+        include/view/qt/FormDialog.hpp
     )
 
     target_link_libraries(CourseCompanion_gui

@@ -13,6 +13,7 @@
  * Provides declarations only; see CourseView.cpp for implementations.
  */
 
+#include <QPushButton>
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -28,6 +29,9 @@ class CourseView : public QWidget {
     public:
         explicit CourseView(QWidget* parent = nullptr);
 
+    private slots:
+        void onAddCourse();
+
     private:
         void setupHeader();
         void setupAssignmentProgress();
@@ -39,8 +43,9 @@ class CourseView : public QWidget {
 
         QVBoxLayout* mainLayout_;
 
-        QLabel* courseTitle_;
-        QLabel* dateRangeLabel_;
+        QLabel*      courseTitle_;
+        QLabel*      dateRangeLabel_;
+        QPushButton* addCourseButton_;
 
         QProgressBar* progressBar_;
         QLabel* progressLabel_;

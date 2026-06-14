@@ -6,9 +6,15 @@
  *
  * Displays information received from the CourseController: course name, date range,
  * assignment completion progress, a scrollable assignment list, and a grade summary footer.
- * 
+ *
  * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
+
+#include "view/qt/FormDialog.hpp"
+
+#include <QDate>
+#include <QDebug>
+#include <QPushButton>
 
 CourseView::CourseView(QWidget* parent) : QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
@@ -40,9 +46,24 @@ void CourseView::setupHeader() {
     courseTypeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
     courseTypeLabel->setAlignment(Qt::AlignBottom);
 
+    addCourseButton_ = new QPushButton("+ Add Course", titleRow);
+    addCourseButton_->setStyleSheet(
+        "QPushButton {"
+        "  font-size: 12px;"
+        "  color: #378ADD;"
+        "  background: transparent;"
+        "  border: 1px solid #378ADD;"
+        "  border-radius: 4px;"
+        "  padding: 3px 10px;"
+        "}"
+        "QPushButton:hover { background: #eef4fb; }"
+    );
+    connect(addCourseButton_, &QPushButton::clicked, this, &CourseView::onAddCourse);
+
     titleLayout->addWidget(courseTitle_);
     titleLayout->addWidget(courseTypeLabel);
     titleLayout->addStretch();
+    titleLayout->addWidget(addCourseButton_);
 
     dateRangeLabel_ = new QLabel("Aug 26 - Dec 20, 2024", header);
     dateRangeLabel_->setStyleSheet("font-size: 13px; color: #666;");
@@ -242,4 +263,28 @@ void CourseView::setupFooter() {
     footerLayout->addWidget(gpaSection);
 
     mainLayout_->addWidget(footer);
+}
+
+void CourseView::onAddCourse() {
+    std::vector<FieldDef> fields = {
+        { "title",       "Title",          FieldDef::Type::Text,         QString{}             },
+        { "description", "Description",    FieldDef::Type::OptionalText, QString{}             },
+        { "startDate",   "Start Date",     FieldDef::Type::Date,         QDate::currentDate()  },
+        { "endDate",     "End Date",       FieldDef::Type::Date,         QDate::currentDate().addMonths(4) },
+        { "numCredits",  "Credits",        FieldDef::Type::Integer,      3                     },
+        { "active",      "Current course", FieldDef::Type::Bool,         true                  },
+    };
+
+    FormDialog dlg("Add Course", fields, this);
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+
+    // TODO: wire to CourseController::addCourse once controller is connected
+    qDebug() << "Add Course:"
+             << dlg.textValue("title")
+             << dlg.textValue("description")
+             << dlg.dateValue("startDate").toString("yyyy-MM-dd")
+             << dlg.dateValue("endDate").toString("yyyy-MM-dd")
+             << dlg.intValue("numCredits")
+             << dlg.boolValue("active");
 }
