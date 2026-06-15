@@ -2,44 +2,17 @@
 
 /**
  * @file AssignmentView.cpp
- * @brief Implementation of the AssignmentView class, which serves as a tertiary page for the Qt GUI.
+ * @brief Implementation of the AssignmentView class, which serves as a detail overlay for the Qt GUI.
  *
- * Displays the assignment list for a selected course. Supports add/remove operations,
- * filtering by completion status, and grade input in both percentage (95.0) and
- * point-based (47/50) formats.
+ * Renders metadata for one selected assignment and handles grade input. Grade input
+ * accepts both percentage format (95.0) and point-based format (47/50); the corresponding
+ * letter grade and percentage are calculated and displayed on submit.
  *
- * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
+ * Note: grade-to-letter calculation uses placeholder thresholds; controller wiring
+ * is planned but not yet implemented.
  */
 
-#include "view/qt/FormDialog.hpp"
-
-#include <QDate>
-#include <QDebug>
-#include <QInputDialog>
 #include <QMessageBox>
-#include <QPushButton>
-
-static const QString kBtnActive =
-    "QPushButton {"
-    "  font-size: 11px;"
-    "  color: #378ADD;"
-    "  background: #eef4fb;"
-    "  border: 1px solid #378ADD;"
-    "  border-radius: 4px;"
-    "  padding: 3px 10px;"
-    "}"
-    "QPushButton:hover { background: #ddeaf8; }";
-
-static const QString kBtnInactive =
-    "QPushButton {"
-    "  font-size: 11px;"
-    "  color: #888;"
-    "  background: transparent;"
-    "  border: 1px solid #ddd;"
-    "  border-radius: 4px;"
-    "  padding: 3px 10px;"
-    "}"
-    "QPushButton:hover { background: #f5f5f5; }";
 
 AssignmentView::AssignmentView(QWidget* parent) : QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
@@ -47,300 +20,198 @@ AssignmentView::AssignmentView(QWidget* parent) : QWidget(parent) {
     mainLayout_->setSpacing(20);
 
     setupHeader();
-    setupProgress();
-    setupFilterBar();
-    setupAssignmentList();
+    setupMeta();
+    setupGradeSection();
     mainLayout_->addStretch();
-    setupFooter();
 }
 
 void AssignmentView::setupHeader() {
     auto* header       = new QWidget(this);
     auto* headerLayout = new QVBoxLayout(header);
     headerLayout->setContentsMargins(0, 0, 0, 0);
-    headerLayout->setSpacing(4);
+    headerLayout->setSpacing(8);
+
+    auto* topRow    = new QWidget(header);
+    auto* topLayout = new QHBoxLayout(topRow);
+    topLayout->setContentsMargins(0, 0, 0, 0);
+    topLayout->setSpacing(8);
+
+    backButton_ = new QPushButton("← Back", topRow);
+    backButton_->setStyleSheet(
+        "QPushButton {"
+        "  font-size: 12px;"
+        "  color: #666;"
+        "  background: transparent;"
+        "  border: none;"
+        "  padding: 0;"
+        "}"
+        "QPushButton:hover { color: #378ADD; }"
+    );
+    connect(backButton_, &QPushButton::clicked, this, &AssignmentView::backRequested);
+
+    topLayout->addWidget(backButton_);
+    topLayout->addStretch();
 
     auto* titleRow    = new QWidget(header);
     auto* titleLayout = new QHBoxLayout(titleRow);
     titleLayout->setContentsMargins(0, 0, 0, 0);
-    titleLayout->setSpacing(8);
+    titleLayout->setSpacing(12);
 
-    courseTitle_ = new QLabel("Data Structures", titleRow);
-    courseTitle_->setStyleSheet("font-size: 22px; font-weight: 500;");
+    titleLabel_ = new QLabel("Assignment Title", titleRow);
+    titleLabel_->setStyleSheet("font-size: 22px; font-weight: 500;");
 
-    auto* typeLabel = new QLabel("Assignments", titleRow);
-    typeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
-    typeLabel->setAlignment(Qt::AlignBottom);
-
-    addAssignmentButton_ = new QPushButton("+ Add", titleRow);
-    addAssignmentButton_->setStyleSheet(
-        "QPushButton {"
-        "  font-size: 12px;"
-        "  color: #378ADD;"
-        "  background: transparent;"
-        "  border: 1px solid #378ADD;"
-        "  border-radius: 4px;"
-        "  padding: 3px 10px;"
-        "}"
-        "QPushButton:hover { background: #eef4fb; }"
+    statusBadge_ = new QLabel("Pending", titleRow);
+    statusBadge_->setStyleSheet(
+        "font-size: 11px;"
+        "color: #888;"
+        "background: #f0f0f0;"
+        "border-radius: 4px;"
+        "padding: 2px 8px;"
     );
-    connect(addAssignmentButton_, &QPushButton::clicked, this, &AssignmentView::onAddAssignment);
+    statusBadge_->setAlignment(Qt::AlignVCenter);
 
-    removeAssignmentButton_ = new QPushButton("Remove", titleRow);
-    removeAssignmentButton_->setStyleSheet(
-        "QPushButton {"
-        "  font-size: 12px;"
-        "  color: #cc4444;"
-        "  background: transparent;"
-        "  border: 1px solid #cc4444;"
-        "  border-radius: 4px;"
-        "  padding: 3px 10px;"
-        "}"
-        "QPushButton:hover { background: #fdf0f0; }"
-    );
-    connect(removeAssignmentButton_, &QPushButton::clicked, this, &AssignmentView::onRemoveAssignment);
-
-    titleLayout->addWidget(courseTitle_);
-    titleLayout->addWidget(typeLabel);
+    titleLayout->addWidget(titleLabel_);
+    titleLayout->addWidget(statusBadge_);
     titleLayout->addStretch();
-    titleLayout->addWidget(addAssignmentButton_);
-    titleLayout->addWidget(removeAssignmentButton_);
 
-    dateRangeLabel_ = new QLabel("Aug 26 - Dec 20, 2024", header);
-    dateRangeLabel_->setStyleSheet("font-size: 13px; color: #666;");
-
+    headerLayout->addWidget(topRow);
     headerLayout->addWidget(titleRow);
-    headerLayout->addWidget(dateRangeLabel_);
 
     mainLayout_->addWidget(header);
 }
 
-void AssignmentView::setupProgress() {
-    auto* section       = new QWidget(this);
+void AssignmentView::setupMeta() {
+    auto* section       = new QFrame(this);
     auto* sectionLayout = new QVBoxLayout(section);
-    sectionLayout->setContentsMargins(0, 0, 0, 0);
-    sectionLayout->setSpacing(6);
+    sectionLayout->setContentsMargins(16, 14, 16, 14);
+    sectionLayout->setSpacing(10);
 
-    auto* labelRow    = new QWidget(section);
-    auto* labelLayout = new QHBoxLayout(labelRow);
-    labelLayout->setContentsMargins(0, 0, 0, 0);
-
-    auto* sectionTitle = new QLabel("ASSIGNMENT PROGRESS", labelRow);
-    sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999;");
-
-    progressLabel_ = new QLabel("9 of 14 completed", labelRow);
-    progressLabel_->setStyleSheet("font-size: 12px; color: #666;");
-
-    labelLayout->addWidget(sectionTitle);
-    labelLayout->addStretch();
-    labelLayout->addWidget(progressLabel_);
-
-    progressBar_ = new QProgressBar(section);
-    progressBar_->setMinimum(0);
-    progressBar_->setMaximum(14);
-    progressBar_->setValue(9);
-    progressBar_->setTextVisible(false);
-    progressBar_->setFixedHeight(6);
-    progressBar_->setStyleSheet(
-        "QProgressBar {"
-        "  border: none;"
-        "  background: #eee;"
-        "  border-radius: 3px;"
-        "}"
-        "QProgressBar::chunk {"
-        "  background: #378ADD;"
-        "  border-radius: 3px;"
-        "}"
-    );
-
-    sectionLayout->addWidget(labelRow);
-    sectionLayout->addWidget(progressBar_);
-
-    mainLayout_->addWidget(section);
-}
-
-void AssignmentView::setupFilterBar() {
-    auto* bar    = new QWidget(this);
-    auto* layout = new QHBoxLayout(bar);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(6);
-
-    filterAllBtn_        = new QPushButton("All", bar);
-    filterCompletedBtn_  = new QPushButton("Completed", bar);
-    filterIncompleteBtn_ = new QPushButton("Incomplete", bar);
-
-    filterAllBtn_->setStyleSheet(kBtnActive);
-    filterCompletedBtn_->setStyleSheet(kBtnInactive);
-    filterIncompleteBtn_->setStyleSheet(kBtnInactive);
-
-    connect(filterAllBtn_,        &QPushButton::clicked, this, &AssignmentView::onFilterAll);
-    connect(filterCompletedBtn_,  &QPushButton::clicked, this, &AssignmentView::onFilterCompleted);
-    connect(filterIncompleteBtn_, &QPushButton::clicked, this, &AssignmentView::onFilterIncomplete);
-
-    layout->addWidget(filterAllBtn_);
-    layout->addWidget(filterCompletedBtn_);
-    layout->addWidget(filterIncompleteBtn_);
-    layout->addStretch();
-
-    mainLayout_->addWidget(bar);
-}
-
-void AssignmentView::setupAssignmentList() {
-    auto* section       = new QWidget(this);
-    auto* sectionLayout = new QVBoxLayout(section);
-    sectionLayout->setContentsMargins(0, 0, 0, 0);
-    sectionLayout->setSpacing(8);
-
-    auto* sectionTitle = new QLabel("ASSIGNMENTS", section);
-    sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999;");
-    sectionLayout->addWidget(sectionTitle);
-
-    auto* scrollContent   = new QWidget();
-    assignmentListLayout_ = new QVBoxLayout(scrollContent);
-    assignmentListLayout_->setContentsMargins(0, 0, 0, 0);
-    assignmentListLayout_->setSpacing(1);
-
-    addAssignmentRow("Homework 1", "Homework · due Sep 5",   "95.0%", "A",   "4.0", true);
-    addAssignmentRow("Homework 2", "Homework · due Sep 12",  "88.5%", "B+",  "3.3", true);
-    addAssignmentRow("Midterm",    "Midterm · due Oct 10",   "91.0%", "A-",  "3.7", true);
-    addAssignmentRow("Homework 3", "Homework · due Oct 24",  "",      "",    "",    false);
-    addAssignmentRow("Final Exam", "Final Exam · due Dec 15","",      "",    "",    false);
-
-    assignmentListLayout_->addStretch();
-
-    auto* scrollArea = new QScrollArea(section);
-    scrollArea->setWidget(scrollContent);
-    scrollArea->setWidgetResizable(true);
-    scrollArea->setFrameShape(QFrame::NoFrame);
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    scrollArea->setMaximumHeight(300);
-
-    sectionLayout->addWidget(scrollArea);
-    mainLayout_->addWidget(section);
-}
-
-void AssignmentView::addAssignmentRow(const QString& name, const QString& sub,
-                                      const QString& pct, const QString& letter,
-                                      const QString& gpa, bool completed) {
-    auto* row       = new QFrame();
-    auto* rowLayout = new QHBoxLayout(row);
-    rowLayout->setContentsMargins(14, 10, 14, 10);
-
-    row->setStyleSheet(
+    section->setStyleSheet(
         "QFrame { background: white; border: 0.5px solid #e0e0e0; border-radius: 8px; }"
     );
 
-    auto* dot = new QWidget(row);
-    dot->setFixedSize(8, 8);
-    dot->setStyleSheet(completed
-        ? "background: #378ADD; border-radius: 4px;"
-        : "background: #ccc; border-radius: 4px;"
-    );
+    auto* sectionTitle = new QLabel("DETAILS", section);
+    sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999;");
 
-    auto* textCol       = new QWidget(row);
-    auto* textColLayout = new QVBoxLayout(textCol);
-    textColLayout->setContentsMargins(0, 0, 0, 0);
-    textColLayout->setSpacing(2);
+    auto* separator = new QFrame(section);
+    separator->setFrameShape(QFrame::HLine);
+    separator->setStyleSheet("color: #eee;");
 
-    auto* nameLabel = new QLabel(name, textCol);
-    nameLabel->setStyleSheet("font-size: 13px; font-weight: 500;");
+    dueDateLabel_ = new QLabel("Due: —", section);
+    dueDateLabel_->setStyleSheet("font-size: 13px; color: #555;");
 
-    auto* subLabel = new QLabel(sub, textCol);
-    subLabel->setStyleSheet("font-size: 11px; color: #999;");
+    descriptionLabel_ = new QLabel("No description.", section);
+    descriptionLabel_->setStyleSheet("font-size: 13px; color: #555;");
+    descriptionLabel_->setWordWrap(true);
 
-    textColLayout->addWidget(nameLabel);
-    textColLayout->addWidget(subLabel);
+    sectionLayout->addWidget(sectionTitle);
+    sectionLayout->addWidget(separator);
+    sectionLayout->addWidget(dueDateLabel_);
+    sectionLayout->addWidget(descriptionLabel_);
 
-    rowLayout->addWidget(dot, 0, Qt::AlignVCenter);
-    rowLayout->addSpacing(10);
-    rowLayout->addWidget(textCol, 1);
-
-    if (completed) {
-        auto* gradeCol       = new QWidget(row);
-        auto* gradeColLayout = new QVBoxLayout(gradeCol);
-        gradeColLayout->setContentsMargins(0, 0, 0, 0);
-        gradeColLayout->setSpacing(2);
-        gradeColLayout->setAlignment(Qt::AlignRight);
-
-        auto* pctLabel = new QLabel(pct, gradeCol);
-        pctLabel->setStyleSheet("font-size: 14px; font-weight: 500;");
-        pctLabel->setAlignment(Qt::AlignRight);
-
-        auto* letterLabel = new QLabel(letter, gradeCol);
-        letterLabel->setStyleSheet("font-size: 11px; color: #999;");
-        letterLabel->setAlignment(Qt::AlignRight);
-
-        gradeColLayout->addWidget(pctLabel);
-        gradeColLayout->addWidget(letterLabel);
-
-        auto* gpaCol       = new QWidget(row);
-        auto* gpaColLayout = new QVBoxLayout(gpaCol);
-        gpaColLayout->setContentsMargins(0, 0, 0, 0);
-        gpaColLayout->setSpacing(2);
-
-        auto* gpaVal = new QLabel(gpa, gpaCol);
-        gpaVal->setStyleSheet("font-size: 14px; font-weight: 500;");
-        gpaVal->setAlignment(Qt::AlignRight);
-
-        auto* gpaLbl = new QLabel("GPA pts", gpaCol);
-        gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
-        gpaLbl->setAlignment(Qt::AlignRight);
-
-        gpaColLayout->addWidget(gpaVal);
-        gpaColLayout->addWidget(gpaLbl);
-
-        rowLayout->addWidget(gradeCol);
-        rowLayout->addSpacing(16);
-        rowLayout->addWidget(gpaCol);
-    } else {
-        auto* pendingLabel = new QLabel("Pending", row);
-        pendingLabel->setStyleSheet("font-size: 11px; color: #bbb;");
-        pendingLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-        rowLayout->addWidget(pendingLabel);
-    }
-
-    assignmentListLayout_->addWidget(row);
+    mainLayout_->addWidget(section);
 }
 
-void AssignmentView::setupFooter() {
-    auto* footer       = new QFrame(this);
-    auto* footerLayout = new QHBoxLayout(footer);
-    footerLayout->setContentsMargins(0, 16, 0, 0);
-    footer->setStyleSheet("QFrame { border-top: 1px solid #eee; }");
+void AssignmentView::setupGradeSection() {
+    gradeSection_ = new QFrame(this);
+    auto* sectionLayout = new QVBoxLayout(gradeSection_);
+    sectionLayout->setContentsMargins(16, 14, 16, 14);
+    sectionLayout->setSpacing(12);
 
-    auto* avgSection = new QWidget(footer);
-    auto* avgLayout  = new QVBoxLayout(avgSection);
-    avgLayout->setContentsMargins(0, 0, 0, 0);
-    avgLayout->setSpacing(2);
+    gradeSection_->setStyleSheet(
+        "QFrame { background: white; border: 0.5px solid #e0e0e0; border-radius: 8px; }"
+    );
 
-    auto* avgLbl = new QLabel("Avg grade", avgSection);
-    avgLbl->setStyleSheet("font-size: 11px; color: #999;");
+    gradeSectionTitle_ = new QLabel("ENTER GRADE", gradeSection_);
+    gradeSectionTitle_->setStyleSheet("font-size: 11px; font-weight: 500; color: #999;");
 
-    avgGradeLabel_ = new QLabel("91.5%", avgSection);
-    avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
+    auto* separator = new QFrame(gradeSection_);
+    separator->setFrameShape(QFrame::HLine);
+    separator->setStyleSheet("color: #eee;");
 
-    avgLayout->addWidget(avgLbl);
-    avgLayout->addWidget(avgGradeLabel_);
+    auto* inputRow    = new QWidget(gradeSection_);
+    auto* inputLayout = new QHBoxLayout(inputRow);
+    inputLayout->setContentsMargins(0, 0, 0, 0);
+    inputLayout->setSpacing(8);
 
-    auto* gpaSection = new QWidget(footer);
-    auto* gpaLayout  = new QVBoxLayout(gpaSection);
-    gpaLayout->setContentsMargins(0, 0, 0, 0);
-    gpaLayout->setSpacing(2);
+    gradeInput_ = new QLineEdit(inputRow);
+    gradeInput_->setPlaceholderText("e.g. 95.0 or 47/50");
+    gradeInput_->setStyleSheet(
+        "QLineEdit {"
+        "  font-size: 13px;"
+        "  border: 1px solid #ddd;"
+        "  border-radius: 4px;"
+        "  padding: 5px 8px;"
+        "}"
+        "QLineEdit:focus { border-color: #378ADD; }"
+    );
 
-    auto* gpaLbl = new QLabel("Course GPA", gpaSection);
-    gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
+    submitGradeButton_ = new QPushButton("Save", inputRow);
+    submitGradeButton_->setStyleSheet(
+        "QPushButton {"
+        "  font-size: 12px;"
+        "  color: white;"
+        "  background: #378ADD;"
+        "  border: none;"
+        "  border-radius: 4px;"
+        "  padding: 5px 16px;"
+        "}"
+        "QPushButton:hover { background: #2d6fb5; }"
+    );
+    connect(submitGradeButton_, &QPushButton::clicked, this, &AssignmentView::onSubmitGrade);
 
-    gpaLabel_ = new QLabel("3.74", gpaSection);
-    gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
+    inputLayout->addWidget(gradeInput_, 1);
+    inputLayout->addWidget(submitGradeButton_);
 
-    gpaLayout->addWidget(gpaLbl);
-    gpaLayout->addWidget(gpaLabel_);
+    gradeResultLabel_ = new QLabel("", gradeSection_);
+    gradeResultLabel_->setStyleSheet("font-size: 13px; color: #555;");
+    gradeResultLabel_->hide();
 
-    footerLayout->addWidget(avgSection);
-    footerLayout->addStretch();
-    footerLayout->addWidget(gpaSection);
+    sectionLayout->addWidget(gradeSectionTitle_);
+    sectionLayout->addWidget(separator);
+    sectionLayout->addWidget(inputRow);
+    sectionLayout->addWidget(gradeResultLabel_);
 
-    mainLayout_->addWidget(footer);
+    mainLayout_->addWidget(gradeSection_);
+}
+
+void AssignmentView::loadAssignment(const QString& title, const QString& description,
+                                    const QString& dueDate, bool completed, float grade) {
+    completed_ = completed;
+
+    titleLabel_->setText(title);
+
+    if (completed) {
+        statusBadge_->setText("Completed");
+        statusBadge_->setStyleSheet(
+            "font-size: 11px;"
+            "color: #378ADD;"
+            "background: #eef4fb;"
+            "border-radius: 4px;"
+            "padding: 2px 8px;"
+        );
+    } else {
+        statusBadge_->setText("Pending");
+        statusBadge_->setStyleSheet(
+            "font-size: 11px;"
+            "color: #888;"
+            "background: #f0f0f0;"
+            "border-radius: 4px;"
+            "padding: 2px 8px;"
+        );
+    }
+
+    dueDateLabel_->setText("Due: " + dueDate);
+    descriptionLabel_->setText(description.isEmpty() ? "No description." : description);
+
+    gradeSectionTitle_->setText(completed ? "EDIT GRADE" : "ENTER GRADE");
+
+    gradeInput_->clear();
+    gradeResultLabel_->hide();
+
+    if (completed && grade > 0.0f) {
+        applyGradeResult(grade);
+    }
 }
 
 float AssignmentView::parseGradeInput(const QString& input, bool& ok) const {
@@ -366,93 +237,54 @@ float AssignmentView::parseGradeInput(const QString& input, bool& ok) const {
     return pct;
 }
 
-void AssignmentView::onAddAssignment() {
-    std::vector<FieldDef> fields = {
-        { "title",     "Title",       FieldDef::Type::Text,         QString{}            },
-        { "desc",      "Description", FieldDef::Type::OptionalText, QString{}            },
-        { "category",  "Category",    FieldDef::Type::Text,         QString{}            },
-        { "dueDate",   "Due Date",    FieldDef::Type::Date,         QDate::currentDate() },
-        { "completed", "Completed",   FieldDef::Type::Bool,         false                },
-    };
+void AssignmentView::applyGradeResult(float pct) {
+    // placeholder grade scale matching Course::gradeScaleDefault_
+    QString letter;
+    float   gpaVal;
 
-    FormDialog dlg("Add Assignment", fields, this);
-    if (dlg.exec() != QDialog::Accepted)
+    if      (pct >= 97.0f) { letter = "A+"; gpaVal = 4.0f; }
+    else if (pct >= 93.0f) { letter = "A";  gpaVal = 4.0f; }
+    else if (pct >= 90.0f) { letter = "A-"; gpaVal = 3.7f; }
+    else if (pct >= 87.0f) { letter = "B+"; gpaVal = 3.3f; }
+    else if (pct >= 83.0f) { letter = "B";  gpaVal = 3.0f; }
+    else if (pct >= 80.0f) { letter = "B-"; gpaVal = 2.7f; }
+    else if (pct >= 77.0f) { letter = "C+"; gpaVal = 2.3f; }
+    else if (pct >= 73.0f) { letter = "C";  gpaVal = 2.0f; }
+    else if (pct >= 70.0f) { letter = "C-"; gpaVal = 1.7f; }
+    else if (pct >= 67.0f) { letter = "D+"; gpaVal = 1.3f; }
+    else if (pct >= 63.0f) { letter = "D";  gpaVal = 1.0f; }
+    else if (pct >= 60.0f) { letter = "D-"; gpaVal = 0.7f; }
+    else                   { letter = "F";  gpaVal = 0.0f; }
+
+    gradeResultLabel_->setText(
+        QString("%1%   %2   %3 GPA pts")
+            .arg(QString::number(pct, 'f', 1))
+            .arg(letter)
+            .arg(QString::number(gpaVal, 'f', 1))
+    );
+    gradeResultLabel_->show();
+}
+
+void AssignmentView::onSubmitGrade() {
+    QString input = gradeInput_->text().trimmed();
+
+    if (input.isEmpty()) {
+        QMessageBox::warning(this, "No Input", "Please enter a grade before saving.");
         return;
-
-    float grade = 0.0f;
-    if (dlg.boolValue("completed")) {
-        bool ok = false;
-        QString gradeInput = QInputDialog::getText(
-            this, "Grade", "Enter grade (e.g. 95.0 or 47/50):", QLineEdit::Normal, "", &ok
-        );
-
-        if (ok && !gradeInput.trimmed().isEmpty()) {
-            bool parseOk = false;
-            grade = parseGradeInput(gradeInput, parseOk);
-
-            if (!parseOk || grade < 0.0f || grade > 150.0f) {
-                QMessageBox::warning(this, "Invalid Grade",
-                    "Grade must be a number from 0 to 150, or a fraction like 47/50.");
-                return;
-            }
-        }
     }
 
-    // TODO: wire to AssignmentController::addAssignment once controller is connected
-    qDebug() << "Add Assignment:"
-             << dlg.textValue("title")
-             << dlg.textValue("desc")
-             << dlg.textValue("category")
-             << dlg.dateValue("dueDate").toString("yyyy-MM-dd")
-             << dlg.boolValue("completed")
-             << grade;
-}
-
-void AssignmentView::onRemoveAssignment() {
     bool ok = false;
-    QString title = QInputDialog::getText(
-        this, "Remove Assignment", "Assignment title:", QLineEdit::Normal, "", &ok
-    );
+    float pct = parseGradeInput(input, ok);
 
-    if (!ok || title.trimmed().isEmpty())
+    if (!ok || pct < 0.0f || pct > 150.0f) {
+        QMessageBox::warning(this, "Invalid Grade",
+            "Enter a percentage (e.g. 95.0) or a fraction (e.g. 47/50).\n"
+            "Grade must be between 0 and 150.");
         return;
+    }
 
-    QMessageBox::StandardButton confirm = QMessageBox::question(
-        this, "Confirm Removal",
-        "Remove assignment '" + title + "'?",
-        QMessageBox::Yes | QMessageBox::No
-    );
+    applyGradeResult(pct);
 
-    if (confirm != QMessageBox::Yes)
-        return;
-
-    // TODO: wire to AssignmentController::removeAssignment once controller is connected
-    qDebug() << "Remove Assignment:" << title;
-}
-
-void AssignmentView::onFilterAll() {
-    filterAllBtn_->setStyleSheet(kBtnActive);
-    filterCompletedBtn_->setStyleSheet(kBtnInactive);
-    filterIncompleteBtn_->setStyleSheet(kBtnInactive);
-
-    // TODO: show all rows once controller is connected
-    qDebug() << "Filter: All";
-}
-
-void AssignmentView::onFilterCompleted() {
-    filterAllBtn_->setStyleSheet(kBtnInactive);
-    filterCompletedBtn_->setStyleSheet(kBtnActive);
-    filterIncompleteBtn_->setStyleSheet(kBtnInactive);
-
-    // TODO: hide incomplete rows once controller is connected
-    qDebug() << "Filter: Completed";
-}
-
-void AssignmentView::onFilterIncomplete() {
-    filterAllBtn_->setStyleSheet(kBtnInactive);
-    filterCompletedBtn_->setStyleSheet(kBtnInactive);
-    filterIncompleteBtn_->setStyleSheet(kBtnActive);
-
-    // TODO: hide completed rows once controller is connected
-    qDebug() << "Filter: Incomplete";
+    // TODO: wire to AssignmentController::addGrade / editGrade once controller is connected
+    qDebug() << "Save grade:" << pct;
 }

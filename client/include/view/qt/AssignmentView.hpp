@@ -3,24 +3,23 @@
 
 /**
  * @file AssignmentView.hpp
- * @brief Definition of the AssignmentView class, which serves as a tertiary page for the Qt GUI.
+ * @brief Definition of the AssignmentView class, which serves as a detail overlay for the Qt GUI.
  *
- * Displays the assignment list for a selected course, supporting add/remove and filtering
- * by completion status. Grade input accepts both percentage format (95.0) and point-based
- * format (47/50).
+ * Shows metadata for a single selected assignment: title, description, due date, and completion
+ * status. Allows grade entry (percentage or points) for incomplete assignments and grade editing
+ * for completed ones. Emits backRequested when the user navigates back to CourseView.
  *
  * Provides declarations only; see AssignmentView.cpp for implementations.
  */
 
+#include <QFrame>
+#include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
-#include <QWidget>
+#include <QString>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QLabel>
-#include <QProgressBar>
-#include <QScrollArea>
-#include <QFrame>
-#include <QString>
+#include <QWidget>
 
 class AssignmentView : public QWidget {
     Q_OBJECT
@@ -28,43 +27,40 @@ class AssignmentView : public QWidget {
     public:
         explicit AssignmentView(QWidget* parent = nullptr);
 
+        void loadAssignment(const QString& title, const QString& description,
+                            const QString& dueDate, bool completed,
+                            float grade = 0.0f);
+
+    signals:
+        void backRequested();
+
     private slots:
-        void onAddAssignment();
-        void onRemoveAssignment();
-        void onFilterAll();
-        void onFilterCompleted();
-        void onFilterIncomplete();
+        void onSubmitGrade();
 
     private:
         void setupHeader();
-        void setupProgress();
-        void setupFilterBar();
-        void setupAssignmentList();
-        void addAssignmentRow(const QString& name, const QString& sub,
-                              const QString& pct, const QString& letter,
-                              const QString& gpa, bool completed);
-        void setupFooter();
+        void setupMeta();
+        void setupGradeSection();
 
         float parseGradeInput(const QString& input, bool& ok) const;
+        void  applyGradeResult(float pct);
 
         QVBoxLayout* mainLayout_;
 
-        QLabel*      courseTitle_;
-        QLabel*      dateRangeLabel_;
-        QPushButton* addAssignmentButton_;
-        QPushButton* removeAssignmentButton_;
+        QPushButton* backButton_;
+        QLabel*      titleLabel_;
+        QLabel*      statusBadge_;
 
-        QProgressBar* progressBar_;
-        QLabel*       progressLabel_;
+        QLabel* descriptionLabel_;
+        QLabel* dueDateLabel_;
 
-        QPushButton* filterAllBtn_;
-        QPushButton* filterCompletedBtn_;
-        QPushButton* filterIncompleteBtn_;
+        QWidget*     gradeSection_;
+        QLabel*      gradeSectionTitle_;
+        QLineEdit*   gradeInput_;
+        QPushButton* submitGradeButton_;
+        QLabel*      gradeResultLabel_;
 
-        QVBoxLayout* assignmentListLayout_;
-
-        QLabel* avgGradeLabel_;
-        QLabel* gpaLabel_;
+        bool completed_ = false;
 };
 
 #endif // ASSIGNMENTVIEW_HPP
