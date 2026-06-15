@@ -1,6 +1,7 @@
 #include "view/qt/MainWindow.hpp"
 #include "view/qt/TermView.hpp"
 #include "view/qt/CourseView.hpp"
+#include "view/qt/AssignmentView.hpp"
 
 /**
  * @file MainWindow.cpp
@@ -31,24 +32,21 @@ void MainWindow::setupUi() {
     sidebarLayout->setContentsMargins(8, 16, 8, 16);
     sidebarLayout->setSpacing(4);
 
-    auto* sidebarLabel = new QLabel("Course Companion", sidebar_);
-    auto* termBtn      = new QPushButton("Fall 2024", sidebar_);
-    auto* courseBtn    = new QPushButton("Data Structures", sidebar_);
+    auto* sidebarLabel    = new QLabel("Course Companion", sidebar_);
+    auto* termBtn         = new QPushButton("Fall 2024", sidebar_);
+    auto* courseBtn       = new QPushButton("Data Structures", sidebar_);
+    auto* assignmentBtn   = new QPushButton("Assignments", sidebar_);
 
     sidebarLayout->addWidget(sidebarLabel);
     sidebarLayout->addWidget(termBtn);
     sidebarLayout->addWidget(courseBtn);
+    sidebarLayout->addWidget(assignmentBtn);
     sidebarLayout->addStretch();
 
     // stacked views
     auto* termPage       = new TermView();
     auto* coursePage     = new CourseView();
-    auto* assignmentPage = new QWidget();
-
-    auto* assignmentLayout = new QVBoxLayout(assignmentPage);
-    assignmentLayout->setContentsMargins(16, 16, 16, 16);
-    assignmentLayout->addWidget(new QLabel("Assignment View", assignmentPage));
-    assignmentLayout->addStretch();
+    auto* assignmentPage = new AssignmentView();
 
     stack_->addWidget(termPage);
     stack_->addWidget(coursePage);
@@ -66,6 +64,7 @@ void MainWindow::setupUi() {
     resize(900, 700);
 
     // signals
-    connect(termBtn,   &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(0); });
-    connect(courseBtn, &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(1); });
+    connect(termBtn,       &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(0); });
+    connect(courseBtn,     &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(1); });
+    connect(assignmentBtn, &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(2); });
 }
