@@ -12,7 +12,9 @@
  * is planned but not yet implemented.
  */
 
+#include <QDebug>
 #include <QMessageBox>
+#include <QStringList>
 
 AssignmentView::AssignmentView(QWidget* parent) : QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
@@ -209,7 +211,7 @@ void AssignmentView::loadAssignment(const QString& title, const QString& descrip
     gradeInput_->clear();
     gradeResultLabel_->hide();
 
-    if (completed && grade > 0.0f) {
+    if (completed && grade >= 0.0f) {
         applyGradeResult(grade);
     }
 }
