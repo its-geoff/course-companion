@@ -1,5 +1,14 @@
 #include "view/qt/MainWindow.hpp"
 #include "view/qt/TermView.hpp"
+#include "view/qt/CourseView.hpp"
+
+/**
+ * @file MainWindow.cpp
+ * @brief Implementation of the MainWindow class, which serves as the main page for the Qt GUI.
+ * 
+ * This class presents output to the user through a Qt GUI. It does not contain any 
+ * app logic. The class calls instances of other windows as the main driver behind the GUI.
+ */
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
@@ -33,13 +42,8 @@ void MainWindow::setupUi() {
 
     // stacked views
     auto* termPage       = new TermView();
-    auto* coursePage     = new QWidget();
+    auto* coursePage     = new CourseView();
     auto* assignmentPage = new QWidget();
-
-    auto* courseLayout = new QVBoxLayout(coursePage);
-    courseLayout->setContentsMargins(16, 16, 16, 16);
-    courseLayout->addWidget(new QLabel("Course View", coursePage));
-    courseLayout->addStretch();
 
     auto* assignmentLayout = new QVBoxLayout(assignmentPage);
     assignmentLayout->setContentsMargins(16, 16, 16, 16);
