@@ -61,9 +61,7 @@ endfunction()
 if(NOT BUILD_TESTING)
     find_package(Qt6 REQUIRED COMPONENTS Widgets)
     set(CMAKE_AUTOMOC ON)
-    set(CMAKE_AUTOMOC ON)
 
-    add_library(CourseCompanion_gui OBJECT
     add_library(CourseCompanion_gui OBJECT
         src/view/qt/MainWindow.cpp
         src/view/qt/TermView.cpp
@@ -71,8 +69,6 @@ if(NOT BUILD_TESTING)
         src/view/qt/FormDialog.cpp
         src/view/cli/CliView.cpp
     )
-
-    target_include_directories(CourseCompanion_gui PUBLIC include)
 
     target_include_directories(CourseCompanion_gui PUBLIC include)
 
