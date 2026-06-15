@@ -64,7 +64,11 @@ void MainWindow::setupUi() {
     setCentralWidget(centralWidget_);
     setWindowTitle("Course Companion");
     resize(900, 700);
+    resize(900, 700);
 
+    // signals
+    connect(termBtn,   &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(0); });
+    connect(courseBtn, &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(1); });
     // signals
     connect(termBtn,   &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(0); });
     connect(courseBtn, &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(1); });
