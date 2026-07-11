@@ -66,6 +66,7 @@ if(NOT BUILD_TESTING)
         src/view/qt/MainWindow.cpp
         src/view/qt/TermView.cpp
         src/view/qt/CourseView.cpp
+        src/view/qt/AssignmentView.cpp
         src/view/qt/FormDialog.cpp
         src/view/cli/CliView.cpp
     )
@@ -79,6 +80,7 @@ if(NOT BUILD_TESTING)
         include/view/qt/MainWindow.hpp
         include/view/qt/TermView.hpp
         include/view/qt/CourseView.hpp
+        include/view/qt/AssignmentView.hpp
         include/view/qt/FormDialog.hpp
     )
 
