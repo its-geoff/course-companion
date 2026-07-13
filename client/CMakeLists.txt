@@ -93,7 +93,6 @@ if(NOT BUILD_TESTING)
     add_executable(CourseCompanion src/main.cpp)
     target_include_directories(CourseCompanion PRIVATE include)
     target_link_libraries(CourseCompanion PRIVATE CourseCompanion_gui CourseCompanion_lib)
-    target_link_libraries(CourseCompanion PRIVATE CourseCompanion_gui CourseCompanion_lib)
 
     set_target_properties(CourseCompanion PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
