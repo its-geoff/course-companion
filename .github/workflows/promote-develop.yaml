@@ -70,4 +70,4 @@ jobs:
                     exit 1
                   fi
 
-                  gh pr merge "$PR_NUMBER" --auto --squash
+                  gh pr merge "$PR_NUMBER" --auto --merge
