@@ -2,6 +2,8 @@
 #include <string_view>
 #include "controller/TermController.hpp"
 #include "view/qt/MainWindow.hpp"
+#include "view/qt/StyleManager.hpp"
+#include "view/qt/PaletteWatcher.hpp"
 #include "view/cli/CliView.hpp"
 
 int main(int argc, char *argv[]) {
@@ -15,8 +17,11 @@ int main(int argc, char *argv[]) {
     }
 
     QApplication app(argc, argv);
-
+    PaletteWatcher paletteWatcher;
     MainWindow window;
+
+    app.setStyleSheet(StyleManager::buildStylesheet());
+    qApp->installEventFilter(&paletteWatcher);
     window.show();
 
     return app.exec();

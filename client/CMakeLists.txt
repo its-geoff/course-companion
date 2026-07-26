@@ -82,6 +82,8 @@ if(NOT BUILD_TESTING)
         include/view/qt/CourseView.hpp
         include/view/qt/AssignmentView.hpp
         include/view/qt/FormDialog.hpp
+        include/view/qt/StyleManager.hpp
+        include/view/qt/PaletteWatcher.hpp
     )
 
     target_link_libraries(CourseCompanion_gui
