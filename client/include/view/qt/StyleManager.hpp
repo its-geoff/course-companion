@@ -30,6 +30,17 @@ namespace StyleManager {
                 background-color: %1;
                 color: %2;
             }
+            QListWidget, QTreeWidget, QListView, QTreeView {
+                background-color: %1;
+                color: %2;
+            }
+            QListWidget::item, QTreeWidget::item {
+                color: %2;
+            }
+            QListWidget::item:selected, QTreeWidget::item:selected {
+                background-color: %6;
+                color: %7;
+            }
             QLineEdit, QTextEdit {
                 background-color: %3;
                 color: %2;
@@ -43,11 +54,12 @@ namespace StyleManager {
                 color: white;
             }
         )").arg(windowBg)
-           .arg(windowText)
-           .arg(base)
-           .arg(altBase)
-           .arg(buttonBg)
-           .arg(buttonText);
+        .arg(windowText)
+        .arg(base)
+        .arg(buttonBg)
+        .arg(buttonText)
+        .arg(palette.color(QPalette::Highlight).name())
+        .arg(palette.color(QPalette::HighlightedText).name());
     }
 }
 
