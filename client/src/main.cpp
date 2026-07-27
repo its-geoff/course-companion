@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     MainWindow window;
 
     app.setStyleSheet(StyleManager::buildStylesheet());
-    qApp->installEventFilter(&paletteWatcher);
+    app.installEventFilter(&paletteWatcher);
     window.show();
 
     return app.exec();

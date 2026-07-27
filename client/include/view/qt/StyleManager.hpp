@@ -3,7 +3,7 @@
 
 /**
  * @file StyleManager.hpp
- * @brief Definition of the StyleManager class, which standardizes style information for Qt.
+ * @brief Definition of the StyleManager namespace, which standardizes style information for Qt.
  *
  * Sets all color palette information for the Qt GUI. Imported by all pages of the GUI for consistent
  * branding and style.
@@ -20,7 +20,6 @@ namespace StyleManager {
         const QString windowBg      = palette.color(QPalette::Window).name();
         const QString windowText    = palette.color(QPalette::WindowText).name();
         const QString base          = palette.color(QPalette::Base).name();
-        const QString altBase       = palette.color(QPalette::AlternateBase).name();
         const QString buttonBg      = palette.color(QPalette::Button).name();
         const QString buttonText    = palette.color(QPalette::ButtonText).name();
 

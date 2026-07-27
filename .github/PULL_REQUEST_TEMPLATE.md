@@ -18,7 +18,6 @@
 ## Checklist
 
 -   [ ] I have tested this code
--   [ ] I have added/updated unit tests
+-   [ ] I have added/updated unit tests if needed
 -   [ ] I have updated documentation if needed
--   [ ] CI/CD checks pass
 -   [ ] Code follows coding standards

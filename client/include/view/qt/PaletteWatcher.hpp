@@ -9,8 +9,10 @@
  * GUI contrast correct on any palette.
  */
 
+#include <QApplication>
 #include <QEvent>
 #include <QObject>
+#include "view/qt/StyleManager.hpp"
 
 class PaletteWatcher : public QObject {
     public:
