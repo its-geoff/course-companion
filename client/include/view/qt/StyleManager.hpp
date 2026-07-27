@@ -42,7 +42,12 @@ namespace StyleManager {
                 background-color: #378ADD;
                 color: white;
             }
-        )").arg(windowBg, windowText, base, altBase, buttonBg, buttonText);
+        )").arg(windowBg)
+           .arg(windowText)
+           .arg(base)
+           .arg(altBase)
+           .arg(buttonBg)
+           .arg(buttonText);
     }
 }
 
