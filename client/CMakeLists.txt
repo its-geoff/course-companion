@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.5)
+cmake_minimum_required(VERSION 3.20)
 
 project(CourseCompanion
     VERSION 0.4.5
