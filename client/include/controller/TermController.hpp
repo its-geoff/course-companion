@@ -39,8 +39,8 @@ class TermController : public QObject {
         void selectTerm(const std::string& title);
 
     signals:
-            void dataChanged();
-            void termSelected();
+        void dataChanged();
+        void termSelected();
 };
 
 #endif  // TERMCONTROLLER_HPP

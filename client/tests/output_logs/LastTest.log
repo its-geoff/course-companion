@@ -1,13 +1,13 @@
-Start testing: May 24 22:31 PDT
+Start testing: Jul 27 23:25 PDT
 ----------------------------------------------------------
 1/11 Testing: AssignmentTests
 1/11 Test: AssignmentTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/AssignmentTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
-"AssignmentTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/AssignmentTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"AssignmentTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 71 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 71 tests from AssignmentTest
@@ -153,27 +153,27 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [       OK ] AssignmentTest.FromRowGradeTooHigh (0 ms)
 [ RUN      ] AssignmentTest.FromRowZeroGradeWhenNotCompleted
 [       OK ] AssignmentTest.FromRowZeroGradeWhenNotCompleted (0 ms)
-[----------] 71 tests from AssignmentTest (1 ms total)
+[----------] 71 tests from AssignmentTest (3 ms total)
 
 [----------] Global test environment tear-down
-[==========] 71 tests from 1 test suite ran. (1 ms total)
+[==========] 71 tests from 1 test suite ran. (3 ms total)
 [  PASSED  ] 71 tests.
 <end of output>
-Test time =   0.25 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"AssignmentTests" end time: May 24 22:31 PDT
+"AssignmentTests" end time: Jul 27 23:25 PDT
 "AssignmentTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 2/11 Testing: CourseTests
 2/11 Test: CourseTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/CourseTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
-"CourseTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/CourseTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"CourseTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 109 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 109 tests from CourseTest
@@ -395,27 +395,27 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [       OK ] CourseTest.FromRowZeroCreditsValid (0 ms)
 [ RUN      ] CourseTest.FromRowSameDayStartAndEnd
 [       OK ] CourseTest.FromRowSameDayStartAndEnd (0 ms)
-[----------] 109 tests from CourseTest (4 ms total)
+[----------] 109 tests from CourseTest (6 ms total)
 
 [----------] Global test environment tear-down
-[==========] 109 tests from 1 test suite ran. (4 ms total)
+[==========] 109 tests from 1 test suite ran. (7 ms total)
 [  PASSED  ] 109 tests.
 <end of output>
-Test time =   0.28 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"CourseTests" end time: May 24 22:31 PDT
+"CourseTests" end time: Jul 27 23:25 PDT
 "CourseTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 3/11 Testing: TermTests
 3/11 Test: TermTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/TermTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
-"TermTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/TermTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"TermTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 50 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 50 tests from TermTest
@@ -519,27 +519,27 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [       OK ] TermTest.FromRowSameDayStartAndEnd (0 ms)
 [ RUN      ] TermTest.FromRowEmptyDatesThrow
 [       OK ] TermTest.FromRowEmptyDatesThrow (0 ms)
-[----------] 50 tests from TermTest (1 ms total)
+[----------] 50 tests from TermTest (2 ms total)
 
 [----------] Global test environment tear-down
-[==========] 50 tests from 1 test suite ran. (1 ms total)
+[==========] 50 tests from 1 test suite ran. (2 ms total)
 [  PASSED  ] 50 tests.
 <end of output>
-Test time =   0.25 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"TermTests" end time: May 24 22:31 PDT
+"TermTests" end time: Jul 27 23:25 PDT
 "TermTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 4/11 Testing: CliViewTests
 4/11 Test: CliViewTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/CliViewTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
-"CliViewTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/CliViewTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"CliViewTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 156 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 156 tests from CliViewTest
@@ -855,27 +855,27 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [       OK ] CliViewTest.ViewAssignmentsIncompleteEmpty (0 ms)
 [ RUN      ] CliViewTest.ViewAssignmentsInvalidSelection
 [       OK ] CliViewTest.ViewAssignmentsInvalidSelection (0 ms)
-[----------] 156 tests from CliViewTest (7 ms total)
+[----------] 156 tests from CliViewTest (10 ms total)
 
 [----------] Global test environment tear-down
-[==========] 156 tests from 1 test suite ran. (7 ms total)
+[==========] 156 tests from 1 test suite ran. (10 ms total)
 [  PASSED  ] 156 tests.
 <end of output>
-Test time =   0.27 sec
+Test time =   0.02 sec
 ----------------------------------------------------------
 Test Passed.
-"CliViewTests" end time: May 24 22:31 PDT
+"CliViewTests" end time: Jul 27 23:25 PDT
 "CliViewTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 5/11 Testing: AssignmentControllerTests
 5/11 Test: AssignmentControllerTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/AssignmentControllerTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
-"AssignmentControllerTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/AssignmentControllerTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"AssignmentControllerTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 37 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 37 tests from AssignmentControllerTest
@@ -959,21 +959,21 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [==========] 37 tests from 1 test suite ran. (1 ms total)
 [  PASSED  ] 37 tests.
 <end of output>
-Test time =   0.25 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"AssignmentControllerTests" end time: May 24 22:31 PDT
+"AssignmentControllerTests" end time: Jul 27 23:25 PDT
 "AssignmentControllerTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 6/11 Testing: CourseControllerTests
 6/11 Test: CourseControllerTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/CourseControllerTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
-"CourseControllerTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/CourseControllerTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"CourseControllerTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 26 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 26 tests from CourseControllerTest
@@ -1035,24 +1035,24 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [==========] 26 tests from 1 test suite ran. (1 ms total)
 [  PASSED  ] 26 tests.
 <end of output>
-Test time =   0.34 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"CourseControllerTests" end time: May 24 22:31 PDT
+"CourseControllerTests" end time: Jul 27 23:25 PDT
 "CourseControllerTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 7/11 Testing: TermControllerTests
 7/11 Test: TermControllerTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/TermControllerTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
-"TermControllerTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/TermControllerTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"TermControllerTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
-[==========] Running 21 tests from 1 test suite.
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 30 tests from 1 test suite.
 [----------] Global test environment set-up.
-[----------] 21 tests from TermControllerTest
+[----------] 30 tests from TermControllerTest
 [ RUN      ] TermControllerTest.TermListGetter
 [       OK ] TermControllerTest.TermListGetter (0 ms)
 [ RUN      ] TermControllerTest.TermIdGetter
@@ -1095,27 +1095,45 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [       OK ] TermControllerTest.FindTermConstNotFound (0 ms)
 [ RUN      ] TermControllerTest.FindTermNonConstNotFound
 [       OK ] TermControllerTest.FindTermNonConstNotFound (0 ms)
-[----------] 21 tests from TermControllerTest (0 ms total)
+[ RUN      ] TermControllerTest.AddTermEmitsDataChanged
+[       OK ] TermControllerTest.AddTermEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.AddTermAlreadyExistsDoesNotEmitDataChanged
+[       OK ] TermControllerTest.AddTermAlreadyExistsDoesNotEmitDataChanged (0 ms)
+[ RUN      ] TermControllerTest.EditTitleEmitsDataChanged
+[       OK ] TermControllerTest.EditTitleEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.EditStartDateEmitsDataChanged
+[       OK ] TermControllerTest.EditStartDateEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.EditEndDateEmitsDataChanged
+[       OK ] TermControllerTest.EditEndDateEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.EditActiveEmitsDataChanged
+[       OK ] TermControllerTest.EditActiveEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.RemoveTermEmitsDataChanged
+[       OK ] TermControllerTest.RemoveTermEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.SelectTermEmitsTermSelected
+[       OK ] TermControllerTest.SelectTermEmitsTermSelected (0 ms)
+[ RUN      ] TermControllerTest.SelectTermNotFoundDoesNotEmitTermSelected
+[       OK ] TermControllerTest.SelectTermNotFoundDoesNotEmitTermSelected (0 ms)
+[----------] 30 tests from TermControllerTest (1 ms total)
 
 [----------] Global test environment tear-down
-[==========] 21 tests from 1 test suite ran. (0 ms total)
-[  PASSED  ] 21 tests.
+[==========] 30 tests from 1 test suite ran. (1 ms total)
+[  PASSED  ] 30 tests.
 <end of output>
-Test time =   0.25 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"TermControllerTests" end time: May 24 22:31 PDT
+"TermControllerTests" end time: Jul 27 23:25 PDT
 "TermControllerTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 8/11 Testing: UtilsTests
 8/11 Test: UtilsTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/UtilsTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/unit
-"UtilsTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/UtilsTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"UtilsTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 26 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 26 tests from UtilsTest
@@ -1146,7 +1164,7 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [ RUN      ] UtilsTest.PrintMap
 [       OK ] UtilsTest.PrintMap (0 ms)
 [ RUN      ] UtilsTest.UuidUniqueness
-[       OK ] UtilsTest.UuidUniqueness (0 ms)
+[       OK ] UtilsTest.UuidUniqueness (2 ms)
 [ RUN      ] UtilsTest.ValidateDateOrderSameDay
 [       OK ] UtilsTest.ValidateDateOrderSameDay (0 ms)
 [ RUN      ] UtilsTest.FloatEqualVerySmall
@@ -1171,27 +1189,27 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [       OK ] UtilsTest.StringTrimTrailingWhitespace (0 ms)
 [ RUN      ] UtilsTest.StringTrimNoWhitespace
 [       OK ] UtilsTest.StringTrimNoWhitespace (0 ms)
-[----------] 26 tests from UtilsTest (1 ms total)
+[----------] 26 tests from UtilsTest (3 ms total)
 
 [----------] Global test environment tear-down
-[==========] 26 tests from 1 test suite ran. (1 ms total)
+[==========] 26 tests from 1 test suite ran. (3 ms total)
 [  PASSED  ] 26 tests.
 <end of output>
-Test time =   0.21 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"UtilsTests" end time: May 24 22:31 PDT
+"UtilsTests" end time: Jul 27 23:25 PDT
 "UtilsTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 9/11 Testing: CourseAssignmentIntegrationTests
 9/11 Test: CourseAssignmentIntegrationTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/CourseAssignmentIntegrationTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/integration
-"CourseAssignmentIntegrationTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/CourseAssignmentIntegrationTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/integration
+"CourseAssignmentIntegrationTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 10 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 10 tests from CourseAssignmentIntegrationTest
@@ -1221,21 +1239,21 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [==========] 10 tests from 1 test suite ran. (0 ms total)
 [  PASSED  ] 10 tests.
 <end of output>
-Test time =   0.19 sec
+Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"CourseAssignmentIntegrationTests" end time: May 24 22:31 PDT
+"CourseAssignmentIntegrationTests" end time: Jul 27 23:25 PDT
 "CourseAssignmentIntegrationTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 10/11 Testing: TermCourseIntegrationTests
 10/11 Test: TermCourseIntegrationTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/TermCourseIntegrationTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/integration
-"TermCourseIntegrationTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/TermCourseIntegrationTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/integration
+"TermCourseIntegrationTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 8 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 8 tests from TermCourseIntegrationTest
@@ -1261,21 +1279,21 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [==========] 8 tests from 1 test suite ran. (0 ms total)
 [  PASSED  ] 8 tests.
 <end of output>
-Test time =   0.19 sec
+Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"TermCourseIntegrationTests" end time: May 24 22:31 PDT
+"TermCourseIntegrationTests" end time: Jul 27 23:25 PDT
 "TermCourseIntegrationTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 11/11 Testing: ControllerIntegrationTests
 11/11 Test: ControllerIntegrationTests
-Command: "/Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/bin/ControllerIntegrationTests"
-Directory: /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/tests/integration
-"ControllerIntegrationTests" start time: May 24 22:31 PDT
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/ControllerIntegrationTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/integration
+"ControllerIntegrationTests" start time: Jul 27 23:25 PDT
 Output:
 ----------------------------------------------------------
-Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 6 tests from 1 test suite.
 [----------] Global test environment set-up.
 [----------] 6 tests from ControllerIntegrationTests
@@ -1297,11 +1315,11 @@ Running main() from /Users/geoffreya/Documents/VS_Code/course-companion/client/b
 [==========] 6 tests from 1 test suite ran. (0 ms total)
 [  PASSED  ] 6 tests.
 <end of output>
-Test time =   0.19 sec
+Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"ControllerIntegrationTests" end time: May 24 22:31 PDT
+"ControllerIntegrationTests" end time: Jul 27 23:25 PDT
 "ControllerIntegrationTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: May 24 22:31 PDT
+End testing: Jul 27 23:25 PDT

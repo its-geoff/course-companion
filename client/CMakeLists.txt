@@ -31,6 +31,10 @@ add_library(CourseCompanion_lib
     src/utils/utils.cpp
 )
 
+target_sources(CourseCompanion_lib PRIVATE
+    include/controller/TermController.hpp
+)
+
 target_include_directories(CourseCompanion_lib PUBLIC include)
 target_link_libraries(CourseCompanion_lib
     PUBLIC
