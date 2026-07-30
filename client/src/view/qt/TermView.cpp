@@ -5,7 +5,8 @@
  * @brief Implementation of the TermView class, which serves as a secondary page for the Qt GUI.
  *
  * This class displays information received from the TermController. The term name is shown,
- * along with course grades, timelines, and the overall GPA from the term.
+ * along with course grades, timelines, and the overall GPA from the term. Clicking a course
+ * card emits courseSelected so MainWindow can navigate to CourseView.
  *
  * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
@@ -15,6 +16,7 @@
 #include <QDate>
 #include <QDebug>
 #include <QPushButton>
+#include <QStackedLayout>
 
 TermView::TermView(QWidget* parent) : QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
@@ -47,8 +49,8 @@ void TermView::setupHeader() {
     termTypeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
     termTypeLabel->setAlignment(Qt::AlignBottom);  // align to baseline of title
 
-    addTermButton_ = new QPushButton("+ Add Term", titleRow);
-    addTermButton_->setStyleSheet(
+    addCourseButton_ = new QPushButton("+ Add Course", titleRow);
+    addCourseButton_->setStyleSheet(
         "QPushButton {"
         "  font-size: 12px;"
         "  color: #378ADD;"
@@ -59,12 +61,12 @@ void TermView::setupHeader() {
         "}"
         "QPushButton:hover { background: #eef4fb; }"
     );
-    connect(addTermButton_, &QPushButton::clicked, this, &TermView::onAddTerm);
+    connect(addCourseButton_, &QPushButton::clicked, this, &TermView::onAddCourse);
 
     titleLayout->addWidget(termTitle_);
     titleLayout->addWidget(termTypeLabel);
     titleLayout->addStretch();  // push both labels to the left
-    titleLayout->addWidget(addTermButton_);
+    titleLayout->addWidget(addCourseButton_);
 
     dateRangeLabel_ = new QLabel("Aug 26 - Dec 20, 2024", header);
     dateRangeLabel_->setStyleSheet("font-size: 13px; color: #666;");
@@ -161,19 +163,24 @@ void TermView::setupCourseList() {
 void TermView::addCourseRow(const QString& name, const QString& sub,
                              const QString& pct, const QString& letter,
                              const QString& gpa) {
-    auto* row       = new QFrame();
-    auto* rowLayout = new QHBoxLayout(row);
-    rowLayout->setContentsMargins(14, 10, 14, 10);
+    // outer card: QStackedLayout lets the click overlay and content share the same rect
+    auto* card        = new QFrame();
+    auto* stackLayout = new QStackedLayout(card);
+    stackLayout->setStackingMode(QStackedLayout::StackAll);
 
-    row->setStyleSheet(
+    card->setStyleSheet(
         "QFrame { background: white; border: 0.5px solid #e0e0e0; border-radius: 8px; }"
     );
 
-    auto* dot = new QWidget(row);
+    auto* content   = new QWidget(card);
+    auto* rowLayout = new QHBoxLayout(content);
+    rowLayout->setContentsMargins(14, 10, 14, 10);
+
+    auto* dot = new QWidget(content);
     dot->setFixedSize(8, 8);
     dot->setStyleSheet("background: #378ADD; border-radius: 4px;");
 
-    auto* textCol       = new QWidget(row);
+    auto* textCol       = new QWidget(content);
     auto* textColLayout = new QVBoxLayout(textCol);
     textColLayout->setContentsMargins(0, 0, 0, 0);
     textColLayout->setSpacing(2);
@@ -187,13 +194,13 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     textColLayout->addWidget(nameLabel);
     textColLayout->addWidget(subLabel);
 
-    auto* gradeCol       = new QWidget(row);
+    auto* gradeCol       = new QWidget(content);
     auto* gradeColLayout = new QVBoxLayout(gradeCol);
     gradeColLayout->setContentsMargins(0, 0, 0, 0);
     gradeColLayout->setSpacing(2);
     gradeColLayout->setAlignment(Qt::AlignRight);
 
-    auto* pctLabel    = new QLabel(pct, gradeCol);
+    auto* pctLabel = new QLabel(pct, gradeCol);
     pctLabel->setStyleSheet("font-size: 14px; font-weight: 500;");
     pctLabel->setAlignment(Qt::AlignRight);
 
@@ -204,16 +211,16 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     gradeColLayout->addWidget(pctLabel);
     gradeColLayout->addWidget(letterLabel);
 
-    auto* gpaCol       = new QWidget(row);
+    auto* gpaCol       = new QWidget(content);
     auto* gpaColLayout = new QVBoxLayout(gpaCol);
     gpaColLayout->setContentsMargins(0, 0, 0, 0);
     gpaColLayout->setSpacing(2);
 
-    auto* gpaVal   = new QLabel(gpa, gpaCol);
+    auto* gpaVal = new QLabel(gpa, gpaCol);
     gpaVal->setStyleSheet("font-size: 14px; font-weight: 500;");
     gpaVal->setAlignment(Qt::AlignRight);
 
-    auto* gpaLbl   = new QLabel("GPA pts", gpaCol);
+    auto* gpaLbl = new QLabel("GPA pts", gpaCol);
     gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
     gpaLbl->setAlignment(Qt::AlignRight);
 
@@ -227,7 +234,23 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     rowLayout->addSpacing(16);
     rowLayout->addWidget(gpaCol);
 
-    courseListLayout_->addWidget(row);
+    // click overlay: transparent button on top of content, fills the card
+    auto* clickOverlay = new QPushButton(card);
+    clickOverlay->setFlat(true);
+    clickOverlay->setCursor(Qt::PointingHandCursor);
+    clickOverlay->setStyleSheet(
+        "QPushButton { background: transparent; border: none; border-radius: 8px; }"
+        "QPushButton:hover { background: rgba(55, 138, 221, 0.06); }"
+    );
+    connect(clickOverlay, &QPushButton::clicked, this, [this, name]() {
+        emit courseSelected(name);
+    });
+
+    stackLayout->addWidget(content);
+    stackLayout->addWidget(clickOverlay);
+    stackLayout->setCurrentIndex(1);
+
+    courseListLayout_->addWidget(card);
 }
 
 
@@ -291,5 +314,29 @@ void TermView::onAddTerm() {
              << dlg.textValue("title")
              << dlg.dateValue("startDate").toString("yyyy-MM-dd")
              << dlg.dateValue("endDate").toString("yyyy-MM-dd")
+             << dlg.boolValue("active");
+}
+
+void TermView::onAddCourse() {
+    std::vector<FieldDef> fields = {
+        { "title",       "Title",          FieldDef::Type::Text,         QString{}                        },
+        { "description", "Description",    FieldDef::Type::OptionalText, QString{}                        },
+        { "startDate",   "Start Date",     FieldDef::Type::Date,         QDate::currentDate()             },
+        { "endDate",     "End Date",       FieldDef::Type::Date,         QDate::currentDate().addMonths(4) },
+        { "numCredits",  "Credits",        FieldDef::Type::Integer,      3                                },
+        { "active",      "Current course", FieldDef::Type::Bool,         true                             },
+    };
+
+    FormDialog dlg("Add Course", fields, this);
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+
+    // TODO: wire to CourseController::addCourse once controller is connected
+    qDebug() << "Add Course:"
+             << dlg.textValue("title")
+             << dlg.textValue("description")
+             << dlg.dateValue("startDate").toString("yyyy-MM-dd")
+             << dlg.dateValue("endDate").toString("yyyy-MM-dd")
+             << dlg.intValue("numCredits")
              << dlg.boolValue("active");
 }
