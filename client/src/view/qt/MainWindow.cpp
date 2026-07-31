@@ -64,6 +64,8 @@ void MainWindow::setupUi() {
     auto* termCardOverlay = new QPushButton(termCard);
     termCardOverlay->setFlat(true);
     termCardOverlay->setCursor(Qt::PointingHandCursor);
+    termCardOverlay->setFocusPolicy(Qt::NoFocus);
+    termCardOverlay->setAccessibleName(QString("Open term %1").arg(termCardTitle->text()));
     termCardOverlay->setStyleSheet(
         "QPushButton { background: transparent; border: none; border-radius: 8px; }"
         "QPushButton:hover { background: rgba(55, 138, 221, 0.06); }"

@@ -237,6 +237,8 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     auto* clickOverlay = new QPushButton(card);
     clickOverlay->setFlat(true);
     clickOverlay->setCursor(Qt::PointingHandCursor);
+    clickOverlay->setFocusPolicy(Qt::NoFocus);
+    clickOverlay->setAccessibleName(QString("Open course %1").arg(name));
     clickOverlay->setStyleSheet(
         "QPushButton { background: transparent; border: none; border-radius: 8px; }"
         "QPushButton:hover { background: rgba(55, 138, 221, 0.06); }"

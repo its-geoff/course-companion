@@ -336,6 +336,11 @@ void AssignmentView::onToggleCompleted() {
     updateStatusBadge();
     gradeSectionTitle_->setText(completed_ ? "EDIT GRADE" : "ENTER GRADE");
 
+    if (!completed_) {
+        gradeInput_->clear();
+        gradeResultLabel_->hide();
+    }
+
     // TODO: wire to AssignmentController once it exposes a direct completion toggle
     qDebug() << "Toggle completed:" << completed_;
 }
