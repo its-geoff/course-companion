@@ -63,7 +63,7 @@ void AssignmentView::setupHeader() {
     titleLayout->setSpacing(12);
 
     titleLabel_ = new QLabel("Assignment Title", titleRow);
-    titleLabel_->setStyleSheet("font-size: 22px; font-weight: 500;");
+    titleLabel_->setStyleSheet("font-size: 22px; font-weight: 500; color: #1a1a1a;");
 
     statusBadge_ = new QLabel("Pending", titleRow);
     statusBadge_->setStyleSheet(

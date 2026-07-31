@@ -43,11 +43,7 @@ void TermView::setupHeader() {
     titleLayout->setSpacing(8);
 
     termTitle_ = new QLabel("Fall 2024", titleRow);
-    termTitle_->setStyleSheet("font-size: 22px; font-weight: 500;");
-
-    auto* termTypeLabel = new QLabel("Term", titleRow);
-    termTypeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
-    termTypeLabel->setAlignment(Qt::AlignBottom);  // align to baseline of title
+    termTitle_->setStyleSheet("font-size: 22px; font-weight: 500; color: #1a1a1a;");
 
     addCourseButton_ = new QPushButton("+ Add Course", titleRow);
     addCourseButton_->setStyleSheet(
@@ -64,14 +60,17 @@ void TermView::setupHeader() {
     connect(addCourseButton_, &QPushButton::clicked, this, &TermView::onAddCourse);
 
     titleLayout->addWidget(termTitle_);
-    titleLayout->addWidget(termTypeLabel);
-    titleLayout->addStretch();  // push both labels to the left
+    titleLayout->addStretch();
     titleLayout->addWidget(addCourseButton_);
+
+    auto* termTypeLabel = new QLabel("Term", header);
+    termTypeLabel->setStyleSheet("font-size: 14px; font-weight: 500; color: #888;");
 
     dateRangeLabel_ = new QLabel("Aug 26 - Dec 20, 2024", header);
     dateRangeLabel_->setStyleSheet("font-size: 13px; color: #666;");
 
     headerLayout->addWidget(titleRow);
+    headerLayout->addWidget(termTypeLabel);
     headerLayout->addWidget(dateRangeLabel_);
 
     mainLayout_->addWidget(header);
@@ -186,7 +185,7 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     textColLayout->setSpacing(2);
 
     auto* nameLabel = new QLabel(name, textCol);
-    nameLabel->setStyleSheet("font-size: 13px; font-weight: 500;");
+    nameLabel->setStyleSheet("font-size: 13px; font-weight: 500; color: #1a1a1a;");
 
     auto* subLabel = new QLabel(sub, textCol);
     subLabel->setStyleSheet("font-size: 11px; color: #999;");
@@ -201,7 +200,7 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     gradeColLayout->setAlignment(Qt::AlignRight);
 
     auto* pctLabel = new QLabel(pct, gradeCol);
-    pctLabel->setStyleSheet("font-size: 14px; font-weight: 500;");
+    pctLabel->setStyleSheet("font-size: 14px; font-weight: 500; color: #1a1a1a;");
     pctLabel->setAlignment(Qt::AlignRight);
 
     auto* letterLabel = new QLabel(letter, gradeCol);
@@ -217,7 +216,7 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     gpaColLayout->setSpacing(2);
 
     auto* gpaVal = new QLabel(gpa, gpaCol);
-    gpaVal->setStyleSheet("font-size: 14px; font-weight: 500;");
+    gpaVal->setStyleSheet("font-size: 14px; font-weight: 500; color: #1a1a1a;");
     gpaVal->setAlignment(Qt::AlignRight);
 
     auto* gpaLbl = new QLabel("GPA pts", gpaCol);
@@ -271,7 +270,7 @@ void TermView::setupFooter() {
     avgLbl->setStyleSheet("font-size: 11px; color: #999;");
 
     avgGradeLabel_ = new QLabel("89.1%", avgSection);
-    avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
+    avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
 
     avgLayout->addWidget(avgLbl);
     avgLayout->addWidget(avgGradeLabel_);
@@ -285,7 +284,7 @@ void TermView::setupFooter() {
     gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
 
     gpaLabel_ = new QLabel("3.52", gpaSection);
-    gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
+    gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
 
     gpaLayout->addWidget(gpaLbl);
     gpaLayout->addWidget(gpaLabel_);

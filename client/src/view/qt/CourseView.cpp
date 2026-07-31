@@ -88,11 +88,7 @@ void CourseView::setupHeader() {
     titleLayout->setSpacing(8);
 
     courseTitle_ = new QLabel("Data Structures", titleRow);
-    courseTitle_->setStyleSheet("font-size: 22px; font-weight: 500;");
-
-    auto* courseTypeLabel = new QLabel("Course", titleRow);
-    courseTypeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
-    courseTypeLabel->setAlignment(Qt::AlignBottom);
+    courseTitle_->setStyleSheet("font-size: 22px; font-weight: 500; color: #1a1a1a;");
 
     addAssignmentButton_ = new QPushButton("+ Add", titleRow);
     addAssignmentButton_->setStyleSheet(
@@ -123,16 +119,19 @@ void CourseView::setupHeader() {
     connect(removeAssignmentButton_, &QPushButton::clicked, this, &CourseView::onRemoveAssignment);
 
     titleLayout->addWidget(courseTitle_);
-    titleLayout->addWidget(courseTypeLabel);
     titleLayout->addStretch();
     titleLayout->addWidget(addAssignmentButton_);
     titleLayout->addWidget(removeAssignmentButton_);
+
+    auto* courseTypeLabel = new QLabel("Course", header);
+    courseTypeLabel->setStyleSheet("font-size: 14px; font-weight: 500; color: #888;");
 
     dateRangeLabel_ = new QLabel("Aug 26 - Dec 20, 2024", header);
     dateRangeLabel_->setStyleSheet("font-size: 13px; color: #666;");
 
     headerLayout->addWidget(topRow);
     headerLayout->addWidget(titleRow);
+    headerLayout->addWidget(courseTypeLabel);
     headerLayout->addWidget(dateRangeLabel_);
 
     mainLayout_->addWidget(header);
@@ -272,7 +271,7 @@ void CourseView::addAssignmentRow(const QString& name, const QString& sub,
     textColLayout->setSpacing(2);
 
     auto* nameLabel = new QLabel(name, textCol);
-    nameLabel->setStyleSheet("font-size: 13px; font-weight: 500;");
+    nameLabel->setStyleSheet("font-size: 13px; font-weight: 500; color: #1a1a1a;");
 
     auto* subLabel = new QLabel(sub, textCol);
     subLabel->setStyleSheet("font-size: 11px; color: #999;");
@@ -292,7 +291,7 @@ void CourseView::addAssignmentRow(const QString& name, const QString& sub,
         gradeColLayout->setAlignment(Qt::AlignRight);
 
         auto* pctLabel = new QLabel(pct, gradeCol);
-        pctLabel->setStyleSheet("font-size: 14px; font-weight: 500;");
+        pctLabel->setStyleSheet("font-size: 14px; font-weight: 500; color: #1a1a1a;");
         pctLabel->setAlignment(Qt::AlignRight);
 
         auto* letterLabel = new QLabel(letter, gradeCol);
@@ -308,7 +307,7 @@ void CourseView::addAssignmentRow(const QString& name, const QString& sub,
         gpaColLayout->setSpacing(2);
 
         auto* gpaVal = new QLabel(gpa, gpaCol);
-        gpaVal->setStyleSheet("font-size: 14px; font-weight: 500;");
+        gpaVal->setStyleSheet("font-size: 14px; font-weight: 500; color: #1a1a1a;");
         gpaVal->setAlignment(Qt::AlignRight);
 
         auto* gpaLbl = new QLabel("GPA pts", gpaCol);
@@ -362,7 +361,7 @@ void CourseView::setupFooter() {
     avgLbl->setStyleSheet("font-size: 11px; color: #999;");
 
     avgGradeLabel_ = new QLabel("91.5%", avgSection);
-    avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
+    avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
 
     avgLayout->addWidget(avgLbl);
     avgLayout->addWidget(avgGradeLabel_);
@@ -376,7 +375,7 @@ void CourseView::setupFooter() {
     gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
 
     gpaLabel_ = new QLabel("3.74", gpaSection);
-    gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
+    gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
 
     gpaLayout->addWidget(gpaLbl);
     gpaLayout->addWidget(gpaLabel_);

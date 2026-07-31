@@ -36,9 +36,11 @@ void MainWindow::setupUi() {
     sidebarLayout->setSpacing(4);
 
     auto* sidebarLabel = new QLabel("Course Companion", sidebar_);
+    sidebarLabel->setStyleSheet("font-size: 13px; font-weight: 600; color: #333;");
 
     // term details card: clicking it returns to the term page
     auto* termCard      = new QFrame(sidebar_);
+    termCard->setFixedHeight(52);
     auto* termCardStack = new QStackedLayout(termCard);
     termCardStack->setStackingMode(QStackedLayout::StackAll);
     termCard->setStyleSheet(
@@ -51,7 +53,7 @@ void MainWindow::setupUi() {
     termCardLayout->setSpacing(2);
 
     auto* termCardTitle = new QLabel("Fall 2024", termCardContent);
-    termCardTitle->setStyleSheet("font-size: 13px; font-weight: 500;");
+    termCardTitle->setStyleSheet("font-size: 13px; font-weight: 500; color: #1a1a1a;");
 
     auto* termCardDates = new QLabel("Aug 26 - Dec 20, 2024", termCardContent);
     termCardDates->setStyleSheet("font-size: 10px; color: #999;");
