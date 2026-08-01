@@ -12,12 +12,6 @@
 class TermController : public QObject {
     Q_OBJECT
 
-    private:
-        std::unordered_map<std::string, Term> termList_{};
-        std::unordered_map<std::string, std::string> titleToId_{};
-        Term* activeTerm_ = nullptr;
-        std::optional<CourseController> courseController_{};
-
     public:
         TermController() = default;
         TermController(const TermController&) = delete;
@@ -41,6 +35,12 @@ class TermController : public QObject {
     signals:
         void dataChanged();
         void termSelected();
+
+    private:
+        std::unordered_map<std::string, Term> termList_{};
+        std::unordered_map<std::string, std::string> titleToId_{};
+        Term* activeTerm_ = nullptr;
+        std::optional<CourseController> courseController_{};
 };
 
 #endif  // TERMCONTROLLER_HPP

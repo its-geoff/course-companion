@@ -32,14 +32,11 @@ class TermView : public QWidget {
     public:
         explicit TermView(QWidget* parent = nullptr);
 
-    signals:
-        void courseSelected(const QString& courseTitle);
-
     public slots:
         void onAddTerm();
 
-    private slots:
-        void onAddCourse();
+    signals:
+        void courseSelected(const QString& courseTitle);
 
     private:
         void setupHeader();
@@ -67,6 +64,9 @@ class TermView : public QWidget {
         // footer
         QLabel* avgGradeLabel_;
         QLabel* gpaLabel_;
+
+    private slots:
+        void onAddCourse();
 };
 
 #endif

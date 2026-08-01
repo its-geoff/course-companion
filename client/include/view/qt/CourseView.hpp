@@ -33,13 +33,6 @@ class CourseView : public QWidget {
         void assignmentSelected(const QString& assignmentTitle);
         void backRequested();
 
-    private slots:
-        void onAddAssignment();
-        void onRemoveAssignment();
-        void onFilterAll();
-        void onFilterCompleted();
-        void onFilterIncomplete();
-
     private:
         void setupHeader();
         void setupAssignmentProgress();
@@ -69,6 +62,13 @@ class CourseView : public QWidget {
 
         QLabel* avgGradeLabel_;
         QLabel* gpaLabel_;
+
+    private slots:
+        void onAddAssignment();
+        void onRemoveAssignment();
+        void onFilterAll();
+        void onFilterCompleted();
+        void onFilterIncomplete();
 };
 
 #endif // COURSEVIEW_HPP
