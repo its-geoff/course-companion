@@ -503,9 +503,6 @@ TEST_F(AssignmentControllerTest, AddGradePointsEmitsDataChangedOnce) {
     QSignalSpy spy(&controller, &AssignmentController::dataChanged);
     controller.addGrade("Homework 1", 18, 20);
 
-    // the points overload delegates to the percentage overload (which already emits)
-    // and then emits again itself; this is a double-emit bug, and the correct count is 1.
-    // This test will fail until the redundant emit is removed from the points overload.
     ASSERT_EQ(spy.count(), 1);
 }
 
