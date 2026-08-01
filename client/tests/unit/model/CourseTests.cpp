@@ -19,6 +19,7 @@ class CourseTest : public testing::Test {
         };
 };
 
+
 // ====================================
 // GETTER SMOKE TESTS
 // ====================================
@@ -118,6 +119,7 @@ TEST_F(CourseTest, GradeScaleGetter) {
     ASSERT_EQ(course1.getGradeScale(), gradeScale2);
 }
 
+
 // ====================================
 // SETTER SMOKE TESTS
 // ====================================
@@ -202,6 +204,7 @@ TEST_F(CourseTest, GradeScaleSetter) {
     ASSERT_EQ(course2.getGradeScale(), gradeScale2);
 }
 
+
 // ====================================
 // INITIALIZATION SMOKE TESTS
 // ====================================
@@ -265,6 +268,7 @@ TEST_F(CourseTest, SixParamDescInitialization) {
     ASSERT_EQ(course2.getNumCredits(), 1);
     ASSERT_FALSE(course2.getActive());
 }
+
 
 // ====================================
 // FUNCTION SMOKE TESTS
@@ -412,6 +416,7 @@ TEST_F(CourseTest, FromRowDoesNotEqualNewCourse) {
     ASSERT_NE(fromRowCourse, newCourse);
 }
 
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -431,6 +436,7 @@ TEST_F(CourseTest, ActiveGetterEmpty) {
     Course course2{"ENGR 195A", "", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}};
     ASSERT_TRUE(course2.getActive());
 }
+
 
 // ====================================
 // SETTER EDGE CASES
@@ -674,6 +680,7 @@ TEST_F(CourseTest, GradeScaleSetterUpperBound) {
     ASSERT_THROW(course2.setGradeScale(gradeScale2), std::runtime_error);
 }
 
+
 // ====================================
 // INITIALIZATION EDGE CASES
 // ====================================
@@ -743,6 +750,7 @@ TEST_F(CourseTest, FiveParamDescInitializationInvalidNumCredits) {
     // throw out of range since input is not greater than or equal to 0
     ASSERT_THROW((Course{"ENGR 195A", "Global and Social Issues in Engineering", std::chrono::year_month_day{2025y/8/14}, std::chrono::year_month_day{2025y/12/18}, -4}), std::out_of_range);
 }
+
 
 // ====================================
 // FUNCTION EDGE CASES

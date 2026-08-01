@@ -13,6 +13,7 @@ class TermControllerTest : public testing::Test {
         TermController controller{};
 };
 
+
 // ====================================
 // GETTER SMOKE TESTS
 // ====================================
@@ -47,6 +48,7 @@ TEST_F(TermControllerTest, TermIdGetter) {
     // if the UUID is in the correct format, it should match this
     ASSERT_EQ(id, "<UUID>");
 }
+
 
 // ====================================
 // FUNCTION SMOKE TESTS
@@ -144,6 +146,7 @@ TEST_F(TermControllerTest, FindTermNonConst) {
     ASSERT_TRUE(selectedTerm.getActive());
 }
 
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -160,6 +163,7 @@ TEST_F(TermControllerTest, TermIdGetterNotFound) {
     // out of range error since term cannot be found
     ASSERT_THROW(controller.getTermId("Fall 2026"), std::out_of_range);
 }
+
 
 // ====================================
 // FUNCTION EDGE CASES
@@ -235,6 +239,7 @@ TEST_F(TermControllerTest, FindTermNonConstNotFound) {
     // out of range error since term cannot be found
     ASSERT_THROW(controller.findTerm("Fall 2026"), std::out_of_range);
 }
+
 
 // ====================================
 // SIGNAL TESTS

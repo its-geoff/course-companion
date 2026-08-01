@@ -13,6 +13,7 @@ class AssignmentControllerTest : public testing::Test {
         AssignmentController controller{course};
 };
 
+
 // ====================================
 // GETTER SMOKE TESTS
 // ====================================
@@ -47,6 +48,7 @@ TEST_F(AssignmentControllerTest, AssignmentIdGetter) {
     // if the UUID is in the correct format, it should match this
     ASSERT_EQ(id, "<UUID>");
 }
+
 
 // ====================================
 // FUNCTION SMOKE TESTS
@@ -181,6 +183,7 @@ TEST_F(AssignmentControllerTest, FindAssignmentNonConst) {
     ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 0.0);
 }
 
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -197,6 +200,7 @@ TEST_F(AssignmentControllerTest, AssignmentIdGetterNotFound) {
     // out of range error since assignment cannot be found
     ASSERT_THROW(controller.getAssignmentId("Homework 4"), std::out_of_range);
 }
+
 
 // ====================================
 // FUNCTION EDGE CASES

@@ -34,11 +34,6 @@ class AssignmentView : public QWidget {
     signals:
         void backRequested();
 
-    private slots:
-        void onSubmitGrade();
-        void onEditDetails();
-        void onToggleCompleted();
-
     private:
         void setupHeader();
         void setupMeta();
@@ -68,6 +63,11 @@ class AssignmentView : public QWidget {
         QString description_;
         QString dueDate_;
         bool completed_ = false;
+
+    private slots:
+        void onSubmitGrade();
+        void onEditDetails();
+        void onToggleCompleted();
 };
 
 #endif // ASSIGNMENTVIEW_HPP

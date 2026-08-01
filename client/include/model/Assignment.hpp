@@ -24,17 +24,6 @@
  * scale. The Assignment class is used by the main function to track progress and report assignment results.
  */
 class Assignment {
-    private:
-        std::string id_{};  // UUID v4 automatically generated during construction
-        std::string title_{};
-        std::string description_{};
-        std::string category_{};    // validation handled in higher-level application logic
-        std::chrono::year_month_day dueDate_{};
-        bool completed_{false};
-        float grade_{0.0f};
-
-        void validateGrade(float grade);
-
     public:
         Assignment(std::string title, std::string description, std::string category, 
             std::chrono::year_month_day dueDate, bool completed = false, float grade = 0.0);
@@ -59,6 +48,17 @@ class Assignment {
             std::string category, std::chrono::year_month_day dueDate, bool completed, float grade);
 
         bool operator==(const Assignment &other) const;
+
+    private:
+        std::string id_{};  // UUID v4 automatically generated during construction
+        std::string title_{};
+        std::string description_{};
+        std::string category_{};    // validation handled in higher-level application logic
+        std::chrono::year_month_day dueDate_{};
+        bool completed_{false};
+        float grade_{0.0f};
+
+        void validateGrade(float grade);
 };
 
 #endif  // ASSIGNMENT_HPP

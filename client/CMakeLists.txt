@@ -22,16 +22,18 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 set(CMAKE_AUTOMOC ON)
 
 add_library(CourseCompanion_lib
-    src/model/Assignment.cpp
-    src/model/Course.cpp
-    src/model/Term.cpp
     src/controller/AssignmentController.cpp
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
+    src/model/Assignment.cpp
+    src/model/Course.cpp
+    src/model/Term.cpp
     src/utils/utils.cpp
 )
 
 target_sources(CourseCompanion_lib PRIVATE
+    include/controller/AssignmentController.hpp
+    include/controller/CourseController.hpp
     include/controller/TermController.hpp
 )
 
@@ -71,12 +73,12 @@ if(NOT BUILD_TESTING)
     find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
     add_library(CourseCompanion_gui OBJECT
+        src/view/cli/CliView.cpp
+        src/view/qt/AssignmentView.cpp
+        src/view/qt/CourseView.cpp
+        src/view/qt/FormDialog.cpp
         src/view/qt/MainWindow.cpp
         src/view/qt/TermView.cpp
-        src/view/qt/CourseView.cpp
-        src/view/qt/AssignmentView.cpp
-        src/view/qt/FormDialog.cpp
-        src/view/cli/CliView.cpp
     )
 
     target_include_directories(CourseCompanion_gui PUBLIC include)
@@ -85,13 +87,13 @@ if(NOT BUILD_TESTING)
         AUTOMOC_MOC_OPTIONS ""
     )
     target_sources(CourseCompanion_gui PRIVATE
-        include/view/qt/MainWindow.hpp
-        include/view/qt/TermView.hpp
-        include/view/qt/CourseView.hpp
         include/view/qt/AssignmentView.hpp
+        include/view/qt/CourseView.hpp
         include/view/qt/FormDialog.hpp
-        include/view/qt/StyleManager.hpp
+        include/view/qt/MainWindow.hpp
         include/view/qt/PaletteWatcher.hpp
+        include/view/qt/StyleManager.hpp
+        include/view/qt/TermView.hpp
     )
 
     target_link_libraries(CourseCompanion_gui

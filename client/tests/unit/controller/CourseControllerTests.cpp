@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>      // diverts output from terminal to separate stream
 #include <regex>        // regular expression matching for UUIDs
+#include <QSignalSpy>
 #include "controller/CourseController.hpp"
 #include "utils/utils.hpp"
 
@@ -12,6 +13,7 @@ class CourseControllerTest : public testing::Test {
         Term term{"Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false};
         CourseController controller{term};
 };
+
 
 // ====================================
 // GETTER SMOKE TESTS
@@ -47,6 +49,7 @@ TEST_F(CourseControllerTest, CourseIdGetter) {
     // if the UUID is in the correct format, it should match this
     ASSERT_EQ(id, "<UUID>");
 }
+
 
 // ====================================
 // FUNCTION SMOKE TESTS
@@ -177,6 +180,7 @@ TEST_F(CourseControllerTest, SelectCourse) {
     ASSERT_NO_THROW(controller.selectCourse("ENGR 195A"));
 }
 
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -193,6 +197,7 @@ TEST_F(CourseControllerTest, CourseIdGetterNotFound) {
     // out of range error since course cannot be found
     ASSERT_THROW(controller.getCourseId("CMPE 152"), std::out_of_range);
 }
+
 
 // ====================================
 // FUNCTION EDGE CASES
@@ -283,4 +288,113 @@ TEST_F(CourseControllerTest, SelectCourseNotFound) {
 
     // out of range error since course cannot be found
     ASSERT_THROW(controller.selectCourse("CMPE 152"), std::out_of_range);
+}
+
+
+// ====================================
+// SIGNAL TESTS
+// ====================================
+
+TEST_F(CourseControllerTest, AddCourseEmitsDataChanged) {
+    QSignalSpy spy(&controller, &CourseController::dataChanged);
+
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(CourseControllerTest, AddCourseAlreadyExistsDoesNotEmitDataChanged) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+
+    QSignalSpy spy(&controller, &CourseController::dataChanged);
+    ASSERT_THROW(controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false), std::logic_error);
+
+    ASSERT_EQ(spy.count(), 0);
+}
+
+TEST_F(CourseControllerTest, EditTitleEmitsDataChanged) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+    std::string id = controller.getCourseId("ENGR 195A");
+
+    QSignalSpy spy(&controller, &CourseController::dataChanged);
+    controller.editTitle(id, "CMPE 152");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(CourseControllerTest, EditDescriptionEmitsDataChanged) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+    std::string id = controller.getCourseId("ENGR 195A");
+
+    QSignalSpy spy(&controller, &CourseController::dataChanged);
+    controller.editDescription(id, "Global and Social Issues in Engineering");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(CourseControllerTest, EditStartDateEmitsDataChanged) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+    std::string id = controller.getCourseId("ENGR 195A");
+
+    QSignalSpy spy(&controller, &CourseController::dataChanged);
+    controller.editStartDate(id, std::chrono::year_month_day{2026y/2/11});
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(CourseControllerTest, EditEndDateEmitsDataChanged) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+    std::string id = controller.getCourseId("ENGR 195A");
+
+    QSignalSpy spy(&controller, &CourseController::dataChanged);
+    controller.editEndDate(id, std::chrono::year_month_day{2026y/5/30});
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(CourseControllerTest, EditNumCreditsEmitsDataChanged) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+    std::string id = controller.getCourseId("ENGR 195A");
+
+    QSignalSpy spy(&controller, &CourseController::dataChanged);
+    controller.editNumCredits(id, 4);
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(CourseControllerTest, EditActiveEmitsDataChanged) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+    std::string id = controller.getCourseId("ENGR 195A");
+
+    QSignalSpy spy(&controller, &CourseController::dataChanged);
+    controller.editActive(id, true);
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(CourseControllerTest, RemoveCourseEmitsDataChanged) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+
+    QSignalSpy spy(&controller, &CourseController::dataChanged);
+    controller.removeCourse("ENGR 195A");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(CourseControllerTest, SelectCourseEmitsCourseSelected) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+
+    QSignalSpy spy(&controller, &CourseController::courseSelected);
+    controller.selectCourse("ENGR 195A");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(CourseControllerTest, SelectCourseNotFoundDoesNotEmitCourseSelected) {
+    controller.addCourse("ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false);
+
+    QSignalSpy spy(&controller, &CourseController::courseSelected);
+    ASSERT_THROW(controller.selectCourse("CMPE 152"), std::out_of_range);
+
+    ASSERT_EQ(spy.count(), 0);
 }

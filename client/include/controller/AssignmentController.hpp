@@ -8,10 +8,6 @@
 #include "model/Assignment.hpp"
 
 class AssignmentController {
-    private:
-        Course& course_;
-        std::unordered_map<std::string, std::string> titleToId_{};
-
     public:
         explicit AssignmentController(Course& course);
         AssignmentController(const AssignmentController&) = delete;
@@ -34,6 +30,10 @@ class AssignmentController {
         void removeAssignment(const std::string& title);
         const Assignment& findAssignment(const std::string& title) const;
         Assignment& findAssignment(const std::string& title);
+
+    private:
+        Course& course_;
+        std::unordered_map<std::string, std::string> titleToId_{};
 };
 
 #endif  // ASSIGNMENTCONTROLLER_HPP

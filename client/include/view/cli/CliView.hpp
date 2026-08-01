@@ -27,6 +27,10 @@
  * Controller to provide input to model functions and displays output after receiving return values.
  */
 class CliView {
+    public:
+        explicit CliView(TermController &controller, std::istream& is = std::cin, std::ostream& os = std::cout);
+        void run();
+
     private:
         TermController &controller_;
         // may or may not exist
@@ -82,10 +86,6 @@ class CliView {
         float getGradeInput(const std::string& label, const float defaultVal) const;
         float getGradePctInput(const std::string& input, const float defaultVal) const;
         float getGradePointsInput(const std::string& input, const float defaultVal) const;
-
-    public:
-        explicit CliView(TermController &controller, std::istream& is = std::cin, std::ostream& os = std::cout);
-        void run();
 };
 
 #endif  // CLIVIEW_HPP
