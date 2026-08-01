@@ -322,7 +322,7 @@ Project Link: [https://github.com/its-geoff/course-companion](https://github.com
 [issues-url]: https://github.com/its-geoff/course-companion/issues
 [license-shield]: https://img.shields.io/github/license/its-geoff/course-companion.svg?style=for-the-badge
 [license-url]: https://github.com/its-geoff/course-companion/blob/main/LICENSE
-[ci-shield]: https://img.shields.io/github/actions/workflow/status/its-geoff/course-companion/ci-cd.yaml?branch=main&style=for-the-badge&label=CI%2FCD
+[ci-shield]: https://img.shields.io/github/actions/workflow/status/its-geoff/course-companion/ci-cd.yaml?branch=develop&style=for-the-badge&label=CI%2FCD
 [ci-url]: https://github.com/its-geoff/course-companion/actions/workflows/ci-cd.yaml
 [product-screenshot]: images/screenshot.png
  

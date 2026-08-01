@@ -1,4 +1,5 @@
 enable_coverage(CourseCompanion_lib)
+find_package(Qt6 REQUIRED COMPONENTS Test)
 
 add_executable(AssignmentTests model/AssignmentTests.cpp)
 target_link_libraries(AssignmentTests PRIVATE CourseCompanion_lib GTest::gtest_main)
@@ -31,7 +32,7 @@ add_test(NAME CourseControllerTests COMMAND CourseControllerTests)
 enable_coverage(CourseControllerTests)
 
 add_executable(TermControllerTests controller/TermControllerTests.cpp)
-target_link_libraries(TermControllerTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+target_link_libraries(TermControllerTests PRIVATE CourseCompanion_lib GTest::gtest_main Qt6::Test)
 add_test(NAME TermControllerTests COMMAND TermControllerTests)
 enable_coverage(TermControllerTests)
 

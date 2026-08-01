@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(CourseCompanion
-    VERSION 0.4.0
+    VERSION 0.4.1
     DESCRIPTION "Homework tracker that allows students to track homework assignments, estimate grades, and organize class schedules."
     LANGUAGES CXX
 )
@@ -18,6 +18,9 @@ endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
+find_package(Qt6 REQUIRED COMPONENTS Core)
+set(CMAKE_AUTOMOC ON)
+
 add_library(CourseCompanion_lib
     src/model/Assignment.cpp
     src/model/Course.cpp
@@ -28,8 +31,14 @@ add_library(CourseCompanion_lib
     src/utils/utils.cpp
 )
 
+target_sources(CourseCompanion_lib PRIVATE
+    include/controller/TermController.hpp
+)
+
 target_include_directories(CourseCompanion_lib PUBLIC include)
 target_link_libraries(CourseCompanion_lib
+    PUBLIC
+        Qt6::Core
     PRIVATE
         $<$<PLATFORM_ID:Linux>:uuid>
 )
@@ -60,7 +69,6 @@ endfunction()
 
 if(NOT BUILD_TESTING)
     find_package(Qt6 REQUIRED COMPONENTS Widgets)
-    set(CMAKE_AUTOMOC ON)
 
     add_library(CourseCompanion_gui OBJECT
         src/view/qt/MainWindow.cpp

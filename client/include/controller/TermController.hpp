@@ -5,10 +5,13 @@
 #include <chrono>
 #include <unordered_map>
 #include <optional>
+#include <QObject>
 #include "model/Term.hpp"
 #include "controller/CourseController.hpp"
 
-class TermController {
+class TermController : public QObject {
+    Q_OBJECT
+
     private:
         std::unordered_map<std::string, Term> termList_{};
         std::unordered_map<std::string, std::string> titleToId_{};
@@ -34,6 +37,10 @@ class TermController {
         const Term& findTerm(const std::string& title) const;
         Term& findTerm(const std::string& title);
         void selectTerm(const std::string& title);
+
+    signals:
+        void dataChanged();
+        void termSelected();
 };
 
 #endif  // TERMCONTROLLER_HPP
