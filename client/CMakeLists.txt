@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(CourseCompanion
-    VERSION 0.4.5
+    VERSION 0.4.1
     DESCRIPTION "Homework tracker that allows students to track homework assignments, estimate grades, and organize class schedules."
     LANGUAGES CXX
 )
