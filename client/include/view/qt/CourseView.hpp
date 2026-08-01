@@ -7,7 +7,8 @@
  *
  * Displays course metadata, assignment completion progress, a filterable list of assignments,
  * and a footer summary with average grade and GPA. Clicking an assignment row emits
- * assignmentSelected so MainWindow can navigate to AssignmentView.
+ * assignmentSelected so MainWindow can navigate to AssignmentView. The back button emits
+ * backRequested so MainWindow can navigate to TermView.
  *
  * Provides declarations only; see CourseView.cpp for implementations.
  */
@@ -30,9 +31,9 @@ class CourseView : public QWidget {
 
     signals:
         void assignmentSelected(const QString& assignmentTitle);
+        void backRequested();
 
     private slots:
-        void onAddCourse();
         void onAddAssignment();
         void onRemoveAssignment();
         void onFilterAll();
@@ -51,9 +52,9 @@ class CourseView : public QWidget {
 
         QVBoxLayout* mainLayout_;
 
+        QPushButton* backButton_;
         QLabel*      courseTitle_;
         QLabel*      dateRangeLabel_;
-        QPushButton* addCourseButton_;
         QPushButton* addAssignmentButton_;
         QPushButton* removeAssignmentButton_;
 

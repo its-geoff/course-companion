@@ -4,13 +4,16 @@
  * @file AssignmentView.cpp
  * @brief Implementation of the AssignmentView class, which serves as a detail overlay for the Qt GUI.
  *
- * Renders metadata for one selected assignment and handles grade input. Grade input
+ * Renders metadata for one selected assignment, handles grade input, lets the user edit
+ * the assignment's details, and lets the user toggle its completion status. Grade input
  * accepts both percentage format (95.0) and point-based format (47/50); the corresponding
  * letter grade and percentage are calculated and displayed on submit.
  *
  * Note: grade-to-letter calculation uses placeholder thresholds; controller wiring
  * is planned but not yet implemented.
  */
+
+#include "view/qt/FormDialog.hpp"
 
 #include <QDebug>
 #include <QMessageBox>
@@ -60,7 +63,7 @@ void AssignmentView::setupHeader() {
     titleLayout->setSpacing(12);
 
     titleLabel_ = new QLabel("Assignment Title", titleRow);
-    titleLabel_->setStyleSheet("font-size: 22px; font-weight: 500;");
+    titleLabel_->setStyleSheet("font-size: 22px; font-weight: 500; color: #1a1a1a;");
 
     statusBadge_ = new QLabel("Pending", titleRow);
     statusBadge_->setStyleSheet(
@@ -72,9 +75,39 @@ void AssignmentView::setupHeader() {
     );
     statusBadge_->setAlignment(Qt::AlignVCenter);
 
+    editButton_ = new QPushButton("Edit", titleRow);
+    editButton_->setStyleSheet(
+        "QPushButton {"
+        "  font-size: 12px;"
+        "  color: #378ADD;"
+        "  background: transparent;"
+        "  border: 1px solid #378ADD;"
+        "  border-radius: 4px;"
+        "  padding: 3px 10px;"
+        "}"
+        "QPushButton:hover { background: #eef4fb; }"
+    );
+    connect(editButton_, &QPushButton::clicked, this, &AssignmentView::onEditDetails);
+
+    toggleCompleteButton_ = new QPushButton("Mark Complete", titleRow);
+    toggleCompleteButton_->setStyleSheet(
+        "QPushButton {"
+        "  font-size: 12px;"
+        "  color: #378ADD;"
+        "  background: transparent;"
+        "  border: 1px solid #378ADD;"
+        "  border-radius: 4px;"
+        "  padding: 3px 10px;"
+        "}"
+        "QPushButton:hover { background: #eef4fb; }"
+    );
+    connect(toggleCompleteButton_, &QPushButton::clicked, this, &AssignmentView::onToggleCompleted);
+
     titleLayout->addWidget(titleLabel_);
     titleLayout->addWidget(statusBadge_);
     titleLayout->addStretch();
+    titleLayout->addWidget(editButton_);
+    titleLayout->addWidget(toggleCompleteButton_);
 
     headerLayout->addWidget(topRow);
     headerLayout->addWidget(titleRow);
@@ -179,29 +212,12 @@ void AssignmentView::setupGradeSection() {
 
 void AssignmentView::loadAssignment(const QString& title, const QString& description,
                                     const QString& dueDate, bool completed, float grade) {
-    completed_ = completed;
+    completed_   = completed;
+    description_ = description;
+    dueDate_     = dueDate;
 
     titleLabel_->setText(title);
-
-    if (completed) {
-        statusBadge_->setText("Completed");
-        statusBadge_->setStyleSheet(
-            "font-size: 11px;"
-            "color: #378ADD;"
-            "background: #eef4fb;"
-            "border-radius: 4px;"
-            "padding: 2px 8px;"
-        );
-    } else {
-        statusBadge_->setText("Pending");
-        statusBadge_->setStyleSheet(
-            "font-size: 11px;"
-            "color: #888;"
-            "background: #f0f0f0;"
-            "border-radius: 4px;"
-            "padding: 2px 8px;"
-        );
-    }
+    updateStatusBadge();
 
     dueDateLabel_->setText("Due: " + dueDate);
     descriptionLabel_->setText(description.isEmpty() ? "No description." : description);
@@ -213,6 +229,30 @@ void AssignmentView::loadAssignment(const QString& title, const QString& descrip
 
     if (completed && grade >= 0.0f) {
         applyGradeResult(grade);
+    }
+}
+
+void AssignmentView::updateStatusBadge() {
+    if (completed_) {
+        statusBadge_->setText("Completed");
+        statusBadge_->setStyleSheet(
+            "font-size: 11px;"
+            "color: #378ADD;"
+            "background: #eef4fb;"
+            "border-radius: 4px;"
+            "padding: 2px 8px;"
+        );
+        toggleCompleteButton_->setText("Mark Incomplete");
+    } else {
+        statusBadge_->setText("Pending");
+        statusBadge_->setStyleSheet(
+            "font-size: 11px;"
+            "color: #888;"
+            "background: #f0f0f0;"
+            "border-radius: 4px;"
+            "padding: 2px 8px;"
+        );
+        toggleCompleteButton_->setText("Mark Complete");
     }
 }
 
@@ -289,4 +329,48 @@ void AssignmentView::onSubmitGrade() {
 
     // TODO: wire to AssignmentController::addGrade / editGrade once controller is connected
     qDebug() << "Save grade:" << pct;
+}
+
+void AssignmentView::onToggleCompleted() {
+    completed_ = !completed_;
+    updateStatusBadge();
+    gradeSectionTitle_->setText(completed_ ? "EDIT GRADE" : "ENTER GRADE");
+
+    if (!completed_) {
+        gradeInput_->clear();
+        gradeResultLabel_->hide();
+    }
+
+    // TODO: wire to AssignmentController once it exposes a direct completion toggle
+    qDebug() << "Toggle completed:" << completed_;
+}
+
+void AssignmentView::onEditDetails() {
+    QDate parsedDueDate = QDate::fromString(dueDate_, "MMM d, yyyy");
+    if (!parsedDueDate.isValid())
+        parsedDueDate = QDate::currentDate();
+
+    std::vector<FieldDef> fields = {
+        { "title",   "Title",       FieldDef::Type::Text,         titleLabel_->text() },
+        { "desc",    "Description", FieldDef::Type::OptionalText, description_         },
+        { "dueDate", "Due Date",    FieldDef::Type::Date,         parsedDueDate        },
+    };
+
+    FormDialog dlg("Edit Assignment", fields, this);
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+
+    QString newTitle = dlg.textValue("title");
+    QString newDesc  = dlg.textValue("desc");
+    QDate   newDate  = dlg.dateValue("dueDate");
+
+    titleLabel_->setText(newTitle);
+    description_ = newDesc;
+    dueDate_      = newDate.toString("MMM d, yyyy");
+
+    descriptionLabel_->setText(newDesc.isEmpty() ? "No description." : newDesc);
+    dueDateLabel_->setText("Due: " + dueDate_);
+
+    // TODO: wire to AssignmentController::editTitle / editDescription / editDueDate once connected
+    qDebug() << "Edit Assignment:" << newTitle << newDesc << dueDate_;
 }
