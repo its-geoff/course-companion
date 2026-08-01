@@ -39,7 +39,7 @@ class CourseController : public QObject {
 
     signals:
         void dataChanged();
-        void assignmentSelected();
+        void courseSelected();
 
     private:
         Term& term_;
