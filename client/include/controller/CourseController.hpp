@@ -10,12 +10,6 @@
 #include "controller/AssignmentController.hpp"
 
 class CourseController {
-    private:
-        Term& term_;
-        Course* activeCourse_ = nullptr;
-        std::unordered_map<std::string, std::string> titleToId_{};
-        std::optional<AssignmentController> assignmentController_{};
-
     public:
         explicit CourseController(Term& term);
         CourseController(const CourseController&) = delete;
@@ -39,6 +33,12 @@ class CourseController {
         const Course& findCourse(const std::string& title) const;
         Course& findCourse(const std::string& title);
         void selectCourse(const std::string& title);
+
+    private:
+        Term& term_;
+        Course* activeCourse_ = nullptr;
+        std::unordered_map<std::string, std::string> titleToId_{};
+        std::optional<AssignmentController> assignmentController_{};
 };
 
 #endif  // COURSECONTROLLER_HPP
