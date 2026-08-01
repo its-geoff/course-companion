@@ -18,7 +18,8 @@
 #include <QPushButton>
 #include <QStackedLayout>
 
-TermView::TermView(QWidget* parent) : QWidget(parent) {
+TermView::TermView(TermController& controller, QWidget* parent) 
+    : QWidget(parent), controller_{controller} {
     mainLayout_ = new QVBoxLayout(this);
     mainLayout_->setContentsMargins(24, 24, 24, 24);
     mainLayout_->setSpacing(20);

@@ -33,12 +33,12 @@ class MainWindow : public QMainWindow {
         explicit MainWindow(QWidget* parent = nullptr);
 
     private:
-        void setupUi();
-
         QWidget*        centralWidget_;
-        QHBoxLayout*    layout_;       // was QVBoxLayout*, now QHBoxLayout*
-        QWidget*        sidebar_;      // new
-        QStackedWidget* stack_;        // new — replaces mainArea_
+        QHBoxLayout*    layout_;
+        QWidget*        sidebar_;
+        QStackedWidget* stack_;
+
+        void setupUi();
 };
 
 #endif // MAINWINDOW_HPP

@@ -35,14 +35,6 @@ class AssignmentView : public QWidget {
         void backRequested();
 
     private:
-        void setupHeader();
-        void setupMeta();
-        void setupGradeSection();
-
-        float parseGradeInput(const QString& input, bool& ok) const;
-        void  applyGradeResult(float pct);
-        void  updateStatusBadge();
-
         QVBoxLayout* mainLayout_;
 
         QPushButton* backButton_;
@@ -63,6 +55,14 @@ class AssignmentView : public QWidget {
         QString description_;
         QString dueDate_;
         bool completed_ = false;
+
+        void setupHeader();
+        void setupMeta();
+        void setupGradeSection();
+
+        float parseGradeInput(const QString& input, bool& ok) const;
+        void  applyGradeResult(float pct);
+        void  updateStatusBadge();
 
     private slots:
         void onSubmitGrade();

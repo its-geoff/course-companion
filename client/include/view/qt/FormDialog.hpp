@@ -56,12 +56,8 @@ public:
     bool    boolValue(const QString& key) const;
 
 private:
-    void addTextField(QFormLayout* layout, const FieldDef& field);
-    void addDateField(QFormLayout* layout, const FieldDef& field);
-    void addIntField(QFormLayout*  layout, const FieldDef& field);
-    void addBoolField(QFormLayout* layout, const FieldDef& field);
-
-    bool validateRequired();
+    std::vector<WidgetEntry> widgets_;
+    QMap<QString, int>       keyIndex_;
 
     struct WidgetEntry {
         FieldDef::Type type;
@@ -69,8 +65,12 @@ private:
         bool     required = false;
     };
 
-    std::vector<WidgetEntry> widgets_;
-    QMap<QString, int>       keyIndex_;
+    void addTextField(QFormLayout* layout, const FieldDef& field);
+    void addDateField(QFormLayout* layout, const FieldDef& field);
+    void addIntField(QFormLayout*  layout, const FieldDef& field);
+    void addBoolField(QFormLayout* layout, const FieldDef& field);
+
+    bool validateRequired();
 
 private slots:
     void onAccepted();

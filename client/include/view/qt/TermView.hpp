@@ -30,7 +30,7 @@ class TermView : public QWidget {
     Q_OBJECT
 
     public:
-        explicit TermView(QWidget* parent = nullptr);
+        explicit TermView(TermController& controller, QWidget* parent = nullptr);
 
     public slots:
         void onAddTerm();
@@ -39,14 +39,7 @@ class TermView : public QWidget {
         void courseSelected(const QString& courseTitle);
 
     private:
-        void setupHeader();
-        void setupProgress();
-        void setupCourseList();
-        void addCourseRow(const QString& name, const QString& sub,
-                             const QString& pct, const QString& letter,
-                             const QString& gpa);
-        void setupFooter();
-
+        TermController& controller_;
         QVBoxLayout* mainLayout_;
 
         // header
@@ -64,6 +57,14 @@ class TermView : public QWidget {
         // footer
         QLabel* avgGradeLabel_;
         QLabel* gpaLabel_;
+
+        void setupHeader();
+        void setupProgress();
+        void setupCourseList();
+        void addCourseRow(const QString& name, const QString& sub,
+                             const QString& pct, const QString& letter,
+                             const QString& gpa);
+        void setupFooter();
 
     private slots:
         void onAddCourse();
