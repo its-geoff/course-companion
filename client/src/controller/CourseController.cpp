@@ -51,14 +51,13 @@ void CourseController::editTitle(const std::string& id, const std::string& newTi
     Course& course = term_.findCourse(id);
     std::string oldTitle = course.getTitle();
 
-    auto inserted = titleToId_.emplace(utils::stringLower(newTitle), id).second;
-
-    if (!inserted) {
+    if (titleToId_.contains(utils::stringLower(newTitle))) {
         throw std::logic_error("A course with this title already exists.");
     }
 
-    titleToId_.erase(utils::stringLower(oldTitle));
     course.setTitle(newTitle);
+    titleToId_.erase(utils::stringLower(oldTitle));
+    titleToId_.emplace(utils::stringLower(newTitle), id);
     emit dataChanged();
 }
 

@@ -42,14 +42,13 @@ void TermController::editTitle(const std::string& id, const std::string& newTitl
     Term& term = termList_.at(id);
     std::string oldTitle = term.getTitle();
 
-    auto inserted = titleToId_.emplace(utils::stringLower(newTitle), id).second;
-
-    if (!inserted) {
+    if (titleToId_.contains(utils::stringLower(newTitle))) {
         throw std::logic_error("A term with this title already exists.");
     }
 
-    titleToId_.erase(utils::stringLower(oldTitle));
     term.setTitle(newTitle);
+    titleToId_.erase(utils::stringLower(oldTitle));
+    titleToId_.emplace(utils::stringLower(newTitle), id);
     emit dataChanged();
 }
 

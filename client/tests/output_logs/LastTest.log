@@ -1,10 +1,290 @@
-Start testing: Jul 27 23:25 PDT
+Start testing: Aug 01 09:42 PDT
 ----------------------------------------------------------
-1/11 Testing: AssignmentTests
-1/11 Test: AssignmentTests
+1/11 Testing: AssignmentControllerTests
+1/11 Test: AssignmentControllerTests
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/AssignmentControllerTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"AssignmentControllerTests" start time: Aug 01 09:42 PDT
+Output:
+----------------------------------------------------------
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 37 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 37 tests from AssignmentControllerTest
+[ RUN      ] AssignmentControllerTest.AssignmentListGetter
+[       OK ] AssignmentControllerTest.AssignmentListGetter (0 ms)
+[ RUN      ] AssignmentControllerTest.AssignmentIdGetter
+[       OK ] AssignmentControllerTest.AssignmentIdGetter (0 ms)
+[ RUN      ] AssignmentControllerTest.AddAssignment
+[       OK ] AssignmentControllerTest.AddAssignment (0 ms)
+[ RUN      ] AssignmentControllerTest.EditTitle
+[       OK ] AssignmentControllerTest.EditTitle (0 ms)
+[ RUN      ] AssignmentControllerTest.EditDescription
+[       OK ] AssignmentControllerTest.EditDescription (0 ms)
+[ RUN      ] AssignmentControllerTest.EditCategory
+[       OK ] AssignmentControllerTest.EditCategory (0 ms)
+[ RUN      ] AssignmentControllerTest.EditDueDate
+[       OK ] AssignmentControllerTest.EditDueDate (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentage
+[       OK ] AssignmentControllerTest.AddGradePercentage (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePoints
+[       OK ] AssignmentControllerTest.AddGradePoints (0 ms)
+[ RUN      ] AssignmentControllerTest.RemoveGrade
+[       OK ] AssignmentControllerTest.RemoveGrade (0 ms)
+[ RUN      ] AssignmentControllerTest.RemoveAssignment
+[       OK ] AssignmentControllerTest.RemoveAssignment (0 ms)
+[ RUN      ] AssignmentControllerTest.FindAssignmentConst
+[       OK ] AssignmentControllerTest.FindAssignmentConst (0 ms)
+[ RUN      ] AssignmentControllerTest.FindAssignmentNonConst
+[       OK ] AssignmentControllerTest.FindAssignmentNonConst (0 ms)
+[ RUN      ] AssignmentControllerTest.AssignmentListGetterEmpty
+[       OK ] AssignmentControllerTest.AssignmentListGetterEmpty (0 ms)
+[ RUN      ] AssignmentControllerTest.AssignmentIdGetterNotFound
+[       OK ] AssignmentControllerTest.AssignmentIdGetterNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.AddAssignmentAlreadyExists
+[       OK ] AssignmentControllerTest.AddAssignmentAlreadyExists (0 ms)
+[ RUN      ] AssignmentControllerTest.AddAssignmentInvalidCategory
+[       OK ] AssignmentControllerTest.AddAssignmentInvalidCategory (0 ms)
+[ RUN      ] AssignmentControllerTest.EditTitleAlreadyExists
+[       OK ] AssignmentControllerTest.EditTitleAlreadyExists (0 ms)
+[ RUN      ] AssignmentControllerTest.EditTitleAlreadyExistsDifferentCase
+[       OK ] AssignmentControllerTest.EditTitleAlreadyExistsDifferentCase (0 ms)
+[ RUN      ] AssignmentControllerTest.EditTitleEmpty
+[       OK ] AssignmentControllerTest.EditTitleEmpty (0 ms)
+[ RUN      ] AssignmentControllerTest.EditCategoryEmpty
+[       OK ] AssignmentControllerTest.EditCategoryEmpty (0 ms)
+[ RUN      ] AssignmentControllerTest.EditDueDateInvalid
+[       OK ] AssignmentControllerTest.EditDueDateInvalid (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradeAssignmentNotFound
+[       OK ] AssignmentControllerTest.AddGradeAssignmentNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentageOutOfRangeLow
+[       OK ] AssignmentControllerTest.AddGradePercentageOutOfRangeLow (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentageOutOfRangeHigh
+[       OK ] AssignmentControllerTest.AddGradePercentageOutOfRangeHigh (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentageBoundaryLow
+[       OK ] AssignmentControllerTest.AddGradePercentageBoundaryLow (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePercentageBoundaryHigh
+[       OK ] AssignmentControllerTest.AddGradePercentageBoundaryHigh (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsOutOfRangeLow
+[       OK ] AssignmentControllerTest.AddGradePointsOutOfRangeLow (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsOutOfRangeHigh
+[       OK ] AssignmentControllerTest.AddGradePointsOutOfRangeHigh (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsBoundaryLow
+[       OK ] AssignmentControllerTest.AddGradePointsBoundaryLow (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsBoundaryHigh
+[       OK ] AssignmentControllerTest.AddGradePointsBoundaryHigh (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsNegativeDivisor
+[       OK ] AssignmentControllerTest.AddGradePointsNegativeDivisor (0 ms)
+[ RUN      ] AssignmentControllerTest.AddGradePointsDivisionByZero
+[       OK ] AssignmentControllerTest.AddGradePointsDivisionByZero (0 ms)
+[ RUN      ] AssignmentControllerTest.RemoveGradeAssignmentNotFound
+[       OK ] AssignmentControllerTest.RemoveGradeAssignmentNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.RemoveAssignmentNotFound
+[       OK ] AssignmentControllerTest.RemoveAssignmentNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.FindAssignmentConstNotFound
+[       OK ] AssignmentControllerTest.FindAssignmentConstNotFound (0 ms)
+[ RUN      ] AssignmentControllerTest.FindAssignmentNonConstNotFound
+[       OK ] AssignmentControllerTest.FindAssignmentNonConstNotFound (0 ms)
+[----------] 37 tests from AssignmentControllerTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 37 tests from 1 test suite ran. (2 ms total)
+[  PASSED  ] 37 tests.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"AssignmentControllerTests" end time: Aug 01 09:42 PDT
+"AssignmentControllerTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/11 Testing: CourseControllerTests
+2/11 Test: CourseControllerTests
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/CourseControllerTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"CourseControllerTests" start time: Aug 01 09:42 PDT
+Output:
+----------------------------------------------------------
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 37 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 37 tests from CourseControllerTest
+[ RUN      ] CourseControllerTest.CourseListGetter
+[       OK ] CourseControllerTest.CourseListGetter (0 ms)
+[ RUN      ] CourseControllerTest.CourseIdGetter
+[       OK ] CourseControllerTest.CourseIdGetter (0 ms)
+[ RUN      ] CourseControllerTest.AddCourse
+[       OK ] CourseControllerTest.AddCourse (0 ms)
+[ RUN      ] CourseControllerTest.EditTitle
+[       OK ] CourseControllerTest.EditTitle (0 ms)
+[ RUN      ] CourseControllerTest.EditDescription
+[       OK ] CourseControllerTest.EditDescription (0 ms)
+[ RUN      ] CourseControllerTest.EditStartDate
+[       OK ] CourseControllerTest.EditStartDate (0 ms)
+[ RUN      ] CourseControllerTest.EditEndDate
+[       OK ] CourseControllerTest.EditEndDate (0 ms)
+[ RUN      ] CourseControllerTest.EditNumCredits
+[       OK ] CourseControllerTest.EditNumCredits (0 ms)
+[ RUN      ] CourseControllerTest.EditActive
+[       OK ] CourseControllerTest.EditActive (0 ms)
+[ RUN      ] CourseControllerTest.RemoveCourse
+[       OK ] CourseControllerTest.RemoveCourse (0 ms)
+[ RUN      ] CourseControllerTest.FindCourseConst
+[       OK ] CourseControllerTest.FindCourseConst (0 ms)
+[ RUN      ] CourseControllerTest.FindCourseNonConst
+[       OK ] CourseControllerTest.FindCourseNonConst (0 ms)
+[ RUN      ] CourseControllerTest.SelectCourse
+[       OK ] CourseControllerTest.SelectCourse (0 ms)
+[ RUN      ] CourseControllerTest.CourseListGetterEmpty
+[       OK ] CourseControllerTest.CourseListGetterEmpty (0 ms)
+[ RUN      ] CourseControllerTest.CourseIdGetterNotFound
+[       OK ] CourseControllerTest.CourseIdGetterNotFound (0 ms)
+[ RUN      ] CourseControllerTest.AddCourseAlreadyExists
+[       OK ] CourseControllerTest.AddCourseAlreadyExists (0 ms)
+[ RUN      ] CourseControllerTest.EditTitleAlreadyExists
+[       OK ] CourseControllerTest.EditTitleAlreadyExists (0 ms)
+[ RUN      ] CourseControllerTest.EditTitleAlreadyExistsDifferentCase
+[       OK ] CourseControllerTest.EditTitleAlreadyExistsDifferentCase (0 ms)
+[ RUN      ] CourseControllerTest.EditTitleEmpty
+[       OK ] CourseControllerTest.EditTitleEmpty (0 ms)
+[ RUN      ] CourseControllerTest.EditStartDateInvalid
+[       OK ] CourseControllerTest.EditStartDateInvalid (0 ms)
+[ RUN      ] CourseControllerTest.EditEndDateInvalid
+[       OK ] CourseControllerTest.EditEndDateInvalid (0 ms)
+[ RUN      ] CourseControllerTest.EditNumCreditsLessThanZero
+[       OK ] CourseControllerTest.EditNumCreditsLessThanZero (0 ms)
+[ RUN      ] CourseControllerTest.RemoveCourseNotFound
+[       OK ] CourseControllerTest.RemoveCourseNotFound (0 ms)
+[ RUN      ] CourseControllerTest.FindCourseConstNotFound
+[       OK ] CourseControllerTest.FindCourseConstNotFound (0 ms)
+[ RUN      ] CourseControllerTest.FindCourseNonConstNotFound
+[       OK ] CourseControllerTest.FindCourseNonConstNotFound (0 ms)
+[ RUN      ] CourseControllerTest.SelectCourseNotFound
+[       OK ] CourseControllerTest.SelectCourseNotFound (0 ms)
+[ RUN      ] CourseControllerTest.AddCourseEmitsDataChanged
+[       OK ] CourseControllerTest.AddCourseEmitsDataChanged (0 ms)
+[ RUN      ] CourseControllerTest.AddCourseAlreadyExistsDoesNotEmitDataChanged
+[       OK ] CourseControllerTest.AddCourseAlreadyExistsDoesNotEmitDataChanged (0 ms)
+[ RUN      ] CourseControllerTest.EditTitleEmitsDataChanged
+[       OK ] CourseControllerTest.EditTitleEmitsDataChanged (0 ms)
+[ RUN      ] CourseControllerTest.EditDescriptionEmitsDataChanged
+[       OK ] CourseControllerTest.EditDescriptionEmitsDataChanged (0 ms)
+[ RUN      ] CourseControllerTest.EditStartDateEmitsDataChanged
+[       OK ] CourseControllerTest.EditStartDateEmitsDataChanged (0 ms)
+[ RUN      ] CourseControllerTest.EditEndDateEmitsDataChanged
+[       OK ] CourseControllerTest.EditEndDateEmitsDataChanged (0 ms)
+[ RUN      ] CourseControllerTest.EditNumCreditsEmitsDataChanged
+[       OK ] CourseControllerTest.EditNumCreditsEmitsDataChanged (0 ms)
+[ RUN      ] CourseControllerTest.EditActiveEmitsDataChanged
+[       OK ] CourseControllerTest.EditActiveEmitsDataChanged (0 ms)
+[ RUN      ] CourseControllerTest.RemoveCourseEmitsDataChanged
+[       OK ] CourseControllerTest.RemoveCourseEmitsDataChanged (0 ms)
+[ RUN      ] CourseControllerTest.SelectCourseEmitsCourseSelected
+[       OK ] CourseControllerTest.SelectCourseEmitsCourseSelected (0 ms)
+[ RUN      ] CourseControllerTest.SelectCourseNotFoundDoesNotEmitCourseSelected
+[       OK ] CourseControllerTest.SelectCourseNotFoundDoesNotEmitCourseSelected (0 ms)
+[----------] 37 tests from CourseControllerTest (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 37 tests from 1 test suite ran. (2 ms total)
+[  PASSED  ] 37 tests.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"CourseControllerTests" end time: Aug 01 09:42 PDT
+"CourseControllerTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/11 Testing: TermControllerTests
+3/11 Test: TermControllerTests
+Command: "/home/its-geoff/course-companion/client/build/build_test/bin/TermControllerTests"
+Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
+"TermControllerTests" start time: Aug 01 09:42 PDT
+Output:
+----------------------------------------------------------
+Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 30 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 30 tests from TermControllerTest
+[ RUN      ] TermControllerTest.TermListGetter
+[       OK ] TermControllerTest.TermListGetter (0 ms)
+[ RUN      ] TermControllerTest.TermIdGetter
+[       OK ] TermControllerTest.TermIdGetter (0 ms)
+[ RUN      ] TermControllerTest.AddTerm
+[       OK ] TermControllerTest.AddTerm (0 ms)
+[ RUN      ] TermControllerTest.EditTitle
+[       OK ] TermControllerTest.EditTitle (0 ms)
+[ RUN      ] TermControllerTest.EditStartDate
+[       OK ] TermControllerTest.EditStartDate (0 ms)
+[ RUN      ] TermControllerTest.EditEndDate
+[       OK ] TermControllerTest.EditEndDate (0 ms)
+[ RUN      ] TermControllerTest.EditActive
+[       OK ] TermControllerTest.EditActive (0 ms)
+[ RUN      ] TermControllerTest.RemoveTerm
+[       OK ] TermControllerTest.RemoveTerm (0 ms)
+[ RUN      ] TermControllerTest.FindTermConst
+[       OK ] TermControllerTest.FindTermConst (0 ms)
+[ RUN      ] TermControllerTest.FindTermNonConst
+[       OK ] TermControllerTest.FindTermNonConst (0 ms)
+[ RUN      ] TermControllerTest.TermListGetterEmpty
+[       OK ] TermControllerTest.TermListGetterEmpty (0 ms)
+[ RUN      ] TermControllerTest.TermIdGetterNotFound
+[       OK ] TermControllerTest.TermIdGetterNotFound (0 ms)
+[ RUN      ] TermControllerTest.AddTermAlreadyExists
+[       OK ] TermControllerTest.AddTermAlreadyExists (0 ms)
+[ RUN      ] TermControllerTest.EditTitleAlreadyExists
+[       OK ] TermControllerTest.EditTitleAlreadyExists (0 ms)
+[ RUN      ] TermControllerTest.EditTitleAlreadyExistsDifferentCase
+[       OK ] TermControllerTest.EditTitleAlreadyExistsDifferentCase (0 ms)
+[ RUN      ] TermControllerTest.EditTitleEmpty
+[       OK ] TermControllerTest.EditTitleEmpty (0 ms)
+[ RUN      ] TermControllerTest.EditStartDateInvalid
+[       OK ] TermControllerTest.EditStartDateInvalid (0 ms)
+[ RUN      ] TermControllerTest.EditEndDateInvalid
+[       OK ] TermControllerTest.EditEndDateInvalid (0 ms)
+[ RUN      ] TermControllerTest.RemoveTermNotFound
+[       OK ] TermControllerTest.RemoveTermNotFound (0 ms)
+[ RUN      ] TermControllerTest.FindTermConstNotFound
+[       OK ] TermControllerTest.FindTermConstNotFound (0 ms)
+[ RUN      ] TermControllerTest.FindTermNonConstNotFound
+[       OK ] TermControllerTest.FindTermNonConstNotFound (0 ms)
+[ RUN      ] TermControllerTest.AddTermEmitsDataChanged
+[       OK ] TermControllerTest.AddTermEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.AddTermAlreadyExistsDoesNotEmitDataChanged
+[       OK ] TermControllerTest.AddTermAlreadyExistsDoesNotEmitDataChanged (0 ms)
+[ RUN      ] TermControllerTest.EditTitleEmitsDataChanged
+[       OK ] TermControllerTest.EditTitleEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.EditStartDateEmitsDataChanged
+[       OK ] TermControllerTest.EditStartDateEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.EditEndDateEmitsDataChanged
+[       OK ] TermControllerTest.EditEndDateEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.EditActiveEmitsDataChanged
+[       OK ] TermControllerTest.EditActiveEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.RemoveTermEmitsDataChanged
+[       OK ] TermControllerTest.RemoveTermEmitsDataChanged (0 ms)
+[ RUN      ] TermControllerTest.SelectTermEmitsTermSelected
+[       OK ] TermControllerTest.SelectTermEmitsTermSelected (0 ms)
+[ RUN      ] TermControllerTest.SelectTermNotFoundDoesNotEmitTermSelected
+[       OK ] TermControllerTest.SelectTermNotFoundDoesNotEmitTermSelected (0 ms)
+[----------] 30 tests from TermControllerTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 30 tests from 1 test suite ran. (1 ms total)
+[  PASSED  ] 30 tests.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"TermControllerTests" end time: Aug 01 09:42 PDT
+"TermControllerTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/11 Testing: AssignmentTests
+4/11 Test: AssignmentTests
 Command: "/home/its-geoff/course-companion/client/build/build_test/bin/AssignmentTests"
 Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
-"AssignmentTests" start time: Jul 27 23:25 PDT
+"AssignmentTests" start time: Aug 01 09:42 PDT
 Output:
 ----------------------------------------------------------
 Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
@@ -162,15 +442,15 @@ Running main() from /home/its-geoff/course-companion/client/build/build_test/_de
 Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"AssignmentTests" end time: Jul 27 23:25 PDT
+"AssignmentTests" end time: Aug 01 09:42 PDT
 "AssignmentTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-2/11 Testing: CourseTests
-2/11 Test: CourseTests
+5/11 Testing: CourseTests
+5/11 Test: CourseTests
 Command: "/home/its-geoff/course-companion/client/build/build_test/bin/CourseTests"
 Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
-"CourseTests" start time: Jul 27 23:25 PDT
+"CourseTests" start time: Aug 01 09:42 PDT
 Output:
 ----------------------------------------------------------
 Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
@@ -398,21 +678,21 @@ Running main() from /home/its-geoff/course-companion/client/build/build_test/_de
 [----------] 109 tests from CourseTest (6 ms total)
 
 [----------] Global test environment tear-down
-[==========] 109 tests from 1 test suite ran. (7 ms total)
+[==========] 109 tests from 1 test suite ran. (6 ms total)
 [  PASSED  ] 109 tests.
 <end of output>
 Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"CourseTests" end time: Jul 27 23:25 PDT
+"CourseTests" end time: Aug 01 09:42 PDT
 "CourseTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-3/11 Testing: TermTests
-3/11 Test: TermTests
+6/11 Testing: TermTests
+6/11 Test: TermTests
 Command: "/home/its-geoff/course-companion/client/build/build_test/bin/TermTests"
 Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
-"TermTests" start time: Jul 27 23:25 PDT
+"TermTests" start time: Aug 01 09:42 PDT
 Output:
 ----------------------------------------------------------
 Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
@@ -528,15 +808,15 @@ Running main() from /home/its-geoff/course-companion/client/build/build_test/_de
 Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"TermTests" end time: Jul 27 23:25 PDT
+"TermTests" end time: Aug 01 09:42 PDT
 "TermTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-4/11 Testing: CliViewTests
-4/11 Test: CliViewTests
+7/11 Testing: CliViewTests
+7/11 Test: CliViewTests
 Command: "/home/its-geoff/course-companion/client/build/build_test/bin/CliViewTests"
 Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
-"CliViewTests" start time: Jul 27 23:25 PDT
+"CliViewTests" start time: Aug 01 09:42 PDT
 Output:
 ----------------------------------------------------------
 Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
@@ -864,273 +1144,15 @@ Running main() from /home/its-geoff/course-companion/client/build/build_test/_de
 Test time =   0.02 sec
 ----------------------------------------------------------
 Test Passed.
-"CliViewTests" end time: Jul 27 23:25 PDT
+"CliViewTests" end time: Aug 01 09:42 PDT
 "CliViewTests" time elapsed: 00:00:00
-----------------------------------------------------------
-
-5/11 Testing: AssignmentControllerTests
-5/11 Test: AssignmentControllerTests
-Command: "/home/its-geoff/course-companion/client/build/build_test/bin/AssignmentControllerTests"
-Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
-"AssignmentControllerTests" start time: Jul 27 23:25 PDT
-Output:
-----------------------------------------------------------
-Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
-[==========] Running 37 tests from 1 test suite.
-[----------] Global test environment set-up.
-[----------] 37 tests from AssignmentControllerTest
-[ RUN      ] AssignmentControllerTest.AssignmentListGetter
-[       OK ] AssignmentControllerTest.AssignmentListGetter (0 ms)
-[ RUN      ] AssignmentControllerTest.AssignmentIdGetter
-[       OK ] AssignmentControllerTest.AssignmentIdGetter (0 ms)
-[ RUN      ] AssignmentControllerTest.AddAssignment
-[       OK ] AssignmentControllerTest.AddAssignment (0 ms)
-[ RUN      ] AssignmentControllerTest.EditTitle
-[       OK ] AssignmentControllerTest.EditTitle (0 ms)
-[ RUN      ] AssignmentControllerTest.EditDescription
-[       OK ] AssignmentControllerTest.EditDescription (0 ms)
-[ RUN      ] AssignmentControllerTest.EditCategory
-[       OK ] AssignmentControllerTest.EditCategory (0 ms)
-[ RUN      ] AssignmentControllerTest.EditDueDate
-[       OK ] AssignmentControllerTest.EditDueDate (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePercentage
-[       OK ] AssignmentControllerTest.AddGradePercentage (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePoints
-[       OK ] AssignmentControllerTest.AddGradePoints (0 ms)
-[ RUN      ] AssignmentControllerTest.RemoveGrade
-[       OK ] AssignmentControllerTest.RemoveGrade (0 ms)
-[ RUN      ] AssignmentControllerTest.RemoveAssignment
-[       OK ] AssignmentControllerTest.RemoveAssignment (0 ms)
-[ RUN      ] AssignmentControllerTest.FindAssignmentConst
-[       OK ] AssignmentControllerTest.FindAssignmentConst (0 ms)
-[ RUN      ] AssignmentControllerTest.FindAssignmentNonConst
-[       OK ] AssignmentControllerTest.FindAssignmentNonConst (0 ms)
-[ RUN      ] AssignmentControllerTest.AssignmentListGetterEmpty
-[       OK ] AssignmentControllerTest.AssignmentListGetterEmpty (0 ms)
-[ RUN      ] AssignmentControllerTest.AssignmentIdGetterNotFound
-[       OK ] AssignmentControllerTest.AssignmentIdGetterNotFound (0 ms)
-[ RUN      ] AssignmentControllerTest.AddAssignmentAlreadyExists
-[       OK ] AssignmentControllerTest.AddAssignmentAlreadyExists (0 ms)
-[ RUN      ] AssignmentControllerTest.AddAssignmentInvalidCategory
-[       OK ] AssignmentControllerTest.AddAssignmentInvalidCategory (0 ms)
-[ RUN      ] AssignmentControllerTest.EditTitleAlreadyExists
-[       OK ] AssignmentControllerTest.EditTitleAlreadyExists (0 ms)
-[ RUN      ] AssignmentControllerTest.EditTitleAlreadyExistsDifferentCase
-[       OK ] AssignmentControllerTest.EditTitleAlreadyExistsDifferentCase (0 ms)
-[ RUN      ] AssignmentControllerTest.EditTitleEmpty
-[       OK ] AssignmentControllerTest.EditTitleEmpty (0 ms)
-[ RUN      ] AssignmentControllerTest.EditCategoryEmpty
-[       OK ] AssignmentControllerTest.EditCategoryEmpty (0 ms)
-[ RUN      ] AssignmentControllerTest.EditDueDateInvalid
-[       OK ] AssignmentControllerTest.EditDueDateInvalid (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradeAssignmentNotFound
-[       OK ] AssignmentControllerTest.AddGradeAssignmentNotFound (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePercentageOutOfRangeLow
-[       OK ] AssignmentControllerTest.AddGradePercentageOutOfRangeLow (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePercentageOutOfRangeHigh
-[       OK ] AssignmentControllerTest.AddGradePercentageOutOfRangeHigh (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePercentageBoundaryLow
-[       OK ] AssignmentControllerTest.AddGradePercentageBoundaryLow (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePercentageBoundaryHigh
-[       OK ] AssignmentControllerTest.AddGradePercentageBoundaryHigh (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePointsOutOfRangeLow
-[       OK ] AssignmentControllerTest.AddGradePointsOutOfRangeLow (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePointsOutOfRangeHigh
-[       OK ] AssignmentControllerTest.AddGradePointsOutOfRangeHigh (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePointsBoundaryLow
-[       OK ] AssignmentControllerTest.AddGradePointsBoundaryLow (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePointsBoundaryHigh
-[       OK ] AssignmentControllerTest.AddGradePointsBoundaryHigh (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePointsNegativeDivisor
-[       OK ] AssignmentControllerTest.AddGradePointsNegativeDivisor (0 ms)
-[ RUN      ] AssignmentControllerTest.AddGradePointsDivisionByZero
-[       OK ] AssignmentControllerTest.AddGradePointsDivisionByZero (0 ms)
-[ RUN      ] AssignmentControllerTest.RemoveGradeAssignmentNotFound
-[       OK ] AssignmentControllerTest.RemoveGradeAssignmentNotFound (0 ms)
-[ RUN      ] AssignmentControllerTest.RemoveAssignmentNotFound
-[       OK ] AssignmentControllerTest.RemoveAssignmentNotFound (0 ms)
-[ RUN      ] AssignmentControllerTest.FindAssignmentConstNotFound
-[       OK ] AssignmentControllerTest.FindAssignmentConstNotFound (0 ms)
-[ RUN      ] AssignmentControllerTest.FindAssignmentNonConstNotFound
-[       OK ] AssignmentControllerTest.FindAssignmentNonConstNotFound (0 ms)
-[----------] 37 tests from AssignmentControllerTest (1 ms total)
-
-[----------] Global test environment tear-down
-[==========] 37 tests from 1 test suite ran. (1 ms total)
-[  PASSED  ] 37 tests.
-<end of output>
-Test time =   0.01 sec
-----------------------------------------------------------
-Test Passed.
-"AssignmentControllerTests" end time: Jul 27 23:25 PDT
-"AssignmentControllerTests" time elapsed: 00:00:00
-----------------------------------------------------------
-
-6/11 Testing: CourseControllerTests
-6/11 Test: CourseControllerTests
-Command: "/home/its-geoff/course-companion/client/build/build_test/bin/CourseControllerTests"
-Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
-"CourseControllerTests" start time: Jul 27 23:25 PDT
-Output:
-----------------------------------------------------------
-Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
-[==========] Running 26 tests from 1 test suite.
-[----------] Global test environment set-up.
-[----------] 26 tests from CourseControllerTest
-[ RUN      ] CourseControllerTest.CourseListGetter
-[       OK ] CourseControllerTest.CourseListGetter (0 ms)
-[ RUN      ] CourseControllerTest.CourseIdGetter
-[       OK ] CourseControllerTest.CourseIdGetter (0 ms)
-[ RUN      ] CourseControllerTest.AddCourse
-[       OK ] CourseControllerTest.AddCourse (0 ms)
-[ RUN      ] CourseControllerTest.EditTitle
-[       OK ] CourseControllerTest.EditTitle (0 ms)
-[ RUN      ] CourseControllerTest.EditDescription
-[       OK ] CourseControllerTest.EditDescription (0 ms)
-[ RUN      ] CourseControllerTest.EditStartDate
-[       OK ] CourseControllerTest.EditStartDate (0 ms)
-[ RUN      ] CourseControllerTest.EditEndDate
-[       OK ] CourseControllerTest.EditEndDate (0 ms)
-[ RUN      ] CourseControllerTest.EditNumCredits
-[       OK ] CourseControllerTest.EditNumCredits (0 ms)
-[ RUN      ] CourseControllerTest.EditActive
-[       OK ] CourseControllerTest.EditActive (0 ms)
-[ RUN      ] CourseControllerTest.RemoveCourse
-[       OK ] CourseControllerTest.RemoveCourse (0 ms)
-[ RUN      ] CourseControllerTest.FindCourseConst
-[       OK ] CourseControllerTest.FindCourseConst (0 ms)
-[ RUN      ] CourseControllerTest.FindCourseNonConst
-[       OK ] CourseControllerTest.FindCourseNonConst (0 ms)
-[ RUN      ] CourseControllerTest.SelectCourse
-[       OK ] CourseControllerTest.SelectCourse (0 ms)
-[ RUN      ] CourseControllerTest.CourseListGetterEmpty
-[       OK ] CourseControllerTest.CourseListGetterEmpty (0 ms)
-[ RUN      ] CourseControllerTest.CourseIdGetterNotFound
-[       OK ] CourseControllerTest.CourseIdGetterNotFound (0 ms)
-[ RUN      ] CourseControllerTest.AddCourseAlreadyExists
-[       OK ] CourseControllerTest.AddCourseAlreadyExists (0 ms)
-[ RUN      ] CourseControllerTest.EditTitleAlreadyExists
-[       OK ] CourseControllerTest.EditTitleAlreadyExists (0 ms)
-[ RUN      ] CourseControllerTest.EditTitleAlreadyExistsDifferentCase
-[       OK ] CourseControllerTest.EditTitleAlreadyExistsDifferentCase (0 ms)
-[ RUN      ] CourseControllerTest.EditTitleEmpty
-[       OK ] CourseControllerTest.EditTitleEmpty (0 ms)
-[ RUN      ] CourseControllerTest.EditStartDateInvalid
-[       OK ] CourseControllerTest.EditStartDateInvalid (0 ms)
-[ RUN      ] CourseControllerTest.EditEndDateInvalid
-[       OK ] CourseControllerTest.EditEndDateInvalid (0 ms)
-[ RUN      ] CourseControllerTest.EditNumCreditsLessThanZero
-[       OK ] CourseControllerTest.EditNumCreditsLessThanZero (0 ms)
-[ RUN      ] CourseControllerTest.RemoveCourseNotFound
-[       OK ] CourseControllerTest.RemoveCourseNotFound (0 ms)
-[ RUN      ] CourseControllerTest.FindCourseConstNotFound
-[       OK ] CourseControllerTest.FindCourseConstNotFound (0 ms)
-[ RUN      ] CourseControllerTest.FindCourseNonConstNotFound
-[       OK ] CourseControllerTest.FindCourseNonConstNotFound (0 ms)
-[ RUN      ] CourseControllerTest.SelectCourseNotFound
-[       OK ] CourseControllerTest.SelectCourseNotFound (0 ms)
-[----------] 26 tests from CourseControllerTest (1 ms total)
-
-[----------] Global test environment tear-down
-[==========] 26 tests from 1 test suite ran. (1 ms total)
-[  PASSED  ] 26 tests.
-<end of output>
-Test time =   0.01 sec
-----------------------------------------------------------
-Test Passed.
-"CourseControllerTests" end time: Jul 27 23:25 PDT
-"CourseControllerTests" time elapsed: 00:00:00
-----------------------------------------------------------
-
-7/11 Testing: TermControllerTests
-7/11 Test: TermControllerTests
-Command: "/home/its-geoff/course-companion/client/build/build_test/bin/TermControllerTests"
-Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
-"TermControllerTests" start time: Jul 27 23:25 PDT
-Output:
-----------------------------------------------------------
-Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
-[==========] Running 30 tests from 1 test suite.
-[----------] Global test environment set-up.
-[----------] 30 tests from TermControllerTest
-[ RUN      ] TermControllerTest.TermListGetter
-[       OK ] TermControllerTest.TermListGetter (0 ms)
-[ RUN      ] TermControllerTest.TermIdGetter
-[       OK ] TermControllerTest.TermIdGetter (0 ms)
-[ RUN      ] TermControllerTest.AddTerm
-[       OK ] TermControllerTest.AddTerm (0 ms)
-[ RUN      ] TermControllerTest.EditTitle
-[       OK ] TermControllerTest.EditTitle (0 ms)
-[ RUN      ] TermControllerTest.EditStartDate
-[       OK ] TermControllerTest.EditStartDate (0 ms)
-[ RUN      ] TermControllerTest.EditEndDate
-[       OK ] TermControllerTest.EditEndDate (0 ms)
-[ RUN      ] TermControllerTest.EditActive
-[       OK ] TermControllerTest.EditActive (0 ms)
-[ RUN      ] TermControllerTest.RemoveTerm
-[       OK ] TermControllerTest.RemoveTerm (0 ms)
-[ RUN      ] TermControllerTest.FindTermConst
-[       OK ] TermControllerTest.FindTermConst (0 ms)
-[ RUN      ] TermControllerTest.FindTermNonConst
-[       OK ] TermControllerTest.FindTermNonConst (0 ms)
-[ RUN      ] TermControllerTest.TermListGetterEmpty
-[       OK ] TermControllerTest.TermListGetterEmpty (0 ms)
-[ RUN      ] TermControllerTest.TermIdGetterNotFound
-[       OK ] TermControllerTest.TermIdGetterNotFound (0 ms)
-[ RUN      ] TermControllerTest.AddTermAlreadyExists
-[       OK ] TermControllerTest.AddTermAlreadyExists (0 ms)
-[ RUN      ] TermControllerTest.EditTitleAlreadyExists
-[       OK ] TermControllerTest.EditTitleAlreadyExists (0 ms)
-[ RUN      ] TermControllerTest.EditTitleAlreadyExistsDifferentCase
-[       OK ] TermControllerTest.EditTitleAlreadyExistsDifferentCase (0 ms)
-[ RUN      ] TermControllerTest.EditTitleEmpty
-[       OK ] TermControllerTest.EditTitleEmpty (0 ms)
-[ RUN      ] TermControllerTest.EditStartDateInvalid
-[       OK ] TermControllerTest.EditStartDateInvalid (0 ms)
-[ RUN      ] TermControllerTest.EditEndDateInvalid
-[       OK ] TermControllerTest.EditEndDateInvalid (0 ms)
-[ RUN      ] TermControllerTest.RemoveTermNotFound
-[       OK ] TermControllerTest.RemoveTermNotFound (0 ms)
-[ RUN      ] TermControllerTest.FindTermConstNotFound
-[       OK ] TermControllerTest.FindTermConstNotFound (0 ms)
-[ RUN      ] TermControllerTest.FindTermNonConstNotFound
-[       OK ] TermControllerTest.FindTermNonConstNotFound (0 ms)
-[ RUN      ] TermControllerTest.AddTermEmitsDataChanged
-[       OK ] TermControllerTest.AddTermEmitsDataChanged (0 ms)
-[ RUN      ] TermControllerTest.AddTermAlreadyExistsDoesNotEmitDataChanged
-[       OK ] TermControllerTest.AddTermAlreadyExistsDoesNotEmitDataChanged (0 ms)
-[ RUN      ] TermControllerTest.EditTitleEmitsDataChanged
-[       OK ] TermControllerTest.EditTitleEmitsDataChanged (0 ms)
-[ RUN      ] TermControllerTest.EditStartDateEmitsDataChanged
-[       OK ] TermControllerTest.EditStartDateEmitsDataChanged (0 ms)
-[ RUN      ] TermControllerTest.EditEndDateEmitsDataChanged
-[       OK ] TermControllerTest.EditEndDateEmitsDataChanged (0 ms)
-[ RUN      ] TermControllerTest.EditActiveEmitsDataChanged
-[       OK ] TermControllerTest.EditActiveEmitsDataChanged (0 ms)
-[ RUN      ] TermControllerTest.RemoveTermEmitsDataChanged
-[       OK ] TermControllerTest.RemoveTermEmitsDataChanged (0 ms)
-[ RUN      ] TermControllerTest.SelectTermEmitsTermSelected
-[       OK ] TermControllerTest.SelectTermEmitsTermSelected (0 ms)
-[ RUN      ] TermControllerTest.SelectTermNotFoundDoesNotEmitTermSelected
-[       OK ] TermControllerTest.SelectTermNotFoundDoesNotEmitTermSelected (0 ms)
-[----------] 30 tests from TermControllerTest (1 ms total)
-
-[----------] Global test environment tear-down
-[==========] 30 tests from 1 test suite ran. (1 ms total)
-[  PASSED  ] 30 tests.
-<end of output>
-Test time =   0.01 sec
-----------------------------------------------------------
-Test Passed.
-"TermControllerTests" end time: Jul 27 23:25 PDT
-"TermControllerTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
 8/11 Testing: UtilsTests
 8/11 Test: UtilsTests
 Command: "/home/its-geoff/course-companion/client/build/build_test/bin/UtilsTests"
 Directory: /home/its-geoff/course-companion/client/build/build_test/tests/unit
-"UtilsTests" start time: Jul 27 23:25 PDT
+"UtilsTests" start time: Aug 01 09:42 PDT
 Output:
 ----------------------------------------------------------
 Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
@@ -1198,7 +1220,7 @@ Running main() from /home/its-geoff/course-companion/client/build/build_test/_de
 Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"UtilsTests" end time: Jul 27 23:25 PDT
+"UtilsTests" end time: Aug 01 09:42 PDT
 "UtilsTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -1206,7 +1228,7 @@ Test Passed.
 9/11 Test: CourseAssignmentIntegrationTests
 Command: "/home/its-geoff/course-companion/client/build/build_test/bin/CourseAssignmentIntegrationTests"
 Directory: /home/its-geoff/course-companion/client/build/build_test/tests/integration
-"CourseAssignmentIntegrationTests" start time: Jul 27 23:25 PDT
+"CourseAssignmentIntegrationTests" start time: Aug 01 09:42 PDT
 Output:
 ----------------------------------------------------------
 Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
@@ -1242,7 +1264,7 @@ Running main() from /home/its-geoff/course-companion/client/build/build_test/_de
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"CourseAssignmentIntegrationTests" end time: Jul 27 23:25 PDT
+"CourseAssignmentIntegrationTests" end time: Aug 01 09:42 PDT
 "CourseAssignmentIntegrationTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -1250,7 +1272,7 @@ Test Passed.
 10/11 Test: TermCourseIntegrationTests
 Command: "/home/its-geoff/course-companion/client/build/build_test/bin/TermCourseIntegrationTests"
 Directory: /home/its-geoff/course-companion/client/build/build_test/tests/integration
-"TermCourseIntegrationTests" start time: Jul 27 23:25 PDT
+"TermCourseIntegrationTests" start time: Aug 01 09:42 PDT
 Output:
 ----------------------------------------------------------
 Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
@@ -1282,7 +1304,7 @@ Running main() from /home/its-geoff/course-companion/client/build/build_test/_de
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"TermCourseIntegrationTests" end time: Jul 27 23:25 PDT
+"TermCourseIntegrationTests" end time: Aug 01 09:42 PDT
 "TermCourseIntegrationTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -1290,7 +1312,7 @@ Test Passed.
 11/11 Test: ControllerIntegrationTests
 Command: "/home/its-geoff/course-companion/client/build/build_test/bin/ControllerIntegrationTests"
 Directory: /home/its-geoff/course-companion/client/build/build_test/tests/integration
-"ControllerIntegrationTests" start time: Jul 27 23:25 PDT
+"ControllerIntegrationTests" start time: Aug 01 09:42 PDT
 Output:
 ----------------------------------------------------------
 Running main() from /home/its-geoff/course-companion/client/build/build_test/_deps/googletest-src/googletest/src/gtest_main.cc
@@ -1315,11 +1337,11 @@ Running main() from /home/its-geoff/course-companion/client/build/build_test/_de
 [==========] 6 tests from 1 test suite ran. (0 ms total)
 [  PASSED  ] 6 tests.
 <end of output>
-Test time =   0.00 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"ControllerIntegrationTests" end time: Jul 27 23:25 PDT
+"ControllerIntegrationTests" end time: Aug 01 09:42 PDT
 "ControllerIntegrationTests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Jul 27 23:25 PDT
+End testing: Aug 01 09:42 PDT
