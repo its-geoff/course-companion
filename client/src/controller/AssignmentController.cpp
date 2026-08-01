@@ -40,6 +40,7 @@ void AssignmentController::addAssignment(const std::string& title, const std::st
         course_.removeAssignment(assignment.getId());
         throw std::logic_error("Assignment with the same title already exists.");
     }
+    emit dataChanged();
 }
 
 void AssignmentController::editTitle(const std::string& id, const std::string& newTitle) {
@@ -53,11 +54,13 @@ void AssignmentController::editTitle(const std::string& id, const std::string& n
     assignment.setTitle(newTitle);
     titleToId_.erase(utils::stringLower(oldTitle));
     titleToId_.emplace(utils::stringLower(newTitle), id);
+    emit dataChanged();
 }
 
 void AssignmentController::editDescription(const std::string& id, const std::string& newDescription) {
     Assignment& assignment = course_.findAssignment(id);
     assignment.setDescription(newDescription);
+    emit dataChanged();
 }
 
 void AssignmentController::editCategory(const std::string& id, const std::string& newCategory) {
@@ -72,6 +75,7 @@ void AssignmentController::editCategory(const std::string& id, const std::string
     }
 
     assignment.setCategory(newCategory);
+    emit dataChanged();
 }
 
 void AssignmentController::editDueDate(const std::string& id, const std::chrono::year_month_day& newDueDate) {
@@ -86,6 +90,7 @@ void AssignmentController::addGrade(const std::string& title, float grade) {
     grade = utils::floatRound(grade, 2);
     selectedAssignment.setGrade(grade);
     selectedAssignment.setCompleted(true);
+    emit dataChanged();
 }
 
 void AssignmentController::addGrade(const std::string& title, float pointsEarned, float totalPoints) {
@@ -95,6 +100,7 @@ void AssignmentController::addGrade(const std::string& title, float pointsEarned
 
     float calculatedGrade = (pointsEarned / totalPoints) * 100.0f;
     addGrade(title, calculatedGrade);
+    emit dataChanged();
 }
 
 void AssignmentController::removeGrade(const std::string& title) {
@@ -103,12 +109,14 @@ void AssignmentController::removeGrade(const std::string& title) {
 
     selectedAssignment.setGrade(0.0f);
     selectedAssignment.setCompleted(false);
+    emit dataChanged();
 }
 
 void AssignmentController::removeAssignment(const std::string& title) {
     std::string id = getAssignmentId(title);
     course_.removeAssignment(id);
     titleToId_.erase(utils::stringLower(title));
+    emit dataChanged();
 }
 
 const Assignment& AssignmentController::findAssignment(const std::string& title) const {
