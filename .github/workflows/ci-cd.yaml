@@ -154,6 +154,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
+            type=sha
 
       - name: Build and push client image
         uses: docker/build-push-action@v7
