@@ -6,6 +6,7 @@
  *
  * Displays course metadata, a filterable assignment list with add/remove support,
  * and a grade summary footer. Clicking an assignment row emits assignmentSelected.
+ * The back button emits backRequested.
  *
  * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
@@ -58,7 +59,28 @@ void CourseView::setupHeader() {
     auto* header       = new QWidget(this);
     auto* headerLayout = new QVBoxLayout(header);
     headerLayout->setContentsMargins(0, 0, 0, 0);
-    headerLayout->setSpacing(4);
+    headerLayout->setSpacing(8);
+
+    auto* topRow    = new QWidget(header);
+    auto* topLayout = new QHBoxLayout(topRow);
+    topLayout->setContentsMargins(0, 0, 0, 0);
+    topLayout->setSpacing(8);
+
+    backButton_ = new QPushButton("← Back", topRow);
+    backButton_->setStyleSheet(
+        "QPushButton {"
+        "  font-size: 12px;"
+        "  color: #666;"
+        "  background: transparent;"
+        "  border: none;"
+        "  padding: 0;"
+        "}"
+        "QPushButton:hover { color: #378ADD; }"
+    );
+    connect(backButton_, &QPushButton::clicked, this, &CourseView::backRequested);
+
+    topLayout->addWidget(backButton_);
+    topLayout->addStretch();
 
     auto* titleRow    = new QWidget(header);
     auto* titleLayout = new QHBoxLayout(titleRow);
@@ -66,25 +88,7 @@ void CourseView::setupHeader() {
     titleLayout->setSpacing(8);
 
     courseTitle_ = new QLabel("Data Structures", titleRow);
-    courseTitle_->setStyleSheet("font-size: 22px; font-weight: 500;");
-
-    auto* courseTypeLabel = new QLabel("Course", titleRow);
-    courseTypeLabel->setStyleSheet("font-size: 12px; color: #888; padding-top: 6px;");
-    courseTypeLabel->setAlignment(Qt::AlignBottom);
-
-    addCourseButton_ = new QPushButton("+ Add Course", titleRow);
-    addCourseButton_->setStyleSheet(
-        "QPushButton {"
-        "  font-size: 12px;"
-        "  color: #378ADD;"
-        "  background: transparent;"
-        "  border: 1px solid #378ADD;"
-        "  border-radius: 4px;"
-        "  padding: 3px 10px;"
-        "}"
-        "QPushButton:hover { background: #eef4fb; }"
-    );
-    connect(addCourseButton_, &QPushButton::clicked, this, &CourseView::onAddCourse);
+    courseTitle_->setStyleSheet("font-size: 22px; font-weight: 500; color: #1a1a1a;");
 
     addAssignmentButton_ = new QPushButton("+ Add", titleRow);
     addAssignmentButton_->setStyleSheet(
@@ -115,16 +119,19 @@ void CourseView::setupHeader() {
     connect(removeAssignmentButton_, &QPushButton::clicked, this, &CourseView::onRemoveAssignment);
 
     titleLayout->addWidget(courseTitle_);
-    titleLayout->addWidget(courseTypeLabel);
     titleLayout->addStretch();
-    titleLayout->addWidget(addCourseButton_);
     titleLayout->addWidget(addAssignmentButton_);
     titleLayout->addWidget(removeAssignmentButton_);
+
+    auto* courseTypeLabel = new QLabel("Course", header);
+    courseTypeLabel->setStyleSheet("font-size: 14px; font-weight: 500; color: #888;");
 
     dateRangeLabel_ = new QLabel("Aug 26 - Dec 20, 2024", header);
     dateRangeLabel_->setStyleSheet("font-size: 13px; color: #666;");
 
+    headerLayout->addWidget(topRow);
     headerLayout->addWidget(titleRow);
+    headerLayout->addWidget(courseTypeLabel);
     headerLayout->addWidget(dateRangeLabel_);
 
     mainLayout_->addWidget(header);
@@ -264,7 +271,7 @@ void CourseView::addAssignmentRow(const QString& name, const QString& sub,
     textColLayout->setSpacing(2);
 
     auto* nameLabel = new QLabel(name, textCol);
-    nameLabel->setStyleSheet("font-size: 13px; font-weight: 500;");
+    nameLabel->setStyleSheet("font-size: 13px; font-weight: 500; color: #1a1a1a;");
 
     auto* subLabel = new QLabel(sub, textCol);
     subLabel->setStyleSheet("font-size: 11px; color: #999;");
@@ -284,7 +291,7 @@ void CourseView::addAssignmentRow(const QString& name, const QString& sub,
         gradeColLayout->setAlignment(Qt::AlignRight);
 
         auto* pctLabel = new QLabel(pct, gradeCol);
-        pctLabel->setStyleSheet("font-size: 14px; font-weight: 500;");
+        pctLabel->setStyleSheet("font-size: 14px; font-weight: 500; color: #1a1a1a;");
         pctLabel->setAlignment(Qt::AlignRight);
 
         auto* letterLabel = new QLabel(letter, gradeCol);
@@ -300,7 +307,7 @@ void CourseView::addAssignmentRow(const QString& name, const QString& sub,
         gpaColLayout->setSpacing(2);
 
         auto* gpaVal = new QLabel(gpa, gpaCol);
-        gpaVal->setStyleSheet("font-size: 14px; font-weight: 500;");
+        gpaVal->setStyleSheet("font-size: 14px; font-weight: 500; color: #1a1a1a;");
         gpaVal->setAlignment(Qt::AlignRight);
 
         auto* gpaLbl = new QLabel("GPA pts", gpaCol);
@@ -354,7 +361,7 @@ void CourseView::setupFooter() {
     avgLbl->setStyleSheet("font-size: 11px; color: #999;");
 
     avgGradeLabel_ = new QLabel("91.5%", avgSection);
-    avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
+    avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
 
     avgLayout->addWidget(avgLbl);
     avgLayout->addWidget(avgGradeLabel_);
@@ -368,7 +375,7 @@ void CourseView::setupFooter() {
     gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
 
     gpaLabel_ = new QLabel("3.74", gpaSection);
-    gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500;");
+    gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
 
     gpaLayout->addWidget(gpaLbl);
     gpaLayout->addWidget(gpaLabel_);
@@ -378,30 +385,6 @@ void CourseView::setupFooter() {
     footerLayout->addWidget(gpaSection);
 
     mainLayout_->addWidget(footer);
-}
-
-void CourseView::onAddCourse() {
-    std::vector<FieldDef> fields = {
-        { "title",       "Title",          FieldDef::Type::Text,         QString{}                        },
-        { "description", "Description",    FieldDef::Type::OptionalText, QString{}                        },
-        { "startDate",   "Start Date",     FieldDef::Type::Date,         QDate::currentDate()             },
-        { "endDate",     "End Date",       FieldDef::Type::Date,         QDate::currentDate().addMonths(4) },
-        { "numCredits",  "Credits",        FieldDef::Type::Integer,      3                                },
-        { "active",      "Current course", FieldDef::Type::Bool,         true                             },
-    };
-
-    FormDialog dlg("Add Course", fields, this);
-    if (dlg.exec() != QDialog::Accepted)
-        return;
-
-    // TODO: wire to CourseController::addCourse once controller is connected
-    qDebug() << "Add Course:"
-             << dlg.textValue("title")
-             << dlg.textValue("description")
-             << dlg.dateValue("startDate").toString("yyyy-MM-dd")
-             << dlg.dateValue("endDate").toString("yyyy-MM-dd")
-             << dlg.intValue("numCredits")
-             << dlg.boolValue("active");
 }
 
 void CourseView::onAddAssignment() {

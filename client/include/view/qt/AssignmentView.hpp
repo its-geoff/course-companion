@@ -6,8 +6,8 @@
  * @brief Definition of the AssignmentView class, which serves as a detail overlay for the Qt GUI.
  *
  * Shows metadata for a single selected assignment: title, description, due date, and completion
- * status. Allows grade entry (percentage or points) for incomplete assignments and grade editing
- * for completed ones. Emits backRequested when the user navigates back to CourseView.
+ * status. Allows editing those details, toggling completion status, and entering or editing a
+ * grade. Emits backRequested when the user navigates back to CourseView.
  *
  * Provides declarations only; see AssignmentView.cpp for implementations.
  */
@@ -36,6 +36,8 @@ class AssignmentView : public QWidget {
 
     private slots:
         void onSubmitGrade();
+        void onEditDetails();
+        void onToggleCompleted();
 
     private:
         void setupHeader();
@@ -44,10 +46,13 @@ class AssignmentView : public QWidget {
 
         float parseGradeInput(const QString& input, bool& ok) const;
         void  applyGradeResult(float pct);
+        void  updateStatusBadge();
 
         QVBoxLayout* mainLayout_;
 
         QPushButton* backButton_;
+        QPushButton* editButton_;
+        QPushButton* toggleCompleteButton_;
         QLabel*      titleLabel_;
         QLabel*      statusBadge_;
 
@@ -60,6 +65,8 @@ class AssignmentView : public QWidget {
         QPushButton* submitGradeButton_;
         QLabel*      gradeResultLabel_;
 
+        QString description_;
+        QString dueDate_;
         bool completed_ = false;
 };
 
