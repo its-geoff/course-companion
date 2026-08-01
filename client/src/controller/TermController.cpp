@@ -102,6 +102,5 @@ void TermController::selectTerm(const std::string& title) {
     } catch (const std::out_of_range& e) {
         throw std::out_of_range("Term not found.");
     }
-
     emit termSelected();
 }

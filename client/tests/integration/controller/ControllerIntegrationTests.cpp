@@ -16,6 +16,7 @@ class ControllerIntegrationTests : public testing::Test {
         }
 };
 
+
 // ====================================
 // TERM -> COURSE CONTROLLER TESTS
 // ====================================
@@ -49,6 +50,7 @@ TEST_F(ControllerIntegrationTests, RemovingTermRemovesCourses) {
     // verify that objects were deleted
     ASSERT_EQ(courseController.getCourseList().size(), 0);
 }
+
 
 // ==========================================
 // COURSE -> ASSIGNMENT CONTROLLER TESTS
@@ -92,6 +94,7 @@ TEST_F(ControllerIntegrationTests, RemovingCourseRemovesAssignments) {
     ASSERT_EQ(assignmentController.getAssignmentList().size(), 0);
 }
 
+
 // ==================================================
 // TERM -> COURSE -> ASSIGNMENT CONTROLLER TESTS
 // ==================================================
@@ -127,6 +130,7 @@ TEST_F(ControllerIntegrationTests, DeleteTermRemovesAllChildren) {
     ASSERT_EQ(courseController.getCourseList().size(), 0);
     ASSERT_EQ(assignmentController.getAssignmentList().size(), 0);
 }
+
 
 // ====================================
 // MUTATION AND SYNC TESTS

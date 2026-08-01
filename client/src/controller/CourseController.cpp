@@ -44,6 +44,7 @@ void CourseController::addCourse(const std::string& title, const std::string& de
         term_.removeCourse(course.getId());
         throw std::logic_error("Course with the same title already exists.");
     }
+    emit dataChanged();
 }
 
 void CourseController::editTitle(const std::string& id, const std::string& newTitle) {
@@ -58,37 +59,44 @@ void CourseController::editTitle(const std::string& id, const std::string& newTi
 
     titleToId_.erase(utils::stringLower(oldTitle));
     course.setTitle(newTitle);
+    emit dataChanged();
 }
 
 void CourseController::editDescription(const std::string& id, const std::string& newDescription) {
     Course& course = term_.findCourse(id);
     course.setDescription(newDescription);
+    emit dataChanged();
 }
 
 void CourseController::editStartDate(const std::string& id, const std::chrono::year_month_day& newStartDate) {
     Course& course = term_.findCourse(id);
     course.setStartDate(newStartDate);
+    emit dataChanged();
 }
 
 void CourseController::editEndDate(const std::string& id, const std::chrono::year_month_day& newEndDate) {
     Course& course = term_.findCourse(id);
     course.setEndDate(newEndDate);
+    emit dataChanged();
 }
 
 void CourseController::editNumCredits(const std::string& id, int newNumCredits) {
     Course& course = term_.findCourse(id);
     course.setNumCredits(newNumCredits);
+    emit dataChanged();
 }
 
 void CourseController::editActive(const std::string& id, bool newActive) {
     Course& course = term_.findCourse(id);
     course.setActive(newActive);
+    emit dataChanged();
 }
 
 void CourseController::removeCourse(const std::string& title) {
     std::string id = getCourseId(title);
     term_.removeCourse(id);
     titleToId_.erase(utils::stringLower(title));
+    emit dataChanged();
 }
 
 const Course& CourseController::findCourse(const std::string& title) const {
@@ -111,4 +119,5 @@ void CourseController::selectCourse(const std::string& title) {
     } catch (const std::out_of_range& e) {
         throw std::out_of_range("Course not found.");
     }
+    emit courseSelected();
 }

@@ -19,6 +19,7 @@ TEST(CliViewTest, FullConstructorInitialization) {
     SUCCEED();
 }
 
+
 // ====================================
 // FUNCTION SMOKE TESTS
 // ====================================
@@ -955,6 +956,7 @@ TEST(CliViewTest, ViewAssignmentsIncomplete) {
     ASSERT_TRUE(userOut.find("Due Date: 2025-02-13") == std::string::npos);
 }
 
+
 // ====================================
 // INITIALIZATION EDGE CASES
 // ====================================
@@ -992,6 +994,7 @@ TEST(CliViewTest, DefaultIstreamCin) {
     // check that input didn't hang
     SUCCEED();
 }
+
 
 // ====================================
 // FUNCTION EDGE CASES

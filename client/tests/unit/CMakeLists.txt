@@ -27,7 +27,7 @@ add_test(NAME AssignmentControllerTests COMMAND AssignmentControllerTests)
 enable_coverage(AssignmentControllerTests)
 
 add_executable(CourseControllerTests controller/CourseControllerTests.cpp)
-target_link_libraries(CourseControllerTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+target_link_libraries(CourseControllerTests PRIVATE CourseCompanion_lib GTest::gtest_main Qt6::Test)
 add_test(NAME CourseControllerTests COMMAND CourseControllerTests)
 enable_coverage(CourseControllerTests)
 

@@ -5,11 +5,14 @@
 #include <chrono>
 #include <unordered_map>
 #include <optional>
+#include <QObject>
 #include "model/Term.hpp"
 #include "model/Course.hpp"
 #include "controller/AssignmentController.hpp"
 
-class CourseController {
+class CourseController : public QObject {
+    Q_OBJECT
+
     public:
         explicit CourseController(Term& term);
         CourseController(const CourseController&) = delete;
@@ -33,6 +36,10 @@ class CourseController {
         const Course& findCourse(const std::string& title) const;
         Course& findCourse(const std::string& title);
         void selectCourse(const std::string& title);
+
+    signals:
+        void dataChanged();
+        void assignmentSelected();
 
     private:
         Term& term_;
