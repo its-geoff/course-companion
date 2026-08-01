@@ -72,7 +72,13 @@ void TermController::editActive(const std::string& id, bool newActive) {
 }
 
 void TermController::removeTerm(const std::string& title) {
-    std::string id = getTermId(title);
+    const std::string id = getTermId(title);
+
+    if (activeTerm_ != nullptr && activeTerm_->getId() == id) { 
+        activeTerm_ = nullptr; 
+        courseController_.reset(); 
+    }
+
     termList_.erase(id);
     titleToId_.erase(utils::stringLower(title));
     emit dataChanged();
