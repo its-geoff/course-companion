@@ -81,6 +81,7 @@ void AssignmentController::editCategory(const std::string& id, const std::string
 void AssignmentController::editDueDate(const std::string& id, const std::chrono::year_month_day& newDueDate) {
     Assignment& assignment = course_.findAssignment(id);
     assignment.setDueDate(newDueDate);
+    emit dataChanged();
 }
 
 void AssignmentController::addGrade(const std::string& title, float grade) {
@@ -100,7 +101,6 @@ void AssignmentController::addGrade(const std::string& title, float pointsEarned
 
     float calculatedGrade = (pointsEarned / totalPoints) * 100.0f;
     addGrade(title, calculatedGrade);
-    emit dataChanged();
 }
 
 void AssignmentController::removeGrade(const std::string& title) {
