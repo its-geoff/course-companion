@@ -2,7 +2,7 @@ enable_coverage(CourseCompanion_lib)
 find_package(Qt6 REQUIRED COMPONENTS Test)
 
 add_executable(AssignmentControllerTests controller/AssignmentControllerTests.cpp)
-target_link_libraries(AssignmentControllerTests PRIVATE CourseCompanion_lib GTest::gtest_main)
+target_link_libraries(AssignmentControllerTests PRIVATE CourseCompanion_lib GTest::gtest_main Qt6::Test)
 add_test(NAME AssignmentControllerTests COMMAND AssignmentControllerTests)
 enable_coverage(AssignmentControllerTests)
 
