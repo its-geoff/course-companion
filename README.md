@@ -64,7 +64,9 @@
  
 [![Product Screenshot][product-screenshot]](https://github.com/its-geoff/course-companion)
  
-**Course Companion** is a command-line homework tracker built in C++. It lets students manage their academic life through a structured hierarchy of terms, courses, and assignments — all from the terminal.
+**Course Companion** started as a command-line homework tracker and is in the middle of growing into a full desktop app. It lets students manage their academic life through a structured hierarchy of terms, courses, and assignments, now backed by a persistent database and a Qt6 GUI that's actively replacing the original CLI as the primary interface.
+
+I'm building this solo, in whatever hours I can find between other things, so consider this a living project rather than a finished product — features land in small, versioned increments and the README gets updated as they do.
  
 Key features:
 - Organize coursework into **terms** and **courses**
@@ -72,15 +74,18 @@ Key features:
 - Enter grades as a **percentage** (`90.5`) or **points** (`17/20`) — Course Companion calculates the rest
 - Automatic **weighted grade calculation** per course, with configurable grade weights and letter grade scale
 - **GPA tracking** per term, weighted by credit hours
+- **Persistent storage** so your terms, courses, and assignments survive between sessions
+- A growing **Qt6 desktop GUI** (`MainWindow`, `TermView`, `CourseView`, `AssignmentView`) sitting alongside the original CLI
 - Persistent CI/CD pipeline with automated testing and weekly promotion from `develop` to `main`
  
-Current Version: **0.2.5 (alpha)**
+Current Version: **0.4.5 (alpha, in development)**
  
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
  
 ### Built With
  
 * [![C++][cpp-shield]][cpp-url]
+* [![Qt][qt-shield]][qt-url]
 * [![CMake][cmake-shield]][cmake-url]
 * [![Docker][docker-shield]][docker-url]
 * [![GoogleTest][gtest-shield]][gtest-url]
@@ -96,6 +101,7 @@ Current Version: **0.2.5 (alpha)**
  
 - [CMake](https://cmake.org/) 3.20+
 - [Clang](https://clang.llvm.org/) (C++20)
+- [Qt6](https://www.qt.io/) (for the GUI build)
 - [Conan](https://conan.io/) package manager
 - [Ninja](https://ninja-build.org/) build system
 - `uuid-dev` and `libmysqlcppconn-dev` (Linux)
@@ -116,10 +122,22 @@ git clone https://github.com/its-geoff/course-companion.git
 cd course-companion
 ```
  
-2. Install dependencies and configure the build:
+2. Install dependencies with Conan. This is a required step before configuring the build:
  
 ```sh
 cd build
+./setup-deps
+```
+
+To install test dependencies instead:
+
+```sh
+./setup-deps -t
+```
+ 
+3. Configure the build:
+ 
+```sh
 ./build-configure
 ```
  
@@ -129,14 +147,14 @@ To also enable test builds and coverage:
 ./build-configure -t -c
 ```
  
-3. Build the project:
+4. Build the project:
  
 ```sh
 cd build_main
 cmake --build .
 ```
  
-4. Run the application:
+5. Run the application:
  
 ```sh
 ./bin/CourseCompanion
@@ -164,7 +182,9 @@ docker run --rm course-companion:test
  
 ## Usage
  
-Course Companion uses an interactive CLI menu. On launch, you'll be guided through a hierarchy of menus:
+Course Companion is mid-migration from a CLI-only tool to a Qt6 desktop app, so both interfaces currently exist side by side while the GUI catches up to full feature parity.
+
+Either way, the workflow follows the same hierarchy:
  
 ```
 Term Menu  →  Course Menu  →  Assignment Menu
@@ -179,7 +199,7 @@ Term Menu  →  Course Menu  →  Assignment Menu
 - Enter grades as a percentage (`90.5`) or as points (`17/20`)
 - View all, completed, or incomplete assignments
  
-Grades are automatically aggregated up: assignment grades feed into course grades (weighted by category), and course grades feed into term GPA (weighted by credits).
+Grades are automatically aggregated up: assignment grades feed into course grades (weighted by category), and course grades feed into term GPA (weighted by credits). Data now persists to a database between runs, so nothing above needs to be re-entered every session.
  
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
  
@@ -190,8 +210,8 @@ Grades are automatically aggregated up: assignment grades feed into course grade
 The project follows an **MVC pattern**:
  
 - **Model** (`src/model/`) — `Assignment`, `Course`, and `Term` classes hold data and grade calculation logic.
-- **Controller** (`src/controller/`) — `AssignmentController`, `CourseController`, and `TermController` mediate between the view and models, maintaining title-to-ID mappings for case-insensitive lookups.
-- **View** (`src/view/`) — `CliView` handles all I/O, collecting user input and displaying output without containing any application logic.
+- **Controller** (`src/controller/`) — `AssignmentController`, `CourseController`, and `TermController` mediate between the views and models, maintaining title-to-ID mappings for case-insensitive lookups and propagating updates to whichever view is active.
+- **View** (`src/view/`) — `CliView` handles the original terminal I/O. The Qt6 views (`MainWindow`, `TermView`, `CourseView`, `AssignmentView`, `FormDialog`) are being built out alongside it as the GUI takes over. Neither view layer contains application logic; all of that stays in the models and controllers.
  
 Utility functions shared across the codebase live in `src/utils/utils.cpp`.
  
@@ -207,6 +227,7 @@ Configure and build the test suite:
  
 ```sh
 cd build
+./setup-deps -t
 ./build-configure -t
 cd build_test
 cmake --build .
@@ -240,9 +261,11 @@ The test suite includes unit tests for all model, controller, and utility classe
  
 ## Roadmap
  
-- [ ] Persistent data storage (database integration)
-- [ ] Configurable grade weights per course
-- [ ] Configurable grade scale per course
+- [x] Persistent data storage (database integration)
+- [x] Configurable grade weights per course
+- [x] Configurable grade scale per course
+- [ ] Full Qt6 GUI feature parity with the CLI
+- [ ] GUI branding and visual polish
 - [ ] Settings menu
 - [ ] Cross-term cumulative GPA
  
@@ -299,12 +322,14 @@ Project Link: [https://github.com/its-geoff/course-companion](https://github.com
 [issues-url]: https://github.com/its-geoff/course-companion/issues
 [license-shield]: https://img.shields.io/github/license/its-geoff/course-companion.svg?style=for-the-badge
 [license-url]: https://github.com/its-geoff/course-companion/blob/main/LICENSE
-[ci-shield]: https://img.shields.io/github/actions/workflow/status/its-geoff/course-companion/ci-cd.yaml?branch=main&style=for-the-badge&label=CI%2FCD
+[ci-shield]: https://img.shields.io/github/actions/workflow/status/its-geoff/course-companion/ci-cd.yaml?branch=develop&style=for-the-badge&label=CI%2FCD
 [ci-url]: https://github.com/its-geoff/course-companion/actions/workflows/ci-cd.yaml
 [product-screenshot]: images/screenshot.png
  
 [cpp-shield]: https://img.shields.io/badge/C%2B%2B-20-00599C?style=for-the-badge&logo=cplusplus&logoColor=white
 [cpp-url]: https://en.cppreference.com/w/cpp/20
+[qt-shield]: https://img.shields.io/badge/Qt-6-41CD52?style=for-the-badge&logo=qt&logoColor=white
+[qt-url]: https://www.qt.io/
 [cmake-shield]: https://img.shields.io/badge/CMake-3.20+-064F8C?style=for-the-badge&logo=cmake&logoColor=white
 [cmake-url]: https://cmake.org/
 [docker-shield]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white

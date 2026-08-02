@@ -35,41 +35,52 @@ void TermController::addTerm(const std::string& title, const std::chrono::year_m
         termList_.erase(termIt);
         throw std::logic_error("Term with the same title already exists.");
     }
+    emit dataChanged();
 }
 
 void TermController::editTitle(const std::string& id, const std::string& newTitle) {
     Term& term = termList_.at(id);
     std::string oldTitle = term.getTitle();
 
-    auto inserted = titleToId_.emplace(utils::stringLower(newTitle), id).second;
-
-    if (!inserted) {
+    if (titleToId_.contains(utils::stringLower(newTitle))) {
         throw std::logic_error("A term with this title already exists.");
     }
 
-    titleToId_.erase(utils::stringLower(oldTitle));
     term.setTitle(newTitle);
+    titleToId_.erase(utils::stringLower(oldTitle));
+    titleToId_.emplace(utils::stringLower(newTitle), id);
+    emit dataChanged();
 }
 
 void TermController::editStartDate(const std::string& id, const std::chrono::year_month_day& newStartDate) {
     Term& term = termList_.at(id);
     term.setStartDate(newStartDate);
+    emit dataChanged();
 }
 
 void TermController::editEndDate(const std::string& id, const std::chrono::year_month_day& newEndDate) {
     Term& term = termList_.at(id);
     term.setEndDate(newEndDate);
+    emit dataChanged();
 }
 
 void TermController::editActive(const std::string& id, bool newActive) {
     Term& term = termList_.at(id);
     term.setActive(newActive);
+    emit dataChanged();
 }
 
 void TermController::removeTerm(const std::string& title) {
-    std::string id = getTermId(title);
+    const std::string id = getTermId(title);
+
+    if (activeTerm_ != nullptr && activeTerm_->getId() == id) { 
+        activeTerm_ = nullptr; 
+        courseController_.reset(); 
+    }
+
     termList_.erase(id);
     titleToId_.erase(utils::stringLower(title));
+    emit dataChanged();
 }
 
 const Term& TermController::findTerm(const std::string& title) const {
@@ -90,4 +101,5 @@ void TermController::selectTerm(const std::string& title) {
     } catch (const std::out_of_range& e) {
         throw std::out_of_range("Term not found.");
     }
+    emit termSelected();
 }

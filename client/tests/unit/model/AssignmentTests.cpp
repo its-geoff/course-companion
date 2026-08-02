@@ -19,6 +19,7 @@ class AssignmentTest : public testing::Test {
         };
 };
 
+
 // ====================================
 // GETTER SMOKE TESTS
 // ====================================
@@ -51,6 +52,7 @@ TEST_F(AssignmentTest, CompletedGetter) {
 TEST_F(AssignmentTest, GradeGetter) {
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 95.18f);
 }
+
 
 // ====================================
 // SETTER SMOKE TESTS
@@ -90,6 +92,7 @@ TEST_F(AssignmentTest, GradeSetterPoints) {
     assignment1.setGrade(18, 20);
     ASSERT_FLOAT_EQ(assignment1.getGrade(), 90.0f);
 }
+
 
 // ====================================
 // INITIALIZATION SMOKE TESTS
@@ -169,6 +172,7 @@ TEST_F(AssignmentTest, SixParamDescInitialization) {
     ASSERT_FLOAT_EQ(assignment2.getGrade(), 90.50f);
 }
 
+
 // ====================================
 // FUNCTION SMOKE TESTS
 // ====================================
@@ -244,6 +248,7 @@ TEST_F(AssignmentTest, FromRowDoesNotEqualNewAssignment) {
     ASSERT_NE(fromRowAssignment, newAssignment);
 }
 
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -270,6 +275,7 @@ TEST_F(AssignmentTest, GradeGetterEmpty) {
     Assignment assignment2{"Homework 1", "", "Homework", std::chrono::year_month_day{2025y/10/31}, false};
     ASSERT_FLOAT_EQ(assignment2.getGrade(), 0.0f);
 }
+
 
 // ====================================
 // SETTER EDGE CASES
@@ -347,6 +353,7 @@ TEST_F(AssignmentTest, GradeSetterPointsZeroTotal) {
     ASSERT_THROW(assignment1.setGrade(20, 0), std::invalid_argument);
 }
 
+
 // ====================================
 // INITIALIZATION EDGE CASES
 // ====================================
@@ -423,6 +430,7 @@ TEST_F(AssignmentTest, SixParamDescInitializationCompletedFalseWithGrade) {
     ASSERT_FALSE(assignment2.getCompleted());
     ASSERT_EQ(assignment2.getGrade(), 0.0f);
 }
+
 
 // ====================================
 // FUNCTION EDGE CASES

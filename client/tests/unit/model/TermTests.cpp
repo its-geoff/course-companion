@@ -17,6 +17,7 @@ class TermTest : public testing::Test {
         };
 };
 
+
 // ====================================
 // GETTER SMOKE TESTS
 // ====================================
@@ -86,6 +87,7 @@ TEST_F(TermTest, ActiveGetter) {
     ASSERT_FALSE(term1.getActive());
 }
 
+
 // ====================================
 // SETTER SMOKE TESTS
 // ====================================
@@ -110,6 +112,7 @@ TEST_F(TermTest, ActiveSetter) {
     ASSERT_FALSE(term1.getActive());
 }
 
+
 // ====================================
 // INITIALIZATION SMOKE TESTS
 // ====================================
@@ -130,6 +133,7 @@ TEST_F(TermTest, FourParamInitialization) {
     ASSERT_EQ(term2.getEndDate(), std::chrono::year_month_day{2025y/5/28});
     ASSERT_FALSE(term2.getActive());
 }
+
 
 // ====================================
 // FUNCTION SMOKE TESTS
@@ -263,6 +267,7 @@ TEST_F(TermTest, FromRowDoesNotEqualNewTerm) {
     ASSERT_NE(fromRowTerm, newTerm);
 }
 
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -282,6 +287,7 @@ TEST_F(TermTest, ActiveGetterEmpty) {
     Term term2{"Spring 2025", std::chrono::year_month_day{2025y/1/18}, std::chrono::year_month_day{2025y/5/28}};
     ASSERT_TRUE(term2.getActive());
 }
+
 
 // ====================================
 // SETTER EDGE CASES
@@ -310,6 +316,7 @@ TEST_F(TermTest, EndDateSetterInvalid) {
     ASSERT_THROW(term1.setEndDate(std::chrono::year_month_day{2025y/2/30}), std::invalid_argument);
     ASSERT_EQ(term1.getEndDate(), std::chrono::year_month_day{2025y/12/5});
 }
+
 
 // ====================================
 // INITIALIZATION EDGE CASES
@@ -340,6 +347,7 @@ TEST_F(TermTest, ThreeParamInitializationDefaultDates) {
     ASSERT_EQ(term2.getEndDate(), defaultEnd);
     ASSERT_TRUE(term2.getActive());
 }
+
 
 // ====================================
 // FUNCTION EDGE CASES

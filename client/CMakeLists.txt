@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(CourseCompanion
-    VERSION 0.4.0
+    VERSION 0.4.1
     DESCRIPTION "Homework tracker that allows students to track homework assignments, estimate grades, and organize class schedules."
     LANGUAGES CXX
 )
@@ -18,18 +18,29 @@ endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
+find_package(Qt6 REQUIRED COMPONENTS Core)
+set(CMAKE_AUTOMOC ON)
+
 add_library(CourseCompanion_lib
-    src/model/Assignment.cpp
-    src/model/Course.cpp
-    src/model/Term.cpp
     src/controller/AssignmentController.cpp
     src/controller/CourseController.cpp
     src/controller/TermController.cpp
+    src/model/Assignment.cpp
+    src/model/Course.cpp
+    src/model/Term.cpp
     src/utils/utils.cpp
+)
+
+target_sources(CourseCompanion_lib PRIVATE
+    include/controller/AssignmentController.hpp
+    include/controller/CourseController.hpp
+    include/controller/TermController.hpp
 )
 
 target_include_directories(CourseCompanion_lib PUBLIC include)
 target_link_libraries(CourseCompanion_lib
+    PUBLIC
+        Qt6::Core
     PRIVATE
         $<$<PLATFORM_ID:Linux>:uuid>
 )
@@ -58,38 +69,39 @@ function(enable_coverage target)
     endif()
 endfunction()
 
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+
+add_library(CourseCompanion_gui OBJECT
+    src/view/cli/CliView.cpp
+    src/view/qt/AssignmentView.cpp
+    src/view/qt/CourseView.cpp
+    src/view/qt/FormDialog.cpp
+    src/view/qt/MainWindow.cpp
+    src/view/qt/TermView.cpp
+)
+
+target_include_directories(CourseCompanion_gui PUBLIC include)
+
+set_target_properties(CourseCompanion_gui PROPERTIES
+    AUTOMOC_MOC_OPTIONS ""
+)
+target_sources(CourseCompanion_gui PRIVATE
+    include/view/qt/AssignmentView.hpp
+    include/view/qt/CourseView.hpp
+    include/view/qt/FormDialog.hpp
+    include/view/qt/MainWindow.hpp
+    include/view/qt/PaletteWatcher.hpp
+    include/view/qt/StyleManager.hpp
+    include/view/qt/TermView.hpp
+)
+
+target_link_libraries(CourseCompanion_gui
+    PUBLIC
+        CourseCompanion_lib
+        Qt6::Widgets
+)
+
 if(NOT BUILD_TESTING)
-    find_package(Qt6 REQUIRED COMPONENTS Widgets)
-    set(CMAKE_AUTOMOC ON)
-
-    add_library(CourseCompanion_gui OBJECT
-        src/view/qt/MainWindow.cpp
-        src/view/qt/TermView.cpp
-        src/view/qt/CourseView.cpp
-        src/view/qt/AssignmentView.cpp
-        src/view/qt/FormDialog.cpp
-        src/view/cli/CliView.cpp
-    )
-
-    target_include_directories(CourseCompanion_gui PUBLIC include)
-
-    set_target_properties(CourseCompanion_gui PROPERTIES
-        AUTOMOC_MOC_OPTIONS ""
-    )
-    target_sources(CourseCompanion_gui PRIVATE
-        include/view/qt/MainWindow.hpp
-        include/view/qt/TermView.hpp
-        include/view/qt/CourseView.hpp
-        include/view/qt/AssignmentView.hpp
-        include/view/qt/FormDialog.hpp
-    )
-
-    target_link_libraries(CourseCompanion_gui
-        PUBLIC
-            CourseCompanion_lib
-            Qt6::Widgets
-    )
-
     add_executable(CourseCompanion src/main.cpp)
     target_include_directories(CourseCompanion PRIVATE include)
     target_link_libraries(CourseCompanion PRIVATE CourseCompanion_gui CourseCompanion_lib)

@@ -26,19 +26,6 @@
  * courses and provide a student's grade for one term. 
  */
 class Term {
-    private:
-        std::string id_{};  // UUID v4 automatically generated during construction
-        std::string title_{};
-        std::chrono::year_month_day startDate_{};
-        std::chrono::year_month_day endDate_{};
-        std::unordered_map<std::string, Course> courseList_{};  // id -> Course
-        int totalCredits_{0};
-        float ovrGpa_{0.0};
-        bool active_{true}; // indicates whether the term is currently ongoing
-
-        int calculateTotalCredits();    // calculates total credits - need to auto call during add or remove Course
-        float calculateOvrGpa();        // calculates overall gpa - need to auto call during add or remove Course
-
     public:
         Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate,
             bool active = true);
@@ -65,6 +52,19 @@ class Term {
             std::chrono::year_month_day endDate, bool active);
 
         bool operator==(const Term &other) const;
+
+    private:
+        std::string id_{};  // UUID v4 automatically generated during construction
+        std::string title_{};
+        std::chrono::year_month_day startDate_{};
+        std::chrono::year_month_day endDate_{};
+        std::unordered_map<std::string, Course> courseList_{};  // id -> Course
+        int totalCredits_{0};
+        float ovrGpa_{0.0};
+        bool active_{true}; // indicates whether the term is currently ongoing
+
+        int calculateTotalCredits();    // calculates total credits - need to auto call during add or remove Course
+        float calculateOvrGpa();        // calculates overall gpa - need to auto call during add or remove Course
 };
 
 #endif  // TERM_HPP

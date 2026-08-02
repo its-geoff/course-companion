@@ -7,7 +7,9 @@
  * 
  * This class shows user information from the Term perspective. It displays the current term,
  * a summary of classes, and the user's overall GPA. The class sends information to the TermController and 
- * outputs results from the TermController.
+ * outputs results from the TermController. Clicking a course row emits courseSelected so MainWindow can
+ * navigate to CourseView. Adding a term is triggered from the sidebar; onAddTerm is public so
+ * MainWindow can call it directly.
  * 
  * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  * 
@@ -30,8 +32,11 @@ class TermView : public QWidget {
     public:
         explicit TermView(QWidget* parent = nullptr);
 
-    private slots:
+    public slots:
         void onAddTerm();
+
+    signals:
+        void courseSelected(const QString& courseTitle);
 
     private:
         void setupHeader();
@@ -47,7 +52,7 @@ class TermView : public QWidget {
         // header
         QLabel*      termTitle_;
         QLabel*      dateRangeLabel_;
-        QPushButton* addTermButton_;
+        QPushButton* addCourseButton_;
 
         // progress
         QProgressBar* progressBar_;
@@ -59,6 +64,9 @@ class TermView : public QWidget {
         // footer
         QLabel* avgGradeLabel_;
         QLabel* gpaLabel_;
+
+    private slots:
+        void onAddCourse();
 };
 
 #endif

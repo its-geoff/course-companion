@@ -29,37 +29,6 @@
  * assignments and provide a student's grade for one course. 
  */
 class Course {
-    private:
-        std::string id_{};  // UUID v4 automatically generated during construction
-        std::string title_{};
-        std::string description_{};
-        std::chrono::year_month_day startDate_{};
-        std::chrono::year_month_day endDate_{};
-        std::unordered_map<std::string, Assignment> assignmentList_{};  // id -> Assignment
-        static const std::unordered_map<std::string, float> gradeWeightsDefault_;   // default grade weights if not set
-        std::unordered_map<std::string, float> gradeWeights_{gradeWeightsDefault_}; // weights of each assignment category
-        std::unordered_map<std::string, float> gradesByCategory_;   // average percentage grade per category for categories with at least one completed assignment
-        int numCredits_{3};     // default number of credits for a class, TO-DO: allow user to override default
-        float gradePct_{0.0};   // grade percentage from 0 to 100%
-        std::string letterGrade_{"N/A"};
-        float gpaVal_{0.0};     // GPA value associated with letter grade
-        bool active_{true};     // indicates whether the course is currently ongoing
-        static const std::map<float, std::string> gradeScaleDefault_;    // default grade scale if not set
-        std::map<float, std::string> gradeScale_{gradeScaleDefault_};     // lower grade thresholds for letter grades
-        static const std::unordered_map<std::string, float> gpaScale_;       // GPA values based on letter grades
-
-        void validateGradeWeights(const std::unordered_map<std::string, float>& gradeWeights);
-        void validateNumCredits(int numCredits);
-        void validateGradePct(float gradePct);
-        void validateGradeScale(const std::map<float, std::string>& gradeScale);
-
-        void calculateGradesByCategory();
-        float calculateGradePct();
-        std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const; // auto set during add or remove Assignment?
-        std::string calculateLetterGrade(float gradePct) const;
-        float calculateGpaVal(const std::string& letterGrade);
-        int calculateCompletedAssignments() const;
-
     public:
         Course(std::string title, std::string description, std::chrono::year_month_day startDate, 
             std::chrono::year_month_day endDate, int numCredits = 3, bool active = true);
@@ -100,6 +69,37 @@ class Course {
             int numCredits, bool active);
 
         bool operator==(const Course &other) const;
+
+    private:
+        std::string id_{};  // UUID v4 automatically generated during construction
+        std::string title_{};
+        std::string description_{};
+        std::chrono::year_month_day startDate_{};
+        std::chrono::year_month_day endDate_{};
+        std::unordered_map<std::string, Assignment> assignmentList_{};  // id -> Assignment
+        static const std::unordered_map<std::string, float> gradeWeightsDefault_;   // default grade weights if not set
+        std::unordered_map<std::string, float> gradeWeights_{gradeWeightsDefault_}; // weights of each assignment category
+        std::unordered_map<std::string, float> gradesByCategory_;   // average percentage grade per category for categories with at least one completed assignment
+        int numCredits_{3};     // default number of credits for a class, TO-DO: allow user to override default
+        float gradePct_{0.0};   // grade percentage from 0 to 100%
+        std::string letterGrade_{"N/A"};
+        float gpaVal_{0.0};     // GPA value associated with letter grade
+        bool active_{true};     // indicates whether the course is currently ongoing
+        static const std::map<float, std::string> gradeScaleDefault_;    // default grade scale if not set
+        std::map<float, std::string> gradeScale_{gradeScaleDefault_};     // lower grade thresholds for letter grades
+        static const std::unordered_map<std::string, float> gpaScale_;       // GPA values based on letter grades
+
+        void validateGradeWeights(const std::unordered_map<std::string, float>& gradeWeights);
+        void validateNumCredits(int numCredits);
+        void validateGradePct(float gradePct);
+        void validateGradeScale(const std::map<float, std::string>& gradeScale);
+
+        void calculateGradesByCategory();
+        float calculateGradePct();
+        std::string calculateLetterGrade(float gradePct, const std::map<float, std::string>& gradeScale) const; // auto set during add or remove Assignment?
+        std::string calculateLetterGrade(float gradePct) const;
+        float calculateGpaVal(const std::string& letterGrade);
+        int calculateCompletedAssignments() const;
 };
 
 #endif  // COURSE_HPP

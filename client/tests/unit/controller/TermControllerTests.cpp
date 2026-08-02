@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>      // diverts output from terminal to separate stream
 #include <regex>        // regular expression matching for UUIDs
+#include <QSignalSpy>
 #include "controller/TermController.hpp"
 #include "utils/utils.hpp"
 
@@ -11,6 +12,7 @@ class TermControllerTest : public testing::Test {
     protected:
         TermController controller{};
 };
+
 
 // ====================================
 // GETTER SMOKE TESTS
@@ -46,6 +48,7 @@ TEST_F(TermControllerTest, TermIdGetter) {
     // if the UUID is in the correct format, it should match this
     ASSERT_EQ(id, "<UUID>");
 }
+
 
 // ====================================
 // FUNCTION SMOKE TESTS
@@ -143,6 +146,7 @@ TEST_F(TermControllerTest, FindTermNonConst) {
     ASSERT_TRUE(selectedTerm.getActive());
 }
 
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -159,6 +163,7 @@ TEST_F(TermControllerTest, TermIdGetterNotFound) {
     // out of range error since term cannot be found
     ASSERT_THROW(controller.getTermId("Fall 2026"), std::out_of_range);
 }
+
 
 // ====================================
 // FUNCTION EDGE CASES
@@ -233,4 +238,93 @@ TEST_F(TermControllerTest, FindTermNonConstNotFound) {
 
     // out of range error since term cannot be found
     ASSERT_THROW(controller.findTerm("Fall 2026"), std::out_of_range);
+}
+
+
+// ====================================
+// SIGNAL TESTS
+// ====================================
+
+TEST_F(TermControllerTest, AddTermEmitsDataChanged) {
+    QSignalSpy spy(&controller, &TermController::dataChanged);
+
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(TermControllerTest, AddTermAlreadyExistsDoesNotEmitDataChanged) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+
+    QSignalSpy spy(&controller, &TermController::dataChanged);
+    ASSERT_THROW(controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false), std::logic_error);
+
+    ASSERT_EQ(spy.count(), 0);
+}
+
+TEST_F(TermControllerTest, EditTitleEmitsDataChanged) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+    std::string id = controller.getTermId("Fall 2025");
+
+    QSignalSpy spy(&controller, &TermController::dataChanged);
+    controller.editTitle(id, "Winter 2026");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(TermControllerTest, EditStartDateEmitsDataChanged) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+    std::string id = controller.getTermId("Fall 2025");
+
+    QSignalSpy spy(&controller, &TermController::dataChanged);
+    controller.editStartDate(id, std::chrono::year_month_day{2025y/8/20});
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(TermControllerTest, EditEndDateEmitsDataChanged) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+    std::string id = controller.getTermId("Fall 2025");
+
+    QSignalSpy spy(&controller, &TermController::dataChanged);
+    controller.editEndDate(id, std::chrono::year_month_day{2025y/12/20});
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(TermControllerTest, EditActiveEmitsDataChanged) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+    std::string id = controller.getTermId("Fall 2025");
+
+    QSignalSpy spy(&controller, &TermController::dataChanged);
+    controller.editActive(id, true);
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(TermControllerTest, RemoveTermEmitsDataChanged) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+
+    QSignalSpy spy(&controller, &TermController::dataChanged);
+    controller.removeTerm("Fall 2025");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(TermControllerTest, SelectTermEmitsTermSelected) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+
+    QSignalSpy spy(&controller, &TermController::termSelected);
+    controller.selectTerm("Fall 2025");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(TermControllerTest, SelectTermNotFoundDoesNotEmitTermSelected) {
+    controller.addTerm("Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, false);
+
+    QSignalSpy spy(&controller, &TermController::termSelected);
+    ASSERT_THROW(controller.selectTerm("Fall 2026"), std::out_of_range);
+
+    ASSERT_EQ(spy.count(), 0);
 }

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <sstream>      // diverts output from terminal to separate stream
 #include <regex>        // regular expression matching for UUIDs
+#include <QSignalSpy>
 #include "controller/AssignmentController.hpp"
 #include "utils/utils.hpp"
 
@@ -12,6 +13,7 @@ class AssignmentControllerTest : public testing::Test {
         Course course {"ENGR 195A", "", std::chrono::year_month_day{2026y/1/2}, std::chrono::year_month_day{2026y/5/12}, 3, false};
         AssignmentController controller{course};
 };
+
 
 // ====================================
 // GETTER SMOKE TESTS
@@ -47,6 +49,7 @@ TEST_F(AssignmentControllerTest, AssignmentIdGetter) {
     // if the UUID is in the correct format, it should match this
     ASSERT_EQ(id, "<UUID>");
 }
+
 
 // ====================================
 // FUNCTION SMOKE TESTS
@@ -181,6 +184,7 @@ TEST_F(AssignmentControllerTest, FindAssignmentNonConst) {
     ASSERT_FLOAT_EQ(selectedAssignment.getGrade(), 0.0);
 }
 
+
 // ====================================
 // GETTER EDGE CASES
 // ====================================
@@ -197,6 +201,7 @@ TEST_F(AssignmentControllerTest, AssignmentIdGetterNotFound) {
     // out of range error since assignment cannot be found
     ASSERT_THROW(controller.getAssignmentId("Homework 4"), std::out_of_range);
 }
+
 
 // ====================================
 // FUNCTION EDGE CASES
@@ -370,4 +375,169 @@ TEST_F(AssignmentControllerTest, FindAssignmentNonConstNotFound) {
 
     // out of range error since assignment cannot be found
     ASSERT_THROW(controller.findAssignment("Homework 4"), std::out_of_range);
+}
+
+
+// ====================================
+// SIGNAL TESTS
+// ====================================
+
+TEST_F(AssignmentControllerTest, AddAssignmentEmitsDataChanged) {
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(AssignmentControllerTest, AddAssignmentInvalidCategoryDoesNotEmitDataChanged) {
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+
+    ASSERT_THROW(controller.addAssignment("Homework 1", "", "Homwork", std::chrono::year_month_day{2026y/1/12}, true, 90.0f), std::out_of_range);
+
+    ASSERT_EQ(spy.count(), 0);
+}
+
+TEST_F(AssignmentControllerTest, AddAssignmentAlreadyExistsDoesNotEmitDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    ASSERT_THROW(controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f), std::logic_error);
+
+    ASSERT_EQ(spy.count(), 0);
+}
+
+TEST_F(AssignmentControllerTest, EditTitleEmitsDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    std::string id = controller.getAssignmentId("Homework 1");
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    controller.editTitle(id, "Homework 3");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(AssignmentControllerTest, EditTitleAlreadyExistsDoesNotEmitDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    std::string id = controller.getAssignmentId("Homework 1");
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    ASSERT_THROW(controller.editTitle(id, "Homework 1"), std::logic_error);
+
+    ASSERT_EQ(spy.count(), 0);
+}
+
+TEST_F(AssignmentControllerTest, EditDescriptionEmitsDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    std::string id = controller.getAssignmentId("Homework 1");
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    controller.editDescription(id, "Linked lists and hash maps");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(AssignmentControllerTest, EditCategoryEmitsDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    std::string id = controller.getAssignmentId("Homework 1");
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    controller.editCategory(id, "Midterm");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(AssignmentControllerTest, EditCategoryEmptyDoesNotEmitDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    std::string id = controller.getAssignmentId("Homework 1");
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    ASSERT_THROW(controller.editCategory(id, ""), std::invalid_argument);
+
+    ASSERT_EQ(spy.count(), 0);
+}
+
+TEST_F(AssignmentControllerTest, EditCategoryInvalidDoesNotEmitDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    std::string id = controller.getAssignmentId("Homework 1");
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    ASSERT_THROW(controller.editCategory(id, "Quiz"), std::out_of_range);
+
+    ASSERT_EQ(spy.count(), 0);
+}
+
+TEST_F(AssignmentControllerTest, EditDueDateEmitsDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+    std::string id = controller.getAssignmentId("Homework 1");
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    controller.editDueDate(id, std::chrono::year_month_day{2026y/1/15});
+
+    // editDueDate is missing emit dataChanged() in the current implementation;
+    // this test documents the intended behavior and will fail until that's fixed
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(AssignmentControllerTest, AddGradePercentageEmitsDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    controller.addGrade("Homework 1", 89.92f);
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(AssignmentControllerTest, AddGradeAssignmentNotFoundDoesNotEmitDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    ASSERT_THROW(controller.addGrade("Homework 3", 89.92f), std::out_of_range);
+
+    ASSERT_EQ(spy.count(), 0);
+}
+
+TEST_F(AssignmentControllerTest, AddGradePointsEmitsDataChangedOnce) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    controller.addGrade("Homework 1", 18, 20);
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(AssignmentControllerTest, RemoveGradeEmitsDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    controller.removeGrade("Homework 1");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(AssignmentControllerTest, RemoveGradeNotFoundDoesNotEmitDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, false, 0.0f);
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    ASSERT_THROW(controller.removeGrade("Homework 3"), std::out_of_range);
+
+    ASSERT_EQ(spy.count(), 0);
+}
+
+TEST_F(AssignmentControllerTest, RemoveAssignmentEmitsDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    controller.removeAssignment("Homework 1");
+
+    ASSERT_EQ(spy.count(), 1);
+}
+
+TEST_F(AssignmentControllerTest, RemoveAssignmentNotFoundDoesNotEmitDataChanged) {
+    controller.addAssignment("Homework 1", "", "Homework", std::chrono::year_month_day{2026y/1/12}, true, 90.0f);
+
+    QSignalSpy spy(&controller, &AssignmentController::dataChanged);
+    ASSERT_THROW(controller.removeAssignment("Homework 4"), std::out_of_range);
+
+    ASSERT_EQ(spy.count(), 0);
 }

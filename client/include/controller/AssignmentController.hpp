@@ -3,14 +3,13 @@
 
 #include <string>
 #include <chrono>
+#include <QObject>
 #include <unordered_map>
 #include "model/Course.hpp"
 #include "model/Assignment.hpp"
 
-class AssignmentController {
-    private:
-        Course& course_;
-        std::unordered_map<std::string, std::string> titleToId_{};
+class AssignmentController : public QObject {
+    Q_OBJECT
 
     public:
         explicit AssignmentController(Course& course);
@@ -34,6 +33,13 @@ class AssignmentController {
         void removeAssignment(const std::string& title);
         const Assignment& findAssignment(const std::string& title) const;
         Assignment& findAssignment(const std::string& title);
+
+    signals:
+        void dataChanged();
+
+    private:
+        Course& course_;
+        std::unordered_map<std::string, std::string> titleToId_{};
 };
 
 #endif  // ASSIGNMENTCONTROLLER_HPP

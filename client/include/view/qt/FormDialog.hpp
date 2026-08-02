@@ -55,9 +55,6 @@ public:
     int     intValue(const QString& key)  const;
     bool    boolValue(const QString& key) const;
 
-private slots:
-    void onAccepted();
-
 private:
     void addTextField(QFormLayout* layout, const FieldDef& field);
     void addDateField(QFormLayout* layout, const FieldDef& field);
@@ -74,6 +71,9 @@ private:
 
     std::vector<WidgetEntry> widgets_;
     QMap<QString, int>       keyIndex_;
+
+private slots:
+    void onAccepted();
 };
 
 #endif // FORMDIALOG_HPP
