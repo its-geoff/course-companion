@@ -8,6 +8,16 @@ usage() {
     exit 1
 }
 
+SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ENV_FILE="$SCRIPT_ROOT/.env"
+if [ -f "$ENV_FILE" ]; then
+    set -a
+    set +u
+    source "$ENV_FILE"
+    set -u
+    set +a
+fi
+
 OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
 mkdir -p "$OUTPUT_DIR"
 

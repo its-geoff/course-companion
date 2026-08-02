@@ -11,14 +11,13 @@
  * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
 
-#include "view/qt/FormDialog.hpp"
-
 #include <QDate>
 #include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QStackedLayout>
+#include "view/qt/FormDialog.hpp"
 
 static const QString kBtnActive =
     "QPushButton {"
