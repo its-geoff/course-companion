@@ -66,11 +66,12 @@ class TermView : public QWidget {
                              const QString& pct, const QString& letter,
                              const QString& gpa);
         void setupFooter();
+        void submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active);
 
     private slots:
         void onAddCourse();
 
-    friend class TermViewTests;
+    friend class TermViewTest;
 };
 
 #endif
