@@ -1,9 +1,9 @@
+.coverage
 .env
-.vscode
-.zshrc
 .pytest_cache
 .python-version
-.coverage
+.vscode
+.zshrc
 __pycache__
 build
 client/tests/output_logs

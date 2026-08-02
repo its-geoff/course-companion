@@ -1,0 +1,23 @@
+services:
+  test:
+    build:
+      context: .
+      target: test
+      args:
+        PLATFORM: linux/amd64
+        QT_VERSION: 6.10.1
+    image: course-companion:test
+
+  production:
+    build:
+      context: .
+      target: production
+      args:
+        PLATFORM: linux/amd64
+        QT_VERSION: 6.10.1
+    image: course-companion:latest
+    # Note: this is a Qt GUI binary. Running this container as-is
+    # will not display a window without X11/display passthrough
+    # configured for your host OS. Treat this service as build-only
+    # (`docker compose build production`) unless GUI forwarding is
+    # explicitly set up.
