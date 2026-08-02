@@ -15,6 +15,7 @@
 
 #include <QDate>
 #include <QDebug>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QStackedLayout>
 #include "utils/utils.hpp"
@@ -317,8 +318,8 @@ void TermView::onAddTerm() {
         auto endDate = dlg.dateValue("endDate");
         controller_.addTerm(
             dlg.textValue("title").toStdString(),
-            utils.parseDateFromQt(startdate),
-            utils.parseDateFromQt(endDate),
+            utils::parseDateFromQt(startdate),
+            utils::parseDateFromQt(endDate),
             dlg.boolValue("active")
         );
     } catch (const std::logic_error& e) {

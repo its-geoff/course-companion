@@ -4,6 +4,7 @@
 #include <unordered_set>    // for UUID testing
 #include <limits>       // for numeric_limits
 #include <exception>    // for exception throwing
+#include <QDate>
 #include "utils/utils.hpp"
 
 using namespace std::chrono_literals;
@@ -193,3 +194,28 @@ TEST(UtilsTest, StringTrimNoWhitespace) {
     std::string str{"hello"};
     ASSERT_EQ(utils::stringTrim(str), "hello");
 }
+
+
+// ====================================
+// QT DATE CONVERSION TESTS
+// ====================================
+
+TEST(UtilsTest, ParseDateFromQtRegularDate) {
+    QDate qdate{2025, 8, 15};
+    std::chrono::year_month_day result = utils::parseDateFromQt(qdate);
+
+    ASSERT_EQ(result, std::chrono::year_month_day(2025y/8/15));
+}
+
+TEST(UtilsTest, ParseDateFromQtEndOfYear) {
+    QDate qdate{2025, 12, 31};
+    std::chrono::year_month_day result = utils::parseDateFromQt(qdate);
+
+    ASSERT_EQ(result, std::chrono::year_month_day(2025y/12/31));
+}
+
+TEST(UtilsTest, ParseDateFromQtLeapYearFebruary) {
+    QDate qdate{2028, 2, 29};
+    std::chrono::year_month_day result = utils::parseDateFromQt(qdate);
+
+    ASSERT_EQ(result, std::chrono::year_month_day(2028y/2/29));

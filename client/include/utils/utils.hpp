@@ -12,11 +12,13 @@
 #include <string>           // for string variables
 #include <chrono>           // for date and time-related variables
 #include <iostream>         // for i/o streams
+#include <QDate>
 #include "model/Assignment.hpp"   // for references to Assignment
 
 namespace utils {
     std::chrono::year_month_day getTodayDate();
     std::chrono::year_month_day parseDate(const std::string &input);
+    std::chrono::year_month_day parseDateFromQt(const QDate& qdate);
     bool isOnlyWhitespace(const std::string str);
     std::string generateUuid();
     void validateReqString(std::string str, std::string label);

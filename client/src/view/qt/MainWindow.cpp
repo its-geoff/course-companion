@@ -14,6 +14,8 @@
 #include <QDebug>
 #include <QFrame>
 #include <QStackedLayout>
+#include <QMessageBox>
+#include <sstream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
@@ -38,42 +40,10 @@ void MainWindow::setupUi() {
     auto* sidebarLabel = new QLabel("Course Companion", sidebar_);
     sidebarLabel->setStyleSheet("font-size: 13px; font-weight: 600; color: #333;");
 
-    // term details card: clicking it returns to the term page
-    auto* termCard      = new QFrame(sidebar_);
-    termCard->setFixedHeight(52);
-    auto* termCardStack = new QStackedLayout(termCard);
-    termCardStack->setStackingMode(QStackedLayout::StackAll);
-    termCard->setStyleSheet(
-        "QFrame { background: white; border: 0.5px solid #e0e0e0; border-radius: 8px; }"
-    );
-
-    auto* termCardContent = new QWidget(termCard);
-    auto* termCardLayout  = new QVBoxLayout(termCardContent);
-    termCardLayout->setContentsMargins(10, 8, 10, 8);
-    termCardLayout->setSpacing(2);
-
-    auto* termCardTitle = new QLabel("Fall 2024", termCardContent);
-    termCardTitle->setStyleSheet("font-size: 13px; font-weight: 500; color: #1a1a1a;");
-
-    auto* termCardDates = new QLabel("Aug 26 - Dec 20, 2024", termCardContent);
-    termCardDates->setStyleSheet("font-size: 10px; color: #999;");
-
-    termCardLayout->addWidget(termCardTitle);
-    termCardLayout->addWidget(termCardDates);
-
-    auto* termCardOverlay = new QPushButton(termCard);
-    termCardOverlay->setFlat(true);
-    termCardOverlay->setCursor(Qt::PointingHandCursor);
-    termCardOverlay->setFocusPolicy(Qt::NoFocus);
-    termCardOverlay->setAccessibleName(QString("Open term %1").arg(termCardTitle->text()));
-    termCardOverlay->setStyleSheet(
-        "QPushButton { background: transparent; border: none; border-radius: 8px; }"
-        "QPushButton:hover { background: rgba(55, 138, 221, 0.06); }"
-    );
-
-    termCardStack->addWidget(termCardContent);
-    termCardStack->addWidget(termCardOverlay);
-    termCardStack->setCurrentIndex(1);
+    auto* termListWidget = new QWidget(sidebar_);
+    termListLayout_ = new QVBoxLayout(termListWidget);
+    termListLayout_->setContentsMargins(0, 0, 0, 0);
+    termListLayout_->setSpacing(6);
 
     auto* addTermButton = new QPushButton("+ Add Term", sidebar_);
     addTermButton->setStyleSheet(
@@ -90,11 +60,11 @@ void MainWindow::setupUi() {
 
     sidebarLayout->addWidget(sidebarLabel);
     sidebarLayout->addSpacing(8);
-    sidebarLayout->addWidget(termCard);
+    sidebarLayout->addWidget(termListWidget);
     sidebarLayout->addWidget(addTermButton);
     sidebarLayout->addStretch();
 
-    auto* termPage       = new TermView();
+    auto* termPage       = new TermView(controller_);
     auto* coursePage     = new CourseView();
     auto* assignmentPage = new AssignmentView();
 
@@ -112,8 +82,8 @@ void MainWindow::setupUi() {
     setWindowTitle("Course Companion");
     resize(900, 700);
 
-    connect(termCardOverlay, &QPushButton::clicked, this, [this]() { stack_->setCurrentIndex(0); });
     connect(addTermButton, &QPushButton::clicked, termPage, &TermView::onAddTerm);
+    connect(&controller_, &TermController::dataChanged, this, &MainWindow::refreshTermList);
 
     connect(termPage, &TermView::courseSelected, this,
         [this](const QString& title) {
@@ -144,4 +114,76 @@ void MainWindow::setupUi() {
     connect(assignmentPage, &AssignmentView::backRequested, this,
         [this]() { stack_->setCurrentIndex(1); }
     );
+
+    refreshTermList();
+}
+
+void MainWindow::refreshTermList() {
+    QLayoutItem* item;
+    while ((item = termListLayout_->takeAt(0)) != nullptr) {
+        delete item->widget();
+        delete item;
+    }
+
+    for (const auto& [id, term] : controller_.getTermList()) {
+        addTermRow(term);
+    }
+}
+
+void MainWindow::addTermRow(const Term& term) {
+    QString title = QString::fromStdString(term.getTitle());
+    bool isSelected = (title == selectedTermTitle_);
+
+    auto* card = new QFrame(sidebar_);
+    card->setFixedHeight(52);
+    auto* cardStack = new QStackedLayout(card);
+    cardStack->setStackingMode(QStackedLayout::StackAll);
+    card->setStyleSheet(isSelected
+        ? "QFrame { background: #eef4fb; border: 1px solid #378ADD; border-radius: 8px; }"
+        : "QFrame { background: white; border: 0.5px solid #e0e0e0; border-radius: 8px; }"
+    );
+
+    auto* content       = new QWidget(card);
+    auto* contentLayout = new QVBoxLayout(content);
+    contentLayout->setContentsMargins(10, 8, 10, 8);
+    contentLayout->setSpacing(2);
+
+    auto* titleLabel = new QLabel(title, content);
+    titleLabel->setStyleSheet("font-size: 13px; font-weight: 500; color: #1a1a1a;");
+
+    std::ostringstream dateStream;
+    dateStream << term.getStartDate() << " - " << term.getEndDate();
+    auto* datesLabel = new QLabel(QString::fromStdString(dateStream.str()), content);
+    datesLabel->setStyleSheet("font-size: 10px; color: #999;");
+
+    contentLayout->addWidget(titleLabel);
+    contentLayout->addWidget(datesLabel);
+
+    auto* overlay = new QPushButton(card);
+    overlay->setFlat(true);
+    overlay->setCursor(Qt::PointingHandCursor);
+    overlay->setFocusPolicy(Qt::NoFocus);
+    overlay->setAccessibleName(QString("Open term %1").arg(title));
+    overlay->setStyleSheet(
+        "QPushButton { background: transparent; border: none; border-radius: 8px; }"
+        "QPushButton:hover { background: rgba(55, 138, 221, 0.06); }"
+    );
+    connect(overlay, &QPushButton::clicked, this, [this, title]() { onTermRowClicked(title); });
+
+    cardStack->addWidget(content);
+    cardStack->addWidget(overlay);
+    cardStack->setCurrentIndex(1);
+
+    termListLayout_->addWidget(card);
+}
+
+void MainWindow::onTermRowClicked(const QString& title) {
+    try {
+        controller_.selectTerm(title.toStdString());
+        selectedTermTitle_ = title;
+        refreshTermList();
+        stack_->setCurrentIndex(0);
+    } catch (const std::out_of_range& e) {
+        QMessageBox::warning(this, "Select Term Failed", QString::fromStdString(e.what()));
+    }
 }

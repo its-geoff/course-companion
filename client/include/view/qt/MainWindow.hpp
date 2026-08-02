@@ -18,6 +18,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QStackedWidget>
+#include "controller/TermController.hpp"
 
 /**
  * @class MainWindow
@@ -33,12 +34,20 @@ class MainWindow : public QMainWindow {
         explicit MainWindow(QWidget* parent = nullptr);
 
     private:
+        TermController  controller_;
         QWidget*        centralWidget_;
         QHBoxLayout*    layout_;
         QWidget*        sidebar_;
         QStackedWidget* stack_;
+        QVBoxLayout*    termListLayout_;
+        QString         selectedTermTitle_;
 
         void setupUi();
+        void addTermRow(const Term& term);
+
+    private slots:
+        void refreshTermList();
+        void onTermRowClicked(const QString& title);
 };
 
 #endif // MAINWINDOW_HPP
