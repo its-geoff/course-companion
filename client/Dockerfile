@@ -1,10 +1,14 @@
 # syntax=docker/dockerfile:1
 
-FROM ubuntu:24.04 AS builder
+ARG QT_VERSION=6.10.1
+ARG PLATFORM=linux/amd64
 
+FROM --platform=${PLATFORM} ubuntu:24.04@sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90 AS builder
+
+ARG QT_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
-ENV QT_VERSION=6.10.1
-ENV QT_DIR=/opt/qt/6.10.1/gcc_64
+ENV QT_VERSION=${QT_VERSION}
+ENV QT_DIR=/opt/qt/${QT_VERSION}/gcc_64
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -74,9 +78,11 @@ RUN cmake -S . -B build/build_main \
 RUN cmake --build build/build_main --target CourseCompanion --parallel $(nproc)
 
 # release production build
-FROM ubuntu:24.04 AS production
+FROM --platform=${PLATFORM} ubuntu:24.04@sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90 AS production
 
+ARG QT_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
+ENV QT_DIR=/opt/qt/${QT_VERSION}/gcc_64
 
 RUN apt-get update && apt-get install -y \
     libstdc++6 \
@@ -90,10 +96,9 @@ RUN apt-get update && apt-get install -y \
     libfreetype6 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=main /opt/qt/6.10.1/gcc_64/lib /opt/qt/6.10.1/gcc_64/lib
-COPY --from=main /opt/qt/6.10.1/gcc_64/plugins /opt/qt/6.10.1/gcc_64/plugins
+COPY --from=main ${QT_DIR}/lib ${QT_DIR}/lib
+COPY --from=main ${QT_DIR}/plugins ${QT_DIR}/plugins
 COPY --from=main /app/build/build_main/bin/CourseCompanion /app/
 
-ENV LD_LIBRARY_PATH=/opt/qt/6.10.1/gcc_64/lib
-
+ENV LD_LIBRARY_PATH=${QT_DIR}/lib
 CMD ["/app/CourseCompanion"]
