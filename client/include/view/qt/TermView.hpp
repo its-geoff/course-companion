@@ -16,6 +16,7 @@
  * Provides declarations only; see TermView.cpp for implementations.
  */
 
+#include <QDate>
 #include <QPushButton>
 #include <QWidget>
 #include <QVBoxLayout>
@@ -68,6 +69,8 @@ class TermView : public QWidget {
 
     private slots:
         void onAddCourse();
+
+    friend class TermViewTests;
 };
 
 #endif
