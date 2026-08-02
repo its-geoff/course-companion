@@ -71,7 +71,7 @@ class TermView : public QWidget {
     private slots:
         void onAddCourse();
 
-    friend class TermViewTest;
+    friend class TermViewTests;
 };
 
 #endif
