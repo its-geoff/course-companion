@@ -13,6 +13,7 @@
 #include <cctype>           // for isspace
 #include <cmath>            // for fabs, min, max, and round
 #include <limits>           // for numeric limits
+#include <QDate>
 #include <uuid/uuid.h>      // for UUID
 
 using namespace std::chrono_literals;
@@ -32,6 +33,12 @@ namespace utils {
         }
 
         throw std::invalid_argument("Invalid date format. Expected YYYY-MM-DD.");
+    }
+
+    std::chrono::year_month_day parseDateFromQt(const QDate& qdate) {
+        return std::chrono::year{qdate.year()} /
+            std::chrono::month{static_cast<unsigned>(qdate.month())} /
+            std::chrono::day{static_cast<unsigned>(qdate.day())};
     }
 
     // checks if a string is only whitespace

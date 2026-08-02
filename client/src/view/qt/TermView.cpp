@@ -17,6 +17,7 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QStackedLayout>
+#include "utils/utils.hpp"
 
 TermView::TermView(TermController& controller, QWidget* parent) 
     : QWidget(parent), controller_{controller} {
@@ -311,12 +312,18 @@ void TermView::onAddTerm() {
     if (dlg.exec() != QDialog::Accepted)
         return;
 
-    // TODO: wire to TermController::addTerm once controller is connected
-    qDebug() << "Add Term:"
-             << dlg.textValue("title")
-             << dlg.dateValue("startDate").toString("yyyy-MM-dd")
-             << dlg.dateValue("endDate").toString("yyyy-MM-dd")
-             << dlg.boolValue("active");
+    try {
+        auto startDate = dlg.dateValue("startDate");
+        auto endDate = dlg.dateValue("endDate");
+        controller_.addTerm(
+            dlg.textValue("title").toStdString(),
+            utils.parseDateFromQt(startdate),
+            utils.parseDateFromQt(endDate),
+            dlg.boolValue("active")
+        );
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Add Term Failed", QString::fromStdString(e.what()));
+    }
 }
 
 void TermView::onAddCourse() {
