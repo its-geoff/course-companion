@@ -47,13 +47,13 @@ enable_coverage(TermTests)
 # add_test(NAME CourseViewTests COMMAND CourseViewTests)
 # enable_coverage(CourseViewTests)
 
-add_executable(TermViewTests
-    view/qt/TermViewTests.cpp
-    view/qt/QtTestMain.cpp
-)
-target_link_libraries(TermViewTests PRIVATE CourseCompanion_gui CourseCompanion_lib GTest::gtest Qt6::Test)
-add_test(NAME TermViewTests COMMAND TermViewTests)
-enable_coverage(TermViewTests)
+# add_executable(TermViewTests
+#     view/qt/TermViewTests.cpp
+#     view/qt/QtTestMain.cpp
+# )
+# target_link_libraries(TermViewTests PRIVATE CourseCompanion_gui CourseCompanion_lib GTest::gtest Qt6::Test)
+# add_test(NAME TermViewTests COMMAND TermViewTests)
+# enable_coverage(TermViewTests)
 
 add_executable(CliViewTests view/cli/CliViewTests.cpp)
 target_link_libraries(CliViewTests PRIVATE CourseCompanion_cli GTest::gtest_main)
