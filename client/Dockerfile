@@ -99,3 +99,6 @@ RUN apt-get update && apt-get install -y \
 COPY --from=main ${QT_DIR}/lib ${QT_DIR}/lib
 COPY --from=main ${QT_DIR}/plugins ${QT_DIR}/plugins
 COPY --from=main /app/build/build_main/bin/CourseCompanion /app/
+
+ENV LD_LIBRARY_PATH=${QT_DIR}/lib
+CMD ["/app/CourseCompanion"]
