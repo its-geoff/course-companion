@@ -8,6 +8,12 @@ usage() {
     exit 1
 }
 
+if [ -f .env ]; then
+    set -a
+    source .env
+    set +a
+fi
+
 OUTPUT_DIR="${OUTPUT_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/tests/output_logs"}"
 mkdir -p "$OUTPUT_DIR"
 
