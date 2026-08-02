@@ -11,14 +11,12 @@
  * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
 
-#include "view/qt/FormDialog.hpp"
-
-#include <QDate>
 #include <QDebug>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QStackedLayout>
 #include "utils/utils.hpp"
+#include "view/qt/FormDialog.hpp"
 
 TermView::TermView(TermController& controller, QWidget* parent) 
     : QWidget(parent), controller_{controller} {

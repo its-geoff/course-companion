@@ -31,6 +31,30 @@ target_link_libraries(TermTests PRIVATE CourseCompanion_lib GTest::gtest_main)
 add_test(NAME TermTests COMMAND TermTests)
 enable_coverage(TermTests)
 
+# add_executable(AssignmentViewTests
+    # view/qt/AssignmentViewTests.cpp
+    # view/qt/QtTestMain.cpp
+# )
+# target_link_libraries(AssignmentViewTests PRIVATE CourseCompanion_gui CourseCompanion_lib GTest::gtest Qt6::Test)
+# add_test(NAME AssignmentViewTests COMMAND AssignmentViewTests)
+# enable_coverage(AssignmentViewTests)
+
+# add_executable(CourseViewTests
+    # view/qt/CourseViewTests.cpp
+    # view/qt/QtTestMain.cpp
+# )
+# target_link_libraries(CourseViewTests PRIVATE CourseCompanion_gui CourseCompanion_lib GTest::gtest Qt6::Test)
+# add_test(NAME CourseViewTests COMMAND CourseViewTests)
+# enable_coverage(CourseViewTests)
+
+# add_executable(TermViewTests
+#     view/qt/TermViewTests.cpp
+#     view/qt/QtTestMain.cpp
+# )
+# target_link_libraries(TermViewTests PRIVATE CourseCompanion_gui CourseCompanion_lib GTest::gtest Qt6::Test)
+# add_test(NAME TermViewTests COMMAND TermViewTests)
+# enable_coverage(TermViewTests)
+
 add_executable(CliViewTests view/cli/CliViewTests.cpp)
 target_link_libraries(CliViewTests PRIVATE CourseCompanion_cli GTest::gtest_main)
 add_test(NAME CliViewTests COMMAND CliViewTests)
@@ -42,13 +66,16 @@ add_test(NAME UtilsTests COMMAND UtilsTests)
 enable_coverage(UtilsTests)
 
 foreach(test_target
-    CliViewTests
     AssignmentTests
     CourseTests
     TermTests
     AssignmentControllerTests
     CourseControllerTests
     TermControllerTests
+    # AssignmentViewTests
+    # CourseViewTests
+    # TermViewTests
+    CliViewTests
     UtilsTests
 )
     set_target_properties(${test_target} PROPERTIES
