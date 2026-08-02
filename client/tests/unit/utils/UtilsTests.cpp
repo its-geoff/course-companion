@@ -219,3 +219,4 @@ TEST(UtilsTest, ParseDateFromQtLeapYearFebruary) {
     std::chrono::year_month_day result = utils::parseDateFromQt(qdate);
 
     ASSERT_EQ(result, std::chrono::year_month_day(2028y/2/29));
+}

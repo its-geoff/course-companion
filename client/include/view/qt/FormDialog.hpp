@@ -56,14 +56,14 @@ public:
     bool    boolValue(const QString& key) const;
 
 private:
-    std::vector<WidgetEntry> widgets_;
-    QMap<QString, int>       keyIndex_;
-
     struct WidgetEntry {
         FieldDef::Type type;
         QWidget* widget  = nullptr;
         bool     required = false;
     };
+
+    std::vector<WidgetEntry> widgets_;
+    QMap<QString, int>       keyIndex_;
 
     void addTextField(QFormLayout* layout, const FieldDef& field);
     void addDateField(QFormLayout* layout, const FieldDef& field);
