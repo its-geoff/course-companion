@@ -157,18 +157,20 @@ jobs:
             type=sha
 
       - name: Build and push client image
-        uses: Wandalen/wretry.action@v3
-        with:
-          action: docker/build-push-action@v7
-          attempt_limit: 3
-          attempt_delay: 20000
-          with: |
-            context: ./client
-            push: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')) }}
-            tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
-            cache-from: type=gha
-            cache-to: type=gha,mode=max
+              uses: Wandalen/wretry.action@v3
+              with:
+                action: docker/build-push-action@v7
+                attempt_limit: 3
+                attempt_delay: 20000
+                with: |
+                  context: ./client
+                  push: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')) }}
+                  tags: |
+                    ${{ steps.meta.outputs.tags }}
+                  labels: |
+                    ${{ steps.meta.outputs.labels }}
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
 
   release:
     if: github.ref_type == 'tag' && github.ref_name != ''
