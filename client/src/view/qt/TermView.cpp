@@ -11,12 +11,12 @@
  * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
 
-#include "view/qt/FormDialog.hpp"
-
-#include <QDate>
 #include <QDebug>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QStackedLayout>
+#include "utils/utils.hpp"
+#include "view/qt/FormDialog.hpp"
 
 TermView::TermView(QWidget* parent) : QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
@@ -310,12 +310,20 @@ void TermView::onAddTerm() {
     if (dlg.exec() != QDialog::Accepted)
         return;
 
-    // TODO: wire to TermController::addTerm once controller is connected
-    qDebug() << "Add Term:"
-             << dlg.textValue("title")
-             << dlg.dateValue("startDate").toString("yyyy-MM-dd")
-             << dlg.dateValue("endDate").toString("yyyy-MM-dd")
-             << dlg.boolValue("active");
+    submitAddTerm(dlg.textValue("title"), dlg.dateValue("startDate"), dlg.dateValue("endDate"), dlg.boolValue("active"));
+}
+
+void TermView::submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active) {
+    try {
+        controller_.addTerm(
+            title.toStdString(),
+            utils::parseDateFromQt(startDate),
+            utils::parseDateFromQt(endDate),
+            active
+        );
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Add Term Failed", QString::fromStdString(e.what()));
+    }
 }
 
 void TermView::onAddCourse() {

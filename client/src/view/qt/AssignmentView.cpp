@@ -13,11 +13,10 @@
  * is planned but not yet implemented.
  */
 
-#include "view/qt/FormDialog.hpp"
-
 #include <QDebug>
 #include <QMessageBox>
 #include <QStringList>
+#include "view/qt/FormDialog.hpp"
 
 AssignmentView::AssignmentView(QWidget* parent) : QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
