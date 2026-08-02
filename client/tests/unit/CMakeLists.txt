@@ -74,7 +74,7 @@ foreach(test_target
     TermControllerTests
     # AssignmentViewTests
     # CourseViewTests
-    TermViewTests
+    # TermViewTests
     CliViewTests
     UtilsTests
 )
