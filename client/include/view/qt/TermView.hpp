@@ -26,6 +26,7 @@
 #include <QScrollArea>
 #include <QFrame>
 #include <QString>
+#include "controller/TermController.hpp"
 
 class TermView : public QWidget {
     Q_OBJECT

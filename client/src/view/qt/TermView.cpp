@@ -311,14 +311,16 @@ void TermView::onAddTerm() {
     if (dlg.exec() != QDialog::Accepted)
         return;
 
+    submitAddTerm(dlg.textValue("title"), dlg.dateValue("startDate"), dlg.dateValue("endDate"), dlg.boolValue("active"));
+}
+
+void TermView::submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active) {
     try {
-        auto startDate = dlg.dateValue("startDate");
-        auto endDate = dlg.dateValue("endDate");
         controller_.addTerm(
-            dlg.textValue("title").toStdString(),
-            utils::parseDateFromQt(startdate),
+            title.toStdString(),
+            utils::parseDateFromQt(startDate),
             utils::parseDateFromQt(endDate),
-            dlg.boolValue("active")
+            active
         );
     } catch (const std::logic_error& e) {
         QMessageBox::warning(this, "Add Term Failed", QString::fromStdString(e.what()));

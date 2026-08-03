@@ -1,16 +1,22 @@
 #include <gtest/gtest.h>
 #include <QSignalSpy>
 #include <QDate>
+#include <QTimer>
+#include <QApplication>
 #include "view/qt/TermView.hpp"
 #include "controller/TermController.hpp"
 
 using namespace std::chrono_literals;
 
 // test fixture for class TermView
-class TermViewTest : public testing::Test {
+class TermViewTests : public testing::Test {
     protected:
         TermController controller{};
         TermView view{controller};
+
+        void submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active) {
+            view.submitAddTerm(title, startDate, endDate, active);
+        }
 };
 
 
@@ -18,10 +24,10 @@ class TermViewTest : public testing::Test {
 // FUNCTION SMOKE TESTS
 // ====================================
 
-TEST_F(TermViewTest, SubmitAddTermMutatesController) {
+TEST_F(TermViewTests, SubmitAddTermMutatesController) {
     QSignalSpy spy(&controller, &TermController::dataChanged);
 
-    view.submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
+    submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
 
     ASSERT_EQ(spy.count(), 1);
     ASSERT_EQ(controller.getTermList().size(), 1);
@@ -31,11 +37,11 @@ TEST_F(TermViewTest, SubmitAddTermMutatesController) {
     ASSERT_TRUE(term.getActive());
 }
 
-TEST_F(TermViewTest, SubmitAddTermMultipleCallsAccumulate) {
+TEST_F(TermViewTests, SubmitAddTermMultipleCallsAccumulate) {
     QSignalSpy spy(&controller, &TermController::dataChanged);
 
-    view.submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), false);
-    view.submitAddTerm("Spring 2026", QDate(2026, 1, 2), QDate(2026, 5, 24), true);
+    submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), false);
+    submitAddTerm("Spring 2026", QDate(2026, 1, 2), QDate(2026, 5, 24), true);
 
     ASSERT_EQ(spy.count(), 2);
     ASSERT_EQ(controller.getTermList().size(), 2);
@@ -46,20 +52,33 @@ TEST_F(TermViewTest, SubmitAddTermMultipleCallsAccumulate) {
 // FUNCTION EDGE CASES
 // ====================================
 
-TEST_F(TermViewTest, SubmitAddTermDuplicateTitleDoesNotMutate) {
-    view.submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
+TEST_F(TermViewTests, SubmitAddTermDuplicateTitleDoesNotMutate) {
+    submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
 
     QSignalSpy spy(&controller, &TermController::dataChanged);
-    view.submitAddTerm("Fall 2025", QDate(2026, 1, 2), QDate(2026, 5, 24), false);
+
+    QTimer::singleShot(0, []() {
+        if (QWidget* activeModal = QApplication::activeModalWidget()) {
+            activeModal->close();
+        }
+    });
+
+    submitAddTerm("Fall 2025", QDate(2026, 1, 2), QDate(2026, 5, 24), false);
 
     ASSERT_EQ(spy.count(), 0);
     ASSERT_EQ(controller.getTermList().size(), 1);
 }
 
-TEST_F(TermViewTest, SubmitAddTermEmptyTitleDoesNotMutate) {
+TEST_F(TermViewTests, SubmitAddTermEmptyTitleDoesNotMutate) {
     QSignalSpy spy(&controller, &TermController::dataChanged);
 
-    view.submitAddTerm("", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
+    QTimer::singleShot(0, []() {
+        if (QWidget* activeModal = QApplication::activeModalWidget()) {
+            activeModal->close();
+        }
+    });
+
+    submitAddTerm("", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
 
     ASSERT_EQ(spy.count(), 0);
     ASSERT_EQ(controller.getTermList().size(), 0);
