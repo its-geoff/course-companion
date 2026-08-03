@@ -20,6 +20,7 @@ class TermController : public QObject {
         const std::unordered_map<std::string, Term>& getTermList() const;
         std::string getTermId(const std::string& title) const;
         CourseController& getCourseController();
+        const Term& getActiveTerm() const;
 
         void addTerm(const std::string& title, const std::chrono::year_month_day& startDate,
             const std::chrono::year_month_day& endDate, bool active);

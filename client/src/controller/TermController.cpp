@@ -24,6 +24,13 @@ CourseController& TermController::getCourseController() {
     return *courseController_;
 }
 
+const Term& TermController::getActiveTerm() const {
+    if (activeTerm_ == nullptr) {
+        throw std::logic_error("No term selected.");
+    }
+    return *activeTerm_;
+}
+
 void TermController::addTerm(const std::string& title, const std::chrono::year_month_day& startDate,
     const std::chrono::year_month_day& endDate, bool active) {
     Term term{title, startDate, endDate, active};

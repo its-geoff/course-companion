@@ -7,14 +7,13 @@
  * This class displays information received from the TermController. The term name is shown,
  * along with course grades, timelines, and the overall GPA from the term. Clicking a course
  * card emits courseSelected so MainWindow can navigate to CourseView.
- *
- * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
  */
 
 #include <QDebug>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QStackedLayout>
+#include <sstream>
 #include "utils/utils.hpp"
 #include "view/qt/FormDialog.hpp"
 
@@ -29,6 +28,11 @@ TermView::TermView(TermController& controller, QWidget* parent)
     setupCourseList();
     mainLayout_->addStretch();  // push the footer to the bottom
     setupFooter();
+
+    connect(&controller_, &TermController::dataChanged, this, &TermView::refreshTerm);
+    connect(&controller_, &TermController::termSelected, this, &TermView::refreshTerm);
+
+    refreshTerm();
 }
 
 void TermView::setupHeader() {
@@ -43,8 +47,36 @@ void TermView::setupHeader() {
     titleLayout->setContentsMargins(0, 0, 0, 0);
     titleLayout->setSpacing(8);
 
-    termTitle_ = new QLabel("Fall 2024", titleRow);
+    termTitle_ = new QLabel("No term selected", titleRow);
     termTitle_->setStyleSheet("font-size: 22px; font-weight: 500; color: #1a1a1a;");
+
+    editTermButton_ = new QPushButton("Edit", titleRow);
+    editTermButton_->setStyleSheet(
+        "QPushButton {"
+        "  font-size: 12px;"
+        "  color: #378ADD;"
+        "  background: transparent;"
+        "  border: 1px solid #378ADD;"
+        "  border-radius: 4px;"
+        "  padding: 3px 10px;"
+        "}"
+        "QPushButton:hover { background: #eef4fb; }"
+    );
+    connect(editTermButton_, &QPushButton::clicked, this, &TermView::onEditTerm);
+
+    removeTermButton_ = new QPushButton("Remove", titleRow);
+    removeTermButton_->setStyleSheet(
+        "QPushButton {"
+        "  font-size: 12px;"
+        "  color: #d9534f;"
+        "  background: transparent;"
+        "  border: 1px solid #d9534f;"
+        "  border-radius: 4px;"
+        "  padding: 3px 10px;"
+        "}"
+        "QPushButton:hover { background: #fdecea; }"
+    );
+    connect(removeTermButton_, &QPushButton::clicked, this, &TermView::onRemoveTerm);
 
     addCourseButton_ = new QPushButton("+ Add Course", titleRow);
     addCourseButton_->setStyleSheet(
@@ -62,12 +94,14 @@ void TermView::setupHeader() {
 
     titleLayout->addWidget(termTitle_);
     titleLayout->addStretch();
+    titleLayout->addWidget(editTermButton_);
+    titleLayout->addWidget(removeTermButton_);
     titleLayout->addWidget(addCourseButton_);
 
     auto* termTypeLabel = new QLabel("Term", header);
     termTypeLabel->setStyleSheet("font-size: 14px; font-weight: 500; color: #888;");
 
-    dateRangeLabel_ = new QLabel("Aug 26 - Dec 20, 2024", header);
+    dateRangeLabel_ = new QLabel("", header);
     dateRangeLabel_->setStyleSheet("font-size: 13px; color: #666;");
 
     headerLayout->addWidget(titleRow);
@@ -76,7 +110,6 @@ void TermView::setupHeader() {
 
     mainLayout_->addWidget(header);
 }
-
 
 void TermView::setupProgress() {
     auto* section       = new QWidget(this);
@@ -122,7 +155,6 @@ void TermView::setupProgress() {
     mainLayout_->addWidget(section);
 }
 
-
 void TermView::setupCourseList() {
     auto* section       = new QWidget(this);
     auto* sectionLayout = new QVBoxLayout(section);
@@ -158,7 +190,6 @@ void TermView::setupCourseList() {
     sectionLayout->addWidget(scrollArea);
     mainLayout_->addWidget(section);
 }
-
 
 void TermView::addCourseRow(const QString& name, const QString& sub,
                              const QString& pct, const QString& letter,
@@ -255,7 +286,6 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     courseListLayout_->addWidget(card);
 }
 
-
 void TermView::setupFooter() {
     auto* footer       = new QFrame(this);
     auto* footerLayout = new QHBoxLayout(footer);
@@ -299,6 +329,21 @@ void TermView::setupFooter() {
     mainLayout_->addWidget(footer);
 }
 
+// pulls the currently active term from the controller and updates the header; falls back to a placeholder if nothing is selected
+void TermView::refreshTerm() {
+    try {
+        const Term& term = controller_.getActiveTerm();
+        termTitle_->setText(QString::fromStdString(term.getTitle()));
+
+        std::ostringstream dateStream;
+        dateStream << term.getStartDate() << " - " << term.getEndDate();
+        dateRangeLabel_->setText(QString::fromStdString(dateStream.str()));
+    } catch (const std::logic_error& e) {
+        termTitle_->setText("No term selected");
+        dateRangeLabel_->setText("");
+    }
+}
+
 void TermView::onAddTerm() {
     std::vector<FieldDef> fields = {
         { "title",     "Title",        FieldDef::Type::Text, QString{}             },
@@ -324,6 +369,74 @@ void TermView::submitAddTerm(const QString& title, const QDate& startDate, const
         );
     } catch (const std::logic_error& e) {
         QMessageBox::warning(this, "Add Term Failed", QString::fromStdString(e.what()));
+    }
+}
+
+// pre-fills the edit dialog with the active term's current values
+void TermView::onEditTerm() {
+    const Term* term = nullptr;
+    try {
+        term = &controller_.getActiveTerm();
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Edit Term Failed", "No term is currently selected.");
+        return;
+    }
+
+    std::vector<FieldDef> fields = {
+        { "title",     "Title",        FieldDef::Type::Text, QString::fromStdString(term->getTitle()) },
+        { "startDate", "Start Date",   FieldDef::Type::Date, utils::parseDateToQt(term->getStartDate()) },
+        { "endDate",   "End Date",     FieldDef::Type::Date, utils::parseDateToQt(term->getEndDate()) },
+        { "active",    "Current term", FieldDef::Type::Bool, term->getActive() },
+    };
+
+    FormDialog dlg("Edit Term", fields, this);
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+
+    submitEditTerm(dlg.textValue("title"), dlg.dateValue("startDate"), dlg.dateValue("endDate"), dlg.boolValue("active"));
+}
+
+// only calls editTitle if the title actually changed, since TermController::editTitle treats a resubmitted, unchanged title as a duplicate
+void TermView::submitEditTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active) {
+    try {
+        const Term& term = controller_.getActiveTerm();
+        std::string id = term.getId();
+
+        if (title.toStdString() != term.getTitle()) {
+            controller_.editTitle(id, title.toStdString());
+        }
+        controller_.editStartDate(id, utils::parseDateFromQt(startDate));
+        controller_.editEndDate(id, utils::parseDateFromQt(endDate));
+        controller_.editActive(id, active);
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Edit Term Failed", QString::fromStdString(e.what()));
+    }
+}
+
+// confirms with the user before removing the active term, since removal cannot be undone
+void TermView::onRemoveTerm() {
+    QString title;
+    try {
+        title = QString::fromStdString(controller_.getActiveTerm().getTitle());
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Remove Term Failed", "No term is currently selected.");
+        return;
+    }
+
+    auto result = QMessageBox::question(this, "Remove Term",
+        QString("Remove term \"%1\"? This cannot be undone.").arg(title));
+
+    if (result != QMessageBox::Yes)
+        return;
+
+    submitRemoveTerm(title);
+}
+
+void TermView::submitRemoveTerm(const QString& title) {
+    try {
+        controller_.removeTerm(title.toStdString());
+    } catch (const std::out_of_range& e) {
+        QMessageBox::warning(this, "Remove Term Failed", QString::fromStdString(e.what()));
     }
 }
 

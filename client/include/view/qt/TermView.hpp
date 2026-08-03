@@ -11,8 +11,6 @@
  * navigate to CourseView. Adding a term is triggered from the sidebar; onAddTerm is public so
  * MainWindow can call it directly.
  * 
- * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
- * 
  * Provides declarations only; see TermView.cpp for implementations.
  */
 
@@ -48,6 +46,8 @@ class TermView : public QWidget {
         QLabel*      termTitle_;
         QLabel*      dateRangeLabel_;
         QPushButton* addCourseButton_;
+        QPushButton* editTermButton_;
+        QPushButton* removeTermButton_;
 
         // progress
         QProgressBar* progressBar_;
@@ -68,9 +68,14 @@ class TermView : public QWidget {
                              const QString& gpa);
         void setupFooter();
         void submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active);
+        void submitEditTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active);
+        void submitRemoveTerm(const QString& title);
 
     private slots:
         void onAddCourse();
+        void onEditTerm();
+        void onRemoveTerm();
+        void refreshTerm();
 
     friend class TermViewTests;
 };

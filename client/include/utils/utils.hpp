@@ -19,6 +19,7 @@ namespace utils {
     std::chrono::year_month_day getTodayDate();
     std::chrono::year_month_day parseDate(const std::string &input);
     std::chrono::year_month_day parseDateFromQt(const QDate& qdate);
+    QDate parseDateToQt(const std::chrono::year_month_day& date);
     bool isOnlyWhitespace(const std::string str);
     std::string generateUuid();
     void validateReqString(std::string str, std::string label);

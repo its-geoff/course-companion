@@ -35,10 +35,20 @@ namespace utils {
         throw std::invalid_argument("Invalid date format. Expected YYYY-MM-DD.");
     }
 
+    // takes a date in QtDate format and returns it in std::chrono format
     std::chrono::year_month_day parseDateFromQt(const QDate& qdate) {
         return std::chrono::year{qdate.year()} /
             std::chrono::month{static_cast<unsigned>(qdate.month())} /
             std::chrono::day{static_cast<unsigned>(qdate.day())};
+    }
+
+    // takes a date in std::chrono format and returns it in QtDate format
+    QDate parseDateToQt(const std::chrono::year_month_day& date) {
+        return QDate(
+            static_cast<int>(date.year()),
+            static_cast<unsigned>(date.month()),
+            static_cast<unsigned>(date.day())
+        );
     }
 
     // checks if a string is only whitespace
