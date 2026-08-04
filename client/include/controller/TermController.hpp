@@ -1,9 +1,18 @@
 #ifndef TERMCONTROLLER_HPP
 #define TERMCONTROLLER_HPP
 
+/**
+ * @file TermController.hpp
+ * @brief Definition of a controller that manages interaction between Term and the views.
+ * 
+ * This controller defines functions that integrate the Term class with the views and allow for the 
+ * model to connect to the main function.
+ */
+
 #include <string>
 #include <chrono>
 #include <unordered_map>
+#include <vector>
 #include <optional>
 #include <QObject>
 #include "model/Term.hpp"
@@ -18,6 +27,7 @@ class TermController : public QObject {
         TermController& operator=(const TermController&) = delete;
 
         const std::unordered_map<std::string, Term>& getTermList() const;
+        const std::vector<std::string>& getTermOrder() const;
         std::string getTermId(const std::string& title) const;
         CourseController& getCourseController();
         const Term& getActiveTerm() const;
@@ -40,6 +50,7 @@ class TermController : public QObject {
     private:
         std::unordered_map<std::string, Term> termList_{};
         std::unordered_map<std::string, std::string> titleToId_{};
+        std::vector<std::string> termOrder_{};
         Term* activeTerm_ = nullptr;
         std::optional<CourseController> courseController_{};
 };

@@ -5,9 +5,6 @@
  * @file MainWindow.hpp
  * @brief Definition of the MainWindow class, which serves as the main page for the Qt GUI.
  * 
- * This class collects user input and presents output to the user through a Qt GUI. It does not contain any 
- * app logic. The class sends information to the Controller and outputs results from the Controller.
- * 
  * Provides declarations only; see MainWindow.cpp for implementations.
  */
 
@@ -20,13 +17,6 @@
 #include <QStackedWidget>
 #include "controller/TermController.hpp"
 
-/**
- * @class MainWindow
- * @brief Represents the main window for the Qt GUI.
- * 
- * Takes input from the user and displays output within the GUI. Does not contain app logic. Interacts with the
- * Controller to provide input to model functions and presents results to the user after receiving return values.
- */
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -48,6 +38,7 @@ class MainWindow : public QMainWindow {
     private slots:
         void refreshTermList();
         void onTermRowClicked(const QString& title);
+        void updateTermPageVisibility();
 };
 
 #endif // MAINWINDOW_HPP

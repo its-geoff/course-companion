@@ -15,14 +15,6 @@
 #include <chrono>       // for date and time-related variables
 #include <iostream>     // for i/o streams
 
-/**
- * @class Assignment
- * @brief Represents an academic assignment given to a student.
- * 
- * Stores metadata such as title, description, due date, completion status, and grade.
- * The Assignment object grades will be used by the Course class to determine a course grade based on the grading
- * scale. The Assignment class is used by the main function to track progress and report assignment results.
- */
 class Assignment {
     public:
         Assignment(std::string title, std::string description, std::string category, 
