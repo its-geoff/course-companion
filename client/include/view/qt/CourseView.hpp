@@ -34,15 +34,6 @@ class CourseView : public QWidget {
         void backRequested();
 
     private:
-        void setupHeader();
-        void setupAssignmentProgress();
-        void setupFilterBar();
-        void setupAssignmentList();
-        void addAssignmentRow(const QString& name, const QString& sub,
-                              const QString& pct, const QString& letter,
-                              const QString& gpa, bool completed);
-        void setupFooter();
-
         QVBoxLayout* mainLayout_;
 
         QPushButton* backButton_;
@@ -62,6 +53,15 @@ class CourseView : public QWidget {
 
         QLabel* avgGradeLabel_;
         QLabel* gpaLabel_;
+
+        void setupHeader();
+        void setupAssignmentProgress();
+        void setupFilterBar();
+        void setupAssignmentList();
+        void addAssignmentRow(const QString& name, const QString& sub,
+                              const QString& pct, const QString& letter,
+                              const QString& gpa, bool completed);
+        void setupFooter();
 
     private slots:
         void onAddAssignment();

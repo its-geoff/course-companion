@@ -66,6 +66,8 @@ jobs:
 
       - name: Run tests
         working-directory: client
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: ctest --test-dir build/build_test --output-on-failure
 
   test-server:

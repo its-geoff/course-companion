@@ -1,6 +1,14 @@
 #ifndef COURSECONTROLLER_HPP
 #define COURSECONTROLLER_HPP
 
+/**
+ * @file CourseController.hpp
+ * @brief Definition of a controller that manages interaction between Course and the views.
+ * 
+ * This controller defines functions that integrate the Course class with the views and allow for the 
+ * model to connect to the main function.
+ */
+
 #include <string>
 #include <chrono>
 #include <unordered_map>

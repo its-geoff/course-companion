@@ -16,15 +16,6 @@
 #include <unordered_map>    // for courseList
 #include "model/Course.hpp"   // for usage of Course objects in vector
 
-/**
- * @class Term
- * @brief Represents an academic term that can contain multiple courses at a given time.
- * 
- * Stores metadata such as title, start date, end date, list of courses, and term GPA.
- * The Term class can contain multiple Course objects. The grade of these Course objects will be combined
- * based on the number of credits to produce the term GPA. The Term class is used by the main function to group
- * courses and provide a student's grade for one term. 
- */
 class Term {
     public:
         Term(std::string title, std::chrono::year_month_day startDate, std::chrono::year_month_day endDate,

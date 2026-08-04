@@ -1,8 +1,19 @@
 #include "controller/TermController.hpp"
+
+/**
+ * @file TermController.cpp
+ * @brief Implementation of a controller that manages interaction between the views and Term. 
+ */
+
+#include <algorithm>
 #include "utils/utils.hpp"
 
 const std::unordered_map<std::string, Term>& TermController::getTermList() const {
     return termList_;
+}
+
+const std::vector<std::string>& TermController::getTermOrder() const {
+    return termOrder_;
 }
 
 std::string TermController::getTermId(const std::string& title) const {
@@ -24,6 +35,13 @@ CourseController& TermController::getCourseController() {
     return *courseController_;
 }
 
+const Term& TermController::getActiveTerm() const {
+    if (activeTerm_ == nullptr) {
+        throw std::logic_error("No term selected.");
+    }
+    return *activeTerm_;
+}
+
 void TermController::addTerm(const std::string& title, const std::chrono::year_month_day& startDate,
     const std::chrono::year_month_day& endDate, bool active) {
     Term term{title, startDate, endDate, active};
@@ -35,6 +53,8 @@ void TermController::addTerm(const std::string& title, const std::chrono::year_m
         termList_.erase(termIt);
         throw std::logic_error("Term with the same title already exists.");
     }
+
+    termOrder_.push_back(termIt->first);
     emit dataChanged();
 }
 
@@ -80,6 +100,7 @@ void TermController::removeTerm(const std::string& title) {
 
     termList_.erase(id);
     titleToId_.erase(utils::stringLower(title));
+    termOrder_.erase(std::remove(termOrder_.begin(), termOrder_.end(), id), termOrder_.end());
     emit dataChanged();
 }
 

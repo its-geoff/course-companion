@@ -1,6 +1,14 @@
 #ifndef ASSIGNMENTCONTROLLER_HPP
 #define ASSIGNMENTCONTROLLER_HPP
 
+/**
+ * @file AssignmentController.hpp
+ * @brief Definition of a controller that manages interaction between Assignment and the views.
+ * 
+ * This controller defines functions that integrate the Assignment class with the views and allow for the 
+ * model to connect to the main function.
+ */
+
 #include <string>
 #include <chrono>
 #include <QObject>

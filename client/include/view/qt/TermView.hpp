@@ -11,11 +11,10 @@
  * navigate to CourseView. Adding a term is triggered from the sidebar; onAddTerm is public so
  * MainWindow can call it directly.
  * 
- * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
- * 
  * Provides declarations only; see TermView.cpp for implementations.
  */
 
+#include <QDate>
 #include <QPushButton>
 #include <QWidget>
 #include <QVBoxLayout>
@@ -25,12 +24,13 @@
 #include <QScrollArea>
 #include <QFrame>
 #include <QString>
+#include "controller/TermController.hpp"
 
 class TermView : public QWidget {
     Q_OBJECT
 
     public:
-        explicit TermView(QWidget* parent = nullptr);
+        explicit TermView(TermController& controller, QWidget* parent = nullptr);
 
     public slots:
         void onAddTerm();
@@ -39,20 +39,15 @@ class TermView : public QWidget {
         void courseSelected(const QString& courseTitle);
 
     private:
-        void setupHeader();
-        void setupProgress();
-        void setupCourseList();
-        void addCourseRow(const QString& name, const QString& sub,
-                             const QString& pct, const QString& letter,
-                             const QString& gpa);
-        void setupFooter();
-
+        TermController& controller_;
         QVBoxLayout* mainLayout_;
 
         // header
         QLabel*      termTitle_;
         QLabel*      dateRangeLabel_;
         QPushButton* addCourseButton_;
+        QPushButton* editTermButton_;
+        QPushButton* removeTermButton_;
 
         // progress
         QProgressBar* progressBar_;
@@ -65,8 +60,24 @@ class TermView : public QWidget {
         QLabel* avgGradeLabel_;
         QLabel* gpaLabel_;
 
+        void setupHeader();
+        void setupProgress();
+        void setupCourseList();
+        void addCourseRow(const QString& name, const QString& sub,
+                             const QString& pct, const QString& letter,
+                             const QString& gpa);
+        void setupFooter();
+        void submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active);
+        void submitEditTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active);
+        void submitRemoveTerm(const QString& title);
+
     private slots:
         void onAddCourse();
+        void onEditTerm();
+        void onRemoveTerm();
+        void refreshTerm();
+
+    friend class TermViewTests;
 };
 
 #endif
