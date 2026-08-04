@@ -6,9 +6,6 @@
 /**
  * @file MainWindow.cpp
  * @brief Implementation of the MainWindow class, which serves as the main page for the Qt GUI.
- *
- * This class presents output to the user through a Qt GUI. It does not contain any
- * app logic. The class calls instances of other windows as the main driver behind the GUI.
  */
 
 #include <QDebug>
@@ -61,17 +58,26 @@ void MainWindow::setupUi() {
     sidebarLayout->addWidget(sidebarLabel);
     sidebarLayout->addSpacing(8);
     sidebarLayout->addWidget(termListWidget);
-    sidebarLayout->addWidget(addTermButton);
     sidebarLayout->addStretch();
+    sidebarLayout->addWidget(addTermButton);
 
     auto* termPage       = new TermView(controller_);
     auto* coursePage     = new CourseView();
     auto* assignmentPage = new AssignmentView();
 
+    // shown whenever no term is currently active, instead of TermView's own placeholder state
+    auto* emptyStatePage = new QWidget();
+    auto* emptyLayout    = new QVBoxLayout(emptyStatePage);
+    auto* emptyLabel     = new QLabel("Select a term to begin", emptyStatePage);
+    emptyLabel->setAlignment(Qt::AlignCenter);
+    emptyLabel->setStyleSheet("font-size: 14px; color: #999;");
+    emptyLayout->addWidget(emptyLabel);
+
     stack_->addWidget(termPage);       // index 0
     stack_->addWidget(coursePage);     // index 1
     stack_->addWidget(assignmentPage); // index 2
-    stack_->setCurrentIndex(0);
+    stack_->addWidget(emptyStatePage); // index 3
+    stack_->setCurrentIndex(3);        // no term selected at startup
 
     layout_->addWidget(sidebar_);
     layout_->addWidget(stack_);
@@ -84,6 +90,7 @@ void MainWindow::setupUi() {
 
     connect(addTermButton, &QPushButton::clicked, termPage, &TermView::onAddTerm);
     connect(&controller_, &TermController::dataChanged, this, &MainWindow::refreshTermList);
+    connect(&controller_, &TermController::dataChanged, this, &MainWindow::updateTermPageVisibility);
 
     connect(termPage, &TermView::courseSelected, this,
         [this](const QString& title) {
@@ -125,9 +132,11 @@ void MainWindow::refreshTermList() {
         delete item;
     }
 
-    for (const auto& [id, term] : controller_.getTermList()) {
-        addTermRow(term);
+    for (const std::string& id : controller_.getTermOrder()) {
+        addTermRow(controller_.getTermList().at(id));
     }
+
+    termListLayout_->addStretch();
 }
 
 void MainWindow::addTermRow(const Term& term) {
@@ -185,5 +194,20 @@ void MainWindow::onTermRowClicked(const QString& title) {
         stack_->setCurrentIndex(0);
     } catch (const std::out_of_range& e) {
         QMessageBox::warning(this, "Select Term Failed", QString::fromStdString(e.what()));
+    }
+}
+
+// clears the highlighted sidebar row and switches away from the term page whenever there is no
+// active term, e.g. it was just removed; runs regardless of which page is currently showing so a
+// stale highlight can't survive into a later term reusing the same title
+void MainWindow::updateTermPageVisibility() {
+    try {
+        controller_.getActiveTerm();
+    } catch (const std::logic_error& e) {
+        selectedTermTitle_.clear();
+
+        if (stack_->currentIndex() == 0) {
+            stack_->setCurrentIndex(3);
+        }
     }
 }
