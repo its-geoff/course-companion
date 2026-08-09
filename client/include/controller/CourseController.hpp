@@ -12,6 +12,7 @@
 #include <string>
 #include <chrono>
 #include <unordered_map>
+#include <vector>
 #include <optional>
 #include <QObject>
 #include "model/Term.hpp"
@@ -29,6 +30,7 @@ class CourseController : public QObject {
         CourseController& operator=(CourseController&&) = delete;
 
         const std::unordered_map<std::string, Course>& getCourseList() const;
+        const std::vector<std::string>& getCourseOrder() const;
         std::string getCourseId(const std::string& title) const;
         AssignmentController& getAssignmentController();
 
@@ -53,6 +55,7 @@ class CourseController : public QObject {
         Term& term_;
         Course* activeCourse_ = nullptr;
         std::unordered_map<std::string, std::string> titleToId_{};
+        std::vector<std::string> courseOrder_{};  // preserves insertion order, since courseList_ (an unordered_map) does not
         std::optional<AssignmentController> assignmentController_{};
 };
 
