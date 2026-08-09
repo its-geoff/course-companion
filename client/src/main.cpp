@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QStyleFactory>
 #include <string_view>
 #include "controller/TermController.hpp"
 #include "view/qt/MainWindow.hpp"
@@ -17,6 +18,9 @@ int main(int argc, char *argv[]) {
     }
 
     QApplication app(argc, argv);
+    app.setStyle(QStyleFactory::create("Fusion"));
+    app.setPalette(StyleManager::fixedLightPalette());
+
     PaletteWatcher paletteWatcher;
     MainWindow window;
 

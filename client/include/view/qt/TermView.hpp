@@ -10,6 +10,12 @@
  * outputs results from the TermController. Clicking a course row emits courseSelected so MainWindow can
  * navigate to CourseView. Adding a term is triggered from the sidebar; onAddTerm is public so
  * MainWindow can call it directly.
+ *
+ * The course list is driven by CourseController rather than placeholder data. Since
+ * TermController re-emplaces its CourseController on every selectTerm call, the connection to
+ * CourseController::dataChanged has to be re-established each time termSelected fires rather
+ * than made once; see onTermCourseControllerChanged. An in-page label is shown in place of the
+ * list when the active term has no courses yet.
  * 
  * Provides declarations only; see TermView.cpp for implementations.
  */
@@ -24,7 +30,9 @@
 #include <QScrollArea>
 #include <QFrame>
 #include <QString>
+#include <QMetaObject>
 #include "controller/TermController.hpp"
+#include "controller/CourseController.hpp"
 
 class TermView : public QWidget {
     Q_OBJECT
@@ -55,6 +63,8 @@ class TermView : public QWidget {
 
         // course list
         QVBoxLayout* courseListLayout_;
+        QLabel* noCoursesLabel_;
+        QMetaObject::Connection courseDataChangedConn_;
 
         // footer
         QLabel* avgGradeLabel_;
@@ -66,16 +76,22 @@ class TermView : public QWidget {
         void addCourseRow(const QString& name, const QString& sub,
                              const QString& pct, const QString& letter,
                              const QString& gpa);
+        void clearCourseRows();
         void setupFooter();
         void submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active);
         void submitEditTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active);
         void submitRemoveTerm(const QString& title);
+        void submitAddCourse(const QString& title, const QString& description, const QDate& startDate,
+                              const QDate& endDate, int numCredits, bool active);
+        CourseController* activeCourseController();
 
     private slots:
         void onAddCourse();
         void onEditTerm();
         void onRemoveTerm();
         void refreshTerm();
+        void onTermCourseControllerChanged();
+        void refreshCourseList();
 
     friend class TermViewTests;
 };

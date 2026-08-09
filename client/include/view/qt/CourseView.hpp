@@ -10,13 +10,6 @@
  * assignmentSelected so MainWindow can navigate to AssignmentView. The back button emits
  * backRequested so MainWindow can navigate to TermView.
  *
- * Add, remove, and filter operations call into the AssignmentController reached through the
- * bound CourseController. CourseController is not yet a QObject (see CC-110/111), so this view
- * refreshes itself manually after each mutation rather than listening for a change signal.
- *
- * Note: course title, date range, and per-assignment letter grade/GPA are not yet wired up.
- * The model only tracks letter grade and GPA at the Course level, not per Assignment.
- *
  * Provides declarations only; see CourseView.cpp for implementations.
  */
 
@@ -30,6 +23,7 @@
 #include <QScrollArea>
 #include <QFrame>
 #include <QString>
+#include <QMetaObject>
 #include "controller/CourseController.hpp"
 
 class CourseView : public QWidget {
@@ -69,6 +63,10 @@ class CourseView : public QWidget {
         CourseController* controller_ = nullptr;
         Filter currentFilter_ = Filter::All;
 
+        QMetaObject::Connection courseSelectedConn_;
+        QMetaObject::Connection courseDataChangedConn_;
+        QMetaObject::Connection assignmentDataChangedConn_;
+
         void setupHeader();
         void setupAssignmentProgress();
         void setupFilterBar();
@@ -79,11 +77,12 @@ class CourseView : public QWidget {
         void setupFooter();
 
         AssignmentController* activeAssignmentController();
-        void refreshAssignmentList();
         void clearAssignmentRows();
         QString formatDueDate(const std::chrono::year_month_day& date) const;
 
     private slots:
+        void onCourseSelected();
+        void refreshAssignmentList();
         void onAddAssignment();
         void onRemoveAssignment();
         void onFilterAll();

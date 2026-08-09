@@ -7,6 +7,10 @@
  * This class displays information received from the TermController. The term name is shown,
  * along with course grades, timelines, and the overall GPA from the term. Clicking a course
  * card emits courseSelected so MainWindow can navigate to CourseView.
+ *
+ * The course list is populated from CourseController::getCourseList and refreshes in response
+ * to CourseController::dataChanged and TermController::termSelected (the latter to rewire the
+ * connection whenever the active term, and therefore the active CourseController, changes).
  */
 
 #include <QDebug>
@@ -31,8 +35,10 @@ TermView::TermView(TermController& controller, QWidget* parent)
 
     connect(&controller_, &TermController::dataChanged, this, &TermView::refreshTerm);
     connect(&controller_, &TermController::termSelected, this, &TermView::refreshTerm);
+    connect(&controller_, &TermController::termSelected, this, &TermView::onTermCourseControllerChanged);
 
     refreshTerm();
+    onTermCourseControllerChanged();
 }
 
 void TermView::setupHeader() {
@@ -165,18 +171,20 @@ void TermView::setupCourseList() {
     sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase;");
     sectionLayout->addWidget(sectionTitle);
 
+    // shown instead of the list when the active term has no courses; lives outside
+    // courseListLayout_ so clearCourseRows doesn't destroy it on every refresh
+    noCoursesLabel_ = new QLabel("No courses yet. Add one to get started.", section);
+    noCoursesLabel_->setStyleSheet("font-size: 12px; color: #999;");
+    noCoursesLabel_->setAlignment(Qt::AlignCenter);
+    noCoursesLabel_->setContentsMargins(0, 12, 0, 12);
+    noCoursesLabel_->hide();
+    sectionLayout->addWidget(noCoursesLabel_);
+
     // the widget that holds the course rows
     auto* scrollContent    = new QWidget();
     courseListLayout_ = new QVBoxLayout(scrollContent);
     courseListLayout_->setContentsMargins(0, 0, 0, 0);
     courseListLayout_->setSpacing(1);  // tight gap between rows
-
-    // placeholder course rows
-    addCourseRow("Data Structures",  "CS 201 · 3 credits",  "93.4%", "A",  "4.0");
-    addCourseRow("Linear Algebra",   "MATH 215 · 4 credits","88.1%", "B+", "3.3");
-    addCourseRow("Tech Writing",     "ENG 310 · 3 credits", "91.7%", "A-", "3.7");
-    addCourseRow("Ethics in CS",     "CS 401 · 3 credits",  "83.2%", "B",  "3.0");
-
     courseListLayout_->addStretch();
 
     // wrap in a scroll area
@@ -283,7 +291,18 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
     stackLayout->addWidget(clickOverlay);
     stackLayout->setCurrentIndex(1);
 
-    courseListLayout_->addWidget(card);
+    // insert before the trailing stretch item
+    courseListLayout_->insertWidget(courseListLayout_->count() - 1, card);
+}
+
+void TermView::clearCourseRows() {
+    QLayoutItem* item;
+    while ((item = courseListLayout_->takeAt(0)) != nullptr) {
+        if (QWidget* widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
 }
 
 void TermView::setupFooter() {
@@ -341,6 +360,57 @@ void TermView::refreshTerm() {
     } catch (const std::logic_error& e) {
         termTitle_->setText("No term selected");
         dateRangeLabel_->setText("");
+    }
+}
+
+CourseController* TermView::activeCourseController() {
+    try {
+        return &controller_.getCourseController();
+    } catch (const std::exception& e) {
+        return nullptr;
+    }
+}
+
+// reconnects the CourseController::dataChanged signal to whichever CourseController is
+// currently active, since TermController re-emplaces it on every selectTerm call and a fresh
+// QObject means a fresh set of connections
+void TermView::onTermCourseControllerChanged() {
+    disconnect(courseDataChangedConn_);
+
+    CourseController* courseController = activeCourseController();
+    if (courseController) {
+        courseDataChangedConn_ = connect(courseController, &CourseController::dataChanged,
+                                          this, &TermView::refreshCourseList);
+    }
+
+    refreshCourseList();
+}
+
+void TermView::refreshCourseList() {
+    clearCourseRows();
+    courseListLayout_->addStretch();
+
+    CourseController* courseController = activeCourseController();
+    if (!courseController) {
+        noCoursesLabel_->show();
+        return;
+    }
+
+    const auto& courses = courseController->getCourseList();
+    noCoursesLabel_->setVisible(courses.empty());
+
+    for (const auto& [id, course] : courses) {
+        QString name = QString::fromStdString(course.getTitle());
+
+        QString description = QString::fromStdString(course.getDescription());
+        QString credits = QString("%1 credit%2").arg(course.getNumCredits()).arg(course.getNumCredits() == 1 ? "" : "s");
+        QString sub = description.isEmpty() ? credits : description + " · " + credits;
+
+        QString pct = QString::number(course.getGradePct(), 'f', 1) + "%";
+        QString letter = QString::fromStdString(course.getLetterGrade());
+        QString gpa = QString::number(course.getGpaVal(), 'f', 1);
+
+        addCourseRow(name, sub, pct, letter, gpa);
     }
 }
 
@@ -454,12 +524,36 @@ void TermView::onAddCourse() {
     if (dlg.exec() != QDialog::Accepted)
         return;
 
-    // TODO: wire to CourseController::addCourse once controller is connected
-    qDebug() << "Add Course:"
-             << dlg.textValue("title")
-             << dlg.textValue("description")
-             << dlg.dateValue("startDate").toString("yyyy-MM-dd")
-             << dlg.dateValue("endDate").toString("yyyy-MM-dd")
-             << dlg.intValue("numCredits")
-             << dlg.boolValue("active");
+    submitAddCourse(
+        dlg.textValue("title"),
+        dlg.textValue("description"),
+        dlg.dateValue("startDate"),
+        dlg.dateValue("endDate"),
+        dlg.intValue("numCredits"),
+        dlg.boolValue("active")
+    );
+}
+
+void TermView::submitAddCourse(const QString& title, const QString& description, const QDate& startDate,
+                                const QDate& endDate, int numCredits, bool active) {
+    CourseController* courseController = activeCourseController();
+    if (!courseController) {
+        QMessageBox::warning(this, "Add Course Failed", "No term is currently selected.");
+        return;
+    }
+
+    try {
+        courseController->addCourse(
+            title.toStdString(),
+            description.toStdString(),
+            utils::parseDateFromQt(startDate),
+            utils::parseDateFromQt(endDate),
+            numCredits,
+            active
+        );
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Add Course Failed", QString::fromStdString(e.what()));
+    } catch (const std::exception& e) {
+        QMessageBox::warning(this, "Add Course Failed", "An unexpected error occurred while adding the course.");
+    }
 }

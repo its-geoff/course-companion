@@ -9,7 +9,8 @@
  * The back button emits backRequested.
  *
  * Assignment add, remove, and filter actions call into the AssignmentController for the
- * currently bound course. See setController for how the view is attached to a course.
+ * currently bound course. The view stays in sync by listening to signals rather than
+ * refreshing manually after each action; see setController and onCourseSelected.
  */
 
 #include <chrono>
@@ -57,6 +58,10 @@ CourseView::CourseView(QWidget* parent) : QWidget(parent) {
 }
 
 void CourseView::setController(CourseController* controller) {
+    disconnect(courseSelectedConn_);
+    disconnect(courseDataChangedConn_);
+    disconnect(assignmentDataChangedConn_);
+
     controller_ = controller;
     currentFilter_ = Filter::All;
 
@@ -64,7 +69,16 @@ void CourseView::setController(CourseController* controller) {
     filterCompletedBtn_->setStyleSheet(kBtnInactive);
     filterIncompleteBtn_->setStyleSheet(kBtnInactive);
 
-    refreshAssignmentList();
+    if (controller_) {
+        courseSelectedConn_ = connect(controller_, &CourseController::courseSelected,
+                                       this, &CourseView::onCourseSelected);
+        courseDataChangedConn_ = connect(controller_, &CourseController::dataChanged,
+                                          this, &CourseView::refreshAssignmentList);
+    }
+
+    // picks up the currently selected course, if any, and wires the assignment
+    // controller connection; also runs an initial refresh either way
+    onCourseSelected();
 }
 
 void CourseView::setupHeader() {
@@ -395,14 +409,12 @@ void CourseView::setupFooter() {
 
 AssignmentController* CourseView::activeAssignmentController() {
     if (!controller_) {
-        QMessageBox::warning(this, "No Course Selected", "No course is currently selected.");
         return nullptr;
     }
 
     try {
         return &controller_->getAssignmentController();
     } catch (const std::exception& e) {
-        QMessageBox::warning(this, "No Course Selected", "No course is currently selected.");
         return nullptr;
     }
 }
@@ -420,6 +432,21 @@ void CourseView::clearAssignmentRows() {
 QString CourseView::formatDueDate(const std::chrono::year_month_day& date) const {
     QDate qDate(int(date.year()), unsigned(date.month()), unsigned(date.day()));
     return qDate.toString("MMM d");
+}
+
+// reconnects the assignment-level dataChanged signal to the currently active
+// AssignmentController, since CourseController re-emplaces it on every course
+// selection and a fresh QObject means a fresh set of connections
+void CourseView::onCourseSelected() {
+    disconnect(assignmentDataChangedConn_);
+
+    AssignmentController* assignmentController = activeAssignmentController();
+    if (assignmentController) {
+        assignmentDataChangedConn_ = connect(assignmentController, &AssignmentController::dataChanged,
+                                              this, &CourseView::refreshAssignmentList);
+    }
+
+    refreshAssignmentList();
 }
 
 void CourseView::refreshAssignmentList() {
@@ -478,8 +505,10 @@ void CourseView::onAddAssignment() {
         return;
 
     AssignmentController* assignmentController = activeAssignmentController();
-    if (!assignmentController)
+    if (!assignmentController) {
+        QMessageBox::warning(this, "No Course Selected", "No course is currently selected.");
         return;
+    }
 
     QDate qDueDate = dlg.dateValue("dueDate");
     std::chrono::year_month_day dueDate{
@@ -507,18 +536,13 @@ void CourseView::onAddAssignment() {
             completed,
             grade
         );
-    } catch (const std::logic_error& e) {
-        QMessageBox::warning(this, "Add Assignment", "An assignment with this title already exists.");
-        return;
     } catch (const std::out_of_range& e) {
         QMessageBox::warning(this, "Add Assignment", "Category must match one of this course's grade categories.");
-        return;
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Add Assignment", "An assignment with this title already exists.");
     } catch (const std::exception& e) {
         QMessageBox::warning(this, "Add Assignment", "An unexpected error occurred while adding the assignment.");
-        return;
     }
-
-    refreshAssignmentList();
 }
 
 void CourseView::onRemoveAssignment() {
@@ -540,17 +564,16 @@ void CourseView::onRemoveAssignment() {
         return;
 
     AssignmentController* assignmentController = activeAssignmentController();
-    if (!assignmentController)
+    if (!assignmentController) {
+        QMessageBox::warning(this, "No Course Selected", "No course is currently selected.");
         return;
+    }
 
     try {
         assignmentController->removeAssignment(title.toStdString());
     } catch (const std::out_of_range& e) {
         QMessageBox::warning(this, "Remove Assignment", "Assignment not found.");
-        return;
     }
-
-    refreshAssignmentList();
 }
 
 void CourseView::onFilterAll() {
