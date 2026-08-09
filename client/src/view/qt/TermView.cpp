@@ -397,10 +397,13 @@ void TermView::refreshCourseList() {
         return;
     }
 
-    const auto& courses = courseController->getCourseList();
-    noCoursesLabel_->setVisible(courses.empty());
+    const auto& courseList = courseController->getCourseList();
+    const auto& courseOrder = courseController->getCourseOrder();
+    noCoursesLabel_->setVisible(courseOrder.empty());
 
-    for (const auto& [id, course] : courses) {
+    for (const std::string& id : courseOrder) {
+        const Course& course = courseList.at(id);
+
         QString name = QString::fromStdString(course.getTitle());
 
         QString description = QString::fromStdString(course.getDescription());

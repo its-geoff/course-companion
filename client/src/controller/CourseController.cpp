@@ -1,12 +1,17 @@
 #include "controller/CourseController.hpp"
 
 #include <exception>
+#include <algorithm>
 #include "utils/utils.hpp"
 
 CourseController::CourseController(Term& term) : term_{term} {}
 
 const std::unordered_map<std::string, Course>& CourseController::getCourseList() const {
     return term_.getCourseList();
+}
+
+const std::vector<std::string>& CourseController::getCourseOrder() const {
+    return courseOrder_;
 }
 
 std::string CourseController::getCourseId(const std::string& title) const {
@@ -44,6 +49,8 @@ void CourseController::addCourse(const std::string& title, const std::string& de
         term_.removeCourse(course.getId());
         throw std::logic_error("Course with the same title already exists.");
     }
+
+    courseOrder_.push_back(course.getId());
     emit dataChanged();
 }
 
@@ -92,9 +99,16 @@ void CourseController::editActive(const std::string& id, bool newActive) {
 }
 
 void CourseController::removeCourse(const std::string& title) {
-    std::string id = getCourseId(title);
+    const std::string id = getCourseId(title);
+
+    if (activeCourse_ != nullptr && activeCourse_->getId() == id) {
+        activeCourse_ = nullptr;
+        assignmentController_.reset();
+    }
+
     term_.removeCourse(id);
     titleToId_.erase(utils::stringLower(title));
+    courseOrder_.erase(std::remove(courseOrder_.begin(), courseOrder_.end(), id), courseOrder_.end());
     emit dataChanged();
 }
 
