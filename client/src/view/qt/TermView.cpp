@@ -184,7 +184,7 @@ void TermView::setupCourseList() {
     auto* scrollContent    = new QWidget();
     courseListLayout_ = new QVBoxLayout(scrollContent);
     courseListLayout_->setContentsMargins(0, 0, 0, 0);
-    courseListLayout_->setSpacing(1);  // tight gap between rows
+    courseListLayout_->setSpacing(6);
     courseListLayout_->addStretch();
 
     // wrap in a scroll area
@@ -204,6 +204,7 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
                              const QString& gpa) {
     // outer card: QStackedLayout lets the click overlay and content share the same rect
     auto* card        = new QFrame();
+    card->setFixedHeight(52);
     auto* stackLayout = new QStackedLayout(card);
     stackLayout->setStackingMode(QStackedLayout::StackAll);
 
@@ -213,7 +214,7 @@ void TermView::addCourseRow(const QString& name, const QString& sub,
 
     auto* content   = new QWidget(card);
     auto* rowLayout = new QHBoxLayout(content);
-    rowLayout->setContentsMargins(14, 10, 14, 10);
+    rowLayout->setContentsMargins(10, 8, 10, 8);
 
     auto* dot = new QWidget(content);
     dot->setFixedSize(8, 8);
