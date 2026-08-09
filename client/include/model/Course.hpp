@@ -18,16 +18,6 @@
 #include <unordered_map>    // for weights, GPA values, and assignmentList
 #include "model/Assignment.hpp"   // for usage of Assignment objects in Course
 
-/**
- * @class Course
- * @brief Represents an academic course that can contain multiple assignments at a given time.
- * 
- * Stores metadata such as title, description, start date, end date, list of assignments, number of credits,
- * and course grade.
- * The Course class can contain multiple Assignment objects. The grade of these Assignment objects will be combined
- * based on the grade weights to produce the course grade. The Course class is used by the main function to group
- * assignments and provide a student's grade for one course. 
- */
 class Course {
     public:
         Course(std::string title, std::string description, std::chrono::year_month_day startDate, 

@@ -19,6 +19,7 @@ while getopts ":mt" opt; do
         t)
             cmake --build . --target AssignmentTests CourseTests TermTests CliViewTests \
                 AssignmentControllerTests CourseControllerTests TermControllerTests \
+                TermViewTests \
                 UtilsTests CourseAssignmentIntegrationTests TermCourseIntegrationTests \
                 ControllerIntegrationTests
             ;;

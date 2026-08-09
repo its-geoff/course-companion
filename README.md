@@ -78,7 +78,7 @@ Key features:
 - A growing **Qt6 desktop GUI** (`MainWindow`, `TermView`, `CourseView`, `AssignmentView`) sitting alongside the original CLI
 - Persistent CI/CD pipeline with automated testing and weekly promotion from `develop` to `main`
  
-Current Version: **0.4.5 (alpha, in development)**
+Current Version: **0.4.1 (alpha, in development)**
  
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
  
@@ -122,22 +122,10 @@ git clone https://github.com/its-geoff/course-companion.git
 cd course-companion
 ```
  
-2. Install dependencies with Conan. This is a required step before configuring the build:
+2. Configure the build. This installs Conan dependencies and generates the CMake toolchain in one step:
  
 ```sh
 cd build
-./setup-deps
-```
-
-To install test dependencies instead:
-
-```sh
-./setup-deps -t
-```
- 
-3. Configure the build:
- 
-```sh
 ./build-configure
 ```
  
@@ -147,14 +135,14 @@ To also enable test builds and coverage:
 ./build-configure -t -c
 ```
  
-4. Build the project:
+3. Build the project:
  
 ```sh
 cd build_main
 cmake --build .
 ```
  
-5. Run the application:
+4. Run the application:
  
 ```sh
 ./bin/CourseCompanion
@@ -227,7 +215,6 @@ Configure and build the test suite:
  
 ```sh
 cd build
-./setup-deps -t
 ./build-configure -t
 cd build_test
 cmake --build .
