@@ -516,21 +516,6 @@ void TermView::refreshTerm() {
     }
 }
 
-// reconnects the CourseController::dataChanged signal to whichever CourseController is
-// currently active, since TermController re-emplaces it on every selectTerm call and a fresh
-// QObject means a fresh set of connections
-void TermView::onTermCourseControllerChanged() {
-    disconnect(courseDataChangedConn_);
-
-    CourseController* courseController = activeCourseController();
-    if (courseController) {
-        courseDataChangedConn_ = connect(courseController, &CourseController::dataChanged,
-                                          this, &TermView::refreshCourseList);
-    }
-
-    refreshCourseList();
-}
-
 void TermView::refreshCourseList() {
     clearCourseRows();
     courseListLayout_->addStretch();
@@ -560,4 +545,19 @@ void TermView::refreshCourseList() {
 
         addCourseRow(name, sub, pct, letter, gpa);
     }
+}
+
+// reconnects the CourseController::dataChanged signal to whichever CourseController is
+// currently active, since TermController re-emplaces it on every selectTerm call and a fresh
+// QObject means a fresh set of connections
+void TermView::onTermCourseControllerChanged() {
+    disconnect(courseDataChangedConn_);
+
+    CourseController* courseController = activeCourseController();
+    if (courseController) {
+        courseDataChangedConn_ = connect(courseController, &CourseController::dataChanged,
+                                          this, &TermView::refreshCourseList);
+    }
+
+    refreshCourseList();
 }

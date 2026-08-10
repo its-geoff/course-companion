@@ -91,8 +91,8 @@ class TermView : public QWidget {
         void onEditTerm();
         void onRemoveTerm();
         void refreshTerm();
-        void onTermCourseControllerChanged();
         void refreshCourseList();
+        void onTermCourseControllerChanged();
 
     friend class TermViewTests;
 };
