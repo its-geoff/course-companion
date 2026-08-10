@@ -86,7 +86,6 @@ class TermView : public QWidget {
                               const QDate& endDate, int numCredits, bool active);
 
     private slots:
-        void onAddTerm();
         void onAddCourse();
         void onEditTerm();
         void onRemoveTerm();
