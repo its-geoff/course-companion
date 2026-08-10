@@ -199,6 +199,49 @@ void TermView::setupCourseList() {
     mainLayout_->addWidget(section);
 }
 
+void TermView::setupFooter() {
+    auto* footer       = new QFrame(this);
+    auto* footerLayout = new QHBoxLayout(footer);
+    footerLayout->setContentsMargins(0, 16, 0, 0);
+    footer->setStyleSheet(
+        "QFrame { border-top: 1px solid #eee; }"
+    );
+
+    auto* avgSection = new QWidget(footer);
+    auto* avgLayout  = new QVBoxLayout(avgSection);
+    avgLayout->setContentsMargins(0, 0, 0, 0);
+    avgLayout->setSpacing(2);
+
+    auto* avgLbl = new QLabel("Avg grade", avgSection);
+    avgLbl->setStyleSheet("font-size: 11px; color: #999;");
+
+    avgGradeLabel_ = new QLabel("89.1%", avgSection);
+    avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
+
+    avgLayout->addWidget(avgLbl);
+    avgLayout->addWidget(avgGradeLabel_);
+
+    auto* gpaSection = new QWidget(footer);
+    auto* gpaLayout  = new QVBoxLayout(gpaSection);
+    gpaLayout->setContentsMargins(0, 0, 0, 0);
+    gpaLayout->setSpacing(2);
+
+    auto* gpaLbl = new QLabel("Term GPA", gpaSection);
+    gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
+
+    gpaLabel_ = new QLabel("3.52", gpaSection);
+    gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
+
+    gpaLayout->addWidget(gpaLbl);
+    gpaLayout->addWidget(gpaLabel_);
+
+    footerLayout->addWidget(avgSection);
+    footerLayout->addStretch();
+    footerLayout->addWidget(gpaSection);
+
+    mainLayout_->addWidget(footer);
+}
+
 void TermView::addCourseRow(const QString& name, const QString& sub,
                              const QString& pct, const QString& letter,
                              const QString& gpa) {
@@ -306,47 +349,156 @@ void TermView::clearCourseRows() {
     }
 }
 
-void TermView::setupFooter() {
-    auto* footer       = new QFrame(this);
-    auto* footerLayout = new QHBoxLayout(footer);
-    footerLayout->setContentsMargins(0, 16, 0, 0);
-    footer->setStyleSheet(
-        "QFrame { border-top: 1px solid #eee; }"
+CourseController* TermView::activeCourseController() {
+    try {
+        return &controller_.getCourseController();
+    } catch (const std::exception& e) {
+        return nullptr;
+    }
+}
+
+void TermView::submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active) {
+    try {
+        controller_.addTerm(
+            title.toStdString(),
+            utils::parseDateFromQt(startDate),
+            utils::parseDateFromQt(endDate),
+            active
+        );
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Add Term Failed", QString::fromStdString(e.what()));
+    }
+}
+
+// only calls editTitle if the title actually changed, since TermController::editTitle treats a resubmitted, unchanged title as a duplicate
+void TermView::submitEditTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active) {
+    try {
+        const Term& term = controller_.getActiveTerm();
+        std::string id = term.getId();
+
+        if (title.toStdString() != term.getTitle()) {
+            controller_.editTitle(id, title.toStdString());
+        }
+        controller_.editStartDate(id, utils::parseDateFromQt(startDate));
+        controller_.editEndDate(id, utils::parseDateFromQt(endDate));
+        controller_.editActive(id, active);
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Edit Term Failed", QString::fromStdString(e.what()));
+    }
+}
+
+void TermView::submitRemoveTerm(const QString& title) {
+    try {
+        controller_.removeTerm(title.toStdString());
+    } catch (const std::out_of_range& e) {
+        QMessageBox::warning(this, "Remove Term Failed", QString::fromStdString(e.what()));
+    }
+}
+
+void TermView::submitAddCourse(const QString& title, const QString& description, const QDate& startDate,
+                                const QDate& endDate, int numCredits, bool active) {
+    CourseController* courseController = activeCourseController();
+    if (!courseController) {
+        QMessageBox::warning(this, "Add Course Failed", "No term is currently selected.");
+        return;
+    }
+
+    try {
+        courseController->addCourse(
+            title.toStdString(),
+            description.toStdString(),
+            utils::parseDateFromQt(startDate),
+            utils::parseDateFromQt(endDate),
+            numCredits,
+            active
+        );
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Add Course Failed", QString::fromStdString(e.what()));
+    } catch (const std::exception& e) {
+        QMessageBox::warning(this, "Add Course Failed", "An unexpected error occurred while adding the course.");
+    }
+}
+
+void TermView::onAddTerm() {
+    std::vector<FieldDef> fields = {
+        { "title",     "Title",        FieldDef::Type::Text, QString{}             },
+        { "startDate", "Start Date",   FieldDef::Type::Date, QDate::currentDate()  },
+        { "endDate",   "End Date",     FieldDef::Type::Date, QDate::currentDate().addMonths(4) },
+        { "active",    "Current term", FieldDef::Type::Bool, true                  },
+    };
+
+    FormDialog dlg("Add Term", fields, this);
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+
+    submitAddTerm(dlg.textValue("title"), dlg.dateValue("startDate"), dlg.dateValue("endDate"), dlg.boolValue("active"));
+}
+
+void TermView::onAddCourse() {
+    std::vector<FieldDef> fields = {
+        { "title",       "Title",          FieldDef::Type::Text,         QString{}                        },
+        { "description", "Description",    FieldDef::Type::OptionalText, QString{}                        },
+        { "startDate",   "Start Date",     FieldDef::Type::Date,         QDate::currentDate()             },
+        { "endDate",     "End Date",       FieldDef::Type::Date,         QDate::currentDate().addMonths(4) },
+        { "numCredits",  "Credits",        FieldDef::Type::Integer,      3                                },
+        { "active",      "Current course", FieldDef::Type::Bool,         true                             },
+    };
+
+    FormDialog dlg("Add Course", fields, this);
+    if (dlg.exec() != QDialog::Accepted)
+        return;
+
+    submitAddCourse(
+        dlg.textValue("title"),
+        dlg.textValue("description"),
+        dlg.dateValue("startDate"),
+        dlg.dateValue("endDate"),
+        dlg.intValue("numCredits"),
+        dlg.boolValue("active")
     );
+}
 
-    auto* avgSection = new QWidget(footer);
-    auto* avgLayout  = new QVBoxLayout(avgSection);
-    avgLayout->setContentsMargins(0, 0, 0, 0);
-    avgLayout->setSpacing(2);
+// pre-fills the edit dialog with the active term's current values
+void TermView::onEditTerm() {
+    const Term* term = nullptr;
+    try {
+        term = &controller_.getActiveTerm();
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Edit Term Failed", "No term is currently selected.");
+        return;
+    }
 
-    auto* avgLbl = new QLabel("Avg grade", avgSection);
-    avgLbl->setStyleSheet("font-size: 11px; color: #999;");
+    std::vector<FieldDef> fields = {
+        { "title",     "Title",        FieldDef::Type::Text, QString::fromStdString(term->getTitle()) },
+        { "startDate", "Start Date",   FieldDef::Type::Date, utils::parseDateToQt(term->getStartDate()) },
+        { "endDate",   "End Date",     FieldDef::Type::Date, utils::parseDateToQt(term->getEndDate()) },
+        { "active",    "Current term", FieldDef::Type::Bool, term->getActive() },
+    };
 
-    avgGradeLabel_ = new QLabel("89.1%", avgSection);
-    avgGradeLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
+    FormDialog dlg("Edit Term", fields, this);
+    if (dlg.exec() != QDialog::Accepted)
+        return;
 
-    avgLayout->addWidget(avgLbl);
-    avgLayout->addWidget(avgGradeLabel_);
+    submitEditTerm(dlg.textValue("title"), dlg.dateValue("startDate"), dlg.dateValue("endDate"), dlg.boolValue("active"));
+}
 
-    auto* gpaSection = new QWidget(footer);
-    auto* gpaLayout  = new QVBoxLayout(gpaSection);
-    gpaLayout->setContentsMargins(0, 0, 0, 0);
-    gpaLayout->setSpacing(2);
+// confirms with the user before removing the active term, since removal cannot be undone
+void TermView::onRemoveTerm() {
+    QString title;
+    try {
+        title = QString::fromStdString(controller_.getActiveTerm().getTitle());
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Remove Term Failed", "No term is currently selected.");
+        return;
+    }
 
-    auto* gpaLbl = new QLabel("Term GPA", gpaSection);
-    gpaLbl->setStyleSheet("font-size: 11px; color: #999;");
+    auto result = QMessageBox::question(this, "Remove Term",
+        QString("Remove term \"%1\"? This cannot be undone.").arg(title));
 
-    gpaLabel_ = new QLabel("3.52", gpaSection);
-    gpaLabel_->setStyleSheet("font-size: 16px; font-weight: 500; color: #1a1a1a;");
+    if (result != QMessageBox::Yes)
+        return;
 
-    gpaLayout->addWidget(gpaLbl);
-    gpaLayout->addWidget(gpaLabel_);
-
-    footerLayout->addWidget(avgSection);
-    footerLayout->addStretch();
-    footerLayout->addWidget(gpaSection);
-
-    mainLayout_->addWidget(footer);
+    submitRemoveTerm(title);
 }
 
 // pulls the currently active term from the controller and updates the header; falls back to a placeholder if nothing is selected
@@ -361,14 +513,6 @@ void TermView::refreshTerm() {
     } catch (const std::logic_error& e) {
         termTitle_->setText("No term selected");
         dateRangeLabel_->setText("");
-    }
-}
-
-CourseController* TermView::activeCourseController() {
-    try {
-        return &controller_.getCourseController();
-    } catch (const std::exception& e) {
-        return nullptr;
     }
 }
 
@@ -415,149 +559,5 @@ void TermView::refreshCourseList() {
         QString gpa = QString::number(course.getGpaVal(), 'f', 1);
 
         addCourseRow(name, sub, pct, letter, gpa);
-    }
-}
-
-void TermView::onAddTerm() {
-    std::vector<FieldDef> fields = {
-        { "title",     "Title",        FieldDef::Type::Text, QString{}             },
-        { "startDate", "Start Date",   FieldDef::Type::Date, QDate::currentDate()  },
-        { "endDate",   "End Date",     FieldDef::Type::Date, QDate::currentDate().addMonths(4) },
-        { "active",    "Current term", FieldDef::Type::Bool, true                  },
-    };
-
-    FormDialog dlg("Add Term", fields, this);
-    if (dlg.exec() != QDialog::Accepted)
-        return;
-
-    submitAddTerm(dlg.textValue("title"), dlg.dateValue("startDate"), dlg.dateValue("endDate"), dlg.boolValue("active"));
-}
-
-void TermView::submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active) {
-    try {
-        controller_.addTerm(
-            title.toStdString(),
-            utils::parseDateFromQt(startDate),
-            utils::parseDateFromQt(endDate),
-            active
-        );
-    } catch (const std::logic_error& e) {
-        QMessageBox::warning(this, "Add Term Failed", QString::fromStdString(e.what()));
-    }
-}
-
-// pre-fills the edit dialog with the active term's current values
-void TermView::onEditTerm() {
-    const Term* term = nullptr;
-    try {
-        term = &controller_.getActiveTerm();
-    } catch (const std::logic_error& e) {
-        QMessageBox::warning(this, "Edit Term Failed", "No term is currently selected.");
-        return;
-    }
-
-    std::vector<FieldDef> fields = {
-        { "title",     "Title",        FieldDef::Type::Text, QString::fromStdString(term->getTitle()) },
-        { "startDate", "Start Date",   FieldDef::Type::Date, utils::parseDateToQt(term->getStartDate()) },
-        { "endDate",   "End Date",     FieldDef::Type::Date, utils::parseDateToQt(term->getEndDate()) },
-        { "active",    "Current term", FieldDef::Type::Bool, term->getActive() },
-    };
-
-    FormDialog dlg("Edit Term", fields, this);
-    if (dlg.exec() != QDialog::Accepted)
-        return;
-
-    submitEditTerm(dlg.textValue("title"), dlg.dateValue("startDate"), dlg.dateValue("endDate"), dlg.boolValue("active"));
-}
-
-// only calls editTitle if the title actually changed, since TermController::editTitle treats a resubmitted, unchanged title as a duplicate
-void TermView::submitEditTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active) {
-    try {
-        const Term& term = controller_.getActiveTerm();
-        std::string id = term.getId();
-
-        if (title.toStdString() != term.getTitle()) {
-            controller_.editTitle(id, title.toStdString());
-        }
-        controller_.editStartDate(id, utils::parseDateFromQt(startDate));
-        controller_.editEndDate(id, utils::parseDateFromQt(endDate));
-        controller_.editActive(id, active);
-    } catch (const std::logic_error& e) {
-        QMessageBox::warning(this, "Edit Term Failed", QString::fromStdString(e.what()));
-    }
-}
-
-// confirms with the user before removing the active term, since removal cannot be undone
-void TermView::onRemoveTerm() {
-    QString title;
-    try {
-        title = QString::fromStdString(controller_.getActiveTerm().getTitle());
-    } catch (const std::logic_error& e) {
-        QMessageBox::warning(this, "Remove Term Failed", "No term is currently selected.");
-        return;
-    }
-
-    auto result = QMessageBox::question(this, "Remove Term",
-        QString("Remove term \"%1\"? This cannot be undone.").arg(title));
-
-    if (result != QMessageBox::Yes)
-        return;
-
-    submitRemoveTerm(title);
-}
-
-void TermView::submitRemoveTerm(const QString& title) {
-    try {
-        controller_.removeTerm(title.toStdString());
-    } catch (const std::out_of_range& e) {
-        QMessageBox::warning(this, "Remove Term Failed", QString::fromStdString(e.what()));
-    }
-}
-
-void TermView::onAddCourse() {
-    std::vector<FieldDef> fields = {
-        { "title",       "Title",          FieldDef::Type::Text,         QString{}                        },
-        { "description", "Description",    FieldDef::Type::OptionalText, QString{}                        },
-        { "startDate",   "Start Date",     FieldDef::Type::Date,         QDate::currentDate()             },
-        { "endDate",     "End Date",       FieldDef::Type::Date,         QDate::currentDate().addMonths(4) },
-        { "numCredits",  "Credits",        FieldDef::Type::Integer,      3                                },
-        { "active",      "Current course", FieldDef::Type::Bool,         true                             },
-    };
-
-    FormDialog dlg("Add Course", fields, this);
-    if (dlg.exec() != QDialog::Accepted)
-        return;
-
-    submitAddCourse(
-        dlg.textValue("title"),
-        dlg.textValue("description"),
-        dlg.dateValue("startDate"),
-        dlg.dateValue("endDate"),
-        dlg.intValue("numCredits"),
-        dlg.boolValue("active")
-    );
-}
-
-void TermView::submitAddCourse(const QString& title, const QString& description, const QDate& startDate,
-                                const QDate& endDate, int numCredits, bool active) {
-    CourseController* courseController = activeCourseController();
-    if (!courseController) {
-        QMessageBox::warning(this, "Add Course Failed", "No term is currently selected.");
-        return;
-    }
-
-    try {
-        courseController->addCourse(
-            title.toStdString(),
-            description.toStdString(),
-            utils::parseDateFromQt(startDate),
-            utils::parseDateFromQt(endDate),
-            numCredits,
-            active
-        );
-    } catch (const std::logic_error& e) {
-        QMessageBox::warning(this, "Add Course Failed", QString::fromStdString(e.what()));
-    } catch (const std::exception& e) {
-        QMessageBox::warning(this, "Add Course Failed", "An unexpected error occurred while adding the course.");
     }
 }
