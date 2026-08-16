@@ -8,20 +8,11 @@
 
 using namespace std::chrono_literals;
 
-// test fixture for class CourseView
 class CourseViewTests : public testing::Test {
     protected:
         Term term{"Fall 2025", std::chrono::year_month_day{2025y/8/15}, std::chrono::year_month_day{2025y/12/17}, true};
         CourseController controller{term};
-        CourseView view{};
-
-        void bindController() {
-            view.setController(&controller);
-        }
-
-        void unbindController() {
-            view.setController(nullptr);
-        }
+        CourseView view{controller};
 
         void selectCourse(const std::string& title) {
             controller.selectCourse(title);
@@ -40,7 +31,6 @@ class CourseViewTests : public testing::Test {
         void onFilterCompleted() { view.onFilterCompleted(); }
         void onFilterIncomplete() { view.onFilterIncomplete(); }
 
-        // assignmentListLayout_ always carries a trailing stretch item, so subtract it
         int assignmentRowCount() {
             return view.assignmentListLayout_->count() - 1;
         }
@@ -57,7 +47,6 @@ class CourseViewTests : public testing::Test {
             return view.progressBar_->maximum();
         }
 
-        // dismisses the next modal that opens, used for tests that trigger QMessageBox::warning
         void dismissNextModal() {
             QTimer::singleShot(0, []() {
                 if (QWidget* activeModal = QApplication::activeModalWidget()) {
@@ -72,16 +61,13 @@ class CourseViewTests : public testing::Test {
 // FUNCTION SMOKE TESTS
 // ====================================
 
-TEST_F(CourseViewTests, SetControllerWithNoCourseSelectedShowsEmptyProgress) {
-    bindController();
-
+TEST_F(CourseViewTests, NoCourseSelectedShowsEmptyProgress) {
     ASSERT_EQ(assignmentRowCount(), 0);
     ASSERT_EQ(progressLabelText(), "0 of 0 completed");
 }
 
 TEST_F(CourseViewTests, SubmitAddAssignmentMutatesAssignmentController) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     selectCourse("CS 201");
 
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, false, 0.0f);
@@ -93,7 +79,6 @@ TEST_F(CourseViewTests, SubmitAddAssignmentMutatesAssignmentController) {
 
 TEST_F(CourseViewTests, SubmitAddAssignmentUpdatesProgressBarAndLabel) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     selectCourse("CS 201");
 
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, true, 95.0f);
@@ -106,7 +91,6 @@ TEST_F(CourseViewTests, SubmitAddAssignmentUpdatesProgressBarAndLabel) {
 
 TEST_F(CourseViewTests, SubmitRemoveAssignmentMutatesAssignmentController) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     selectCourse("CS 201");
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, false, 0.0f);
 
@@ -120,7 +104,6 @@ TEST_F(CourseViewTests, SubmitRemoveAssignmentMutatesAssignmentController) {
 
 TEST_F(CourseViewTests, FilterCompletedShowsOnlyCompletedAssignments) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     selectCourse("CS 201");
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, true, 90.0f);
     submitAddAssignment("HW2", "", "Homework", std::chrono::year_month_day{2025y/9/17}, false, 0.0f);
@@ -132,7 +115,6 @@ TEST_F(CourseViewTests, FilterCompletedShowsOnlyCompletedAssignments) {
 
 TEST_F(CourseViewTests, FilterIncompleteShowsOnlyIncompleteAssignments) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     selectCourse("CS 201");
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, true, 90.0f);
     submitAddAssignment("HW2", "", "Homework", std::chrono::year_month_day{2025y/9/17}, false, 0.0f);
@@ -144,7 +126,6 @@ TEST_F(CourseViewTests, FilterIncompleteShowsOnlyIncompleteAssignments) {
 
 TEST_F(CourseViewTests, FilterAllShowsBothCompletedAndIncomplete) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     selectCourse("CS 201");
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, true, 90.0f);
     submitAddAssignment("HW2", "", "Homework", std::chrono::year_month_day{2025y/9/17}, false, 0.0f);
@@ -162,7 +143,6 @@ TEST_F(CourseViewTests, FilterAllShowsBothCompletedAndIncomplete) {
 TEST_F(CourseViewTests, SwitchingCoursesRefreshesAssignmentListForNewActiveCourse) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
     controller.addCourse("MATH 215", "Linear Algebra", {}, {}, 4, true);
-    bindController();
 
     selectCourse("CS 201");
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, false, 0.0f);
@@ -181,7 +161,6 @@ TEST_F(CourseViewTests, SwitchingCoursesRefreshesAssignmentListForNewActiveCours
 
 TEST_F(CourseViewTests, SubmitAddAssignmentWithoutSelectedCourseDoesNotCrash) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     dismissNextModal();
 
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, false, 0.0f);
@@ -191,7 +170,6 @@ TEST_F(CourseViewTests, SubmitAddAssignmentWithoutSelectedCourseDoesNotCrash) {
 
 TEST_F(CourseViewTests, SubmitAddAssignmentInvalidCategoryDoesNotMutate) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     selectCourse("CS 201");
     dismissNextModal();
 
@@ -203,7 +181,6 @@ TEST_F(CourseViewTests, SubmitAddAssignmentInvalidCategoryDoesNotMutate) {
 
 TEST_F(CourseViewTests, SubmitAddAssignmentDuplicateTitleDoesNotMutate) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     selectCourse("CS 201");
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, false, 0.0f);
 
@@ -218,32 +195,18 @@ TEST_F(CourseViewTests, SubmitAddAssignmentDuplicateTitleDoesNotMutate) {
 
 TEST_F(CourseViewTests, SubmitRemoveAssignmentNonexistentTitleDoesNotMutate) {
     controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
     selectCourse("CS 201");
     submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, false, 0.0f);
 
     QSignalSpy spy(&controller.getAssignmentController(), &AssignmentController::dataChanged);
+    dismissNextModal();
     submitRemoveAssignment("Nonexistent");
 
     ASSERT_EQ(spy.count(), 0);
     ASSERT_EQ(assignmentRowCount(), 1);
 }
 
-TEST_F(CourseViewTests, UnbindControllerClearsAssignmentListAndDoesNotCrash) {
-    controller.addCourse("CS 201", "Data Structures", {}, {}, 3, true);
-    bindController();
-    selectCourse("CS 201");
-    submitAddAssignment("HW1", "", "Homework", std::chrono::year_month_day{2025y/9/10}, false, 0.0f);
-    ASSERT_EQ(assignmentRowCount(), 1);
-
-    unbindController();
-
-    ASSERT_EQ(assignmentRowCount(), 0);
-    ASSERT_EQ(progressLabelText(), "0 of 0 completed");
-}
-
 TEST_F(CourseViewTests, SubmitRemoveAssignmentWithoutSelectedCourseDoesNotCrash) {
-    bindController();
     dismissNextModal();
 
     submitRemoveAssignment("HW1");
