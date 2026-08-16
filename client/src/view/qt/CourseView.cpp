@@ -8,9 +8,12 @@
  * and a grade summary footer. Clicking an assignment row emits assignmentSelected.
  * The back button emits backRequested.
  *
- * Note: the current Qt implementation uses placeholder data; controller wiring is planned but not yet implemented.
+ * Assignment add, remove, and filter actions call into the AssignmentController for the
+ * currently bound course. The view stays in sync by listening to signals rather than
+ * refreshing manually after each action; see setController and onCourseSelected.
  */
 
+#include <chrono>
 #include <QDate>
 #include <QDebug>
 #include <QInputDialog>
@@ -52,6 +55,30 @@ CourseView::CourseView(QWidget* parent) : QWidget(parent) {
     setupAssignmentList();
     mainLayout_->addStretch();
     setupFooter();
+}
+
+void CourseView::setController(CourseController* controller) {
+    disconnect(courseSelectedConn_);
+    disconnect(courseDataChangedConn_);
+    disconnect(assignmentDataChangedConn_);
+
+    controller_ = controller;
+    currentFilter_ = Filter::All;
+
+    filterAllBtn_->setStyleSheet(kBtnActive);
+    filterCompletedBtn_->setStyleSheet(kBtnInactive);
+    filterIncompleteBtn_->setStyleSheet(kBtnInactive);
+
+    if (controller_) {
+        courseSelectedConn_ = connect(controller_, &CourseController::courseSelected,
+                                       this, &CourseView::onCourseSelected);
+        courseDataChangedConn_ = connect(controller_, &CourseController::dataChanged,
+                                          this, &CourseView::refreshAssignmentList);
+    }
+
+    // picks up the currently selected course, if any, and wires the assignment
+    // controller connection; also runs an initial refresh either way
+    onCourseSelected();
 }
 
 void CourseView::setupHeader() {
@@ -149,7 +176,7 @@ void CourseView::setupAssignmentProgress() {
     auto* sectionTitle = new QLabel("ASSIGNMENT PROGRESS", labelRow);
     sectionTitle->setStyleSheet("font-size: 11px; font-weight: 500; color: #999;");
 
-    progressLabel_ = new QLabel("9 of 14 completed", labelRow);
+    progressLabel_ = new QLabel("0 of 0 completed", labelRow);
     progressLabel_->setStyleSheet("font-size: 12px; color: #666;");
 
     labelLayout->addWidget(sectionTitle);
@@ -158,8 +185,8 @@ void CourseView::setupAssignmentProgress() {
 
     progressBar_ = new QProgressBar(section);
     progressBar_->setMinimum(0);
-    progressBar_->setMaximum(14);
-    progressBar_->setValue(9);
+    progressBar_->setMaximum(1);
+    progressBar_->setValue(0);
     progressBar_->setTextVisible(false);
     progressBar_->setFixedHeight(6);
     progressBar_->setStyleSheet(
@@ -220,13 +247,6 @@ void CourseView::setupAssignmentList() {
     assignmentListLayout_ = new QVBoxLayout(scrollContent);
     assignmentListLayout_->setContentsMargins(0, 0, 0, 0);
     assignmentListLayout_->setSpacing(1);
-
-    addAssignmentRow("Homework 1", "Homework · due Sep 5",    "95.0%", "A",  "4.0", true);
-    addAssignmentRow("Homework 2", "Homework · due Sep 12",   "88.5%", "B+", "3.3", true);
-    addAssignmentRow("Midterm",    "Midterm · due Oct 10",    "91.0%", "A-", "3.7", true);
-    addAssignmentRow("Homework 3", "Homework · due Oct 24",   "",      "",   "",    false);
-    addAssignmentRow("Final Exam", "Final Exam · due Dec 15", "",      "",   "",    false);
-
     assignmentListLayout_->addStretch();
 
     auto* scrollArea = new QScrollArea(section);
@@ -342,7 +362,8 @@ void CourseView::addAssignmentRow(const QString& name, const QString& sub,
     stackLayout->addWidget(clickOverlay);
     stackLayout->setCurrentIndex(1);
 
-    assignmentListLayout_->addWidget(card);
+    // insert before the trailing stretch item
+    assignmentListLayout_->insertWidget(assignmentListLayout_->count() - 1, card);
 }
 
 void CourseView::setupFooter() {
@@ -386,6 +407,89 @@ void CourseView::setupFooter() {
     mainLayout_->addWidget(footer);
 }
 
+AssignmentController* CourseView::activeAssignmentController() {
+    if (!controller_) {
+        return nullptr;
+    }
+
+    try {
+        return &controller_->getAssignmentController();
+    } catch (const std::exception& e) {
+        return nullptr;
+    }
+}
+
+void CourseView::clearAssignmentRows() {
+    QLayoutItem* item;
+    while ((item = assignmentListLayout_->takeAt(0)) != nullptr) {
+        if (QWidget* widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
+}
+
+QString CourseView::formatDueDate(const std::chrono::year_month_day& date) const {
+    QDate qDate(int(date.year()), unsigned(date.month()), unsigned(date.day()));
+    return qDate.toString("MMM d");
+}
+
+// reconnects the assignment-level dataChanged signal to the currently active
+// AssignmentController, since CourseController re-emplaces it on every course
+// selection and a fresh QObject means a fresh set of connections
+void CourseView::onCourseSelected() {
+    disconnect(assignmentDataChangedConn_);
+
+    AssignmentController* assignmentController = activeAssignmentController();
+    if (assignmentController) {
+        assignmentDataChangedConn_ = connect(assignmentController, &AssignmentController::dataChanged,
+                                              this, &CourseView::refreshAssignmentList);
+    }
+
+    refreshAssignmentList();
+}
+
+void CourseView::refreshAssignmentList() {
+    clearAssignmentRows();
+    assignmentListLayout_->addStretch();
+
+    AssignmentController* assignmentController = activeAssignmentController();
+    if (!assignmentController) {
+        progressBar_->setMaximum(1);
+        progressBar_->setValue(0);
+        progressLabel_->setText("0 of 0 completed");
+        return;
+    }
+
+    const auto& assignments = assignmentController->getAssignmentList();
+    int completedCount = 0;
+
+    for (const auto& [id, assignment] : assignments) {
+        bool completed = assignment.getCompleted();
+        if (completed) {
+            completedCount++;
+        }
+
+        if (currentFilter_ == Filter::Completed && !completed) {
+            continue;
+        }
+        if (currentFilter_ == Filter::Incomplete && completed) {
+            continue;
+        }
+
+        QString name = QString::fromStdString(assignment.getTitle());
+        QString sub  = QString::fromStdString(assignment.getCategory()) + " · due " + formatDueDate(assignment.getDueDate());
+        QString pct  = completed ? QString::number(assignment.getGrade(), 'f', 1) + "%" : "";
+
+        // letter grade and GPA are not tracked per assignment, only per course
+        addAssignmentRow(name, sub, pct, "", "", completed);
+    }
+
+    progressBar_->setMaximum(static_cast<int>(assignments.size()) > 0 ? static_cast<int>(assignments.size()) : 1);
+    progressBar_->setValue(completedCount);
+    progressLabel_->setText(QString::number(completedCount) + " of " + QString::number(assignments.size()) + " completed");
+}
+
 void CourseView::onAddAssignment() {
     std::vector<FieldDef> fields = {
         { "title",     "Title",       FieldDef::Type::Text,         QString{}            },
@@ -393,19 +497,52 @@ void CourseView::onAddAssignment() {
         { "category",  "Category",    FieldDef::Type::Text,         QString{}            },
         { "dueDate",   "Due Date",    FieldDef::Type::Date,         QDate::currentDate() },
         { "completed", "Completed",   FieldDef::Type::Bool,         false                },
+        { "grade",     "Grade (%)",   FieldDef::Type::OptionalText, QString{}            },
     };
 
     FormDialog dlg("Add Assignment", fields, this);
     if (dlg.exec() != QDialog::Accepted)
         return;
 
-    // TODO: wire to AssignmentController::addAssignment once controller is connected
-    qDebug() << "Add Assignment:"
-             << dlg.textValue("title")
-             << dlg.textValue("desc")
-             << dlg.textValue("category")
-             << dlg.dateValue("dueDate").toString("yyyy-MM-dd")
-             << dlg.boolValue("completed");
+    AssignmentController* assignmentController = activeAssignmentController();
+    if (!assignmentController) {
+        QMessageBox::warning(this, "No Course Selected", "No course is currently selected.");
+        return;
+    }
+
+    QDate qDueDate = dlg.dateValue("dueDate");
+    std::chrono::year_month_day dueDate{
+        std::chrono::year{qDueDate.year()},
+        std::chrono::month{static_cast<unsigned>(qDueDate.month())},
+        std::chrono::day{static_cast<unsigned>(qDueDate.day())}
+    };
+
+    bool completed = dlg.boolValue("completed");
+    float grade = 0.0f;
+    if (completed) {
+        bool ok = false;
+        grade = dlg.textValue("grade").toFloat(&ok);
+        if (!ok) {
+            grade = 0.0f;
+        }
+    }
+
+    try {
+        assignmentController->addAssignment(
+            dlg.textValue("title").toStdString(),
+            dlg.textValue("desc").toStdString(),
+            dlg.textValue("category").toStdString(),
+            dueDate,
+            completed,
+            grade
+        );
+    } catch (const std::out_of_range& e) {
+        QMessageBox::warning(this, "Add Assignment", "Category must match one of this course's grade categories.");
+    } catch (const std::logic_error& e) {
+        QMessageBox::warning(this, "Add Assignment", "An assignment with this title already exists.");
+    } catch (const std::exception& e) {
+        QMessageBox::warning(this, "Add Assignment", "An unexpected error occurred while adding the assignment.");
+    }
 }
 
 void CourseView::onRemoveAssignment() {
@@ -426,33 +563,42 @@ void CourseView::onRemoveAssignment() {
     if (confirm != QMessageBox::Yes)
         return;
 
-    // TODO: wire to AssignmentController::removeAssignment once controller is connected
-    qDebug() << "Remove Assignment:" << title;
+    AssignmentController* assignmentController = activeAssignmentController();
+    if (!assignmentController) {
+        QMessageBox::warning(this, "No Course Selected", "No course is currently selected.");
+        return;
+    }
+
+    try {
+        assignmentController->removeAssignment(title.toStdString());
+    } catch (const std::out_of_range& e) {
+        QMessageBox::warning(this, "Remove Assignment", "Assignment not found.");
+    }
 }
 
 void CourseView::onFilterAll() {
+    currentFilter_ = Filter::All;
     filterAllBtn_->setStyleSheet(kBtnActive);
     filterCompletedBtn_->setStyleSheet(kBtnInactive);
     filterIncompleteBtn_->setStyleSheet(kBtnInactive);
 
-    // TODO: show all rows once controller is connected
-    qDebug() << "Filter: All";
+    refreshAssignmentList();
 }
 
 void CourseView::onFilterCompleted() {
+    currentFilter_ = Filter::Completed;
     filterAllBtn_->setStyleSheet(kBtnInactive);
     filterCompletedBtn_->setStyleSheet(kBtnActive);
     filterIncompleteBtn_->setStyleSheet(kBtnInactive);
 
-    // TODO: hide incomplete rows once controller is connected
-    qDebug() << "Filter: Completed";
+    refreshAssignmentList();
 }
 
 void CourseView::onFilterIncomplete() {
+    currentFilter_ = Filter::Incomplete;
     filterAllBtn_->setStyleSheet(kBtnInactive);
     filterCompletedBtn_->setStyleSheet(kBtnInactive);
     filterIncompleteBtn_->setStyleSheet(kBtnActive);
 
-    // TODO: hide completed rows once controller is connected
-    qDebug() << "Filter: Incomplete";
+    refreshAssignmentList();
 }

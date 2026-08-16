@@ -13,6 +13,7 @@
  * Provides declarations only; see CourseView.cpp for implementations.
  */
 
+#include <chrono>
 #include <QPushButton>
 #include <QWidget>
 #include <QVBoxLayout>
@@ -22,18 +23,23 @@
 #include <QScrollArea>
 #include <QFrame>
 #include <QString>
+#include <QMetaObject>
+#include "controller/CourseController.hpp"
 
 class CourseView : public QWidget {
     Q_OBJECT
 
     public:
         explicit CourseView(QWidget* parent = nullptr);
+        void setController(CourseController* controller);
 
     signals:
         void assignmentSelected(const QString& assignmentTitle);
         void backRequested();
 
     private:
+        enum class Filter { All, Completed, Incomplete };
+
         QVBoxLayout* mainLayout_;
 
         QPushButton* backButton_;
@@ -54,6 +60,13 @@ class CourseView : public QWidget {
         QLabel* avgGradeLabel_;
         QLabel* gpaLabel_;
 
+        CourseController* controller_ = nullptr;
+        Filter currentFilter_ = Filter::All;
+
+        QMetaObject::Connection courseSelectedConn_;
+        QMetaObject::Connection courseDataChangedConn_;
+        QMetaObject::Connection assignmentDataChangedConn_;
+
         void setupHeader();
         void setupAssignmentProgress();
         void setupFilterBar();
@@ -63,7 +76,13 @@ class CourseView : public QWidget {
                               const QString& gpa, bool completed);
         void setupFooter();
 
+        AssignmentController* activeAssignmentController();
+        void clearAssignmentRows();
+        QString formatDueDate(const std::chrono::year_month_day& date) const;
+
     private slots:
+        void onCourseSelected();
+        void refreshAssignmentList();
         void onAddAssignment();
         void onRemoveAssignment();
         void onFilterAll();

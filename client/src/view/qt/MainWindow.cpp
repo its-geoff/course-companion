@@ -93,10 +93,15 @@ void MainWindow::setupUi() {
     connect(&controller_, &TermController::dataChanged, this, &MainWindow::updateTermPageVisibility);
 
     connect(termPage, &TermView::courseSelected, this,
-        [this](const QString& title) {
-            // TODO: load real course data from controller once wiring lands
-            qDebug() << "Course selected:" << title;
-            stack_->setCurrentIndex(1);
+        [this, coursePage](const QString& title) {
+            try {
+                CourseController& courseController = controller_.getCourseController();
+                courseController.selectCourse(title.toStdString());
+                coursePage->setController(&courseController);
+                stack_->setCurrentIndex(1);
+            } catch (const std::exception& e) {
+                QMessageBox::warning(this, "Select Course Failed", QString::fromStdString(e.what()));
+            }
         }
     );
 
