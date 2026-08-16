@@ -30,8 +30,8 @@ class CourseView : public QWidget {
     Q_OBJECT
 
     public:
-        explicit CourseView(QWidget* parent = nullptr);
-        void setController(CourseController* controller);
+        explicit CourseView(CourseController& controller, QWidget* parent = nullptr);
+        void setController(CourseController& controller);
 
     signals:
         void assignmentSelected(const QString& assignmentTitle);
@@ -40,12 +40,15 @@ class CourseView : public QWidget {
     private:
         enum class Filter { All, Completed, Incomplete };
 
+        std::reference_wrapper<CourseController> controller_;
+        Filter currentFilter_ = Filter::All;
         QVBoxLayout* mainLayout_;
 
         QPushButton* backButton_;
         QLabel*      courseTitle_;
         QLabel*      dateRangeLabel_;
         QPushButton* addAssignmentButton_;
+        QPushButton* editCourseButton_;
         QPushButton* removeAssignmentButton_;
 
         QProgressBar* progressBar_;
@@ -60,9 +63,6 @@ class CourseView : public QWidget {
         QLabel* avgGradeLabel_;
         QLabel* gpaLabel_;
 
-        CourseController* controller_ = nullptr;
-        Filter currentFilter_ = Filter::All;
-
         QMetaObject::Connection courseSelectedConn_;
         QMetaObject::Connection courseDataChangedConn_;
         QMetaObject::Connection assignmentDataChangedConn_;
@@ -71,23 +71,31 @@ class CourseView : public QWidget {
         void setupAssignmentProgress();
         void setupFilterBar();
         void setupAssignmentList();
+        void setupFooter();
+        QString formatDueDate(const std::chrono::year_month_day& date) const;
         void addAssignmentRow(const QString& name, const QString& sub,
                               const QString& pct, const QString& letter,
                               const QString& gpa, bool completed);
-        void setupFooter();
-
-        AssignmentController* activeAssignmentController();
         void clearAssignmentRows();
-        QString formatDueDate(const std::chrono::year_month_day& date) const;
+        AssignmentController* activeAssignmentController();
+        void submitEditCourse(const QString& title, const QString& description, const QDate& startDate,
+                       const QDate& endDate, int numCredits, bool active);
+        void submitAddAssignment(const QString& title, const QString& description, const QString& category,
+                                const std::chrono::year_month_day& dueDate, bool completed, float grade);
+        void submitRemoveAssignment(const QString& title);
 
     private slots:
-        void onCourseSelected();
-        void refreshAssignmentList();
+        void onEditCourse();
         void onAddAssignment();
         void onRemoveAssignment();
+        void onCourseSelected();
+        void refreshCourse();
+        void refreshAssignmentList();
         void onFilterAll();
         void onFilterCompleted();
         void onFilterIncomplete();
+
+    friend class CourseViewTests;
 };
 
 #endif // COURSEVIEW_HPP

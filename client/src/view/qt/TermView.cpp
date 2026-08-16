@@ -22,7 +22,7 @@
 #include "view/qt/FormDialog.hpp"
 
 TermView::TermView(TermController& controller, QWidget* parent) 
-    : QWidget(parent), controller_{controller} {
+    : controller_{controller}, QWidget(parent) {
     mainLayout_ = new QVBoxLayout(this);
     mainLayout_->setContentsMargins(24, 24, 24, 24);
     mainLayout_->setSpacing(20);

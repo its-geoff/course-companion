@@ -33,6 +33,7 @@ class CourseController : public QObject {
         const std::vector<std::string>& getCourseOrder() const;
         std::string getCourseId(const std::string& title) const;
         AssignmentController& getAssignmentController();
+        const Course& getActiveCourse() const;
 
         void addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate,
             const std::chrono::year_month_day& endDate, int numCredits, bool active);
