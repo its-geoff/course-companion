@@ -26,6 +26,11 @@ class TermViewTests : public testing::Test {
             view.submitRemoveTerm(title);
         }
 
+        void submitAddCourse(const QString& title, const QString& description, const QDate& startDate,
+                              const QDate& endDate, int numCredits, bool active) {
+            view.submitAddCourse(title, description, startDate, endDate, numCredits, active);
+        }
+
         void refreshTerm() {
             view.refreshTerm();
         }
@@ -36,6 +41,15 @@ class TermViewTests : public testing::Test {
 
         QString termDateRangeText() {
             return view.dateRangeLabel_->text();
+        }
+
+        // courseListLayout_ always carries a trailing stretch item, so subtract it
+        int courseRowCount() {
+            return view.courseListLayout_->count() - 1;
+        }
+
+        bool noCoursesLabelHidden() {
+            return view.noCoursesLabel_->isHidden();
         }
 
         // dismisses the next modal that opens, used for tests that trigger QMessageBox::warning
@@ -123,6 +137,35 @@ TEST_F(TermViewTests, SubmitRemoveTermMutatesController) {
     ASSERT_EQ(controller.getTermList().size(), 0);
 }
 
+TEST_F(TermViewTests, SubmitAddCourseMutatesCourseController) {
+    submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
+    controller.selectTerm("Fall 2025");
+
+    submitAddCourse("CS 201", "Data Structures", QDate(2025, 8, 26), QDate(2025, 12, 20), 3, true);
+
+    CourseController& courseController = controller.getCourseController();
+    ASSERT_EQ(courseController.getCourseList().size(), 1);
+    ASSERT_EQ(courseController.getCourseOrder().size(), 1);
+    ASSERT_EQ(courseRowCount(), 1);
+    ASSERT_TRUE(noCoursesLabelHidden());
+}
+
+// regression test for onTermCourseControllerChanged: switching the active term must rewire
+// CourseController::dataChanged to the new term's controller and fully refresh the row list,
+// not leave stale rows from the previously selected term
+TEST_F(TermViewTests, SwitchingTermsRefreshesCourseListForNewActiveTerm) {
+    submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
+    controller.selectTerm("Fall 2025");
+    submitAddCourse("CS 201", "Data Structures", QDate(2025, 8, 26), QDate(2025, 12, 20), 3, true);
+    ASSERT_EQ(courseRowCount(), 1);
+
+    submitAddTerm("Spring 2026", QDate(2026, 1, 2), QDate(2026, 5, 24), true);
+    controller.selectTerm("Spring 2026");
+
+    ASSERT_EQ(courseRowCount(), 0);
+    ASSERT_FALSE(noCoursesLabelHidden());
+}
+
 
 // ====================================
 // FUNCTION EDGE CASES
@@ -168,4 +211,44 @@ TEST_F(TermViewTests, SubmitRemoveTermNonexistentTitleDoesNotMutate) {
 
     ASSERT_EQ(spy.count(), 0);
     ASSERT_EQ(controller.getTermList().size(), 1);
+}
+
+TEST_F(TermViewTests, RefreshCourseListShowsEmptyStateForTermWithNoCourses) {
+    submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
+    controller.selectTerm("Fall 2025");
+
+    ASSERT_EQ(courseRowCount(), 0);
+    ASSERT_FALSE(noCoursesLabelHidden());
+}
+
+TEST_F(TermViewTests, RefreshCourseListHidesEmptyStateAfterAddingCourse) {
+    submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
+    controller.selectTerm("Fall 2025");
+    ASSERT_FALSE(noCoursesLabelHidden());
+
+    submitAddCourse("CS 201", "Data Structures", QDate(2025, 8, 26), QDate(2025, 12, 20), 3, true);
+
+    ASSERT_TRUE(noCoursesLabelHidden());
+}
+
+TEST_F(TermViewTests, SubmitAddCourseWithoutActiveTermDoesNotCrash) {
+    dismissNextModal();
+
+    submitAddCourse("CS 201", "Data Structures", QDate(2025, 8, 26), QDate(2025, 12, 20), 3, true);
+
+    ASSERT_EQ(courseRowCount(), 0);
+}
+
+TEST_F(TermViewTests, SubmitAddCourseDuplicateTitleDoesNotMutate) {
+    submitAddTerm("Fall 2025", QDate(2025, 8, 15), QDate(2025, 12, 17), true);
+    controller.selectTerm("Fall 2025");
+    submitAddCourse("CS 201", "Data Structures", QDate(2025, 8, 26), QDate(2025, 12, 20), 3, true);
+
+    QSignalSpy spy(&controller.getCourseController(), &CourseController::dataChanged);
+    dismissNextModal();
+
+    submitAddCourse("CS 201", "Duplicate", QDate(2026, 1, 2), QDate(2026, 5, 24), 4, false);
+
+    ASSERT_EQ(spy.count(), 0);
+    ASSERT_EQ(courseRowCount(), 1);
 }
