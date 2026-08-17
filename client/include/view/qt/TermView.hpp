@@ -73,25 +73,25 @@ class TermView : public QWidget {
         void setupHeader();
         void setupProgress();
         void setupCourseList();
+        void setupFooter();
         void addCourseRow(const QString& name, const QString& sub,
                              const QString& pct, const QString& letter,
                              const QString& gpa);
         void clearCourseRows();
-        void setupFooter();
+        CourseController* activeCourseController();
         void submitAddTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active);
         void submitEditTerm(const QString& title, const QDate& startDate, const QDate& endDate, bool active);
         void submitRemoveTerm(const QString& title);
         void submitAddCourse(const QString& title, const QString& description, const QDate& startDate,
                               const QDate& endDate, int numCredits, bool active);
-        CourseController* activeCourseController();
 
     private slots:
         void onAddCourse();
         void onEditTerm();
         void onRemoveTerm();
         void refreshTerm();
-        void onTermCourseControllerChanged();
         void refreshCourseList();
+        void onTermCourseControllerChanged();
 
     friend class TermViewTests;
 };

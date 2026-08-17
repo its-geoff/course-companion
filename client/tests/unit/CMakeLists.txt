@@ -39,13 +39,13 @@ enable_coverage(TermTests)
 # add_test(NAME AssignmentViewTests COMMAND AssignmentViewTests)
 # enable_coverage(AssignmentViewTests)
 
-# add_executable(CourseViewTests
-    # view/qt/CourseViewTests.cpp
-    # view/qt/QtTestMain.cpp
-# )
-# target_link_libraries(CourseViewTests PRIVATE CourseCompanion_gui CourseCompanion_lib GTest::gtest Qt6::Test)
-# add_test(NAME CourseViewTests COMMAND CourseViewTests)
-# enable_coverage(CourseViewTests)
+add_executable(CourseViewTests
+    view/qt/CourseViewTests.cpp
+    view/qt/QtTestMain.cpp
+)
+target_link_libraries(CourseViewTests PRIVATE CourseCompanion_gui CourseCompanion_lib GTest::gtest Qt6::Test)
+add_test(NAME CourseViewTests COMMAND CourseViewTests)
+enable_coverage(CourseViewTests)
 
 add_executable(TermViewTests
     view/qt/TermViewTests.cpp
@@ -73,7 +73,7 @@ foreach(test_target
     CourseControllerTests
     TermControllerTests
     # AssignmentViewTests
-    # CourseViewTests
+    CourseViewTests
     TermViewTests
     CliViewTests
     UtilsTests

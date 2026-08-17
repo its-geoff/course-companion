@@ -62,7 +62,6 @@ void MainWindow::setupUi() {
     sidebarLayout->addWidget(addTermButton);
 
     auto* termPage       = new TermView(controller_);
-    auto* coursePage     = new CourseView();
     auto* assignmentPage = new AssignmentView();
 
     // shown whenever no term is currently active, instead of TermView's own placeholder state
@@ -74,10 +73,9 @@ void MainWindow::setupUi() {
     emptyLayout->addWidget(emptyLabel);
 
     stack_->addWidget(termPage);       // index 0
-    stack_->addWidget(coursePage);     // index 1
-    stack_->addWidget(assignmentPage); // index 2
-    stack_->addWidget(emptyStatePage); // index 3
-    stack_->setCurrentIndex(3);        // no term selected at startup
+    stack_->addWidget(assignmentPage); // index 1
+    stack_->addWidget(emptyStatePage); // index 2
+    stack_->setCurrentIndex(2);        // no term selected at startup
 
     layout_->addWidget(sidebar_);
     layout_->addWidget(stack_);
@@ -93,38 +91,37 @@ void MainWindow::setupUi() {
     connect(&controller_, &TermController::dataChanged, this, &MainWindow::updateTermPageVisibility);
 
     connect(termPage, &TermView::courseSelected, this,
-        [this, coursePage](const QString& title) {
+        [this, assignmentPage](const QString& title) {
             try {
                 CourseController& courseController = controller_.getCourseController();
                 courseController.selectCourse(title.toStdString());
-                coursePage->setController(&courseController);
-                stack_->setCurrentIndex(1);
+
+                if (!coursePage_) {
+                    coursePage_ = new CourseView(courseController);
+                    stack_->addWidget(coursePage_);
+
+                    connect(coursePage_, &CourseView::backRequested, this,
+                        [this]() { stack_->setCurrentIndex(0); });
+
+                    connect(coursePage_, &CourseView::assignmentSelected, this,
+                        [this, assignmentPage](const QString& title) {
+                            // TODO: fetch real data from controller; placeholder values used until then
+                            assignmentPage->loadAssignment(title, "", "Dec 15, 2024", false, 0.0f);
+                            stack_->setCurrentIndex(stack_->indexOf(assignmentPage));
+                        });
+                } else {
+                    coursePage_->setController(courseController);
+                }
+
+                stack_->setCurrentIndex(stack_->indexOf(coursePage_));
             } catch (const std::exception& e) {
                 QMessageBox::warning(this, "Select Course Failed", QString::fromStdString(e.what()));
             }
         }
     );
 
-    connect(coursePage, &CourseView::backRequested, this,
-        [this]() { stack_->setCurrentIndex(0); }
-    );
-
-    connect(coursePage, &CourseView::assignmentSelected, this,
-        [this, assignmentPage](const QString& title) {
-            // TODO: fetch real data from controller; placeholder values used until then
-            assignmentPage->loadAssignment(
-                title,
-                "",
-                "Dec 15, 2024",
-                false,
-                0.0f
-            );
-            stack_->setCurrentIndex(2);
-        }
-    );
-
     connect(assignmentPage, &AssignmentView::backRequested, this,
-        [this]() { stack_->setCurrentIndex(1); }
+        [this]() { stack_->setCurrentIndex(stack_->indexOf(coursePage_)); }
     );
 
     refreshTermList();
@@ -212,7 +209,7 @@ void MainWindow::updateTermPageVisibility() {
         selectedTermTitle_.clear();
 
         if (stack_->currentIndex() == 0) {
-            stack_->setCurrentIndex(3);
+            stack_->setCurrentIndex(2);
         }
     }
 }
