@@ -17,6 +17,8 @@
 #include <QStackedWidget>
 #include "controller/TermController.hpp"
 
+class CourseView;
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -25,6 +27,7 @@ class MainWindow : public QMainWindow {
 
     private:
         TermController  controller_;
+        CourseView*     coursePage_ = nullptr;    
         QWidget*        centralWidget_;
         QHBoxLayout*    layout_;
         QWidget*        sidebar_;

@@ -33,6 +33,13 @@ AssignmentController& CourseController::getAssignmentController() {
     return *assignmentController_;
 }
 
+const Course& CourseController::getActiveCourse() const {
+    if (activeCourse_ == nullptr) {
+        throw std::logic_error("No course selected.");
+    }
+    return *activeCourse_;
+}
+
 void CourseController::addCourse(const std::string& title, const std::string& description, const std::chrono::year_month_day& startDate,
     const std::chrono::year_month_day& endDate, int numCredits, bool active) {
     Course course{title, description, startDate, endDate, numCredits, active};
