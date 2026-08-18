@@ -48,7 +48,7 @@ jobs:
           conan install . --lockfile=conan.lock --build=missing -of build/build_main -s build_type=Debug
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4.37.4
+        uses: github/codeql-action/init@v4.37.6
         with:
           languages: cpp
           queries: security-and-quality
@@ -64,6 +64,6 @@ jobs:
           cmake --build build/build_main -- -j$(nproc)
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4.37.4
+        uses: github/codeql-action/analyze@v4.37.6
         with:
           category: "security-and-quality"
